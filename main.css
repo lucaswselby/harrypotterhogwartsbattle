@@ -1,12 +1,35 @@
+:root {
+    --boardWidth: 74%;
+}
 body {
     margin: 0;
 }
+main {
+    flex-flow: row nowrap;
+    align-items: center;
+}
 
+#gameBoardContainer, #playerBoardContainer {
+    position: relative;
+}
 #gameBoardContainer {
     height: 100vh;
-    width: 100%;
+    width: var(--boardWidth);
 }
 #gameBoard {
     max-height: 100%;
-    max-width: 100%;
+    width: 100%;
+}
+
+#playerBoardContainer {
+    width: calc(100% - var(--boardWidth));
+}
+#playerBoard {
+    width: 100%;
+}
+#healthTracker {
+    height: 20%;
+    position: absolute;
+    top: 12%;
+    left: 2%;
 }
