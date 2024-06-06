@@ -2,18 +2,24 @@
     --boardWidth: 74%;
 }
 body {
+    height: 100vh;
     margin: 0;
 }
 main {
+    height: 100%;
     flex-flow: row nowrap;
     align-items: center;
+}
+
+#player3Proficiency, #player4Proficiency {
+    display: none;
 }
 
 #gameBoardContainer, #playerBoardContainer {
     position: relative;
 }
 #gameBoardContainer {
-    height: 100vh;
+    height: 100%;
     width: var(--boardWidth);
 }
 #gameBoard {
@@ -21,9 +27,13 @@ main {
     width: 100%;
 }
 
-#playerBoardContainer {
+#playerContainer {
     width: calc(100% - var(--boardWidth));
 }
+#playerCharacter, #playerProficiency {
+    width: 50%;
+}
+
 #playerBoard {
     width: 100%;
 }
