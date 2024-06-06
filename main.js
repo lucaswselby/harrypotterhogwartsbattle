@@ -103,6 +103,11 @@ document.getElementById("player4Character").onchange = () => {
 
     document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
         <img id="gameBoard" src="./images/board.png" alt="game board">
+        <div id="locations">
+            <img id="location1" class="location" src="./images/box1location1.png" alt="box 1 location 1">
+            <img id="location2" class="location" src="./images/box1location2.png" alt="box 1 location 2">
+            <img id="location3" class="location" src="./images/box1location3.png" alt="box 1 location 3">
+        </div>
     </div>
     <div id=playerContainer>
         <div style="display: flex">

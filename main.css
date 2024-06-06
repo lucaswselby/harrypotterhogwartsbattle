@@ -29,6 +29,31 @@ main {
     max-height: 100%;
     width: 100%;
 }
+#locations {
+    height: 18%;
+    position: absolute;
+    top: 16%;
+    left: 6%;
+}
+.location {
+    height: 100%;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#location1 {
+    z-index: 3;
+}
+#location2 {
+    z-index: 2;
+}
+#location3 {
+    z-index: 1;
+}
+#location4 {
+    z-index: 0;
+}
 
 #playerContainer {
     width: calc(100% - var(--boardWidth));
