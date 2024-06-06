@@ -1,5 +1,8 @@
 :root {
     --boardWidth: 74%;
+    --tokenBoxHeight: 28%;
+    --tokenBoxWidth: 46%;
+    --tokenBoxTop: 62%;
 }
 body {
     height: 100vh;
@@ -42,4 +45,21 @@ main {
     position: absolute;
     top: 12%;
     left: 2%;
+}
+#attackTokens, #influenceTokens {
+    height: var(--tokenBoxHeight);
+    width: var(--tokenBoxWidth);
+    position: absolute;
+    top: var(--tokenBoxTop);
+    display: flex;
+    flex-flow: row wrap;
+}
+#attackTokens {
+    left: 3%;    
+}
+#influenceTokens {
+    left: 50%;
+}
+.attackToken, .influenceToken {
+    height: 50%;
 }

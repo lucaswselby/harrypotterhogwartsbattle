@@ -25,6 +25,8 @@ document.getElementById("player4Character").onchange = () => {
             this._proficiency = proficiency;
             this._proficiencyImage = `<img id="playerCharacter" src="./images/${proficiency[0].toLowerCase() + proficiency.replaceAll(" ", "").substring(1)}.png" alt="${proficiency}">`
             this._health = 10;
+            this._attack = 0;
+            this._influence = 0;
         }
         get character() {
             return this._character;
@@ -41,13 +43,54 @@ document.getElementById("player4Character").onchange = () => {
         get health() {
             return this._health;
         }
-        loseHealth(health) {
-            this._health -= health;
+        set health(health) {
+            // sets health
+            this._health = health;
             if (this._health < 0) {
                 this._health = 0;
             }
             else if (this._health > 10) {
                 this._health = 10;
+            }
+
+            // adjusts health trackers
+            const healthTracker = document.getElementById("healthTracker");
+            healthTracker.style.left = `${10.3 + 8.3 * (9 - this._health)}%`;
+            if (activePlayer.health % 2 === 1) {
+                healthTracker.style.top = "33%";
+            }
+            else {
+                healthTracker.style.top = "12%";
+            }
+        }
+        get attack() {
+            return this._attack;
+        }
+        set attack(attack) {
+            // sets attack
+            this._attack = attack;
+            if (this._attack < 0) {
+                this._attack = 0;
+            }
+
+            // adds attack tokens to board
+            for (let i = 0; i < attack; i++) {
+                document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+            }
+        }
+        get influence() {
+            return this._influence;
+        }
+        set influence(influence) {
+            // sets influence
+            this._influence = influence;
+            if (this._influence < 0) {
+                this._influence = 0;
+            }
+
+            // adds influence tokens to board
+            for (let i = 0; i < influence; i++) {
+                document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
             }
         }
     }
@@ -69,21 +112,8 @@ document.getElementById("player4Character").onchange = () => {
         <div id="playerBoardContainer">
             <img id="playerBoard" src="./images/playerBoard.png" alt="player board">
             <img id="healthTracker" src="./images/healthTracker.png" alt="health tracker">
+            <div id="attackTokens"></div>
+            <div id="influenceTokens"></div>
         </div>
     </div>`;
-
-    const loseHealth = health => {
-        activePlayer.loseHealth(health);
-        const healthTracker = document.getElementById("healthTracker");
-        healthTracker.style.left = `${10.3 + 8.3 * (9 - activePlayer.health)}%`;
-        if (activePlayer.health % 2 === 1) {
-            healthTracker.style.top = "33%";
-        }
-        else {
-            healthTracker.style.top = "12%";
-        }
-    }
-    const gainHealth = health => {
-        loseHealth(-1 * health)
-    }
 //}
