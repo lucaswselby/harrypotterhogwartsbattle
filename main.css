@@ -1,8 +1,5 @@
 :root {
     --boardWidth: 74%;
-    --tokenBoxHeight: 28%;
-    --tokenBoxWidth: 46%;
-    --tokenBoxTop: 62%;
 }
 body {
     height: 100vh;
@@ -29,13 +26,16 @@ main {
     max-height: 100%;
     width: 100%;
 }
-#locations {
+
+#locations, #darkArtsEvents {
     height: 18%;
     position: absolute;
     top: 16%;
+}
+#locations {
     left: 6%;
 }
-.location {
+.location, .darkArtsEvent {
     height: 100%;
     border-radius: 10px;
     position: absolute;
@@ -55,6 +55,17 @@ main {
     z-index: 0;
 }
 
+#darkArtsEvents {
+    width: 27%;
+    left: 32%;
+}
+.darkArtsEvent {
+    transform: rotateY(180deg);
+    translate: 0;
+    opacity: 0;
+    transition: transform 1s, translate 1s, opacity 1s;
+}
+
 #playerContainer {
     width: calc(100% - var(--boardWidth));
 }
@@ -72,10 +83,10 @@ main {
     left: 2%;
 }
 #attackTokens, #influenceTokens {
-    height: var(--tokenBoxHeight);
-    width: var(--tokenBoxWidth);
+    height: 28%;
+    width: 46%;
     position: absolute;
-    top: var(--tokenBoxTop);
+    top: 62%;
     display: flex;
     flex-flow: row wrap;
 }

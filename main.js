@@ -104,9 +104,12 @@ document.getElementById("player4Character").onchange = () => {
     document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
         <img id="gameBoard" src="./images/board.png" alt="game board">
         <div id="locations">
-            <img id="location1" class="location" src="./images/box1location1.png" alt="box 1 location 1">
-            <img id="location2" class="location" src="./images/box1location2.png" alt="box 1 location 2">
-            <img id="location3" class="location" src="./images/box1location3.png" alt="box 1 location 3">
+            <img id="location1" class="location" src="./images/box1location1.png" alt="Box 1 Location 1">
+            <img id="location2" class="location" src="./images/box1location2.png" alt="Box 1 Location 2">
+            <img id="location3" class="location" src="./images/box1location3.png" alt="Box 1 Location 3">
+        </div>
+        <div id="darkArtsEvents">
+            <img class="darkArtsEvent" src="./images/menacingGrowl.png" alt="Menacing Growl">
         </div>
     </div>
     <div id=playerContainer>
@@ -121,4 +124,13 @@ document.getElementById("player4Character").onchange = () => {
             <div id="influenceTokens"></div>
         </div>
     </div>`;
+
+    for (let i = 0; i < document.getElementsByClassName("darkArtsEvent").length; i++) {
+        const darkArtsEvent = document.getElementsByClassName("darkArtsEvent")[i];
+        darkArtsEvent.onclick = () => {
+            darkArtsEvent.style.opacity = "1";
+            darkArtsEvent.style.transform = "rotateY(0)";
+            darkArtsEvent.style.translate = "140%";
+        }
+    }
 //}
