@@ -1,9 +1,11 @@
 :root {
     --boardWidth: 74%;
 }
-body {
+html, body {
     height: 100vh;
     margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 main {
     height: 100%;
@@ -100,9 +102,9 @@ main {
     height: 50%;
 }
 
-#playerHand {
-    
-    width: auto;
+#playerHand {    
+    width: 100%;
+    display: flex;
 }
 .card {
     width: 20%;
