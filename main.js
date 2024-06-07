@@ -17,12 +17,39 @@ document.getElementById("player4Hero").onchange = () => {
 // display game
 //document.getElementById("submitPlayers").onclick = () => {
     document.getElementsByTagName("MAIN")[0].style.display = "flex";
-    const year = document.getElementById("year").value;
+    const game = document.getElementById("game").value;
+    const attackToken = "<img src=\"./images/attackToken.png\" alt=\"attack token\">";
+    const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Health Token\">";
+
+    // some cards give the players a choice of action
+    const playerChoice = choices => {
+        const playerChoiceElement = document.getElementById("playerChoice");
+        playerChoiceElement.style.display = "grid";
+        let gridTemplateColumns = "";
+        for (let i = 1; i <= choices; i++) {
+            gridTemplateColumns += ` ${100 / choices}%`;
+            playerChoiceElement.innerHTML += `<div class="choice" id="choice${i}"></div>`;
+        }
+        playerChoiceElement.style.gridTemplateColumns = gridTemplateColumns.substring(1);
+        playerChoiceElement.onclick = () => {
+            playerChoiceElement.style.display = "none";
+            for (let i = 1; i < choices; i++) {
+                document.getElementById(`choice${i}`).remove();
+            }
+        }
+    }
 
     // cards
     class Card {
-        constructor(name, type, cost, effect) {
-            this._img = `<img id="${name}" class="card" src="./images/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}" onclick="{${effect} this.remove();}">`;
+        constructor(name, game, type, cost, effect) {
+            this._img = document.createElement("img");
+            this._img.src = `./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png`;
+            this._img.className = "card";
+            this._img.alt = name;
+            this._img.onclick = () => {
+                effect();
+                this._img.remove();
+            }
             this._type = type;
             this._cost = cost;
             this._effect = effect;
@@ -40,17 +67,19 @@ document.getElementById("player4Hero").onchange = () => {
             this._effect();
         }
     }
-    const alohomora = "activePlayer.influence++;";
-    const alohomoraHarry = new Card("Alohomora Harry", "spell", 0, alohomora);
-    const harryStartingCards = [alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry]; // TO-DO: add Harry's starting cards
+    const alohomora = () => {activePlayer.influence++;};
+    const alohomoraHarry = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
+    const firebolt = new Card("Firebolt", "Game 1", "item", 0, () => {activePlayer.attack++;}); // TO-DO: add coin if villain defeat
+    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice2").innerHTML = healthToken + healthToken});
+    const harryStartingCards = [alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, firebolt, hedwig]; // TO-DO: add Harry's starting cards
 
     // players
     class Player {
         constructor(hero, proficiency) {
             this._hero = hero;
-            this._heroImage = `<img id="playerHero" src="./images/${hero[0].toLowerCase() + hero.replaceAll(" ", "").substring(1)}${year < 3 ? 1 : 3}.png" alt="${hero}">`;
+            this._heroImage = `<img id="playerHero" src="./images/${parseInt(game[game.length - 1]) < 3 ? "Game 1" : (parseInt(game[game.length - 1]) < 7 ? "Game 3" : "Game 7")}/${hero[0].toLowerCase() + hero.replaceAll(" ", "").substring(1)}.png" alt="${hero}">`;
             this._proficiency = proficiency;
-            this._proficiencyImage = `<img id="playerHero" src="./images/${proficiency[0].toLowerCase() + proficiency.replaceAll(" ", "").substring(1)}.png" alt="${proficiency}">`
+            this._proficiencyImage = `<img id="playerHero" src="./images/Game 6/${proficiency[0].toLowerCase() + proficiency.replaceAll(" ", "").substring(1)}.png" alt="${proficiency}">`
             this._health = 10;
             this._attack = 0;
             this._influence = 0;
@@ -164,7 +193,7 @@ document.getElementById("player4Hero").onchange = () => {
                 if (this.draw.length > 0) {
                     this._hand.push(this.draw[0]);
                     this._draw.shift();
-                    document.getElementById("playerHand").innerHTML += this.hand[this.hand.length - 1].img;
+                    document.getElementById("playerHand").appendChild(this.hand[this.hand.length - 1].img);
                 }
                 // shuffles the discard pile into the draw pile
                 else {
@@ -183,8 +212,8 @@ document.getElementById("player4Hero").onchange = () => {
 
     // locations
     class Location {
-        constructor(name, number, spaces, game) {
-            this._img = `<img id="location${number}" class="location" src="./images/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
+        constructor(name, number, spaces) {
+            this._img = `<img id="location${number}" class="location" src="./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
             this._spaces = spaces;
             this._game = game;
         }
@@ -198,15 +227,15 @@ document.getElementById("player4Hero").onchange = () => {
             return this._game;
         }
     }
-    const castleGates = new Location("Castle Gates", 1, 5, 1);
-    const hagridsHut = new Location("Hagrid's Hut", 2, 6, 1);
-    const greatHall = new Location("Great Hall", 3, 7, 1);
-    const box1Locations = [castleGates, hagridsHut, greatHall];
+    const castleGates = new Location("Castle Gates", 1, 5);
+    const hagridsHut = new Location("Hagrid's Hut", 2, 6);
+    const greatHall = new Location("Great Hall", 3, 7);
+    let locations = [castleGates];
 
     // dark arts events
     class DarkArtsEvent {
         constructor(name, effect) {
-            this._img = `<img class="darkArtsEvent" src="./images/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
+            this._img = `<img class="darkArtsEvent" src="./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
             this._effect = effect;
         }
         get img() {
@@ -222,9 +251,9 @@ document.getElementById("player4Hero").onchange = () => {
     document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
         <img id="gameBoard" src="./images/board.png" alt="game board">
         <div id="locations">
-            ${box1Locations.reduce((prev, curr) => {
+            ${locations.reduce((prev, curr) => {
                 return prev.concat(curr.img);
-            }, box1Locations[0].img)}
+            }, locations[0].img)}
         </div>
         <div id="darkArtsEvents">
             ${darkArtsEvents.reduce((prev, curr) => {
@@ -244,7 +273,8 @@ document.getElementById("player4Hero").onchange = () => {
             <div id="influenceTokens"></div>
         </div>
         <div id="playerHand"></div>
-    </div>`;
+    </div>
+    <div id="playerChoice"></div>`;
     activePlayer.drawCards(activePlayer.draw.length);
     document.getElementById("healthTracker").onclick = () => {
         activePlayer.health--;
