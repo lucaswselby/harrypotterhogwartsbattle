@@ -22,7 +22,7 @@ document.getElementById("player4Hero").onchange = () => {
     // cards
     class Card {
         constructor(name, type, cost, effect) {
-            this._img = `<img id="${name}" class="card" src="./images/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}" onclick="{${effect} this.remove()}">`;
+            this._img = `<img id="${name}" class="card" src="./images/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}" onclick="{${effect} this.remove();}">`;
             this._type = type;
             this._cost = cost;
             this._effect = effect;
