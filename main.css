@@ -69,7 +69,7 @@ main {
 #playerContainer {
     width: calc(100% - var(--boardWidth));
 }
-#playerCharacter, #playerProficiency {
+#playerHero, #playerProficiency {
     width: 50%;
 }
 
@@ -98,4 +98,12 @@ main {
 }
 .attackToken, .influenceToken {
     height: 50%;
+}
+
+#playerHand {
+    
+    width: auto;
+}
+.card {
+    width: 20%;
 }
