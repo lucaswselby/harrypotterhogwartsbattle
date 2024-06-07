@@ -104,9 +104,9 @@ document.getElementById("player4Character").onchange = () => {
     document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
         <img id="gameBoard" src="./images/board.png" alt="game board">
         <div id="locations">
-            <img id="location1" class="location" src="./images/box1location1.png" alt="Box 1 Location 1">
-            <img id="location2" class="location" src="./images/box1location2.png" alt="Box 1 Location 2">
-            <img id="location3" class="location" src="./images/box1location3.png" alt="Box 1 Location 3">
+            <img id="location1" class="location" src="./images/castleGates.png" alt="Castle Gates">
+            <img id="location2" class="location" src="./images/hagridsHut.png" alt="Hagrid's Hut">
+            <img id="location3" class="location" src="./images/greatHall.png" alt="Great Hall">
         </div>
         <div id="darkArtsEvents">
             <img class="darkArtsEvent" src="./images/menacingGrowl.png" alt="Menacing Growl">
