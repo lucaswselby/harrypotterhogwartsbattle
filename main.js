@@ -18,10 +18,11 @@ document.getElementById("player4Character").onchange = () => {
 //document.getElementById("submitPlayers").onclick = () => {
     document.getElementsByTagName("MAIN")[0].style.display = "flex";
 
+    const year = document.getElementById("year").value;
     class Player {
         constructor(character, proficiency) {
             this._character = character;
-            this._characterImage = `<img id="playerCharacter" src="./images/${character[0].toLowerCase() + character.replaceAll(" ", "").substring(1)}.png" alt="${character}">`;
+            this._characterImage = `<img id="playerCharacter" src="./images/${character[0].toLowerCase() + character.replaceAll(" ", "").substring(1)}${year < 3 ? 1 : 3}.png" alt="${character}">`;
             this._proficiency = proficiency;
             this._proficiencyImage = `<img id="playerCharacter" src="./images/${proficiency[0].toLowerCase() + proficiency.replaceAll(" ", "").substring(1)}.png" alt="${proficiency}">`
             this._health = 10;
@@ -114,8 +115,8 @@ document.getElementById("player4Character").onchange = () => {
     </div>
     <div id=playerContainer>
         <div style="display: flex">
-            <!-- ${activePlayer.characterImage} -->
-            <!-- ${activePlayer.proficiencyImage} -->
+            ${activePlayer.characterImage}
+            ${activePlayer.proficiencyImage}
         </div>
         <div id="playerBoardContainer">
             <img id="playerBoard" src="./images/playerBoard.png" alt="player board">
