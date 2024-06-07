@@ -40,8 +40,9 @@ document.getElementById("player4Hero").onchange = () => {
             this._effect();
         }
     }
-    const alohomoraHarry = new Card("Alohomora Harry", "spell", 0, "activePlayer.influence++;");
-    const harryStartingCards = [alohomoraHarry]; // TO-DO: add Harry's starting cards
+    const alohomora = "activePlayer.influence++;";
+    const alohomoraHarry = new Card("Alohomora Harry", "spell", 0, alohomora);
+    const harryStartingCards = [alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry]; // TO-DO: add Harry's starting cards
 
     // players
     class Player {
@@ -105,6 +106,7 @@ document.getElementById("player4Hero").onchange = () => {
             }
 
             // adds attack tokens to board
+            document.getElementById("attackTokens").innerHTML = "";
             for (let i = 0; i < attack; i++) {
                 document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
             }
@@ -115,12 +117,13 @@ document.getElementById("player4Hero").onchange = () => {
         set influence(influence) {
             // sets influence
             this._influence = influence;
-            if (this._influence < 0) {
+            if (this.influence < 0) {
                 this._influence = 0;
             }
 
             // adds influence tokens to board
-            for (let i = 0; i < influence; i++) {
+            document.getElementById("influenceTokens").innerHTML = "";
+            for (let i = 0; i < this.influence; i++) {
                 document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
             }
         }
@@ -242,7 +245,10 @@ document.getElementById("player4Hero").onchange = () => {
         </div>
         <div id="playerHand"></div>
     </div>`;
-    activePlayer.drawCards(1);
+    activePlayer.drawCards(activePlayer.draw.length);
+    document.getElementById("healthTracker").onclick = () => {
+        activePlayer.health--;
+    }
 
     // click dark arts event to flip it over
     for (let i = 0; i < document.getElementsByClassName("darkArtsEvent").length; i++) {
