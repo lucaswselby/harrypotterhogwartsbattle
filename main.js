@@ -21,6 +21,11 @@ document.getElementById("player4Hero").onchange = () => {
     const attackToken = "<img src=\"./images/attackToken.png\" alt=\"attack token\">";
     const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Health Token\">";
 
+    // convert card name to src
+    const src = name => {
+        return `${name[0].toLowerCase()}${name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png`;
+    };
+
     // some cards give the players a choice of action
     const playerChoice = choices => {
         const playerChoiceElement = document.getElementById("playerChoice");
@@ -43,7 +48,7 @@ document.getElementById("player4Hero").onchange = () => {
     class Card {
         constructor(name, game, type, cost, effect) {
             this._img = document.createElement("img");
-            this._img.src = `./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png`;
+            this._img.src = `./images/${game}/${src(name)}`;
             this._img.className = "card";
             this._img.alt = name;
             this._img.onclick = () => {
@@ -52,7 +57,6 @@ document.getElementById("player4Hero").onchange = () => {
             }
             this._type = type;
             this._cost = cost;
-            this._effect = effect;
         }
         get img() {
             return this._img;
@@ -63,23 +67,26 @@ document.getElementById("player4Hero").onchange = () => {
         get cost() {
             return this._cost;
         }
-        effect() {
-            this._effect();
-        }
     }
     const alohomora = () => {activePlayer.influence++;};
-    const alohomoraHarry = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
+    const alohomoraHarry1 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
+    const alohomoraHarry2 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
+    const alohomoraHarry3 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
+    const alohomoraHarry4 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
+    const alohomoraHarry5 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
+    const alohomoraHarry6 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
+    const alohomoraHarry7 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
     const firebolt = new Card("Firebolt", "Game 1", "item", 0, () => {activePlayer.attack++;}); // TO-DO: add coin if villain defeat
-    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice2").innerHTML = healthToken + healthToken});
-    const harryStartingCards = [alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, alohomoraHarry, firebolt, hedwig]; // TO-DO: add Harry's starting cards
+    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice2").innerHTML = healthToken + healthToken;}); // TO-DO: finish effect
+    const harryStartingCards = [alohomoraHarry1, alohomoraHarry2, alohomoraHarry3, alohomoraHarry4, alohomoraHarry5, alohomoraHarry6, alohomoraHarry7, firebolt, hedwig]; // TO-DO: add Harry's starting cards
 
     // players
     class Player {
         constructor(hero, proficiency) {
             this._hero = hero;
-            this._heroImage = `<img id="playerHero" src="./images/${parseInt(game[game.length - 1]) < 3 ? "Game 1" : (parseInt(game[game.length - 1]) < 7 ? "Game 3" : "Game 7")}/${hero[0].toLowerCase() + hero.replaceAll(" ", "").substring(1)}.png" alt="${hero}">`;
+            this._heroImage = `<img id="playerHero" src="./images/${parseInt(game[game.length - 1]) < 3 ? "Game 1" : (parseInt(game[game.length - 1]) < 7 ? "Game 3" : "Game 7")}/${src(hero)}" alt="${hero}">`;
             this._proficiency = proficiency;
-            this._proficiencyImage = `<img id="playerHero" src="./images/Game 6/${proficiency[0].toLowerCase() + proficiency.replaceAll(" ", "").substring(1)}.png" alt="${proficiency}">`
+            this._proficiencyImage = `<img id="playerHero" src="./images/Game 6/${src(proficiency)}" alt="${proficiency}">`
             this._health = 10;
             this._attack = 0;
             this._influence = 0;
@@ -248,6 +255,7 @@ document.getElementById("player4Hero").onchange = () => {
     const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {}); // TO-DO: add effect
     const darkArtsEvents = [menacingGrowl];
 
+    // display game
     document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
         <img id="gameBoard" src="./images/board.png" alt="game board">
         <div id="locations">

@@ -105,11 +105,11 @@ main {
 }
 
 #playerHand {  
-    max-height: 40vh;  
+    max-height: 40vh;
     width: 100%;
     display: flex;
     flex-flow: row wrap;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 .card {
     width: 20%;
