@@ -36,27 +36,15 @@ main {
     position: absolute;
     top: 16%;
 }
-#locations {
+#locations, #villainDraw, #villain1 {
     left: 6%;
 }
-.location, .darkArtsEvent {
+.location, .darkArtsEvent, .villain, .event {
     height: 100%;
     border-radius: 10px;
     position: absolute;
     top: 0;
     left: 0;
-}
-#location1 {
-    z-index: 3;
-}
-#location2 {
-    z-index: 2;
-}
-#location3 {
-    z-index: 1;
-}
-#location4 {
-    z-index: 0;
 }
 
 #darkArtsEvents {
@@ -68,6 +56,48 @@ main {
     translate: 0;
     opacity: 0;
     transition: transform 1s, translate 1s, opacity 1s;
+}
+
+#villainDraw, #events, #villainDiscard {
+    height: 17%;
+    position: absolute;
+    top: 39%;
+}
+#events {
+    left: 29%;
+}
+#villainDiscard {
+    left: 48%;
+}
+
+.activeVillain {
+    height: 17%;
+    position: absolute;
+    top: 64%;
+}
+#villain2 {
+    left: 26%;
+}
+#villain3 {
+    left: 47%;
+}
+
+.villainDamage {
+    position: absolute;
+    top: 82%;
+    height: 10%;
+    width: 16%;
+    display: flex;
+    flex-flow: row wrap;
+}
+#villain1Damage {
+    left: 5%;
+}
+#villain2Damage {
+    left: 25%;
+}
+#villain3Damage {
+    left: 46%;
 }
 
 #playerContainer {

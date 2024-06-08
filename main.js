@@ -17,7 +17,7 @@ document.getElementById("player4Hero").onchange = () => {
 // display game
 //document.getElementById("submitPlayers").onclick = () => {
     document.getElementsByTagName("MAIN")[0].style.display = "flex";
-    const game = document.getElementById("game").value;
+    let activeGame = document.getElementById("game").value;
     const attackToken = "<img src=\"./images/attackToken.png\" alt=\"attack token\">";
     const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Health Token\">";
 
@@ -84,7 +84,7 @@ document.getElementById("player4Hero").onchange = () => {
     class Player {
         constructor(hero, proficiency) {
             this._hero = hero;
-            this._heroImage = `<img id="playerHero" src="./images/${parseInt(game[game.length - 1]) < 3 ? "Game 1" : (parseInt(game[game.length - 1]) < 7 ? "Game 3" : "Game 7")}/${src(hero)}" alt="${hero}">`;
+            this._heroImage = `<img id="playerHero" src="./images/${parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : (parseInt(activeGame[activeGame.length - 1]) < 7 ? "Game 3" : "Game 7")}/${src(hero)}" alt="${hero}">`;
             this._proficiency = proficiency;
             this._proficiencyImage = `<img id="playerHero" src="./images/Game 6/${src(proficiency)}" alt="${proficiency}">`
             this._health = 10;
@@ -220,9 +220,9 @@ document.getElementById("player4Hero").onchange = () => {
     // locations
     class Location {
         constructor(name, number, spaces) {
-            this._img = `<img id="location${number}" class="location" src="./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
+            this._img = `<img id="location${number}" class="location" src="./images/${activeGame}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
             this._spaces = spaces;
-            this._game = game;
+            this._game = activeGame;
         }
         get img() {
             return this._img;
@@ -242,7 +242,7 @@ document.getElementById("player4Hero").onchange = () => {
     // dark arts events
     class DarkArtsEvent {
         constructor(name, effect) {
-            this._img = `<img class="darkArtsEvent" src="./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
+            this._img = `<img class="darkArtsEvent" src="./images/${activeGame}/${src(name)}" alt="${name}">`;
             this._effect = effect;
         }
         get img() {
@@ -253,21 +253,98 @@ document.getElementById("player4Hero").onchange = () => {
         }
     }
     const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {}); // TO-DO: add effect
-    const darkArtsEvents = [menacingGrowl];
+    let darkArtsEvents = [menacingGrowl];
+
+    // villains
+    class Villain {
+        constructor(name, type, health, healthType, effect, reward) {
+            this._img = `<img class="villain" src="./images/${activeGame}/${src(name)}" alt="${name}">`;
+            this._type = type;
+            this._health = health;
+            this._healthType = healthType;
+            this._effect = effect;
+            this._reward = reward;
+        }
+        get img() {
+            return this._img;
+        }
+        get type() {
+            return this._type;
+        }
+        get health() {
+            return this._health;
+        }
+        set health(health) {
+            this._health = health;
+        }
+        get healthType() {
+            return this._healthType;
+        }
+        effect() {
+            this._effect();
+        }
+        reward() {
+            this._reward();
+        }
+    }
+    const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {});
+    let villains = [troll];
+
+    // events (horcruxes)
+    class Event {
+        constructor(name, effect, reward) {
+            this._img = `<img class="event" src="./images/${activeGame}/${src(name)}" alt="${name}">`;
+            this._effect = effect;
+            this._reward = reward;
+        }
+        get img() {
+            return this._img;
+        }
+        effect() {
+            this._effect();
+        }
+        reward() {
+            this._reward();
+        }
+    }
+    const horcrux1 = new Event("Horcrux 1", () => {}, () => {});
+    let events = [horcrux1];
+
+    // display cards in order
+    const stackCards = array => {
+        return array.reduce((prev, curr) => {return prev.concat(curr.img);}, array[0].img);
+    }
 
     // display game
     document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
         <img id="gameBoard" src="./images/board.png" alt="game board">
         <div id="locations">
-            ${locations.reduce((prev, curr) => {
-                return prev.concat(curr.img);
-            }, locations[0].img)}
+            ${stackCards(locations)}
         </div>
         <div id="darkArtsEvents">
-            ${darkArtsEvents.reduce((prev, curr) => {
-                return prev.concat(curr.img);
-            }, darkArtsEvents[0].img)}
+            ${stackCards(darkArtsEvents)}
         </div>
+        <div id="villainDraw">
+            ${stackCards(villains)}
+        </div>
+        <div id="events">
+            ${stackCards(events)}   
+        </div>
+        <div id="villainDiscard">
+            ${stackCards(villains)}
+        </div>
+        <div class="activeVillain" id="villain1">
+            ${stackCards(villains)}
+        </div>
+        <div class="activeVillain" id="villain2">
+            ${stackCards(villains)}
+        </div>
+        <div class="activeVillain" id="villain3">
+            ${stackCards(villains)}
+        </div>
+        <div class="villainDamage" id="villain1Damage"></div>
+        <div class="villainDamage" id="villain2Damage"></div>
+        <div class="villainDamage" id="villain3Damage"></div>
     </div>
     <div id=playerContainer>
         <div style="display: flex">
@@ -296,5 +373,15 @@ document.getElementById("player4Hero").onchange = () => {
             darkArtsEvent.style.transform = "rotateY(0)";
             darkArtsEvent.style.translate = "140%";
         }
+    }
+
+    // deal damage by clicking on a villain or villain's damage area
+    for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
+        const dealDamage = () => {
+            activePlayer.attack--;
+            document.getElementsByClassName("villainDamage")[i].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+        }
+        document.getElementsByClassName("activeVillain")[i].onclick = dealDamage;
+        document.getElementsByClassName("villainDamage")[i].onclick = dealDamage;
     }
 //}
