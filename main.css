@@ -122,9 +122,11 @@ main {
     position: fixed;
     top: 20vh;
     left: 20vw;
-    background-color: var(--backgroundColor);
+    background-color: black;
+    gap: 10px;
 }
 .choice {
+    background-color: var(--backgroundColor);
     height: 100%;
     width: 100%;
     display: flex;

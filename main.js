@@ -77,7 +77,7 @@ document.getElementById("player4Hero").onchange = () => {
     const alohomoraHarry6 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
     const alohomoraHarry7 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomora);
     const firebolt = new Card("Firebolt", "Game 1", "item", 0, () => {activePlayer.attack++;}); // TO-DO: add coin if villain defeat
-    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice2").innerHTML = healthToken + healthToken;}); // TO-DO: finish effect
+    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice1").onclick = () => {activePlayer.attack++}; document.getElementById("choice2").innerHTML = healthToken + healthToken; document.getElementById("choice2").onclick = () => {activePlayer.health += 2};});
     const harryStartingCards = [alohomoraHarry1, alohomoraHarry2, alohomoraHarry3, alohomoraHarry4, alohomoraHarry5, alohomoraHarry6, alohomoraHarry7, firebolt, hedwig]; // TO-DO: add Harry's starting cards
 
     // players
