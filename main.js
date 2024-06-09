@@ -18,8 +18,8 @@ document.getElementById("player4Hero").onchange = () => {
 //document.getElementById("submitPlayers").onclick = () => {
     document.getElementsByTagName("MAIN")[0].style.display = "flex";
     let activeGame = document.getElementById("game").value;
-    const attackToken = "<img src=\"./images/attackToken.png\" alt=\"attack token\">";
-    const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Health Token\">";
+    const attackToken = "<img src=\"./images/attackToken.png\" alt=\"Choose Attack Token\" style=\"width: 50%;\">";
+    const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Choose Health Token\" style=\"width: 50%;\">";
 
     // convert card name to src
     const src = name => {
@@ -33,12 +33,15 @@ document.getElementById("player4Hero").onchange = () => {
         let gridTemplateColumns = "";
         for (let i = 1; i <= choices; i++) {
             gridTemplateColumns += ` ${100 / choices}%`;
-            playerChoiceElement.innerHTML += `<div class="choice" id="choice${i}"></div>`;
+            const choice = document.createElement("div");
+            choice.className = "choice";
+            choice.id = `choice${i}`;
+            playerChoiceElement.appendChild(choice);
         }
         playerChoiceElement.style.gridTemplateColumns = gridTemplateColumns.substring(1);
         playerChoiceElement.onclick = () => {
             playerChoiceElement.style.display = "none";
-            for (let i = 1; i < choices; i++) {
+            for (let i = 1; i <= choices; i++) {
                 document.getElementById(`choice${i}`).remove();
             }
         }
@@ -76,8 +79,8 @@ document.getElementById("player4Hero").onchange = () => {
     const alohomoraHarry5 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
     const alohomoraHarry6 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
     const alohomoraHarry7 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
-    const firebolt = new Card("Firebolt", "Game 1", "item", 0, () => {activePlayer.attack++;}); // TO-DO: add coin if villain defeat
-    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice1").onclick = () => {activePlayer.attack++}; document.getElementById("choice2").innerHTML = healthToken + healthToken; document.getElementById("choice2").onclick = () => {activePlayer.health += 2};});
+    const firebolt = new Card("Firebolt", "Game 1", "item", 0, () => {activePlayer.attack++;});
+    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice1").onclick = () => {activePlayer.attack++}; document.getElementById("choice2").innerHTML = `${healthToken + healthToken}`; document.getElementById("choice2").onclick = () => {activePlayer.health += 2};});
     const harryStartingCards = [alohomoraHarry1, alohomoraHarry2, alohomoraHarry3, alohomoraHarry4, alohomoraHarry5, alohomoraHarry6, alohomoraHarry7, firebolt, hedwig]; // TO-DO: add Harry's starting cards
 
     // players
@@ -173,6 +176,11 @@ document.getElementById("player4Hero").onchange = () => {
             return this._discard;
         }
 
+        discardAt(index) {
+            this._discard.push(this.hand[index]);
+            document.getElementById("playerHand").removeChild(this.hand[index].img);
+            this._hand.splice(index, 1);
+        }
         shuffle() {
             // shuffle discard pile
             // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -221,23 +229,37 @@ document.getElementById("player4Hero").onchange = () => {
     class Location {
         constructor(name, number, spaces) {
             this._img = `<img id="location${number}" class="location" src="./images/${activeGame}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
+            this._number = number;
             this._spaces = spaces;
             this._game = activeGame;
+            this._added = 0;
         }
         get img() {
             return this._img;
         }
-        get spaces() {
-            return this._spaces;
-        }
         get game() {
             return this._game;
         }
+        addToLocation() {
+            this._added++;
+            if (this._added === this._spaces) {
+                // Game Over
+                if (this._number === locations.length) {
+                    // TO-DO: Game Over
+                }
+                // new location
+                else {
+                    activeLocation = locations[this._number];
+                }
+            }
+        }
     }
+    const diagonAlley = new Location("Diagon Alley", 1, 4);
     const castleGates = new Location("Castle Gates", 1, 5);
     const hagridsHut = new Location("Hagrid's Hut", 2, 6);
     const greatHall = new Location("Great Hall", 3, 7);
-    let locations = [castleGates];
+    let locations = [diagonAlley];
+    let activeLocation = locations[0];
 
     // dark arts events
     class DarkArtsEvent {
@@ -252,8 +274,10 @@ document.getElementById("player4Hero").onchange = () => {
             this._effect();
         }
     }
+    const flipendo = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {activePlayer.discardAt(i);};}});
     const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {}); // TO-DO: add effect
-    let darkArtsEvents = [menacingGrowl];
+    let darkArtsEvents = [flipendo];
+    let activeDarkArtsEvent = darkArtsEvents[0];
 
     // villains
     class Villain {
@@ -276,6 +300,14 @@ document.getElementById("player4Hero").onchange = () => {
         }
         set health(health) {
             this._health = health;
+            if (this.health <= 0) {
+                // TO-DO: villain is defeated
+
+                // Firebolt special power
+                if (activePlayer.hand.includes(firebolt)) {
+                    activePlayer.influence++;
+                }
+            }
         }
         get healthType() {
             return this._healthType;
@@ -287,8 +319,9 @@ document.getElementById("player4Hero").onchange = () => {
             this._reward();
         }
     }
+    const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {});
     const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {});
-    let villains = [troll];
+    let villains = [dracoMalfoy];
 
     // events (horcruxes)
     class Event {
@@ -309,6 +342,7 @@ document.getElementById("player4Hero").onchange = () => {
     }
     const horcrux1 = new Event("Horcrux 1", () => {}, () => {});
     let events = [horcrux1];
+    let activeEvent = events[0];
 
     // display cards in order
     const stackCards = array => {
@@ -328,7 +362,7 @@ document.getElementById("player4Hero").onchange = () => {
             ${stackCards(villains)}
         </div>
         <div id="events">
-            ${stackCards(events)}   
+            ${game === "Game 7" ? stackCards(events) : ""}   
         </div>
         <div id="villainDiscard">
             ${stackCards(villains)}
@@ -372,14 +406,17 @@ document.getElementById("player4Hero").onchange = () => {
             darkArtsEvent.style.opacity = "1";
             darkArtsEvent.style.transform = "rotateY(0)";
             darkArtsEvent.style.translate = "140%";
+            activeDarkArtsEvent.effect();
         }
     }
 
     // deal damage by clicking on a villain or villain's damage area
     for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
         const dealDamage = () => {
-            activePlayer.attack--;
-            document.getElementsByClassName("villainDamage")[i].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+            if (activePlayer.attack > 0) {
+                activePlayer.attack--;
+                document.getElementsByClassName("villainDamage")[i].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+            }
         }
         document.getElementsByClassName("activeVillain")[i].onclick = dealDamage;
         document.getElementsByClassName("villainDamage")[i].onclick = dealDamage;

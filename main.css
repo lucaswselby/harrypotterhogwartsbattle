@@ -164,5 +164,6 @@ main {
     align-items: center;
 }
 .choice img {
-    width: 20%;
+    max-height: 100%;
+    max-width: 100%;
 }
