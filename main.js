@@ -276,19 +276,28 @@ document.getElementById("player4Hero").onchange = () => {
     // dark arts events
     class DarkArtsEvent {
         constructor(name, effect) {
-            this._img = `<img class="darkArtsEvent" src="./images/${activeGame}/${src(name)}" alt="${name}">`;
+            this._name = name;
             this._effect = effect;
+            this.generateImg();
         }
         get img() {
             return this._img;
+        }
+        generateImg() {
+            this._img = document.createElement("img");
+            this._img.src = `./images/${activeGame}/${src(this._name)}`;
+            this._img.className = "darkArtsEvent";
+            this._img.alt = this._name;
         }
         effect() {
             this._effect();
         }
     }
+    const expulso = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
     const flipendo = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {activePlayer.discardAt(i);};}});
-    const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {}); // TO-DO: add effect
-    let darkArtsEvents = [flipendo];
+    const heWhoMustNotBeNamed = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
+    //const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {}); // TO-DO: add effect
+    let darkArtsEvents = [expulso, flipendo, heWhoMustNotBeNamed];
     let activeDarkArtsEvent = darkArtsEvents[0];
 
     // villains
@@ -369,7 +378,7 @@ document.getElementById("player4Hero").onchange = () => {
             ${stackCards(locations.toReversed())}
         </div>
         <div id="darkArtsEvents">
-            ${stackCards(darkArtsEvents)}
+            <img id="darkArtsEventBack" src="./images/darkArtsEventBack.png" alt="Back of Dark Arts Event card">
         </div>
         <div id="villainDraw">
             <img class="villain" src="./images/villainBack.png" alt="Back of villain card">
@@ -420,13 +429,30 @@ document.getElementById("player4Hero").onchange = () => {
     }
 
     // click dark arts event to flip it over
-    for (let i = 0; i < document.getElementsByClassName("darkArtsEvent").length; i++) {
-        const darkArtsEvent = document.getElementsByClassName("darkArtsEvent")[i];
-        darkArtsEvent.onclick = () => {
-            darkArtsEvent.style.opacity = "1";
-            darkArtsEvent.style.transform = "rotateY(0)";
-            darkArtsEvent.style.translate = "140%";
-            activeDarkArtsEvent.effect();
+    let lastCardImg = null;
+    document.getElementById("darkArtsEvents").onclick = () => {
+        const darkArtsEventsElement = document.getElementById("darkArtsEvents");
+        darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
+        activeDarkArtsEvent.img.classList.toggle("flipped");
+        activeDarkArtsEvent.effect();
+
+        // remove previous dark arts card
+        if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) { // screen contains first and last card
+            darkArtsEventsElement.removeChild(lastCardImg);
+        }
+        else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) { // not first card
+            darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
+        }
+
+        // updates activeDarkArtsEvent
+        if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) { // not last card
+            activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
+        }
+        else { // is last card
+            lastCardImg = darkArtsEvents[darkArtsEvents.length - 1].img;
+            darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
+            // TO-DO: shuffle dark arts events
+            activeDarkArtsEvent = darkArtsEvents[0];
         }
     }
 

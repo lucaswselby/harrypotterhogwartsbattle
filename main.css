@@ -39,7 +39,7 @@ main {
 #locations, #villainDraw, #villain1 {
     left: 6%;
 }
-.location, .darkArtsEvent, .villain, .event {
+.location, .darkArtsEvent, #darkArtsEventBack, .villain, .event {
     height: 100%;
     border-radius: 10px;
     position: absolute;
@@ -56,6 +56,11 @@ main {
     translate: 0;
     opacity: 0;
     transition: transform 1s, translate 1s, opacity 1s;
+}
+.darkArtsEvent.flipped {
+    opacity: 1;
+    transform: rotateY(0);
+    translate: 140%;
 }
 
 #villainDraw, #events, #villainDiscard {
