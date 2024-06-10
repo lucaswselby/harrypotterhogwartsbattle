@@ -334,6 +334,7 @@ document.getElementById("player4Hero").onchange = () => {
     const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {});
     const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {});
     let villains = [dracoMalfoy];
+    let activeVillains = [dracoMalfoy];
 
     // events (horcruxes)
     class Event {
@@ -380,13 +381,13 @@ document.getElementById("player4Hero").onchange = () => {
             ${stackCards(villains)}
         </div>
         <div class="activeVillain" id="villain1">
-            ${stackCards(villains)}
+            ${activeVillains[0].img}
         </div>
         <div class="activeVillain" id="villain2">
-            ${stackCards(villains)}
+            ${activeVillains.length > 1 ? activeVillains[1].img : ""}
         </div>
         <div class="activeVillain" id="villain3">
-            ${stackCards(villains)}
+            ${activeVillains.length > 2 ? activeVillains[2].img : ""}
         </div>
         <div class="villainDamage" id="villain1Damage"></div>
         <div class="villainDamage" id="villain2Damage"></div>
@@ -432,7 +433,7 @@ document.getElementById("player4Hero").onchange = () => {
     // deal damage by clicking on a villain or villain's damage area
     for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
         const dealDamage = () => {
-            if (activePlayer.attack > 0) {
+            if (activePlayer.attack > 0 && document.getElementById(`villain${i + 1}`).getElementsByClassName("villain")[0]) {
                 activePlayer.attack--;
                 document.getElementsByClassName("villainDamage")[i].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
             }
