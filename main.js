@@ -235,10 +235,11 @@ document.getElementById("player4Hero").onchange = () => {
 
     // locations
     class Location {
-        constructor(name, number, spaces) {
+        constructor(name, number, spaces, darkArtsEventDraws) {
             this._img = `<img id="location${number}" class="location" src="./images/${activeGame}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
             this._number = number;
             this._spaces = spaces;
+            this._darkArtsEventDraws = darkArtsEventDraws;
             this._game = activeGame;
             this._added = 0;
         }
@@ -250,23 +251,26 @@ document.getElementById("player4Hero").onchange = () => {
         }
         addToLocation() {
             this._added++;
-            if (this._added === this._spaces) {
+            if (this._added === this._spaces + 1) {
                 // Game Over
                 if (this._number === locations.length) {
+                    alert("Game Over");
                     // TO-DO: Game Over
                 }
                 // new location
                 else {
                     activeLocation = locations[this._number];
+                    document.getElementById(`location${this._number}`).style.display = "none";
                 }
             }
         }
     }
-    const diagonAlley = new Location("Diagon Alley", 1, 4);
-    const castleGates = new Location("Castle Gates", 1, 5);
-    const hagridsHut = new Location("Hagrid's Hut", 2, 6);
-    const greatHall = new Location("Great Hall", 3, 7);
-    let locations = [diagonAlley];
+    const diagonAlley = new Location("Diagon Alley", 1, 4, 1);
+    const mirrorOfErised = new Location("Mirror of Erised", 2, 4, 1);
+    const castleGates = new Location("Castle Gates", 1, 5, 1);
+    const hagridsHut = new Location("Hagrid's Hut", 2, 6, 2);
+    const greatHall = new Location("Great Hall", 3, 7, 3);
+    let locations = [diagonAlley, mirrorOfErised];
     let activeLocation = locations[0];
 
     // dark arts events
@@ -361,7 +365,7 @@ document.getElementById("player4Hero").onchange = () => {
     document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
         <img id="gameBoard" src="./images/board.png" alt="game board">
         <div id="locations">
-            ${stackCards(locations)}
+            ${stackCards(locations.toReversed())}
         </div>
         <div id="darkArtsEvents">
             ${stackCards(darkArtsEvents)}
@@ -405,6 +409,13 @@ document.getElementById("player4Hero").onchange = () => {
     activePlayer.drawCards(activePlayer.draw.length);
     document.getElementById("healthTracker").onclick = () => {
         activePlayer.health--;
+    }
+
+    // click locations to add to location
+    for (let i = 0; i < document.getElementsByClassName("location").length; i++) {
+        document.getElementsByClassName("location")[i].onclick = () => {
+            activeLocation.addToLocation();
+        }
     }
 
     // click dark arts event to flip it over
