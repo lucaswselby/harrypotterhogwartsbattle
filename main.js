@@ -431,6 +431,7 @@ document.getElementById("player4Hero").onchange = () => {
     // click dark arts event to flip it over
     let lastCardImg = null;
     document.getElementById("darkArtsEvents").onclick = () => {
+        document.getElementById("darkArtsEventBack").style.display = "initial";
         const darkArtsEventsElement = document.getElementById("darkArtsEvents");
         darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
         activeDarkArtsEvent.img.classList.toggle("flipped");
@@ -449,6 +450,7 @@ document.getElementById("player4Hero").onchange = () => {
             activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
         }
         else { // is last card
+            document.getElementById("darkArtsEventBack").style.display = "none";
             lastCardImg = darkArtsEvents[darkArtsEvents.length - 1].img;
             darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
             // TO-DO: shuffle dark arts events
