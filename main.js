@@ -56,7 +56,7 @@ document.getElementById("player4Hero").onchange = () => {
             this._img.alt = name;
             this._img.onclick = () => {
                 effect();
-                this._img.remove();
+                activePlayer.discardAt(activePlayer.hand.indexOf(this));
             }
             this._type = type;
             this._cost = cost;
