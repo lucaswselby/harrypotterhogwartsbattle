@@ -258,6 +258,7 @@ document.getElementById("player4Hero").onchange = () => {
     // locations
     class Location {
         constructor(name, number, spaces, darkArtsEventDraws) {
+            this._name = name;
             this._img = `<img id="location${number}" class="location" src="./images/${activeGame}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
             this._number = number;
             this._spaces = spaces;
@@ -268,27 +269,55 @@ document.getElementById("player4Hero").onchange = () => {
         get img() {
             return this._img;
         }
+        get number() {
+            return this._number;
+        }
+        get spaces() {
+            return this._spaces;
+        }
         get game() {
             return this._game;
         }
+        get added() {
+            return this._added;
+        }
+        set added(added) {
+            this._added = added;
+        }
         addToLocation() {
-            this._added++;
-            if (this._added === this._spaces + 1) {
+            this.added++;
+            if (this.added > this.spaces) {
                 // Game Over
-                if (this._number === locations.length) {
+                if (this.number === locations.length) {
                     alert("Game Over");
                     // TO-DO: Game Over
                 }
                 // new location
                 else {
-                    activeLocation = locations[this._number];
-                    document.getElementById(`location${this._number}`).style.display = "none";
+                    activeLocation = locations[this.number];
+                    document.getElementById(`location${this.number}`).style.display = "none";
                 }
             }
 
             // Draco Malfoy effect
             if (activeVillains.includes(dracoMalfoy)) {
                 activePlayer.health -= 2;
+            }
+        }
+        removeFromLocation() {
+            if (this === locations[0]) {
+                if (this.added > 0) {
+                    this.added--;
+                }
+            }
+            else {
+                if (this.added === 0) {
+                    activeLocation = locations[this.number - 2];
+                    document.getElementById(`location${this.number - 1}`).style.display = "initial";
+                }
+                else {
+                    this.added--;
+                }
             }
         }
     }
@@ -350,7 +379,7 @@ document.getElementById("player4Hero").onchange = () => {
         set health(health) {
             this._health = health;
             if (this.health <= 0) {
-                // TO-DO: villain is defeated
+                this.reward();
 
                 // Firebolt special power
                 if (activePlayer.hand.includes(firebolt)) {
@@ -371,7 +400,7 @@ document.getElementById("player4Hero").onchange = () => {
     const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {}); // TO-DO: add reward
     const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
     let villains = [dracoMalfoy];
-    let activeVillains = villains[0];
+    let activeVillains = [villains[0]];
 
     // events (horcruxes)
     class Event {
