@@ -59,6 +59,67 @@ main {
 .darkArtsEvent.flipped {
     opacity: 1;
     transform: rotateY(0) translateX(153%);
+
+    /* https://stackoverflow.com/questions/11679567/using-css-for-a-fade-in-effect-on-page-load */
+    -webkit-animation: slideDown 1s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: slideDown 1s; /* Firefox < 16 */
+        -ms-animation: slideDown 1s; /* Internet Explorer */
+         -o-animation: slideDown 1s; /* Opera < 12.1 */
+            animation: slideDown 1s;
+}
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: rotateY(180deg) translateX(0);
+    }
+    to {
+        opacity: 1;
+        transform: rotateY(0) translateX(153%);
+    }
+}   
+/* Firefox < 16 */
+@-moz-keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: rotateY(180deg) translateX(0);
+    }
+    to {
+        opacity: 1;
+        transform: rotateY(0) translateX(153%);
+    }
+}
+/* Safari, Chrome, and Opera > 12.1 */
+@-webkit-keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: rotateY(180deg) translateX(0);
+    }
+    to {
+        opacity: 1;
+        transform: rotateY(0) translateX(153%);
+    }
+}
+/* Internet Explorer */
+@-ms-keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: rotateY(180deg) translateX(0);
+    }
+    to {
+        opacity: 1;
+        transform: rotateY(0) translateX(153%);
+    }
+}
+/* Opera < 12.1 */
+@-o-keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: rotateY(180deg) translateX(0);
+    }
+    to {
+        opacity: 1;
+        transform: rotateY(0) translateX(153%);
+    }
 }
 
 #villainDraw, #events, #villainDiscard {
