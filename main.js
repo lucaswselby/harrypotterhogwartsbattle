@@ -97,10 +97,10 @@ document.getElementById("player4Hero").onchange = () => {
             this._attack = 0;
             this._influence = 0;
             this._draw = [];
-            if (hero === "Harry Potter") this._draw = harryStartingCards;
-            // TO-DO: add other heroes
             this._hand = [];
             this._discard = [];
+            if (hero === "Harry Potter") this._discard = harryStartingCards;
+            // TO-DO: add other heroes
         }
         get hero() {
             return this._hero;
@@ -417,7 +417,7 @@ document.getElementById("player4Hero").onchange = () => {
         <div id="playerHand"></div>
     </div>
     <div id="playerChoice"></div>`;
-    activePlayer.drawCards(activePlayer.draw.length);
+    activePlayer.drawCards(5);
     document.getElementById("healthTracker").onclick = () => {
         activePlayer.health--;
     }
