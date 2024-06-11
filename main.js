@@ -285,6 +285,11 @@ document.getElementById("player4Hero").onchange = () => {
                     document.getElementById(`location${this._number}`).style.display = "none";
                 }
             }
+
+            // Draco Malfoy effect
+            if (activeVillains.includes(dracoMalfoy)) {
+                activePlayer.health -= 2;
+            }
         }
     }
     const diagonAlley = new Location("Diagon Alley", 1, 4, 1);
@@ -363,10 +368,10 @@ document.getElementById("player4Hero").onchange = () => {
             this._reward();
         }
     }
-    const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {});
-    const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {});
+    const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {}); // TO-DO: add reward
+    const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
     let villains = [dracoMalfoy];
-    let activeVillains = [dracoMalfoy];
+    let activeVillains = villains[0];
 
     // events (horcruxes)
     class Event {
@@ -470,18 +475,18 @@ document.getElementById("player4Hero").onchange = () => {
         activeDarkArtsEvent.effect();
 
         // remove previous dark arts card
-        if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) { // screen contains first and last card
+        if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
             darkArtsEventsElement.removeChild(lastCardImg);
         }
-        else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) { // not first card
+        else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
             darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
         }
 
         // updates activeDarkArtsEvent
-        if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) { // not last card
+        if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) {
             activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
         }
-        else { // is last card
+        else {
             document.getElementById("darkArtsEventBack").style.display = "none";
             lastCardImg = darkArtsEvents[darkArtsEvents.length - 1].img;
             darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
@@ -505,4 +510,3 @@ document.getElementById("player4Hero").onchange = () => {
     // populate shop
     document.getElementById("shop1").appendChild(activeShop1.img);
 //}
-activePlayer.influence += 7;
