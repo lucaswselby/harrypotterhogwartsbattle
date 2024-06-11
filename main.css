@@ -164,6 +164,35 @@ main {
     left: 46%;
 }
 
+.shop, #hogwartsCardBack {
+    height: 20%;
+    position: absolute;
+}
+#shop1, #shop2 {
+    top: 26%;
+}
+#shop3, #shop4 {
+    top: 50%;
+}
+#shop5, #shop6 {
+    top: 74%;
+}
+#shop1, #shop3, #shop5 {
+    left: 68%;
+}
+#shop2, #shop4, #shop6 {
+    left: 84%;
+}
+.shop img, #hogwartsCardBack img {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+}
+#hogwartsCardBack {
+    top: 4%;
+    left: 77%;
+}
+
 #playerContainer {
     width: calc(100% - var(--boardWidth));
 }

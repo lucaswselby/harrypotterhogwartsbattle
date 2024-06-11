@@ -54,10 +54,8 @@ document.getElementById("player4Hero").onchange = () => {
             this._img.src = `./images/${game}/${src(name)}`;
             this._img.className = "card";
             this._img.alt = name;
-            this._img.onclick = () => {
-                effect();
-                activePlayer.discardAt(activePlayer.hand.indexOf(this));
-            }
+            this._effect = effect;
+            this.generateOnClick();
             this._type = type;
             this._cost = cost;
         }
@@ -69,6 +67,12 @@ document.getElementById("player4Hero").onchange = () => {
         }
         get cost() {
             return this._cost;
+        }
+        generateOnClick() {
+            this._img.onclick = () => {
+                this._effect();
+                activePlayer.discardAt(activePlayer.hand.indexOf(this));
+            }
         }
     }
 
@@ -85,6 +89,22 @@ document.getElementById("player4Hero").onchange = () => {
     const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice1").onclick = () => {activePlayer.attack++}; document.getElementById("choice2").innerHTML = `${healthToken + healthToken}`; document.getElementById("choice2").onclick = () => {activePlayer.health += 2};});
     const invisibilityCloak = new Card("Invisibility Cloak", "Game 1", "item", 0, () => {activePlayer.influence++;});
     const harryStartingCards = [alohomoraHarry1, alohomoraHarry2, alohomoraHarry3, alohomoraHarry4, alohomoraHarry5, alohomoraHarry6, alohomoraHarry7, firebolt, hedwig, invisibilityCloak];
+
+    // Hogwarts cards
+    const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});});
+    const hogwartsCards = [albusDumbledore];
+    // purchase a Hogwarts card
+    hogwartsCards.forEach(card => {
+        card.img.onclick = () => {
+            if (activePlayer.influence >= card.cost) {
+                activePlayer.influence -= card.cost;
+                activePlayer.discard.push(card);
+                card.generateOnClick();
+            }
+        }
+    });
+    let activeShop1 = hogwartsCards[0];
+    const activeShops = [activeShop1];
 
     // players
     class Player {
@@ -402,6 +422,15 @@ document.getElementById("player4Hero").onchange = () => {
         <div class="villainDamage" id="villain1Damage"></div>
         <div class="villainDamage" id="villain2Damage"></div>
         <div class="villainDamage" id="villain3Damage"></div>
+        <div id="hogwartsCardBack">
+            <img src="./images/hogwartsCardBack.png" alt="Back of Hogwarts card">
+        </div>
+        <div class="shop" id="shop1"></div>
+        <div class="shop" id="shop2"></div>
+        <div class="shop" id="shop3"></div>
+        <div class="shop" id="shop4"></div>
+        <div class="shop" id="shop5"></div>
+        <div class="shop" id="shop6"></div>
     </div>
     <div id=playerContainer>
         <div style="display: flex">
@@ -470,4 +499,15 @@ document.getElementById("player4Hero").onchange = () => {
         document.getElementsByClassName("activeVillain")[i].onclick = dealDamage;
         document.getElementsByClassName("villainDamage")[i].onclick = dealDamage;
     }
+
+    // populate shop
+    document.getElementById("shop1").appendChild(activeShop1.img);
+    for (let i = 0; i < document.getElementsByClassName("shop").length; i++) {
+        const shopElement = document.getElementsByClassName("shop")[i];
+        shopElement.onclick = () => {
+            hogwartsCards.splice(hogwartsCards.indexOf(activeShops[i]), 1);
+            shopElement.getElementsByTagName("IMG")[0].remove();
+        };
+    }
 //}
+activePlayer.influence += 8; // DEBUG
