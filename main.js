@@ -296,8 +296,9 @@ document.getElementById("player4Hero").onchange = () => {
     const expulso = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
     const flipendo = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {activePlayer.discardAt(i);};}});
     const heWhoMustNotBeNamed = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
+    const petrification = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--;});}); // TO-DO: no drawn cards this turn
     //const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {}); // TO-DO: add effect
-    let darkArtsEvents = [expulso, flipendo, heWhoMustNotBeNamed];
+    let darkArtsEvents = [expulso, flipendo, heWhoMustNotBeNamed, petrification];
     let activeDarkArtsEvent = darkArtsEvents[0];
 
     // villains
