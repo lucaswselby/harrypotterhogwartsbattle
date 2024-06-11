@@ -119,7 +119,7 @@ document.getElementById("player4Hero").onchange = () => {
         }
         set health(health) {
             // Invisibility Cloak effect
-            if (this.hand.includes(invisibilityCloak) && health < this.health - 1) {
+            if (this.hand.includes(invisibilityCloak) && health < this.health) {
                 health = this.health - 1;
             }
 
@@ -134,7 +134,7 @@ document.getElementById("player4Hero").onchange = () => {
 
             // adjusts health trackers
             const healthTracker = document.getElementById("healthTracker");
-            healthTracker.style.left = `${10.3 + 8.3 * (9 - this._health)}%`;
+            healthTracker.style.left = `${10.3 + 8.3 * (9 - activePlayer.health)}%`; // TO-DO: fix I think
             if (activePlayer.health % 2 === 1) {
                 healthTracker.style.top = "33%";
             }
