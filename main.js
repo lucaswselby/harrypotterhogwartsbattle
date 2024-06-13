@@ -67,6 +67,7 @@ document.getElementById("player4Hero").onchange = () => {
     // cards
     class Card {
         constructor(name, game, type, cost, effect, passive) {
+            this._name = name;
             this._img = document.createElement("img");
             this._img.src = `./images/${game}/${src(name)}`;
             this._img.className = "card";
@@ -75,6 +76,7 @@ document.getElementById("player4Hero").onchange = () => {
             this.generateOnClick();
             this._type = type;
             this._cost = cost;
+            this._passive = passive;
         }
         get img() {
             return this._img;
@@ -158,6 +160,7 @@ document.getElementById("player4Hero").onchange = () => {
             this._draw = [];
             this._hand = [];
             this._discard = [];
+            this._passives = [];
             if (hero === "Harry Potter") this._discard = harryStartingCards;
             // TO-DO: add other heroes
         }
@@ -178,7 +181,7 @@ document.getElementById("player4Hero").onchange = () => {
         }
         set health(health) {
             // Invisibility Cloak effect
-            if (this.hand.includes(invisibilityCloak) && health < this.health) {
+            if (this.passives.includes(invisibilityCloak) && health < this.health) {
                 health = this.health - 1;
             }
 
@@ -242,6 +245,9 @@ document.getElementById("player4Hero").onchange = () => {
         get discard() {
             return this._discard;
         }
+        get passives() {
+            return this._passives;
+        }
 
         discardAt(index) {
             this._discard.push(this.hand[index]);
@@ -253,16 +259,17 @@ document.getElementById("player4Hero").onchange = () => {
             shuffle(this._discard)
 
             // add discard pile to draw pile
-            for (let i = 0; i < this.discard.length; i++) {
-                this._draw.push(this.discard[0]);
-                this._discard.shift();
-            }
+            this._draw = this._draw.concat(this.discard);
+            this._discard = [];
         }
         drawCards(numberOfCards) {
             for (let i = 0; i < numberOfCards; i++) {
                 // moves a card from the draw pile to your hand
                 if (this.draw.length > 0) {
                     this._hand.push(this.draw[0]);
+                    if (this.draw[0].passive) {
+                        this._passives.push(this.draw[0]);
+                    }
                     this._draw.shift();
                     document.getElementById("playerHand").appendChild(this.hand[this.hand.length - 1].img);
                 }
@@ -272,6 +279,10 @@ document.getElementById("player4Hero").onchange = () => {
                     i--;
                 }
             }
+        }
+        endTurn() {
+            this._passives = [];
+            // TO-DO: other end of turn stuff
         }
     }
     const player1 = new Player(document.getElementById("player1Hero").value, document.getElementById("player1Proficiency").value);
@@ -408,11 +419,11 @@ document.getElementById("player4Hero").onchange = () => {
                 this.reward();
 
                 // Firebolt effect
-                if (activePlayer.hand.includes(firebolt)) {
+                if (activePlayer.passives.includes(firebolt)) {
                     activePlayer.influence++;
                 }
                 // Oliver Wood effect
-                if (activePlayer.hand.includes(oliverWood)) {
+                if (activePlayer.passives.includes(oliverWood)) {
                     playerChoice(players.length);
                     for (let i = 0; i < players.length; i++) {
                         document.getElementsByClassName("choice")[i].onclick = () => {
