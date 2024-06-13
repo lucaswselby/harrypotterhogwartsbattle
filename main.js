@@ -113,7 +113,8 @@ document.getElementById("player4Hero").onchange = () => {
     const incendio = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);});
     const lumos = new Card("Lumos", "Game 1", "spell", 4, () => {players.forEach(player => {player.drawCards(1);});});
     const oliverWood = new Card("Oliver Wood", "Game 1", "ally", 3, () => {activePlayer.attack++;});
-    const hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood];
+    const quidditchGear = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;});
+    const hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood, quidditchGear];
     // purchase a Hogwarts card
     hogwartsCards.forEach(card => {
         card.img.onclick = () => {
@@ -128,7 +129,7 @@ document.getElementById("player4Hero").onchange = () => {
         }
     });
     let activeShops = [hogwartsCards[0], hogwartsCards[1], hogwartsCards[2], hogwartsCards[3], hogwartsCards[4], hogwartsCards[5]];
-    activeShops = activeShops.sort((a, b) => {return a.cost - b.cost;});
+    activeShops = activeShops.sort((a, b) => {return a.cost - b.cost;}); // sorts store by cost
 
     // players
     class Player {
