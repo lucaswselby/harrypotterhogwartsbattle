@@ -66,7 +66,7 @@ document.getElementById("player4Hero").onchange = () => {
 
     // cards
     class Card {
-        constructor(name, game, type, cost, effect) {
+        constructor(name, game, type, cost, effect, passive) {
             this._img = document.createElement("img");
             this._img.src = `./images/${game}/${src(name)}`;
             this._img.className = "card";
@@ -91,33 +91,36 @@ document.getElementById("player4Hero").onchange = () => {
                 activePlayer.discardAt(activePlayer.hand.indexOf(this));
             }
         }
+        get passive() {
+            return this._passive;
+        }
     }
 
     // Harry starting cards
     const alohomoraEffect = () => {activePlayer.influence++;};
-    const alohomoraHarry1 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
-    const alohomoraHarry2 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
-    const alohomoraHarry3 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
-    const alohomoraHarry4 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
-    const alohomoraHarry5 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
-    const alohomoraHarry6 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
-    const alohomoraHarry7 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect);
-    const firebolt = new Card("Firebolt", "Game 1", "item", 0, () => {activePlayer.attack++;});
-    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice1").onclick = () => {activePlayer.attack++}; document.getElementById("choice2").innerHTML = `${healthToken + healthToken}`; document.getElementById("choice2").onclick = () => {activePlayer.health += 2};});
-    const invisibilityCloak = new Card("Invisibility Cloak", "Game 1", "item", 0, () => {activePlayer.influence++;});
+    const alohomoraHarry1 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHarry2 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHarry3 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHarry4 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHarry5 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHarry6 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHarry7 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
+    const firebolt = new Card("Firebolt", "Game 1", "item", 0, () => {activePlayer.attack++;}, true);
+    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice1").onclick = () => {activePlayer.attack++}; document.getElementById("choice2").innerHTML = `${healthToken + healthToken}`; document.getElementById("choice2").onclick = () => {activePlayer.health += 2};}, false);
+    const invisibilityCloak = new Card("Invisibility Cloak", "Game 1", "item", 0, () => {activePlayer.influence++;}, true);
     const harryStartingCards = [alohomoraHarry1, alohomoraHarry2, alohomoraHarry3, alohomoraHarry4, alohomoraHarry5, alohomoraHarry6, alohomoraHarry7, firebolt, hedwig, invisibilityCloak];
 
     // Hogwarts cards
-    const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});});
-    const descendo = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;});
-    const essenceOfDittany = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}});
-    const goldenSnitch = new Card("Golden Snitch", "Game 1", "item", 5, () => {activePlayer.influence += 2; activePlayer.drawCards(1);});
-    const incendio = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);});
-    const lumos = new Card("Lumos", "Game 1", "spell", 4, () => {players.forEach(player => {player.drawCards(1);});});
-    const oliverWood = new Card("Oliver Wood", "Game 1", "ally", 3, () => {activePlayer.attack++;});
-    const quidditchGear = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;});
-    const reparo = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};});
-    const rubeusHagrid = new Card("Rubeus Hagrid", "Game 1", "ally", 4, () => {activeDarkArtsEvent.attack++; players.forEach(player => {player.health++;});});
+    const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});}, false);
+    const descendo = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;}, false);
+    const essenceOfDittany = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
+    const goldenSnitch = new Card("Golden Snitch", "Game 1", "item", 5, () => {activePlayer.influence += 2; activePlayer.drawCards(1);}, false);
+    const incendio = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
+    const lumos = new Card("Lumos", "Game 1", "spell", 4, () => {players.forEach(player => {player.drawCards(1);});}, false);
+    const oliverWood = new Card("Oliver Wood", "Game 1", "ally", 3, () => {activePlayer.attack++;}, true);
+    const quidditchGear = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;}, false);
+    const reparo = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
+    const rubeusHagrid = new Card("Rubeus Hagrid", "Game 1", "ally", 4, () => {activeDarkArtsEvent.attack++; players.forEach(player => {player.health++;});}, false);
     let hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood, quidditchGear, reparo, rubeusHagrid];
     // purchase a Hogwarts card
     hogwartsCards.forEach(card => {
