@@ -126,7 +126,8 @@ document.getElementById("player4Hero").onchange = () => {
             }
         }
     });
-    const activeShops = [hogwartsCards[0], hogwartsCards[1], hogwartsCards[2], hogwartsCards[3], hogwartsCards[4], hogwartsCards[5]];
+    let activeShops = [hogwartsCards[0], hogwartsCards[1], hogwartsCards[2], hogwartsCards[3], hogwartsCards[4], hogwartsCards[5]];
+    activeShops = activeShops.sort((a, b) => {return a.cost - b.cost;});
 
     // players
     class Player {
