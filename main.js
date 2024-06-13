@@ -122,7 +122,7 @@ document.getElementById("player4Hero").onchange = () => {
                 card.generateOnClick();
                 hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
                 document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
-                //activePlayer.drawCards(4); // DEBUG
+                //activePlayer.drawCards(5); // DEBUG
             }
         }
     });
