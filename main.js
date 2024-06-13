@@ -107,7 +107,9 @@ document.getElementById("player4Hero").onchange = () => {
 
     // Hogwarts cards
     const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});});
-    const hogwartsCards = [albusDumbledore];
+    const descendo = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;});
+    const essenceOfDittany = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}});
+    const hogwartsCards = [albusDumbledore, descendo, essenceOfDittany];
     // purchase a Hogwarts card
     hogwartsCards.forEach(card => {
         card.img.onclick = () => {
@@ -117,19 +119,25 @@ document.getElementById("player4Hero").onchange = () => {
                 card.generateOnClick();
                 hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
                 document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
+                //activePlayer.drawCards(4); // DEBUG
             }
         }
     });
-    let activeShop1 = hogwartsCards[0];
-    const activeShops = [activeShop1];
+    const activeShops = [hogwartsCards[0], hogwartsCards[1], hogwartsCards[2]];
 
     // players
     class Player {
         constructor(hero, proficiency) {
             this._hero = hero;
-            this._heroImage = `<img id="playerHero" src="./images/${parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : (parseInt(activeGame[activeGame.length - 1]) < 7 ? "Game 3" : "Game 7")}/${src(hero)}" alt="${hero}">`;
+            this._heroImage = document.createElement("img");
+            this._heroImage.id = "playerHero";
+            this._heroImage.src = `./images/${parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : (parseInt(activeGame[activeGame.length - 1]) < 7 ? "Game 3" : "Game 7")}/${src(hero)}`;
+            this._heroImage.alt = hero;
             this._proficiency = proficiency;
-            this._proficiencyImage = `<img id="playerHero" src="./images/Game 6/${src(proficiency)}" alt="${proficiency}">`
+            this._proficiencyImage = document.createElement("img");
+            this._proficiencyImage.id = "playerProficiency";
+            this._proficiencyImage.src = `./images/Game 6/${src(proficiency)}`;
+            this._proficiencyImage.alt = proficiency;
             this._health = 10;
             this._attack = 0;
             this._influence = 0;
@@ -473,10 +481,7 @@ document.getElementById("player4Hero").onchange = () => {
         <div class="shop" id="shop6"></div>
     </div>
     <div id=playerContainer>
-        <div style="display: flex">
-            ${activePlayer.heroImage}
-            ${activePlayer.proficiencyImage}
-        </div>
+        <div id="heroImage" style="display: flex"></div>
         <div id="playerBoardContainer">
             <img id="playerBoard" src="./images/playerBoard.png" alt="player board">
             <img id="healthTracker" src="./images/healthTracker.png" alt="health tracker">
@@ -486,6 +491,8 @@ document.getElementById("player4Hero").onchange = () => {
         <div id="playerHand"></div>
     </div>
     <div id="playerChoice"></div>`;
+    document.getElementById("heroImage").appendChild(activePlayer.heroImage);
+    document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
     activePlayer.drawCards(5);
     document.getElementById("healthTracker").onclick = () => {
         activePlayer.health--;
@@ -541,5 +548,11 @@ document.getElementById("player4Hero").onchange = () => {
     }
 
     // populate shop
-    document.getElementById("shop1").appendChild(activeShop1.img);
+    document.getElementById("shop1").appendChild(activeShops[0].img);
+    document.getElementById("shop2").appendChild(activeShops[1].img);
+    document.getElementById("shop3").appendChild(activeShops[2].img);
+    //document.getElementById("shop4").appendChild(activeShops[3].img);
+    //document.getElementById("shop5").appendChild(activeShops[4].img);
+    //document.getElementById("shop6").appendChild(activeShops[5].img);
 //}
+//activePlayer.influence = 2; // DEBUG
