@@ -112,7 +112,8 @@ document.getElementById("player4Hero").onchange = () => {
     const goldenSnitch = new Card("Golden Snitch", "Game 1", "item", 5, () => {activePlayer.influence += 2; activePlayer.drawCards(1);});
     const incendio = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);});
     const lumos = new Card("Lumos", "Game 1", "spell", 4, () => {players.forEach(player => {player.drawCards(1);});});
-    const hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos];
+    const oliverWood = new Card("Oliver Wood", "Game 1", "ally", 3, () => {activePlayer.attack++;});
+    const hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood];
     // purchase a Hogwarts card
     hogwartsCards.forEach(card => {
         card.img.onclick = () => {
@@ -397,9 +398,18 @@ document.getElementById("player4Hero").onchange = () => {
             if (this.health <= 0) {
                 this.reward();
 
-                // Firebolt special power
+                // Firebolt effect
                 if (activePlayer.hand.includes(firebolt)) {
                     activePlayer.influence++;
+                }
+                // Oliver Wood effect
+                if (activePlayer.hand.includes(oliverWood)) {
+                    playerChoice(players.length);
+                    for (let i = 0; i < players.length; i++) {
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            players[i].health += 2;
+                        };
+                    }
                 }
             }
         }
