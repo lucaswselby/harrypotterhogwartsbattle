@@ -284,8 +284,13 @@ document.getElementById("player4Hero").onchange = () => {
             }
         }
         endTurn() {
+            this.attack = 0;
+            this.influence = 0;
             this._passives = [];
-            // TO-DO: other end of turn stuff
+            for (let i = 0; i < this.hand.length; i++) {
+                this.discardAt(i);
+            }
+            this.drawCards(5);
         }
     }
     const player1 = new Player(document.getElementById("player1Hero").value, document.getElementById("player1Proficiency").value);
