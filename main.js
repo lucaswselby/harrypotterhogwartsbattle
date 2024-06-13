@@ -19,7 +19,9 @@ document.getElementById("player4Hero").onchange = () => {
     document.getElementsByTagName("MAIN")[0].style.display = "flex";
     let activeGame = document.getElementById("game").value;
     const attackToken = "<img src=\"./images/attackToken.png\" alt=\"Choose Attack Token\" style=\"width: 50%;\">";
+    const influenceToken = "<img src=\"./images/influenceToken.png\" alt=\"Choose Influece Token\" style=\"width: 50%;\">";
     const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Choose Health Token\" style=\"width: 50%;\">";
+    const hogwartsCardBack = "<img src=\"./images/hogwartsCardBack.png\" alt=\"Draw card\" style=\"width: 50%;\">";
 
     // convert card name to src
     const src = name => {
@@ -114,7 +116,8 @@ document.getElementById("player4Hero").onchange = () => {
     const lumos = new Card("Lumos", "Game 1", "spell", 4, () => {players.forEach(player => {player.drawCards(1);});});
     const oliverWood = new Card("Oliver Wood", "Game 1", "ally", 3, () => {activePlayer.attack++;});
     const quidditchGear = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;});
-    let hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood, quidditchGear];
+    const reparo = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};});
+    let hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood, quidditchGear, reparo];
     // purchase a Hogwarts card
     hogwartsCards.forEach(card => {
         card.img.onclick = () => {
@@ -571,4 +574,4 @@ document.getElementById("player4Hero").onchange = () => {
     document.getElementById("shop5").appendChild(activeShops[4].img);
     document.getElementById("shop6").appendChild(activeShops[5].img);
 //}
-//activePlayer.influence = 2; // DEBUG
+//activePlayer.influence = 8; // DEBUG
