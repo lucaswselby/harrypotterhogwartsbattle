@@ -47,6 +47,21 @@ document.getElementById("player4Hero").onchange = () => {
         }
     }
 
+    // shuffles cards in a random order
+    const shuffle = array => {
+        // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+        let currentIndex = array.length;          
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {          
+          // Pick a remaining element...
+          let randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;          
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+    }
+
     // cards
     class Card {
         constructor(name, game, type, cost, effect) {
@@ -213,18 +228,7 @@ document.getElementById("player4Hero").onchange = () => {
         }
         shuffle() {
             // shuffle discard pile
-            // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-            let array = this._discard;
-            let currentIndex = array.length;          
-            // While there remain elements to shuffle...
-            while (currentIndex != 0) {          
-              // Pick a remaining element...
-              let randomIndex = Math.floor(Math.random() * currentIndex);
-              currentIndex--;          
-              // And swap it with the current element.
-              [array[currentIndex], array[randomIndex]] = [
-                array[randomIndex], array[currentIndex]];
-            }
+            shuffle(this._discard)
 
             // add discard pile to draw pile
             for (let i = 0; i < this.discard.length; i++) {
