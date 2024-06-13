@@ -250,6 +250,9 @@ document.getElementById("player4Hero").onchange = () => {
         }
 
         discardAt(index) {
+            if (this.passives.includes(this.hand[index])) {
+                this.passives.splice(this.passives.indexOf(this.hand[index]), 1);
+            }
             this._discard.push(this.hand[index]);
             document.getElementById("playerHand").removeChild(this.hand[index].img);
             this._hand.splice(index, 1);
