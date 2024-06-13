@@ -111,7 +111,8 @@ document.getElementById("player4Hero").onchange = () => {
     const essenceOfDittany = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}});
     const goldenSnitch = new Card("Golden Snitch", "Game 1", "item", 5, () => {activePlayer.influence += 2; activePlayer.drawCards(1);});
     const incendio = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);});
-    const hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio];
+    const lumos = new Card("Lumos", "Game 1", "spell", 4, () => {players.forEach(player => {player.drawCards(1);});});
+    const hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos];
     // purchase a Hogwarts card
     hogwartsCards.forEach(card => {
         card.img.onclick = () => {
@@ -125,7 +126,7 @@ document.getElementById("player4Hero").onchange = () => {
             }
         }
     });
-    const activeShops = [hogwartsCards[0], hogwartsCards[1], hogwartsCards[2], hogwartsCards[3], hogwartsCards[4]];
+    const activeShops = [hogwartsCards[0], hogwartsCards[1], hogwartsCards[2], hogwartsCards[3], hogwartsCards[4], hogwartsCards[5]];
 
     // players
     class Player {
@@ -555,6 +556,6 @@ document.getElementById("player4Hero").onchange = () => {
     document.getElementById("shop3").appendChild(activeShops[2].img);
     document.getElementById("shop4").appendChild(activeShops[3].img);
     document.getElementById("shop5").appendChild(activeShops[4].img);
-    //document.getElementById("shop6").appendChild(activeShops[5].img);
+    document.getElementById("shop6").appendChild(activeShops[5].img);
 //}
 //activePlayer.influence = 2; // DEBUG
