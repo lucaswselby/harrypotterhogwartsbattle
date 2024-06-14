@@ -181,8 +181,13 @@ document.getElementById("player4Hero").onchange = () => {
                     activePlayer.discard.push(card);
                 }
                 card.generateOnClick();
-                hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
+
+                // replaces previous card with next card in store
                 document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
+                hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
+                activeShops[activeShops.indexOf(card)] = hogwartsCards[5];
+                activeShops.sort((a, b) => {return a.cost - b.cost});
+                populateShop();
                 //activePlayer.drawCards(5); // DEBUG
             }
         }
@@ -642,11 +647,14 @@ document.getElementById("player4Hero").onchange = () => {
     }
 
     // populate shop
-    document.getElementById("shop1").appendChild(activeShops[0].img);
-    document.getElementById("shop2").appendChild(activeShops[1].img);
-    document.getElementById("shop3").appendChild(activeShops[2].img);
-    document.getElementById("shop4").appendChild(activeShops[3].img);
-    document.getElementById("shop5").appendChild(activeShops[4].img);
-    document.getElementById("shop6").appendChild(activeShops[5].img);
+    const populateShop = () => {
+        document.getElementById("shop1").appendChild(activeShops[0].img);
+        document.getElementById("shop2").appendChild(activeShops[1].img);
+        document.getElementById("shop3").appendChild(activeShops[2].img);
+        document.getElementById("shop4").appendChild(activeShops[3].img);
+        document.getElementById("shop5").appendChild(activeShops[4].img);
+        document.getElementById("shop6").appendChild(activeShops[5].img);
+    }
+    populateShop();
 //}
 //activePlayer.influence = 8; // DEBUG
