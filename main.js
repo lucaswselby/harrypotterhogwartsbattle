@@ -170,15 +170,16 @@ document.getElementById("player4Hero").onchange = () => {
     const reparo = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
     const rubeusHagrid = new Card("Rubeus Hagrid", "Game 1", "ally", 4, () => {activeDarkArtsEvent.attack++; players.forEach(player => {player.health++;});}, false);
     const sortingHat = new Card("Sorting Hat", "Game 1", "item", 4, () => {activePlayer.influence += 2;}, true);
-    let hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood, quidditchGear, reparo, rubeusHagrid, sortingHat];
+    const wingardiumLeviosa = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
+    let hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood, quidditchGear, reparo, rubeusHagrid, sortingHat, wingardiumLeviosa];
     // purchase a Hogwarts card
     hogwartsCards.forEach(card => {
         card.img.onclick = () => {
             if (activePlayer.influence >= card.cost) {
                 activePlayer.influence -= card.cost;
 
-                // Time Turner and Sorting Hat effects
-                if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(timeTurner) && card.type === "ally")) {
+                // Time Turner, Sorting Hat, and Wingardium Leviosa effects
+                if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(timeTurner) && card.type === "ally") || (activePlayer.passives.includes(wingardiumLeviosa) && card.type === "item")) {
                     playerChoice(2);
                     document.getElementsByClassName("choice")[0].innerHTML = "Top of deck";
                     document.getElementsByClassName("choice")[0].appendChild(card.img.cloneNode());
