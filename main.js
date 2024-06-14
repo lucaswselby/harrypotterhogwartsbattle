@@ -145,6 +145,19 @@ document.getElementById("player4Hero").onchange = () => {
     const timeTurner = new Card("Time Turner", "Game 1", "item", 0, () => {activePlayer.influence++;}, true);
     const hermioneStartingCards = [alohomoraHermione1, alohomoraHermione2, alohomoraHermione3, alohomoraHermione4, alohomoraHermione5, alohomoraHermione6, alohomoraHermione7, crookshanks, theTalesOfBeedleTheBard, timeTurner];
 
+    // Neville starting cards
+    const alohomoraNeville1 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraNeville2 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraNeville3 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraNeville4 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraNeville5 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraNeville6 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraNeville7 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
+    const mandrake = new Card("Mandrake", "Game 1", "item", 0, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack++}; document.getElementsByClassName("choice")[1].innerHTML = `Any one Hero${healthToken}${healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage); document.getElementsByClassName("choice")[i].onclick = () => {players[i].health += 2;};}};}, false);
+    const remembrall = new Card("Remembrall", "Game 1", "item", 0, () => {activePlayer.influence++;}, false);
+    const trevor = new Card("Trevor", "Game 1", "ally", 0, startingAllyEffect, false);
+    const nevilleStartingCards = [alohomoraNeville1, alohomoraNeville2, alohomoraNeville3, alohomoraNeville4, alohomoraNeville5, alohomoraNeville6, alohomoraNeville7, mandrake, remembrall, trevor];
+
     // Hogwarts cards
     const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});}, false);
     const descendo = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;}, false);
@@ -186,7 +199,7 @@ document.getElementById("player4Hero").onchange = () => {
                 document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
                 hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
                 activeShops[activeShops.indexOf(card)] = hogwartsCards[5];
-                activeShops.sort((a, b) => {return a.cost - b.cost});
+                activeShops.sort((a, b) => {return a.cost - b.cost}); // sorts store by cost
                 populateShop();
                 //activePlayer.drawCards(5); // DEBUG
             }
@@ -219,6 +232,7 @@ document.getElementById("player4Hero").onchange = () => {
             if (hero === "Harry Potter") this._discard = harryStartingCards;
             else if (hero === "Ron Weasley") this._discard = ronStartingCards;
             else if (hero === "Hermione Granger") this._discard = hermioneStartingCards;
+            else if (hero === "Neville Longbottom") this._discard = nevilleStartingCards;
             // TO-DO: add other heroes
         }
         get hero() {
@@ -314,6 +328,14 @@ document.getElementById("player4Hero").onchange = () => {
             document.getElementById("playerHand").removeChild(this.hand[index].img);
             this._hand.splice(index, 1);
         }
+        forcedDiscardAt(index) {
+            // Remembrall effect
+            if (this.hand[index] === remembrall) {
+                activePlayer.influence += 2;
+            }
+
+            this.discardAt(index);
+        }
         shuffle() {
             // shuffle discard pile
             shuffle(this._discard)
@@ -341,12 +363,12 @@ document.getElementById("player4Hero").onchange = () => {
             }
         }
         endTurn() {
-            this.attack = 0;
-            this.influence = 0;
-            this._passives = [];
             for (let i = 0; i < this.hand.length; i++) {
                 this.discardAt(i);
             }
+            this.attack = 0;
+            this.influence = 0;
+            this._passives = [];
             this.drawCards(5);
         }
     }
@@ -452,7 +474,7 @@ document.getElementById("player4Hero").onchange = () => {
         }
     }
     const expulso = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
-    const flipendo = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.discardAt(i);};}});
+    const flipendo = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
     const heWhoMustNotBeNamed = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
     const petrification = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--;});}); // TO-DO: no drawn cards this turn
     //const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
