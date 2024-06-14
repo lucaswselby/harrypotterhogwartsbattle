@@ -698,4 +698,4 @@ document.getElementById("player4Hero").onchange = () => {
     populateShop();
 //}
 //activePlayer.influence = 100; // DEBUG
-activePlayer.attack = 6; // DEBUG
+//activePlayer.attack = 6; // DEBUG
