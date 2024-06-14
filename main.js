@@ -648,13 +648,25 @@ document.getElementById("player4Hero").onchange = () => {
 
     // populate shop
     const populateShop = () => {
-        document.getElementById("shop1").appendChild(activeShops[0].img);
-        document.getElementById("shop2").appendChild(activeShops[1].img);
-        document.getElementById("shop3").appendChild(activeShops[2].img);
-        document.getElementById("shop4").appendChild(activeShops[3].img);
-        document.getElementById("shop5").appendChild(activeShops[4].img);
-        document.getElementById("shop6").appendChild(activeShops[5].img);
+        if (hogwartsCards.length > 0) {
+            document.getElementById("shop1").appendChild(activeShops[0].img);
+            if (hogwartsCards.length > 1) {
+                document.getElementById("shop2").appendChild(activeShops[1].img);
+                if (hogwartsCards.length > 2) {
+                    document.getElementById("shop3").appendChild(activeShops[2].img);
+                    if (hogwartsCards.length > 3) {
+                        document.getElementById("shop4").appendChild(activeShops[3].img);
+                        if (hogwartsCards.length > 4) {
+                            document.getElementById("shop5").appendChild(activeShops[4].img);
+                            if (hogwartsCards.length > 5) {
+                                document.getElementById("shop6").appendChild(activeShops[5].img);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     populateShop();
 //}
-//activePlayer.influence = 8; // DEBUG
+//activePlayer.influence = 100; // DEBUG
