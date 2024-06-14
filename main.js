@@ -90,6 +90,12 @@ document.getElementById("player4Hero").onchange = () => {
         generateOnClick() {
             this._img.onclick = () => {
                 this._effect();
+
+                // Every Flavour Beans effect
+                if (activePlayer.passives.includes(everyFlavourBeans) && this.type === "ally") {
+                    activePlayer.attack++;
+                }
+
                 activePlayer.discardAt(activePlayer.hand.indexOf(this));
             }
         }
@@ -100,6 +106,7 @@ document.getElementById("player4Hero").onchange = () => {
 
     // Harry starting cards
     const alohomoraEffect = () => {activePlayer.influence++;};
+    const startingAllyEffect = () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice1").onclick = () => {activePlayer.attack++}; document.getElementById("choice2").innerHTML = `${healthToken + healthToken}`; document.getElementById("choice2").onclick = () => {activePlayer.health += 2};};
     const alohomoraHarry1 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
     const alohomoraHarry2 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
     const alohomoraHarry3 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
@@ -108,9 +115,35 @@ document.getElementById("player4Hero").onchange = () => {
     const alohomoraHarry6 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
     const alohomoraHarry7 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
     const firebolt = new Card("Firebolt", "Game 1", "item", 0, () => {activePlayer.attack++;}, true);
-    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice1").onclick = () => {activePlayer.attack++}; document.getElementById("choice2").innerHTML = `${healthToken + healthToken}`; document.getElementById("choice2").onclick = () => {activePlayer.health += 2};}, false);
+    const hedwig = new Card("Hedwig", "Game 1", "ally", 0, startingAllyEffect, false);
     const invisibilityCloak = new Card("Invisibility Cloak", "Game 1", "item", 0, () => {activePlayer.influence++;}, true);
     const harryStartingCards = [alohomoraHarry1, alohomoraHarry2, alohomoraHarry3, alohomoraHarry4, alohomoraHarry5, alohomoraHarry6, alohomoraHarry7, firebolt, hedwig, invisibilityCloak];
+
+    // Ron starting cards
+    const alohomoraRon1 = new Card("Alohomora Ron", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraRon2 = new Card("Alohomora Ron", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraRon3 = new Card("Alohomora Ron", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraRon4 = new Card("Alohomora Ron", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraRon5 = new Card("Alohomora Ron", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraRon6 = new Card("Alohomora Ron", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraRon7 = new Card("Alohomora Ron", "Game 1", "spell", 0, alohomoraEffect, false);
+    const cleansweep11 = new Card("Cleansweep 11", "Game 1", "item", 0, () => {activePlayer.attack++;}, true);
+    const everyFlavourBeans = new Card("Every Flavour Beans", "Game 1", "item", 0, () => {activePlayer.influence++;}, true);
+    const pigwidgeon = new Card("Pigwidgeon", "Game 1", "ally", 0, startingAllyEffect, false);
+    const ronStartingCards = [alohomoraRon1, alohomoraRon2, alohomoraRon3, alohomoraRon4, alohomoraRon5, alohomoraRon6, alohomoraRon7, cleansweep11, everyFlavourBeans, pigwidgeon];
+
+    // Hermione starting cards
+    const alohomoraHermione1 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHermione2 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHermione3 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHermione4 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHermione5 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHermione6 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
+    const alohomoraHermione7 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
+    const crookshanks = new Card("Crookshanks", "Game 1", "ally", 0, startingAllyEffect, false);
+    const theTalesOfBeedleTheBard = new Card("The Tales of Beedle the Bard", "Game 1", "item", 0, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = influenceToken + influenceToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes: ${influenceToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.influence++;});};}, false);
+    const timeTurner = new Card("Time Turner", "Game 1", "item", 0, () => {activePlayer.influence++;}, true);
+    const hermioneStartingCards = [alohomoraHermione1, alohomoraHermione2, alohomoraHermione3, alohomoraHermione4, alohomoraHermione5, alohomoraHermione6, alohomoraHermione7, crookshanks, theTalesOfBeedleTheBard, timeTurner];
 
     // Hogwarts cards
     const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});}, false);
@@ -129,7 +162,24 @@ document.getElementById("player4Hero").onchange = () => {
         card.img.onclick = () => {
             if (activePlayer.influence >= card.cost) {
                 activePlayer.influence -= card.cost;
-                activePlayer.discard.push(card);
+                
+                // Time Turner effect
+                if (activePlayer.passives.includes(timeTurner) && card.type === "spell") {
+                    playerChoice(2);
+                    document.getElementsByClassName("choice")[0].innerHTML = "Top of deck";
+                    document.getElementsByClassName("choice")[0].appendChild(card.img.cloneNode());
+                    document.getElementsByClassName("choice")[0].onclick = () => {
+                        activePlayer.draw.unshift(card);
+                    };
+                    document.getElementsByClassName("choice")[1].innerHTML = "Discard";
+                    document.getElementsByClassName("choice")[1].appendChild(card.img.cloneNode());
+                    document.getElementsByClassName("choice")[1].onclick = () => {
+                        activePlayer.discard.push(card);
+                    };
+                }
+                else {
+                    activePlayer.discard.push(card);
+                }
                 card.generateOnClick();
                 hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
                 document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
@@ -162,6 +212,8 @@ document.getElementById("player4Hero").onchange = () => {
             this._discard = [];
             this._passives = [];
             if (hero === "Harry Potter") this._discard = harryStartingCards;
+            else if (hero === "Ron Weasley") this._discard = ronStartingCards;
+            else if (hero === "Hermione Granger") this._discard = hermioneStartingCards;
             // TO-DO: add other heroes
         }
         get hero() {
@@ -242,6 +294,9 @@ document.getElementById("player4Hero").onchange = () => {
         get hand() {
             return this._hand;
         }
+        set hand(hand) {
+            this_hand = hand;
+        }
         get discard() {
             return this._discard;
         }
@@ -250,9 +305,6 @@ document.getElementById("player4Hero").onchange = () => {
         }
 
         discardAt(index) {
-            if (this.passives.includes(this.hand[index])) {
-                this.passives.splice(this.passives.indexOf(this.hand[index]), 1);
-            }
             this._discard.push(this.hand[index]);
             document.getElementById("playerHand").removeChild(this.hand[index].img);
             this._hand.splice(index, 1);
@@ -426,8 +478,8 @@ document.getElementById("player4Hero").onchange = () => {
             if (this.health <= 0) {
                 this.reward();
 
-                // Firebolt effect
-                if (activePlayer.passives.includes(firebolt)) {
+                // Firebolt and Cleansweep 11 effects
+                if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11)) {
                     activePlayer.influence++;
                 }
                 // Oliver Wood effect
