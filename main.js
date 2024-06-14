@@ -170,7 +170,7 @@ document.getElementById("player4Hero").onchange = () => {
     const reparo = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
     const rubeusHagrid = new Card("Rubeus Hagrid", "Game 1", "ally", 4, () => {activeDarkArtsEvent.attack++; players.forEach(player => {player.health++;});}, false);
     const sortingHat = new Card("Sorting Hat", "Game 1", "item", 4, () => {activePlayer.influence += 2;}, true);
-    let hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood, quidditchGear, reparo, rubeusHagrid];
+    let hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood, quidditchGear, reparo, rubeusHagrid, sortingHat];
     // purchase a Hogwarts card
     hogwartsCards.forEach(card => {
         card.img.onclick = () => {
