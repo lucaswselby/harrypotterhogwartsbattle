@@ -486,7 +486,10 @@ document.getElementById("player4Hero").onchange = () => {
     // villains
     class Villain {
         constructor(name, type, health, healthType, effect, reward) {
-            this._img = `<img class="villain" src="./images/${activeGame}/${src(name)}" alt="${name}">`;
+            this._img = document.createElement("img");
+            this._img.className = "villain";
+            this._img.src = `./images/${activeGame}/${src(name)}`;
+            this._img.alt = name;
             this._type = type;
             this._health = health;
             this._healthType = healthType;
@@ -506,6 +509,9 @@ document.getElementById("player4Hero").onchange = () => {
             this._health = health;
             if (this.health <= 0) {
                 this.reward();
+                this.img.remove();
+                document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
+                document.getElementById("villainDiscard").appendChild(this.img);
 
                 // Firebolt and Cleansweep 11 effects
                 if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11)) {
@@ -533,7 +539,7 @@ document.getElementById("player4Hero").onchange = () => {
         }
     }
     const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {}); // TO-DO: add reward
-    const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
+    //const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
     let villains = [dracoMalfoy];
     let activeVillains = [villains[0]];
 
@@ -578,18 +584,10 @@ document.getElementById("player4Hero").onchange = () => {
         <div id="events">
             ${game === "Game 7" ? stackCards(events) : ""}   
         </div>
-        <div id="villainDiscard">
-            ${stackCards(villains)}
-        </div>
-        <div class="activeVillain" id="villain1">
-            ${activeVillains[0].img}
-        </div>
-        <div class="activeVillain" id="villain2">
-            ${activeVillains.length > 1 ? activeVillains[1].img : ""}
-        </div>
-        <div class="activeVillain" id="villain3">
-            ${activeVillains.length > 2 ? activeVillains[2].img : ""}
-        </div>
+        <div id="villainDiscard"></div>
+        <div class="activeVillain" id="villain1"></div>
+        <div class="activeVillain" id="villain2"></div>
+        <div class="activeVillain" id="villain3"></div>
         <div class="villainDamage" id="villain1Damage"></div>
         <div class="villainDamage" id="villain2Damage"></div>
         <div class="villainDamage" id="villain3Damage"></div>
@@ -620,6 +618,11 @@ document.getElementById("player4Hero").onchange = () => {
     document.getElementById("healthTracker").onclick = () => {
         activePlayer.health--;
     }
+
+    // add villains to board
+    document.getElementById("villain1").appendChild(activeVillains[0].img);
+    if (activeVillains.length > 1) document.getElementById("villain2").appendChild(activeVillains[1].img);
+    if (activeVillains.length > 2) document.getElementById("villain3").appendChild(activeVillains[2].img);
 
     // click locations to add to location
     for (let i = 0; i < document.getElementsByClassName("location").length; i++) {
@@ -664,6 +667,7 @@ document.getElementById("player4Hero").onchange = () => {
             if (activePlayer.attack > 0 && document.getElementById(`villain${i + 1}`).getElementsByClassName("villain")[0]) {
                 activePlayer.attack--;
                 document.getElementsByClassName("villainDamage")[i].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                activeVillains[i].health--;
             }
         }
         document.getElementsByClassName("activeVillain")[i].onclick = dealDamage;
@@ -694,3 +698,4 @@ document.getElementById("player4Hero").onchange = () => {
     populateShop();
 //}
 //activePlayer.influence = 100; // DEBUG
+activePlayer.attack = 6; // DEBUG
