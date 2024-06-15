@@ -493,6 +493,7 @@ document.getElementById("player4Hero").onchange = () => {
     const petrification = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--;});}); // TO-DO: no drawn cards this turn
     //const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
     let darkArtsEvents = [expulso, flipendo, heWhoMustNotBeNamed, petrification];
+    shuffle(darkArtsEvents);
     let activeDarkArtsEvent = darkArtsEvents[0];
 
     // villains
@@ -553,6 +554,7 @@ document.getElementById("player4Hero").onchange = () => {
     const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {}); // TO-DO: add reward
     //const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
     let villains = [dracoMalfoy];
+    shuffle(villains);
     let activeVillains = [villains[0]];
 
     // events (horcruxes)
@@ -636,43 +638,6 @@ document.getElementById("player4Hero").onchange = () => {
     if (activeVillains.length > 1) document.getElementById("villain2").appendChild(activeVillains[1].img);
     if (activeVillains.length > 2) document.getElementById("villain3").appendChild(activeVillains[2].img);
 
-    // click locations to add to location
-    for (let i = 0; i < document.getElementsByClassName("location").length; i++) {
-        document.getElementsByClassName("location")[i].onclick = () => {
-            activeLocation.addToLocation();
-        }
-    }
-
-    // click dark arts event to flip it over
-    let lastCardImg = null;
-    document.getElementById("darkArtsEvents").onclick = () => {
-        document.getElementById("darkArtsEventBack").style.display = "initial";
-        const darkArtsEventsElement = document.getElementById("darkArtsEvents");
-        darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
-        activeDarkArtsEvent.img.classList.toggle("flipped");
-        activeDarkArtsEvent.effect();
-
-        // remove previous dark arts card
-        if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
-            darkArtsEventsElement.removeChild(lastCardImg);
-        }
-        else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
-            darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
-        }
-
-        // updates activeDarkArtsEvent
-        if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) {
-            activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
-        }
-        else {
-            document.getElementById("darkArtsEventBack").style.display = "none";
-            lastCardImg = darkArtsEvents[darkArtsEvents.length - 1].img;
-            darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
-            // TO-DO: shuffle dark arts events
-            activeDarkArtsEvent = darkArtsEvents[0];
-        }
-    }
-
     // deal damage by clicking on a villain or villain's damage area
     for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
         const dealDamage = () => {
@@ -708,6 +673,43 @@ document.getElementById("player4Hero").onchange = () => {
         }
     }
     populateShop();
+
+    // start a new turn
+    let lastCardImg = null;
+    const startTurn = () => {
+        // reveal Dark Arts Event
+        document.getElementById("darkArtsEventBack").style.display = "initial";
+        const darkArtsEventsElement = document.getElementById("darkArtsEvents");
+        darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
+        activeDarkArtsEvent.img.classList.toggle("flipped");
+        activeDarkArtsEvent.effect();
+
+        // remove previous dark arts card
+        if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
+            darkArtsEventsElement.removeChild(lastCardImg);
+        }
+        else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
+            darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
+        }
+
+        // updates activeDarkArtsEvent
+        if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) {
+            activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
+        }
+        else {
+            document.getElementById("darkArtsEventBack").style.display = "none";
+            lastCardImg = darkArtsEvents[darkArtsEvents.length - 1].img;
+            darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
+            // TO-DO: shuffle dark arts events
+            activeDarkArtsEvent = darkArtsEvents[0];
+        }
+
+        // villain effects
+        activeVillains.forEach(villain => {
+            villain.effect();
+        });
+    };
+    window.onload = startTurn;
 //}
 //activePlayer.influence = 100; // DEBUG
 //activePlayer.attack = 6; // DEBUG
