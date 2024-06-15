@@ -701,7 +701,6 @@ document.getElementById("player4Hero").onchange = () => {
         document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
 
         // reveal Dark Arts Event
-        document.getElementById("darkArtsEventBack").style.display = "initial";
         const darkArtsEventsElement = document.getElementById("darkArtsEvents");
         darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
         activeDarkArtsEvent.img.classList.toggle("flipped");
@@ -715,18 +714,6 @@ document.getElementById("player4Hero").onchange = () => {
             darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
         }
 
-        // updates activeDarkArtsEvent
-        if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) {
-            activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
-        }
-        else {
-            document.getElementById("darkArtsEventBack").style.display = "none";
-            lastCardImg = darkArtsEvents[darkArtsEvents.length - 1].img;
-            darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
-            // TO-DO: shuffle dark arts events
-            activeDarkArtsEvent = darkArtsEvents[0];
-        }
-
         // villain effects
         activeVillains.forEach(villain => {
             villain.effect();
@@ -737,6 +724,17 @@ document.getElementById("player4Hero").onchange = () => {
     // end turn
     document.getElementById("endTurn").onclick = () => {
         activePlayer.endTurn();
+
+        // updates activeDarkArtsEvent
+        if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) {
+            activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
+        }
+        else {
+            lastCardImg = darkArtsEvents[darkArtsEvents.length - 1].img;
+            darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
+            shuffle(darkArtsEvents);
+            activeDarkArtsEvent = darkArtsEvents[0];
+        }
 
         // start new turn
         startTurn();
