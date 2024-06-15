@@ -39,12 +39,20 @@ main {
 #locations, #villainDraw, #villain1 {
     left: 6%;
 }
+#locations {
+    width: 15%;
+}
 .location, .darkArtsEvent, #darkArtsEventBack, .villain, .event {
     height: 100%;
     border-radius: 10px;
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.locationToken {
+    position: absolute;
+    height: 16%;
 }
 
 #darkArtsEvents {

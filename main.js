@@ -409,6 +409,13 @@ document.getElementById("player4Hero").onchange = () => {
         }
         set added(added) {
             this._added = added;
+            const locationToken = document.createElement("img");
+            locationToken.src = "./images/locationToken.png";
+            locationToken.alt = "Location token";
+            locationToken.className = "locationToken";
+            locationToken.style.top = added % 2 === 0 ? "78%" : "82%";
+            locationToken.style.left = `${15 + (added * 11)}%`;
+            document.getElementById("locations").appendChild(locationToken);
         }
         addToLocation() {
             this.added++;
