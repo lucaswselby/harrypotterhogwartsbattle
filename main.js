@@ -340,6 +340,11 @@ document.getElementById("player4Hero").onchange = () => {
                 activePlayer.influence += 2;
             }
 
+            // Crabbe and Goyle effect
+            if (activeVillains.includes(crabbeAndGoyle)) {
+                this.health--;
+            }
+
             this.discardAt(index);
         }
         shuffle() {
@@ -390,7 +395,7 @@ document.getElementById("player4Hero").onchange = () => {
     const players = [player1, player2];
     if (document.getElementById("player3Hero").value) players.push(new Player(document.getElementById("player3Hero").value, document.getElementById("player3Proficiency").value));
     if (document.getElementById("player4Hero").value) players.push(new Player(document.getElementById("player4Hero").value, document.getElementById("player4Proficiency").value));
-    let activePlayer = players[players.length - 1];
+    let activePlayer = players[players.length - 1]; // sets to last hero because turn starts with next hero
 
     // locations
     class Location {
@@ -562,9 +567,11 @@ document.getElementById("player4Hero").onchange = () => {
             this._reward();
         }
     }
-    const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {}); // TO-DO: add reward
+    const crabbeAndGoyle = new Villain("Crabbe and Goyle", "villain", 5, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});});
+    const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {activeLocation.removeFromLocation();});
+    const quirinusQuirrell = new Villain("Quirinus Quirrell", "villain", 6, "health", () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
     //const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
-    let villains = [dracoMalfoy];
+    let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
     shuffle(villains);
     let activeVillains = [villains[0]];
 
