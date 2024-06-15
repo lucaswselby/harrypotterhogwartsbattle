@@ -537,6 +537,7 @@ document.getElementById("player4Hero").onchange = () => {
         set health(health) {
             this._health = health;
             if (this.health <= 0) {
+                // remove villain
                 this.reward();
                 this.img.remove();
                 document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
@@ -657,7 +658,7 @@ document.getElementById("player4Hero").onchange = () => {
     // deal damage by clicking on a villain or villain's damage area
     for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
         const dealDamage = () => {
-            if (activePlayer.attack > 0 && document.getElementById(`villain${i + 1}`).getElementsByClassName("villain")[0]) {
+            if (activePlayer.attack > 0 && document.getElementsByClassName("activeVillain")[i].getElementsByClassName("villain")[0]) {
                 activePlayer.attack--;
                 document.getElementsByClassName("villainDamage")[i].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
                 activeVillains[i].health--;
@@ -699,6 +700,8 @@ document.getElementById("player4Hero").onchange = () => {
         activePlayer.populateHand();
         document.getElementById("heroImage").appendChild(activePlayer.heroImage);
         document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
+        //activePlayer.influence = 100; // DEBUG
+        //activePlayer.attack = 6; // DEBUG
 
         // reveal Dark Arts Event
         const darkArtsEventsElement = document.getElementById("darkArtsEvents");
@@ -725,6 +728,23 @@ document.getElementById("player4Hero").onchange = () => {
     document.getElementById("endTurn").onclick = () => {
         activePlayer.endTurn();
 
+        // replace with new villain
+        for (let i = 0; i < activeVillains.length; i++) {
+            if (activeVillains[i].health <= 0) {
+                if (villains.indexOf(activeVillains[i]) + 1 < villains.length) {
+                    activeVillains[i] = villains[villains.indexOf(activeVillains[i]) + 1];
+                    document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
+                }
+            }
+        }
+
+        // check if all villains are defeated
+        let villainsDefeated = true;
+        for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
+            if (document.getElementsByClassName("activeVillain")[i].getElementsByClassName("villain")[0]) villainsDefeated = false;
+        }
+        if (villainsDefeated) alert("Victory!");
+
         // updates activeDarkArtsEvent
         if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) {
             activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
@@ -740,5 +760,3 @@ document.getElementById("player4Hero").onchange = () => {
         startTurn();
     }
 //}
-//activePlayer.influence = 100; // DEBUG
-//activePlayer.attack = 6; // DEBUG
