@@ -203,6 +203,9 @@ main {
 
 #playerContainer {
     width: calc(100% - var(--boardWidth));
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
 }
 #playerHero, #playerProficiency {
     width: 50%;
@@ -244,6 +247,10 @@ main {
 }
 .card {
     width: 20%;
+}
+
+#endTurn {
+    margin: 1em;
 }
 
 #playerChoice {

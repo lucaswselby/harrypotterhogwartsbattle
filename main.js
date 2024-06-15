@@ -236,6 +236,7 @@ document.getElementById("player4Hero").onchange = () => {
             else if (hero === "Hermione Granger") this._discard = hermioneStartingCards;
             else if (hero === "Neville Longbottom") this._discard = nevilleStartingCards;
             // TO-DO: add other heroes
+            this._firstTurn = true;
         }
         get hero() {
             return this._hero;
@@ -324,6 +325,9 @@ document.getElementById("player4Hero").onchange = () => {
         get passives() {
             return this._passives;
         }
+        get firstTurn() {
+            return this._firstTurn;
+        }
 
         discardAt(index) {
             this._discard.push(this.hand[index]);
@@ -346,6 +350,12 @@ document.getElementById("player4Hero").onchange = () => {
             this._draw = this._draw.concat(this.discard);
             this._discard = [];
         }
+        populateHand() {
+            document.getElementById("playerHand").innerHTML = "";
+            this.hand.forEach(card => {
+                document.getElementById("playerHand").appendChild(card.img);
+            });
+        }
         drawCards(numberOfCards) {
             for (let i = 0; i < numberOfCards; i++) {
                 // moves a card from the draw pile to your hand
@@ -365,12 +375,13 @@ document.getElementById("player4Hero").onchange = () => {
             }
         }
         endTurn() {
-            for (let i = 0; i < this.hand.length; i++) {
-                this.discardAt(i);
-            }
+            this.heroImage.remove();
+            this.proficiencyImage.remove();
+            while (this.hand.length) this.discardAt(0);
             this.attack = 0;
             this.influence = 0;
             this._passives = [];
+            this._firstTurn = false;
             this.drawCards(5);
         }
     }
@@ -379,7 +390,7 @@ document.getElementById("player4Hero").onchange = () => {
     const players = [player1, player2];
     if (document.getElementById("player3Hero").value) players.push(new Player(document.getElementById("player3Hero").value, document.getElementById("player3Proficiency").value));
     if (document.getElementById("player4Hero").value) players.push(new Player(document.getElementById("player4Hero").value, document.getElementById("player4Proficiency").value));
-    let activePlayer = players[0];
+    let activePlayer = players[players.length - 1];
 
     // locations
     class Location {
@@ -624,11 +635,9 @@ document.getElementById("player4Hero").onchange = () => {
             <div id="influenceTokens"></div>
         </div>
         <div id="playerHand"></div>
+        <input type="button" id="endTurn" value="End Turn">
     </div>
     <div id="playerChoice"></div>`;
-    document.getElementById("heroImage").appendChild(activePlayer.heroImage);
-    document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
-    activePlayer.drawCards(5);
     document.getElementById("healthTracker").onclick = () => {
         activePlayer.health--;
     }
@@ -677,6 +686,13 @@ document.getElementById("player4Hero").onchange = () => {
     // start a new turn
     let lastCardImg = null;
     const startTurn = () => {
+        // new active player
+        activePlayer = players.indexOf(activePlayer) < players.length - 1 ? players[players.indexOf(activePlayer) + 1] : players[0];
+        if (activePlayer.firstTurn) activePlayer.drawCards(5);
+        activePlayer.populateHand();
+        document.getElementById("heroImage").appendChild(activePlayer.heroImage);
+        document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
+
         // reveal Dark Arts Event
         document.getElementById("darkArtsEventBack").style.display = "initial";
         const darkArtsEventsElement = document.getElementById("darkArtsEvents");
@@ -710,6 +726,14 @@ document.getElementById("player4Hero").onchange = () => {
         });
     };
     window.onload = startTurn;
+
+    // end turn
+    document.getElementById("endTurn").onclick = () => {
+        activePlayer.endTurn();
+
+        // start new turn
+        startTurn();
+    }
 //}
 //activePlayer.influence = 100; // DEBUG
 //activePlayer.attack = 6; // DEBUG
