@@ -409,16 +409,16 @@ document.getElementById("player4Hero").onchange = () => {
         }
         set added(added) {
             this._added = added;
+        }
+        addToLocation() {
+            this.added++;
             const locationToken = document.createElement("img");
             locationToken.src = "./images/locationToken.png";
             locationToken.alt = "Location token";
             locationToken.className = "locationToken";
-            locationToken.style.top = added % 2 === 0 ? "78%" : "82%";
-            locationToken.style.left = `${15 + (added * 11)}%`;
+            locationToken.style.top = this.added % 2 === 0 ? "78%" : "82%";
+            locationToken.style.left = `${15 + (this.added * 11)}%`;
             document.getElementById("locations").appendChild(locationToken);
-        }
-        addToLocation() {
-            this.added++;
             if (this.added > this.spaces) {
                 // Game Over
                 if (this.number === locations.length) {
@@ -427,6 +427,7 @@ document.getElementById("player4Hero").onchange = () => {
                 }
                 // new location
                 else {
+                    while (document.getElementsByClassName("locationToken")[0]) document.getElementsByClassName("locationToken")[0].remove();
                     activeLocation = locations[this.number];
                     document.getElementById(`location${this.number}`).style.display = "none";
                 }
@@ -441,15 +442,19 @@ document.getElementById("player4Hero").onchange = () => {
             if (this === locations[0]) {
                 if (this.added > 0) {
                     this.added--;
+                    document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1].remove();
                 }
             }
             else {
+                // new location
                 if (this.added === 0) {
+                    while (document.getElementsByClassName("locationToken")[0]) document.getElementsByClassName("locationToken")[0].remove();
                     activeLocation = locations[this.number - 2];
                     document.getElementById(`location${this.number - 1}`).style.display = "initial";
                 }
                 else {
                     this.added--;
+                    document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1].remove();
                 }
             }
         }
