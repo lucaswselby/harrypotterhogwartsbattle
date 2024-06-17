@@ -646,9 +646,6 @@ document.getElementById("player4Hero").onchange = () => {
         <input type="button" id="endTurn" value="End Turn">
     </div>
     <div id="playerChoice"></div>`;
-    document.getElementById("healthTracker").onclick = () => {
-        activePlayer.health--;
-    }
 
     // add villains to board
     document.getElementById("villain1").appendChild(activeVillains[0].img);
