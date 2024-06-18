@@ -268,6 +268,7 @@ document.getElementById("player4Hero").onchange = () => {
                 else if (hero === "Neville Longbottom") this._discard = nevilleStartingCards;
                 // TO-DO: add other heroes
                 this._firstTurn = true;
+                this._petrified = false;
             }
             get hero() {
                 return this._hero;
@@ -359,6 +360,12 @@ document.getElementById("player4Hero").onchange = () => {
             get firstTurn() {
                 return this._firstTurn;
             }
+            get petrified() {
+                return this._petrified;
+            }
+            set petrified(petrified) {
+                this._petrified = petrified;
+            }
 
             discardAt(index) {
                 this._discard.push(this.hand[index]);
@@ -393,7 +400,7 @@ document.getElementById("player4Hero").onchange = () => {
                 });
             }
             drawCards(numberOfCards) {
-                if (activeDarkArtsEvent !== petrification) {
+                if (!this.petrified) {
                     for (let i = 0; i < numberOfCards; i++) {
                         // moves a card from the draw pile to your hand
                         if (this.draw.length > 0) {
@@ -414,6 +421,7 @@ document.getElementById("player4Hero").onchange = () => {
                 }
             }
             endTurn() {
+                this.petrified = false;
                 this.heroImage.remove();
                 this.proficiencyImage.remove();
                 while (this.hand.length) this.discardAt(0);
@@ -548,8 +556,8 @@ document.getElementById("player4Hero").onchange = () => {
         const heWhoMustNotBeNamed1 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
         const heWhoMustNotBeNamed2 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
         const heWhoMustNotBeNamed3 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
-        const petrification1 = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--;});});
-        const petrification2 = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--;});});
+        const petrification1 = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--; player.petrified = true;});});
+        const petrification2 = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--; player.petrified = true;});});
         //const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         shuffle(darkArtsEvents);
@@ -766,6 +774,12 @@ document.getElementById("player4Hero").onchange = () => {
 
         // end turn
         document.getElementById("endTurn").onclick = () => {
+            players.forEach(player => {
+                player.petrified = false;
+                }
+            });
+
+            // player resets for next turn
             activePlayer.endTurn();
 
             // replace with new villain
