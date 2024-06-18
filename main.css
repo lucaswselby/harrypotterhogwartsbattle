@@ -6,7 +6,6 @@ html, body {
     height: 100vh;
     margin: 0;
     padding: 0;
-    overflow: hidden;
 }
 main {
     height: 100%;
@@ -25,6 +24,7 @@ main {
 #gameBoardContainer {
     aspect-ratio: 1280 / 853;
     height: 100%;
+    overflow-y: hidden;
 }
 #gameBoard {
     height: 100%;
@@ -206,6 +206,7 @@ main {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
+    overflow-y: scroll;
 }
 #playerHero, #playerProficiency {
     width: 50%;
@@ -238,12 +239,10 @@ main {
     height: 50%;
 }
 
-#playerHand {  
-    max-height: 40vh;
+#playerHand {
     width: 100%;
     display: flex;
     flex-flow: row wrap;
-    overflow-y: auto;
 }
 .card {
     width: 20%;
