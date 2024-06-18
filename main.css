@@ -203,10 +203,10 @@ main {
 
 #playerContainer {
     height: 100%;
+    padding-top: 1em;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    justify-content: center;
     overflow-y: auto;
 }
 #playerHero, #playerProficiency {
