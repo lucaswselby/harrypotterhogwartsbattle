@@ -14,7 +14,7 @@ document.getElementById("player4Hero").onchange = () => {
     displayProficiencyChoice(4);
 }
 
-document.getElementById("submitPlayers").onclick = () => {
+//document.getElementById("submitPlayers").onclick = () => {
     // can't have more than one of each hero
     let continueGame = true;
     for (let i = 0; i < document.getElementsByClassName("playerHero").length - 1; i++) {
@@ -38,7 +38,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // convert card name to src
         const src = name => {
-            return `${name[0].toLowerCase()}${name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png`;
+            return `${name[0].toLowerCase()}${name.substring(1).replaceAll(" ", "").replaceAll("'", "").replaceAll("-", "")}.png`;
         };
 
         // some cards give the players a choice of action
@@ -63,8 +63,8 @@ document.getElementById("submitPlayers").onclick = () => {
         }
 
         // shuffles cards in a random order
+        // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
         const shuffle = array => {
-            // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
             let currentIndex = array.length;          
             // While there remain elements to shuffle...
             while (currentIndex != 0) {          
@@ -173,18 +173,36 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // Hogwarts cards
         const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});}, false);
-        const descendo = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;}, false);
-        const essenceOfDittany = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
+        const descendo1 = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;}, false);
+        const descendo2 = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;}, false);
+        const essenceOfDittany1 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
+        const essenceOfDittany2 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
+        const essenceOfDittany3 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
+        const essenceOfDittany4 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
         const goldenSnitch = new Card("Golden Snitch", "Game 1", "item", 5, () => {activePlayer.influence += 2; activePlayer.drawCards(1);}, false);
-        const incendio = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
-        const lumos = new Card("Lumos", "Game 1", "spell", 4, () => {players.forEach(player => {player.drawCards(1);});}, false);
+        const incendio1 = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
+        const incendio2 = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
+        const incendio3 = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
+        const incendio4 = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
+        const lumos1 = new Card("Lumos", "Game 1", "spell", 4, () => {players.forEach(player => {player.drawCards(1);});}, false);
+        const lumos2 = new Card("Lumos", "Game 1", "spell", 4, () => {players.forEach(player => {player.drawCards(1);});}, false);
         const oliverWood = new Card("Oliver Wood", "Game 1", "ally", 3, () => {activePlayer.attack++;}, true);
-        const quidditchGear = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;}, false);
-        const reparo = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
+        const quidditchGear1 = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;}, false);
+        const quidditchGear2 = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;}, false);
+        const quidditchGear3 = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;}, false);
+        const quidditchGear4 = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;}, false);
+        const reparo1 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
+        const reparo2 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
+        const reparo3 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
+        const reparo4 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
+        const reparo5 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
+        const reparo6 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
         const rubeusHagrid = new Card("Rubeus Hagrid", "Game 1", "ally", 4, () => {activeDarkArtsEvent.attack++; players.forEach(player => {player.health++;});}, false);
         const sortingHat = new Card("Sorting Hat", "Game 1", "item", 4, () => {activePlayer.influence += 2;}, true);
-        const wingardiumLeviosa = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
-        let hogwartsCards = [albusDumbledore, descendo, essenceOfDittany, goldenSnitch, incendio, lumos, oliverWood, quidditchGear, reparo, rubeusHagrid, sortingHat, wingardiumLeviosa];
+        const wingardiumLeviosa1 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
+        const wingardiumLeviosa2 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
+        const wingardiumLeviosa3 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
+        let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         // purchase a Hogwarts card
         hogwartsCards.forEach(card => {
             card.img.onclick = () => {
@@ -192,7 +210,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     activePlayer.influence -= card.cost;
 
                     // Time Turner, Sorting Hat, and Wingardium Leviosa effects
-                    if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(timeTurner) && card.type === "ally") || (activePlayer.passives.includes(wingardiumLeviosa) && card.type === "item")) {
+                    if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(timeTurner) && card.type === "ally") || ((activePlayer.passives.includes(wingardiumLeviosa1) || activePlayer.passives.includes(wingardiumLeviosa2) || activePlayer.passives.includes(wingardiumLeviosa3)) && card.type === "item")) {
                         playerChoice(2);
                         document.getElementsByClassName("choice")[0].innerHTML = "Top of deck";
                         document.getElementsByClassName("choice")[0].appendChild(card.img.cloneNode());
@@ -379,6 +397,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     for (let i = 0; i < numberOfCards; i++) {
                         // moves a card from the draw pile to your hand
                         if (this.draw.length > 0) {
+                            this.draw[0].generateOnClick();
                             this._hand.push(this.draw[0]);
                             if (this.draw[0].passive) {
                                 this._passives.push(this.draw[0]);
@@ -492,9 +511,9 @@ document.getElementById("submitPlayers").onclick = () => {
         }
         const diagonAlley = new Location("Diagon Alley", 1, 4, 1);
         const mirrorOfErised = new Location("Mirror of Erised", 2, 4, 1);
-        const castleGates = new Location("Castle Gates", 1, 5, 1);
-        const hagridsHut = new Location("Hagrid's Hut", 2, 6, 2);
-        const greatHall = new Location("Great Hall", 3, 7, 3);
+        //const castleGates = new Location("Castle Gates", 1, 5, 1);
+        //const hagridsHut = new Location("Hagrid's Hut", 2, 6, 2);
+        //const greatHall = new Location("Great Hall", 3, 7, 3);
         let locations = [diagonAlley, mirrorOfErised];
         let activeLocation = locations[0];
 
@@ -504,6 +523,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._name = name;
                 this._effect = effect;
                 this.generateImg();
+            }
+            get name() {
+                return this._name;
             }
             get img() {
                 return this._img;
@@ -518,12 +540,18 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._effect();
             }
         }
-        const expulso = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
-        const flipendo = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
-        const heWhoMustNotBeNamed = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
-        const petrification = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--;});});
+        const expulso1 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
+        const expulso2 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
+        const expulso3 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
+        const flipendo1 = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
+        const flipendo2 = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
+        const heWhoMustNotBeNamed1 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
+        const heWhoMustNotBeNamed2 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
+        const heWhoMustNotBeNamed3 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
+        const petrification1 = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--;});});
+        const petrification2 = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--;});});
         //const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
-        let darkArtsEvents = [expulso, flipendo, heWhoMustNotBeNamed, petrification];
+        let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         shuffle(darkArtsEvents);
         let activeDarkArtsEvent = darkArtsEvents[0];
 
@@ -775,4 +803,4 @@ document.getElementById("submitPlayers").onclick = () => {
     else {
         alert("Can't have more than one of each hero.");
     }
-}
+//}
