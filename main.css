@@ -23,11 +23,11 @@ main {
     position: relative;
 }
 #gameBoardContainer {
+    aspect-ratio: 1280 / 853;
     height: 100%;
-    width: var(--boardWidth);
 }
 #gameBoard {
-    max-height: 100%;
+    height: 100%;
     width: 100%;
 }
 
@@ -37,10 +37,10 @@ main {
     top: 16%;
 }
 #locations, #villainDraw, #villain1 {
-    left: 6%;
+    left: 5%;
 }
 #locations {
-    width: 15%;
+    width: 16.5%;
 }
 .location, .darkArtsEvent, #darkArtsEventBack, .villain, .event {
     height: 100%;
@@ -56,8 +56,7 @@ main {
 }
 
 #darkArtsEvents {
-    width: 27%;
-    left: 32%;
+    left: 31%;
 }
 .darkArtsEvent {
     transform: rotateY(180deg) translateX(0);
@@ -65,7 +64,7 @@ main {
     transition: transform 1s, opacity 1s;
 }
 .darkArtsEvent.flipped {
-    --translate: 153%;
+    --translate: 138%;
     opacity: 1;
     transform: rotateY(0) translateX(var(--translate));
 
@@ -137,10 +136,10 @@ main {
     top: 39%;
 }
 #events {
-    left: 29%;
+    left: 27%;
 }
 #villainDiscard {
-    left: 48%;
+    left: 46%;
 }
 
 .activeVillain {
@@ -149,17 +148,17 @@ main {
     top: 64%;
 }
 #villain2 {
-    left: 26%;
+    left: 25%;
 }
 #villain3 {
-    left: 47%;
+    left: 46%;
 }
 
 .villainDamage {
     position: absolute;
     top: 82%;
     height: 10%;
-    width: 16%;
+    width: 17%;
     display: flex;
     flex-flow: row wrap;
 }
@@ -199,11 +198,11 @@ main {
 }
 #hogwartsCardBack {
     top: 4%;
-    left: 77%;
+    left: 76%;
 }
 
 #playerContainer {
-    width: calc(100% - var(--boardWidth));
+    max-height: 100%;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
