@@ -254,7 +254,7 @@ main {
 }
 
 #playerChoice {
-    display: none;
+    display: grid;
     height: 60vh;
     width: 60vw;
     position: fixed;

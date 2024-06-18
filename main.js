@@ -43,23 +43,27 @@ document.getElementById("player4Hero").onchange = () => {
 
         // some cards give the players a choice of action
         const playerChoice = choices => {
-            const playerChoiceElement = document.getElementById("playerChoice");
-            playerChoiceElement.style.display = "grid";
+            // create playerChoice element
+            const playerChoiceElement = document.createElement("div");
+            playerChoiceElement.id = "playerChoice";
+
+            // add columns to playerChoice
             let gridTemplateColumns = "";
             for (let i = 1; i <= choices; i++) {
                 gridTemplateColumns += ` ${100 / choices}%`;
                 const choice = document.createElement("div");
                 choice.className = "choice";
-                choice.id = `choice${i}`;
                 playerChoiceElement.appendChild(choice);
             }
             playerChoiceElement.style.gridTemplateColumns = gridTemplateColumns.substring(1);
+
+            // remove playerChoice when clicked
             playerChoiceElement.onclick = () => {
-                playerChoiceElement.style.display = "none";
-                for (let i = 1; i <= choices; i++) {
-                    document.getElementById(`choice${i}`).remove();
-                }
+                playerChoiceElement.remove();
             }
+
+            // add playerChoice to main
+            document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceElement);
         }
 
         // shuffles cards in a random order
@@ -119,7 +123,7 @@ document.getElementById("player4Hero").onchange = () => {
 
         // Harry starting cards
         const alohomoraEffect = () => {activePlayer.influence++;};
-        const startingAllyEffect = () => {playerChoice(2); document.getElementById("choice1").innerHTML = attackToken; document.getElementById("choice1").onclick = () => {activePlayer.attack++}; document.getElementById("choice2").innerHTML = `${healthToken + healthToken}`; document.getElementById("choice2").onclick = () => {activePlayer.health += 2};};
+        const startingAllyEffect = () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack++}; document.getElementsByClassName("choice")[1].innerHTML = `${healthToken + healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.health += 2};};
         const alohomoraHarry1 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraHarry2 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraHarry3 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
@@ -269,6 +273,7 @@ document.getElementById("player4Hero").onchange = () => {
                 // TO-DO: add other heroes
                 this._firstTurn = true;
                 this._petrified = false;
+                this._stunned = false;
             }
             get hero() {
                 return this._hero;
@@ -286,28 +291,31 @@ document.getElementById("player4Hero").onchange = () => {
                 return this._health;
             }
             set health(health) {
-                // Invisibility Cloak effect
-                if (this.passives.includes(invisibilityCloak) && health < this.health) {
-                    health = this.health - 1;
-                }
+                if (!this.stunned) {
+                    // Invisibility Cloak effect
+                    if (this.passives.includes(invisibilityCloak) && health < this.health) {
+                        health = this.health - 1;
+                    }
 
-                // sets health
-                this._health = health;
-                if (this._health < 0) {
-                    this._health = 0;
-                }
-                else if (this._health > 10) {
-                    this._health = 10;
-                }
+                    // sets health
+                    this._health = health;
+                    if (this.health <= 0) {
+                        this._health = 0;
+                        this.stun();
+                    }
+                    else if (this.health > 10) {
+                        this._health = 10;
+                    }
 
-                // adjusts health trackers
-                const healthTracker = document.getElementById("healthTracker");
-                healthTracker.style.left = `${10.3 + 8.3 * (9 - activePlayer.health)}%`;
-                if (activePlayer.health % 2 === 1) {
-                    healthTracker.style.top = "33%";
-                }
-                else {
-                    healthTracker.style.top = "12%";
+                    // adjusts health trackers
+                    const healthTracker = document.getElementById("healthTracker");
+                    healthTracker.style.left = `${10.3 + 8.3 * (9 - activePlayer.health)}%`;
+                    if (activePlayer.health % 2 === 1) {
+                        healthTracker.style.top = "33%";
+                    }
+                    else {
+                        healthTracker.style.top = "12%";
+                    }
                 }
             }
             get attack() {
@@ -365,6 +373,9 @@ document.getElementById("player4Hero").onchange = () => {
             }
             set petrified(petrified) {
                 this._petrified = petrified;
+            }
+            get stunned() {
+                return this._stunned;
             }
 
             discardAt(index) {
@@ -430,6 +441,12 @@ document.getElementById("player4Hero").onchange = () => {
                 this._passives = [];
                 this._firstTurn = false;
                 this.drawCards(5);
+            }
+            stun() {
+                this._stunned = true;
+                this.attack = 0;
+                this.influence = 0;
+                // TO-DO: Discard half your hand. Look out for multiple stuns.
             }
         }
         const player1 = new Player(document.getElementById("player1Hero").value, document.getElementById("player1Proficiency").value);
@@ -551,8 +568,8 @@ document.getElementById("player4Hero").onchange = () => {
         const expulso1 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
         const expulso2 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
         const expulso3 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
-        const flipendo1 = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
-        const flipendo2 = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementById(`choice${i + 1}`).innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementById(`choice${i + 1}`).onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
+        const flipendo1 = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
+        const flipendo2 = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
         const heWhoMustNotBeNamed1 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
         const heWhoMustNotBeNamed2 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
         const heWhoMustNotBeNamed3 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
@@ -695,8 +712,7 @@ document.getElementById("player4Hero").onchange = () => {
             </div>
             <div id="playerHand"></div>
             <input type="button" id="endTurn" value="End Turn">
-        </div>
-        <div id="playerChoice"></div>`;
+        </div>`;
 
         // add villains to board
         document.getElementById("villain1").appendChild(activeVillains[0].img);
@@ -774,8 +790,12 @@ document.getElementById("player4Hero").onchange = () => {
 
         // end turn
         document.getElementById("endTurn").onclick = () => {
+            // unpetrify and unstun everyone
             players.forEach(player => {
                 player.petrified = false;
+                if (player.stunned) {
+                    player.stunned = false;
+                    player.health = 10;
                 }
             });
 
