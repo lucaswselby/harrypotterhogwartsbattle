@@ -42,28 +42,42 @@ document.getElementById("player4Hero").onchange = () => {
         };
 
         // some cards give the players a choice of action
-        const playerChoice = choices => {
-            // create playerChoice element
-            const playerChoiceElement = document.createElement("div");
-            playerChoiceElement.id = "playerChoice";
-
-            // add columns to playerChoice
-            let gridTemplateColumns = "";
-            for (let i = 1; i <= choices; i++) {
-                gridTemplateColumns += ` ${100 / choices}%`;
-                const choice = document.createElement("div");
-                choice.className = "choice";
-                playerChoiceElement.appendChild(choice);
+        // TO-DO: add description of choice (i.e. choose a card to discard)
+        const playerChoice = (choices, iterations, populateFunction) => {
+            // queue playerChoices in case there are multiple
+            if (document.getElementById("playerChoice")) {
+                document.getElementById("playerChoice").addEventListener("click", () => {playerChoice(choices, iterations, populateFunction);}); // TO-DO: choices does not update from multiple discard events, like petrification causing a stun, leaving an empty choice for the first stun discard
             }
-            playerChoiceElement.style.gridTemplateColumns = gridTemplateColumns.substring(1);
+            else {
+                // create playerChoice element
+                const playerChoiceElement = document.createElement("div");
+                playerChoiceElement.id = "playerChoice";
+                playerChoiceElement.className = iterations;
 
-            // remove playerChoice when clicked
-            playerChoiceElement.onclick = () => {
-                playerChoiceElement.remove();
+                // add columns to playerChoice
+                let gridTemplateColumns = "";
+                for (let i = 1; i <= choices; i++) {
+                    gridTemplateColumns += ` ${100 / choices}%`;
+                    const choice = document.createElement("div");
+                    choice.className = "choice";
+                    playerChoiceElement.appendChild(choice);
+                }
+                playerChoiceElement.style.gridTemplateColumns = gridTemplateColumns.substring(1);
+
+                playerChoiceElement.onclick = () => {
+                    // remove playerChoice when clicked
+                    playerChoiceElement.remove();
+
+                    // increment and display a new playerChoice for multiple iterations
+                    if (--iterations > 0) {
+                        playerChoice(--choices, iterations, populateFunction);
+                    }
+                }
+
+                // add playerChoice to main
+                document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceElement);
+                populateFunction();
             }
-
-            // add playerChoice to main
-            document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceElement);
         }
 
         // shuffles cards in a random order
@@ -123,7 +137,7 @@ document.getElementById("player4Hero").onchange = () => {
 
         // Harry starting cards
         const alohomoraEffect = () => {activePlayer.influence++;};
-        const startingAllyEffect = () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack++}; document.getElementsByClassName("choice")[1].innerHTML = `${healthToken + healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.health += 2};};
+        const startingAllyEffect = () => {playerChoice(2, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack++}; document.getElementsByClassName("choice")[1].innerHTML = `${healthToken + healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.health += 2};})};
         const alohomoraHarry1 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraHarry2 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraHarry3 = new Card("Alohomora Harry", "Game 1", "spell", 0, alohomoraEffect, false);
@@ -158,7 +172,7 @@ document.getElementById("player4Hero").onchange = () => {
         const alohomoraHermione6 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraHermione7 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
         const crookshanks = new Card("Crookshanks", "Game 1", "ally", 0, startingAllyEffect, false);
-        const theTalesOfBeedleTheBard = new Card("The Tales of Beedle the Bard", "Game 1", "item", 0, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = influenceToken + influenceToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes: ${influenceToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.influence++;});};}, false);
+        const theTalesOfBeedleTheBard = new Card("The Tales of Beedle the Bard", "Game 1", "item", 0, () => {playerChoice(2, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = influenceToken + influenceToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes: ${influenceToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.influence++;});};})}, false);
         const timeTurner = new Card("Time Turner", "Game 1", "item", 0, () => {activePlayer.influence++;}, true);
         const hermioneStartingCards = [alohomoraHermione1, alohomoraHermione2, alohomoraHermione3, alohomoraHermione4, alohomoraHermione5, alohomoraHermione6, alohomoraHermione7, crookshanks, theTalesOfBeedleTheBard, timeTurner];
 
@@ -170,7 +184,7 @@ document.getElementById("player4Hero").onchange = () => {
         const alohomoraNeville5 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraNeville6 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraNeville7 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
-        const mandrake = new Card("Mandrake", "Game 1", "item", 0, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack++}; document.getElementsByClassName("choice")[1].innerHTML = `Any one Hero${healthToken}${healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage); document.getElementsByClassName("choice")[i].onclick = () => {players[i].health += 2;};}};}, false);
+        const mandrake = new Card("Mandrake", "Game 1", "item", 0, () => {playerChoice(2, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack++}; document.getElementsByClassName("choice")[1].innerHTML = `Any one Hero${healthToken}${healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {playerChoice(players.length, 1); for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage); document.getElementsByClassName("choice")[i].onclick = () => {players[i].health += 2;};}};})}, false);
         const remembrall = new Card("Remembrall", "Game 1", "item", 0, () => {activePlayer.influence++;}, false);
         const trevor = new Card("Trevor", "Game 1", "ally", 0, startingAllyEffect, false);
         const nevilleStartingCards = [alohomoraNeville1, alohomoraNeville2, alohomoraNeville3, alohomoraNeville4, alohomoraNeville5, alohomoraNeville6, alohomoraNeville7, mandrake, remembrall, trevor];
@@ -179,10 +193,10 @@ document.getElementById("player4Hero").onchange = () => {
         const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});}, false);
         const descendo1 = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;}, false);
         const descendo2 = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;}, false);
-        const essenceOfDittany1 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
-        const essenceOfDittany2 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
-        const essenceOfDittany3 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
-        const essenceOfDittany4 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length); for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}}, false);
+        const essenceOfDittany1 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}})}, false);
+        const essenceOfDittany2 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}})}, false);
+        const essenceOfDittany3 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}})}, false);
+        const essenceOfDittany4 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice(players.length, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage); choice.onclick = () => {players[i].health += 2;};}})}, false);
         const goldenSnitch = new Card("Golden Snitch", "Game 1", "item", 5, () => {activePlayer.influence += 2; activePlayer.drawCards(1);}, false);
         const incendio1 = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
         const incendio2 = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
@@ -195,12 +209,12 @@ document.getElementById("player4Hero").onchange = () => {
         const quidditchGear2 = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;}, false);
         const quidditchGear3 = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;}, false);
         const quidditchGear4 = new Card("Quidditch Gear", "Game 1", "item", 3, () => {activePlayer.attack++; activePlayer.health++;}, false);
-        const reparo1 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
-        const reparo2 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
-        const reparo3 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
-        const reparo4 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
-        const reparo5 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
-        const reparo6 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2); document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};}, false);
+        const reparo1 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};})}, false);
+        const reparo2 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};})}, false);
+        const reparo3 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};})}, false);
+        const reparo4 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};})}, false);
+        const reparo5 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};})}, false);
+        const reparo6 = new Card("Reparo", "Game 1", "spell", 3, () => {playerChoice(2, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}${influenceToken}`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.drawCards(1)};})}, false);
         const rubeusHagrid = new Card("Rubeus Hagrid", "Game 1", "ally", 4, () => {activeDarkArtsEvent.attack++; players.forEach(player => {player.health++;});}, false);
         const sortingHat = new Card("Sorting Hat", "Game 1", "item", 4, () => {activePlayer.influence += 2;}, true);
         const wingardiumLeviosa1 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
@@ -215,17 +229,18 @@ document.getElementById("player4Hero").onchange = () => {
 
                     // Time Turner, Sorting Hat, and Wingardium Leviosa effects
                     if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(timeTurner) && card.type === "ally") || ((activePlayer.passives.includes(wingardiumLeviosa1) || activePlayer.passives.includes(wingardiumLeviosa2) || activePlayer.passives.includes(wingardiumLeviosa3)) && card.type === "item")) {
-                        playerChoice(2);
-                        document.getElementsByClassName("choice")[0].innerHTML = "Top of deck";
-                        document.getElementsByClassName("choice")[0].appendChild(card.img.cloneNode());
-                        document.getElementsByClassName("choice")[0].onclick = () => {
-                            activePlayer.draw.unshift(card);
-                        };
-                        document.getElementsByClassName("choice")[1].innerHTML = "Discard";
-                        document.getElementsByClassName("choice")[1].appendChild(card.img.cloneNode());
-                        document.getElementsByClassName("choice")[1].onclick = () => {
-                            activePlayer.discard.push(card);
-                        };
+                        playerChoice(2, 1, () => {
+                            document.getElementsByClassName("choice")[0].innerHTML = "Top of deck";
+                            document.getElementsByClassName("choice")[0].appendChild(card.img.cloneNode());
+                            document.getElementsByClassName("choice")[0].onclick = () => {
+                                activePlayer.draw.unshift(card);
+                            };
+                            document.getElementsByClassName("choice")[1].innerHTML = "Discard";
+                            document.getElementsByClassName("choice")[1].appendChild(card.img.cloneNode());
+                            document.getElementsByClassName("choice")[1].onclick = () => {
+                                activePlayer.discard.push(card);
+                            };
+                        });
                     }
                     else {
                         activePlayer.discard.push(card);
@@ -271,7 +286,6 @@ document.getElementById("player4Hero").onchange = () => {
                 else if (hero === "Hermione Granger") this._discard = hermioneStartingCards;
                 else if (hero === "Neville Longbottom") this._discard = nevilleStartingCards;
                 // TO-DO: add other heroes
-                this._firstTurn = true;
                 this._petrified = false;
                 this._stunned = false;
             }
@@ -322,32 +336,36 @@ document.getElementById("player4Hero").onchange = () => {
                 return this._attack;
             }
             set attack(attack) {
-                // sets attack
-                this._attack = attack;
-                if (this._attack < 0) {
-                    this._attack = 0;
-                }
+                if (!this.stunned) {
+                    // sets attack
+                    this._attack = attack;
+                    if (this._attack < 0) {
+                        this._attack = 0;
+                    }
 
-                // adds attack tokens to board
-                document.getElementById("attackTokens").innerHTML = "";
-                for (let i = 0; i < attack; i++) {
-                    document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                    // adds attack tokens to board
+                    document.getElementById("attackTokens").innerHTML = "";
+                    for (let i = 0; i < attack; i++) {
+                        document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                    }
                 }
             }
             get influence() {
                 return this._influence;
             }
             set influence(influence) {
-                // sets influence
-                this._influence = influence;
-                if (this.influence < 0) {
-                    this._influence = 0;
-                }
+                if (!this.stunned) {
+                    // sets influence
+                    this._influence = influence;
+                    if (this.influence < 0) {
+                        this._influence = 0;
+                    }
 
-                // adds influence tokens to board
-                document.getElementById("influenceTokens").innerHTML = "";
-                for (let i = 0; i < this.influence; i++) {
-                    document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
+                    // adds influence tokens to board
+                    document.getElementById("influenceTokens").innerHTML = "";
+                    for (let i = 0; i < this.influence; i++) {
+                        document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
+                    }
                 }
             }
             get draw() {
@@ -365,9 +383,6 @@ document.getElementById("player4Hero").onchange = () => {
             get passives() {
                 return this._passives;
             }
-            get firstTurn() {
-                return this._firstTurn;
-            }
             get petrified() {
                 return this._petrified;
             }
@@ -376,6 +391,9 @@ document.getElementById("player4Hero").onchange = () => {
             }
             get stunned() {
                 return this._stunned;
+            }
+            set stunned(stunned) {
+                this._stunned = stunned;
             }
 
             discardAt(index) {
@@ -439,14 +457,22 @@ document.getElementById("player4Hero").onchange = () => {
                 this.attack = 0;
                 this.influence = 0;
                 this._passives = [];
-                this._firstTurn = false;
                 this.drawCards(5);
             }
             stun() {
-                this._stunned = true;
-                this.attack = 0;
-                this.influence = 0;
-                // TO-DO: Discard half your hand. Look out for multiple stuns.
+                this.stunned = true;
+                this._attack = 0;
+                this._influence = 0;
+                let iterations = Math.floor(this.hand.length / 2);
+                playerChoice(this.hand.length, iterations, () => {
+                    for (let i = 0; i < this.hand.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML += `<img src="${this.hand[i].img.src}">`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            this.forcedDiscardAt(i);
+                        }
+                    }
+                });
+                // TO-DO: account for multiple stuns
             }
         }
         const player1 = new Player(document.getElementById("player1Hero").value, document.getElementById("player1Proficiency").value);
@@ -568,8 +594,8 @@ document.getElementById("player4Hero").onchange = () => {
         const expulso1 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
         const expulso2 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
         const expulso3 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
-        const flipendo1 = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
-        const flipendo2 = new DarkArtsEvent("Flipendo", () => {activePlayer.health--; playerChoice(activePlayer.hand.length); for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}});
+        const flipendo1 = new DarkArtsEvent("Flipendo", () => {playerChoice(activePlayer.hand.length, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}}); activePlayer.health--;});
+        const flipendo2 = new DarkArtsEvent("Flipendo", () => {playerChoice(activePlayer.hand.length, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}}); activePlayer.health--;});
         const heWhoMustNotBeNamed1 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
         const heWhoMustNotBeNamed2 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
         const heWhoMustNotBeNamed3 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
@@ -617,12 +643,13 @@ document.getElementById("player4Hero").onchange = () => {
                     }
                     // Oliver Wood effect
                     if (activePlayer.passives.includes(oliverWood)) {
-                        playerChoice(players.length);
-                        for (let i = 0; i < players.length; i++) {
-                            document.getElementsByClassName("choice")[i].onclick = () => {
-                                players[i].health += 2;
-                            };
-                        }
+                        playerChoice(players.length, 1, () => {
+                            for (let i = 0; i < players.length; i++) {
+                                document.getElementsByClassName("choice")[i].onclick = () => {
+                                    players[i].health += 2;
+                                };
+                            }                            
+                        });
                     }
                 }
             }
@@ -757,15 +784,20 @@ document.getElementById("player4Hero").onchange = () => {
 
         // start a new turn
         let lastCardImg = null;
+        let firstTurn = true;
         const startTurn = () => {
             // new active player
             activePlayer = players.indexOf(activePlayer) < players.length - 1 ? players[players.indexOf(activePlayer) + 1] : players[0];
-            if (activePlayer.firstTurn) activePlayer.drawCards(5);
+            if (firstTurn) {
+                players.forEach(player => {player.drawCards(5);});
+                firstTurn = false;
+            }
             activePlayer.populateHand();
             document.getElementById("heroImage").appendChild(activePlayer.heroImage);
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
             //activePlayer.influence = 100; // DEBUG
             //activePlayer.attack = 6; // DEBUG
+            //players.forEach(player => {player.health = 1;}); // DEBUG
 
             // reveal Dark Arts Event
             const darkArtsEventsElement = document.getElementById("darkArtsEvents");
