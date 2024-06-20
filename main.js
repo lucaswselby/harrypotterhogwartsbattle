@@ -14,7 +14,7 @@ document.getElementById("player4Hero").onchange = () => {
     displayProficiencyChoice(4);
 }
 
-//document.getElementById("submitPlayers").onclick = () => {
+document.getElementById("submitPlayers").onclick = () => {
     // can't have more than one of each hero
     let continueGame = true;
     for (let i = 0; i < document.getElementsByClassName("playerHero").length - 1; i++) {
@@ -864,4 +864,4 @@ document.getElementById("player4Hero").onchange = () => {
     else {
         alert("Can't have more than one of each hero.");
     }
-//}
+}
