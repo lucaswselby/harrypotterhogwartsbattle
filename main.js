@@ -434,14 +434,6 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 this.discardAt(index);
             }
-            shuffle() {
-                // shuffle discard pile
-                shuffle(this._discard)
-
-                // add discard pile to draw pile
-                this._draw = this._draw.concat(this.discard);
-                this._discard = [];
-            }
             populateHand() {
                 document.getElementById("playerHand").innerHTML = "";
                 this.hand.forEach(card => {
@@ -454,7 +446,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         // moves a card from the draw pile to your hand
                         if (this.draw.length > 0) {
                             this.draw[0].generateOnClick();
-                            this._hand.push(this.draw[0]);
+                            this.hand.push(this.draw[0]);
                             if (this.draw[0].passive) {
                                 this._passives.push(this.draw[0]);
                             }
@@ -465,7 +457,12 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         // shuffles the discard pile into the draw pile
                         else {
-                            this.shuffle();
+                            // shuffle discard pile
+                            shuffle(this._discard);
+            
+                            // add discard pile to draw pile
+                            this._draw = this.draw.concat(this.discard);
+                            this._discard = [];
                             i--;
                         }
                     }
