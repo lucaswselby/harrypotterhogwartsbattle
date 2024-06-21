@@ -47,7 +47,6 @@ document.getElementById("submitPlayers").onclick = () => {
         };
 
         // some cards give the players a choice of action
-        // TO-DO: add description of choice (i.e. choose a card to discard)
         const playerChoice = (description, choices, iterations, populateFunction) => {
             // queue playerChoices in case there are multiple
             if (document.getElementById("playerChoice")) {
@@ -234,6 +233,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const wingardiumLeviosa2 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
         const wingardiumLeviosa3 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
+        // TO-DO: add other games' Hogwarts cards to hogwartsCards based on the selected game
         // purchase a Hogwarts card
         hogwartsCards.forEach(card => {
             card.img.onclick = () => {
@@ -580,7 +580,9 @@ document.getElementById("submitPlayers").onclick = () => {
         //const castleGates = new Location("Castle Gates", 1, 5, 1);
         //const hagridsHut = new Location("Hagrid's Hut", 2, 6, 2);
         //const greatHall = new Location("Great Hall", 3, 7, 3);
-        let locations = [diagonAlley, mirrorOfErised];
+        let locations = [];
+        if (activeGame === "Game 1") [diagonAlley, mirrorOfErised];
+        // add other games' locations
         let activeLocation = locations[0];
 
         // dark arts events
@@ -619,6 +621,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const petrification2 = new DarkArtsEvent("Petrification", "Game 1", () => {players.forEach(player => {player.health--; player.petrified = true;});});
         //const menacingGrowl = new DarkArtsEvent("Menacing Growl", "Box 1", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
+        // TO-DO: add future games' DAEs to darkArtsEvents if selected
         shuffle(darkArtsEvents);
         let activeDarkArtsEvent = darkArtsEvents[0];
 
@@ -684,8 +687,10 @@ document.getElementById("submitPlayers").onclick = () => {
         const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, "health", () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
         //const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
         let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
+        // TO-DO: add other games' villains to villains if selected
         shuffle(villains);
         let activeVillains = [villains[0]];
+        // TO-DO: add more active villains based on selected game
 
         // events (horcruxes)
         class Event {
@@ -704,7 +709,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._reward();
             }
         }
-        const horcrux1 = new Event("Horcrux 1", () => {}, () => {});
+        const horcrux1 = new Event("Horcrux 1", () => {}, () => {}); // TO-DO: complete horcruxes
         let events = [horcrux1];
         let activeEvent = events[0];
 
