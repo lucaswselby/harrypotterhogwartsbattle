@@ -455,7 +455,9 @@ document.getElementById("submitPlayers").onclick = () => {
                                 this._passives.push(this.draw[0]);
                             }
                             this._draw.shift();
-                            document.getElementById("playerHand").appendChild(this.hand[this.hand.length - 1].img);
+                            if (this === activePlayer) {
+                                document.getElementById("playerHand").appendChild(this.hand[this.hand.length - 1].img);
+                            }
                         }
                         // shuffles the discard pile into the draw pile
                         else {
