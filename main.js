@@ -694,9 +694,15 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (this.health <= 0) {
                     // remove villain
                     this.reward();
-                    this.img.remove();
-                    document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
-                    document.getElementById("villainDiscard").appendChild(this.img);
+                    this.img.classList.toggle("defeating");
+                    setTimeout(() => {
+                        this.img.remove();
+                        document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
+                        this.img.classList.toggle("defeating");
+                        if (document.getElementById("villainDiscard").getElementsByTagName("IMG")[0]) setTimeout(() => {document.getElementById("villainDiscard").getElementsByTagName("IMG")[0].remove();}, 1000);
+                        document.getElementById("villainDiscard").appendChild(this.img);
+                        this.img.classList.toggle("defeated");
+                    }, 1000);
 
                     // Firebolt and Cleansweep 11 effects
                     if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11)) {
