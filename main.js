@@ -581,7 +581,7 @@ document.getElementById("submitPlayers").onclick = () => {
         //const hagridsHut = new Location("Hagrid's Hut", 2, 6, 2);
         //const greatHall = new Location("Great Hall", 3, 7, 3);
         let locations = [];
-        if (activeGame === "Game 1") [diagonAlley, mirrorOfErised];
+        if (activeGame === "Game 1") locations = [diagonAlley, mirrorOfErised];
         // add other games' locations
         let activeLocation = locations[0];
 
