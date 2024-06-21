@@ -499,13 +499,13 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // locations
         class Location {
-            constructor(name, number, spaces, darkArtsEventDraws) {
+            constructor(name, game, number, spaces, darkArtsEventDraws) {
                 this._name = name;
-                this._img = `<img id="location${number}" class="location" src="./images/${activeGame}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
+                this._img = `<img id="location${number}" class="location" src="./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
                 this._number = number;
                 this._spaces = spaces;
                 this._darkArtsEventDraws = darkArtsEventDraws;
-                this._game = activeGame;
+                this._game = game;
                 this._added = 0;
             }
             get img() {
@@ -575,14 +575,53 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
         }
-        const diagonAlley = new Location("Diagon Alley", 1, 4, 1);
-        const mirrorOfErised = new Location("Mirror of Erised", 2, 4, 1);
-        //const castleGates = new Location("Castle Gates", 1, 5, 1);
-        //const hagridsHut = new Location("Hagrid's Hut", 2, 6, 2);
-        //const greatHall = new Location("Great Hall", 3, 7, 3);
-        let locations = [];
-        if (activeGame === "Game 1") locations = [diagonAlley, mirrorOfErised];
-        // add other games' locations
+        const diagonAlley = new Location("Diagon Alley", "Game 1", 1, 4, 1);
+        const mirrorOfErised = new Location("Mirror of Erised", "Game 1", 2, 4, 1);
+        const forbiddenForest = new Location("Forbidden Forest", "Game 2", 1, 4, 1);
+        const quidditchPitch = new Location("Quidditch Pitch", "Game 2", 2, 4, 1);
+        const chamberOfSecrets = new Location("Chamber of Secrets", "Game 2", 3, 5, 2);
+        const hogwartsExpress = new Location("Hogwarts Express", "Game 3", 1, 5, 1);
+        const hogsmeadeVillage = new Location("Hogsmeade Village", "Game 3", 2, 6, 2);
+        const shriekingShack = new Location("Shrieking Shack", "Game 3", 3, 6, 2);
+        const quidditchWorldCup = new Location("Quidditch World Cup", "Game 4", 1, 6, 1);
+        const triwizardTournament = new Location("Triwizard Tournament", "Game 4", 2, 6, 2);
+        const graveyard = new Location("Graveyard", "Game 4", 3, 7, 2);
+        const azkaban = new Location("Azkaban", "Game 5", 1, 7, 1);
+        const hallOfProphecy = new Location("Hall of Prophecy", "Game 5", 2, 7, 2);
+        const ministryOfMagic = new Location("Ministry of Magic", "Game 5", 3, 7, 2);
+        const knockturnAlley = new Location("Knockturn Alley", "Game 6", 1, 7, 1);
+        const theBurrow = new Location("The Burrow", "Game 6", 2, 7, 2);
+        const astronomyTower = new Location("Astronomy Tower", "Game 6", 3, 8, 3);
+        const godricsHollow = new Location("Godric's Hollow", "Game 7", 1, 6, 1);
+        const gringotts = new Location("Gringotts", "Game 7", 2, 6, 2);
+        const roomOfRequirement = new Location("Room of Requirement", "Game 7", 3, 7, 2);
+        const hogwartsCastle = new Location("Hogwarts Castle", "Game 7", 4, 8, 3);
+        const castleGates = new Location("Castle Gates", "Box 1", 1, 5, 1);
+        const hagridsHut = new Location("Hagrid's Hut", "Box 1", 2, 6, 2);
+        const greatHallBox = new Location("Great Hall", "Box 1", 3, 7, 3);
+        const dADAClassroom = new Location("DADA Classroom", "Box 2", 1, 6, 1);
+        const castleHallways = new Location("Castle Hallways", "Box 2", 2, 6, 2);
+        const whompingWillow = new Location("Whomping Willow", "Box 2", 3, 7, 3);
+        const unicornHollow = new Location("Unicorn Hollow", "Box 3", 1, 5, 1);
+        const aragogsLair = new Location("Aragog's Lair", "Box 3", 2, 6, 2);
+        const giantClearing = new Location("Giat Clearing", "Box 3", 3, 7, 3);
+        const selectionOfChampions = new Location("Selection of Champions", "Box 4", 1, 5, 1);
+        const dragonArena = new Location("Dragon Arena", "Box 4", 2, 6, 2);
+        const mermaidVillage = new Location("Mermaid Village", "Box 4", 3, 6, 2);
+        const triwizardMaze = new Location("Triwizard Maze", "Box 4", 4, 7, 3);
+        const theBlackLake = new Location("The Black Lake", "Pack 1", 1, 5, 1);
+        const theHospitalWing = new Location("The Hospital Wing", "Pack 1", 2, 7, 2);
+        const theHogwartsLibrary = new Location("The Hogwarts Library", "Pack 1", 3, 7, 3);
+        const ministryOfMagicAtrium = new Location("Ministry of Magic Atrium", "Pack 2", 1, 6, 1);
+        const ministryCourtroom = new Location("Ministry Courtroom", "Pack 2", 2, 6, 2);
+        const ministryLift = new Location("Ministry Lift", "Pack 2", 3, 7, 3);
+        const malfoyManor = new Location("Malfoy Manor", "Pack 3", 1, 5, 1);
+        const cave = new Location("Cave", "Pack 3", 2, 6, 2);
+        const atopTheTower = new Location("Atop the Tower", "Pack 3", 3, 6, 3);
+        const greatHallPack = new Location("Great Hall", "Pack 4", 1, 6, 1);
+        const forestClearing = new Location("Forest Clearing", "Pack 4", 2, 6, 2);
+        const castleCourtyard = new Location("Castle Courtyard", "Pack 4", 3, 7, 3);
+        let locations = [diagonAlley, mirrorOfErised, forbiddenForest, quidditchPitch, chamberOfSecrets, hogwartsExpress, hogsmeadeVillage, shriekingShack, quidditchWorldCup, triwizardTournament, graveyard, azkaban, hallOfProphecy, ministryOfMagic, knockturnAlley, theBurrow, astronomyTower, godricsHollow, gringotts, roomOfRequirement, hogwartsCastle, castleGates, hagridsHut, greatHallBox, dADAClassroom, castleHallways, whompingWillow, unicornHollow, aragogsLair, giantClearing, selectionOfChampions, dragonArena, mermaidVillage, triwizardMaze, theBlackLake, theHospitalWing, theHogwartsLibrary, ministryOfMagicAtrium, ministryCourtroom, ministryLift, malfoyManor, cave, atopTheTower, greatHallPack, forestClearing, castleCourtyard].filter(loc => {return loc.game === activeGame});
         let activeLocation = locations[0];
 
         // dark arts events
