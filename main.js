@@ -585,8 +585,9 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // dark arts events
         class DarkArtsEvent {
-            constructor(name, effect) {
+            constructor(name, game, effect) {
                 this._name = name;
+                this._game = game;
                 this._effect = effect;
                 this.generateImg();
             }
@@ -598,7 +599,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             generateImg() {
                 this._img = document.createElement("img");
-                this._img.src = `./images/${activeGame}/${src(this._name)}`;
+                this._img.src = `./images/${this._game}/${src(this._name)}`;
                 this._img.className = "darkArtsEvent";
                 this._img.alt = this._name;
             }
@@ -606,27 +607,27 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._effect();
             }
         }
-        const expulso1 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
-        const expulso2 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
-        const expulso3 = new DarkArtsEvent("Expulso", () => {activePlayer.health -= 2;});
-        const flipendo1 = new DarkArtsEvent("Flipendo", () => {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}}); activePlayer.health--;});
-        const flipendo2 = new DarkArtsEvent("Flipendo", () => {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}}); activePlayer.health--;});
-        const heWhoMustNotBeNamed1 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
-        const heWhoMustNotBeNamed2 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
-        const heWhoMustNotBeNamed3 = new DarkArtsEvent("He Who Must Not Be Named", () => {activeLocation.addToLocation()});
-        const petrification1 = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--; player.petrified = true;});});
-        const petrification2 = new DarkArtsEvent("Petrification", () => {players.forEach(player => {player.health--; player.petrified = true;});});
-        //const menacingGrowl = new DarkArtsEvent("Menacing Growl", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
+        const expulso1 = new DarkArtsEvent("Expulso", "Game 1", () => {activePlayer.health -= 2;});
+        const expulso2 = new DarkArtsEvent("Expulso", "Game 1", () => {activePlayer.health -= 2;});
+        const expulso3 = new DarkArtsEvent("Expulso", "Game 1", () => {activePlayer.health -= 2;});
+        const flipendo1 = new DarkArtsEvent("Flipendo", "Game 1", () => {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}}); activePlayer.health--;});
+        const flipendo2 = new DarkArtsEvent("Flipendo", "Game 1", () => {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.passives.includes(activePlayer.hand[i])) activePlayer.passives.splice(activePlayer.hand[i], 1); activePlayer.forcedDiscardAt(i);};}}); activePlayer.health--;});
+        const heWhoMustNotBeNamed1 = new DarkArtsEvent("He Who Must Not Be Named", "Game 1", () => {activeLocation.addToLocation()});
+        const heWhoMustNotBeNamed2 = new DarkArtsEvent("He Who Must Not Be Named", "Game 1", () => {activeLocation.addToLocation()});
+        const heWhoMustNotBeNamed3 = new DarkArtsEvent("He Who Must Not Be Named", "Game 1", () => {activeLocation.addToLocation()});
+        const petrification1 = new DarkArtsEvent("Petrification", "Game 1", () => {players.forEach(player => {player.health--; player.petrified = true;});});
+        const petrification2 = new DarkArtsEvent("Petrification", "Game 1", () => {players.forEach(player => {player.health--; player.petrified = true;});});
+        //const menacingGrowl = new DarkArtsEvent("Menacing Growl", "Box 1", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         shuffle(darkArtsEvents);
         let activeDarkArtsEvent = darkArtsEvents[0];
 
         // villains
         class Villain {
-            constructor(name, type, health, healthType, effect, reward) {
+            constructor(name, game, type, health, healthType, effect, reward) {
                 this._img = document.createElement("img");
                 this._img.className = "villain";
-                this._img.src = `./images/${activeGame}/${src(name)}`;
+                this._img.src = `./images/${game}/${src(name)}`;
                 this._img.alt = name;
                 this._type = type;
                 this._health = health;
@@ -678,9 +679,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._reward();
             }
         }
-        const crabbeAndGoyle = new Villain("Crabbe and Goyle", "villain", 5, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});});
-        const dracoMalfoy = new Villain("Draco Malfoy", "villain", 6, "health", () => {}, () => {activeLocation.removeFromLocation();});
-        const quirinusQuirrell = new Villain("Quirinus Quirrell", "villain", 6, "health", () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
+        const crabbeAndGoyle = new Villain("Crabbe and Goyle", "Game 1", "villain", 5, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});});
+        const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, "health", () => {}, () => {activeLocation.removeFromLocation();});
+        const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, "health", () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
         //const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
         let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         shuffle(villains);
