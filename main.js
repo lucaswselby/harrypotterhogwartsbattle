@@ -1,6 +1,6 @@
 // display player proficiecy choice
 const displayProficiencyChoice = playerNumber => {
-    if (document.getElementById(`player${playerNumber}Hero`).value) {
+    if (document.getElementById(`player${playerNumber}Hero`).value && (document.getElementById("game").value === "Game 6" || document.getElementById("game").value === "Game 7")) {
         document.getElementById(`player${playerNumber}Proficiency`).style.display = "initial";
     }
     else {
@@ -12,6 +12,11 @@ document.getElementById("player3Hero").onchange = () => {
 }
 document.getElementById("player4Hero").onchange = () => {
     displayProficiencyChoice(4);
+}
+document.getElementById("game").onchange = () => {
+    for (let i = 1; i <= document.getElementsByClassName("playerProficiency").length; i++) {
+        displayProficiencyChoice(i);
+    }
 }
 
 document.getElementById("submitPlayers").onclick = () => {
@@ -268,11 +273,15 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._heroImage.id = "playerHero";
                 this._heroImage.src = `./images/${parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : (parseInt(activeGame[activeGame.length - 1]) < 7 ? "Game 3" : "Game 7")}/${src(hero)}`;
                 this._heroImage.alt = hero;
-                this._proficiency = proficiency;
-                this._proficiencyImage = document.createElement("img");
-                this._proficiencyImage.id = "playerProficiency";
-                this._proficiencyImage.src = `./images/Game 6/${src(proficiency)}`;
-                this._proficiencyImage.alt = proficiency;
+                this._proficiency = "";
+                this._proficiencyImage = document.createElement("div");
+                if (activeGame === "Game 6" || activeGame === "Game 7") {
+                    this._proficiency = proficiency;
+                    this._proficiencyImage = document.createElement("img");
+                    this._proficiencyImage.id = "playerProficiency";
+                    this._proficiencyImage.src = `./images/Game 6/${src(proficiency)}`;
+                    this._proficiencyImage.alt = proficiency;
+                }
                 this._health = 10;
                 this._attack = 0;
                 this._influence = 0;

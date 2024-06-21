@@ -15,7 +15,7 @@ main {
     overflow: hidden;
 }
 
-#player3Proficiency, #player4Proficiency {
+.playerProficiency {
     display: none;
 }
 
