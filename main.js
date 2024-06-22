@@ -895,7 +895,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 villain.effect();
             });
         };
-        document.getElementById("gameBoard").onload = startTurn;
+        document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
 
         // end turn
         document.getElementById("endTurn").onclick = () => {

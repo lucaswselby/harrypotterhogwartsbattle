@@ -330,6 +330,7 @@ main {
     position: absolute;
     top: 12%;
     left: 2%;
+    transition: top 1s, left 1s;
 }
 #attackTokens, #influenceTokens {
     height: 28%;
