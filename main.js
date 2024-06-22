@@ -48,47 +48,49 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // some cards give the players a choice of action
         const playerChoice = (description, choices, iterations, populateFunction) => {
-            // queue playerChoices in case there are multiple
-            if (document.getElementById("playerChoice")) {
-                document.getElementById("playerChoice").addEventListener("click", () => {playerChoice(description, choices, iterations, populateFunction);});
-            }
-            else {
-                // create playerChoice element
-                const playerChoiceElement = document.createElement("div");
-                playerChoiceElement.id = "playerChoice";
-                playerChoiceElement.className = iterations;
-
-                // create playerChoice label
-                const playerChoiceLabel = document.createElement("h1");
-                playerChoiceLabel.id = "playerChoiceLabel";
-                playerChoiceLabel.innerHTML = description;
-
-                // add columns to playerChoice
-                let gridTemplateColumns = "";
-                for (let i = 1; i <= choices(); i++) {
-                    gridTemplateColumns += ` ${100 / choices()}%`;
-                    const choice = document.createElement("div");
-                    choice.className = "choice";
-                    playerChoiceElement.appendChild(choice);
+            if (choices) {
+                // queue playerChoices in case there are multiple
+                if (document.getElementById("playerChoice")) {
+                    document.getElementById("playerChoice").addEventListener("click", () => {playerChoice(description, choices, iterations, populateFunction);});
                 }
-                playerChoiceElement.style.gridTemplateColumns = gridTemplateColumns.substring(1);
+                else {
+                    // create playerChoice element
+                    const playerChoiceElement = document.createElement("div");
+                    playerChoiceElement.id = "playerChoice";
+                    playerChoiceElement.className = iterations;
 
-                playerChoiceElement.onclick = () => {
-                    // remove playerChoice when clicked
-                    playerChoiceElement.remove();
-                    playerChoiceLabel.remove();
+                    // create playerChoice label
+                    const playerChoiceLabel = document.createElement("h1");
+                    playerChoiceLabel.id = "playerChoiceLabel";
+                    playerChoiceLabel.innerHTML = description;
 
-                    // increment and display a new playerChoice for multiple iterations
-                    if (--iterations > 0) {
-                        playerChoice(description, choices, iterations, populateFunction);
+                    // add columns to playerChoice
+                    let gridTemplateColumns = "";
+                    for (let i = 1; i <= choices(); i++) {
+                        gridTemplateColumns += ` ${100 / choices()}%`;
+                        const choice = document.createElement("div");
+                        choice.className = "choice";
+                        playerChoiceElement.appendChild(choice);
                     }
-                }
+                    playerChoiceElement.style.gridTemplateColumns = gridTemplateColumns.substring(1);
 
-                // add playerChoice to main
-                document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceElement);
-                playerChoiceLabel.style.width = `${playerChoiceElement.offsetWidth + 10 * (choices() - 1)}px`;
-                document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceLabel);
-                populateFunction();
+                    playerChoiceElement.onclick = () => {
+                        // remove playerChoice when clicked
+                        playerChoiceElement.remove();
+                        playerChoiceLabel.remove();
+
+                        // increment and display a new playerChoice for multiple iterations
+                        if (--iterations > 0) {
+                            playerChoice(description, choices, iterations, populateFunction);
+                        }
+                    }
+
+                    // add playerChoice to main
+                    document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceElement);
+                    playerChoiceLabel.style.width = `${playerChoiceElement.offsetWidth + 10 * (choices() - 1)}px`;
+                    document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceLabel);
+                    populateFunction();
+                }
             }
         }
 
@@ -233,14 +235,25 @@ document.getElementById("submitPlayers").onclick = () => {
         const wingardiumLeviosa2 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
         const wingardiumLeviosa3 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
+        const arthurWeasley = new Card("Arthur Weasley", "Game 2", "ally", 6, () => {players.forEach(player => {player.influence += 2;});}, false);
+        const dobbyTheHouseElf = new Card("Dobby The House-Elf", "Game 1", "ally", 4, () => {activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false);
+        const expelliarmus1 = new Card("Expelliarmus", "Game 2", "spell", 6, () => {activePlayer.attack += 2; activePlayer.drawCards(1);}, false);
+        const expelliarmus2 = new Card("Expelliarmus", "Game 2", "spell", 6, () => {activePlayer.attack += 2; activePlayer.drawCards(1);}, false);
+        const fawkesThePhoenix = new Card("Fawkes The Phoenix", "Game 2", "ally", 5, () => {playerChoice("Pick one:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = attackToken + attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes:</br>${healthToken}${healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.health += 2;});}});}, false);
+        const finite1 = new Card("Finite", "Game 2", "spell", 3, () => {activeLocation.removeFromLocation();}, false);
+        const finite2 = new Card("Finite", "Game 2", "spell", 3, () => {activeLocation.removeFromLocation();}, false);
+        const gilderoyLockhart = new Card("Gilderoy Lockhart", "Game 2", "ally", 2, () => {activePlayer.drawCards(1); playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i);}}});}, false);
+        const ginnyWeasley = new Card("Ginny Weasley", "Game 2", "ally", 4, () => {activePlayer.attack++; activePlayer.influence++;}, false);
+        const mollyWeasley = new Card("Molly Weasley", "Game 2", "ally", 6, () => {players.forEach(player => {player.influence++; player.health += 2;});}, false);
+        const nimbusTwoThousandAndOne1 = new Card("Nimbus Two Thousand And One", "Game 2", "item", 5, () => {activePlayer.attack += 2;}, true);
+        const nimbusTwoThousandAndOne2 = new Card("Nimbus Two Thousand And One", "Game 2", "item", 5, () => {activePlayer.attack += 2;}, true);
+        const polyjuicePotion1 = new Card("Polyjuice Potion", "Game 2", "item", 3, () => {const allies = activePlayer.hand.filter(card => {return card.type === "ally";}); playerChoice("Pick an ally to copy:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {allies[i].effect(); if (allies[i].passive) activePlayer.passives.push(allies[i]);};}});}, false);
+        const polyjuicePotion2 = new Card("Polyjuice Potion", "Game 2", "item", 3, () => {const allies = activePlayer.hand.filter(card => {return card.type === "ally";}); playerChoice("Pick an ally to copy:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {allies[i].effect(); if (allies[i].passive) activePlayer.passives.push(allies[i]);};}});}, false);
         if (activeGame === "Game 2") {
-            const arthurWeasley = new Card("Arthur Weasley", "Game 2", "ally", 6, () => {players.forEach(player => {player.influence += 2;});}, false);
-            const dobbyTheHouseElf = new Card("Dobby The House-Elf", "Game 1", "ally", 4, () => {activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false);
-            const expelliarmus = new Card("Expelliarmus", "Game 2", "spell", 6, () => {activePlayer.attack += 2; activePlayer.drawCards(1);}, false);
-            const fawkesThePhoenix = new Card("Fawkes The Phoenix", "Game 2", "ally", 5, () => {playerChoice("Pick one:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = attackToken + attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes:</br>${healthToken}${healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.health += 2;});}});}, false);
-            hogwartsCards.push(arthurWeasley); // TO-DO: duplicate cards and add to hogwartsCards
+            hogwartsCards.push(arthurWeasley, dobbyTheHouseElf, expelliarmus1, expelliarmus2, fawkesThePhoenix, finite1, finite2, gilderoyLockhart, ginnyWeasley, mollyWeasley, nimbusTwoThousandAndOne1, nimbusTwoThousandAndOne2, polyjuicePotion1, polyjuicePotion2);
         }
         // TO-DO: add other games' Hogwarts cards to hogwartsCards based on the selected game
+        
         // purchase a Hogwarts card
         hogwartsCards.forEach(card => {
             card.img.onclick = () => {
@@ -428,6 +441,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 // Remembrall effect
                 if (this.hand[index] === remembrall) {
                     activePlayer.influence += 2;
+                }
+                // Gilderoy Lockhart effect
+                else if (this.hand[index] === gilderoyLockhart) {
+                    this.drawCards(1);
                 }
 
                 // Crabbe and Goyle effect
@@ -718,6 +735,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     // Firebolt and Cleansweep 11 effects
                     if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11)) {
                         activePlayer.influence++;
+                    }
+                    // Nimbus Two Thousand and One effect
+                    if (activePlayer.passives.includes(nimbusTwoThousandAndOne1) || activePlayer.passives.includes(nimbusTwoThousandAndOne2)) {
+                        activePlayer.influence += 2;
                     }
                     // Oliver Wood effect
                     if (activePlayer.passives.includes(oliverWood)) {
