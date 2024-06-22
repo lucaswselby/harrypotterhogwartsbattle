@@ -237,6 +237,8 @@ document.getElementById("submitPlayers").onclick = () => {
             const arthurWeasley = new Card("Arthur Weasley", "Game 2", "ally", 6, () => {players.forEach(player => {player.influence += 2;});}, false);
             const dobbyTheHouseElf = new Card("Dobby The House-Elf", "Game 1", "ally", 4, () => {activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false);
             const expelliarmus = new Card("Expelliarmus", "Game 2", "spell", 6, () => {activePlayer.attack += 2; activePlayer.drawCards(1);}, false);
+            const fawkesThePhoenix = new Card("Fawkes The Phoenix", "Game 2", "ally", 5, () => {playerChoice("Pick one:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = attackToken + attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes:</br>${healthToken}${healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.health += 2;});}});}, false);
+            hogwartsCards.push(arthurWeasley); // TO-DO: duplicate cards and add to hogwartsCards
         }
         // TO-DO: add other games' Hogwarts cards to hogwartsCards based on the selected game
         // purchase a Hogwarts card
