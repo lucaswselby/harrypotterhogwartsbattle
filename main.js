@@ -234,7 +234,6 @@ document.getElementById("submitPlayers").onclick = () => {
         const wingardiumLeviosa1 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
         const wingardiumLeviosa2 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
         const wingardiumLeviosa3 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
-        let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         const arthurWeasley = new Card("Arthur Weasley", "Game 2", "ally", 6, () => {players.forEach(player => {player.influence += 2;});}, false);
         const dobbyTheHouseElf = new Card("Dobby The House-Elf", "Game 1", "ally", 4, () => {activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false);
         const expelliarmus1 = new Card("Expelliarmus", "Game 2", "spell", 6, () => {activePlayer.attack += 2; activePlayer.drawCards(1);}, false);
@@ -249,11 +248,12 @@ document.getElementById("submitPlayers").onclick = () => {
         const nimbusTwoThousandAndOne2 = new Card("Nimbus Two Thousand And One", "Game 2", "item", 5, () => {activePlayer.attack += 2;}, true);
         const polyjuicePotion1 = new Card("Polyjuice Potion", "Game 2", "item", 3, () => {const allies = activePlayer.hand.filter(card => {return card.type === "ally";}); playerChoice("Pick an ally to copy:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {allies[i].effect(); if (allies[i].passive) activePlayer.passives.push(allies[i]);};}});}, false);
         const polyjuicePotion2 = new Card("Polyjuice Potion", "Game 2", "item", 3, () => {const allies = activePlayer.hand.filter(card => {return card.type === "ally";}); playerChoice("Pick an ally to copy:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {allies[i].effect(); if (allies[i].passive) activePlayer.passives.push(allies[i]);};}});}, false);
-        if (activeGame === "Game 2") {
+        let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
+        // TO-DO: add other games' Hogwarts cards to hogwartsCards based on the selected game
+        if (activeGame !== "Game 1") {
             hogwartsCards.push(arthurWeasley, dobbyTheHouseElf, expelliarmus1, expelliarmus2, fawkesThePhoenix, finite1, finite2, gilderoyLockhart, ginnyWeasley, mollyWeasley, nimbusTwoThousandAndOne1, nimbusTwoThousandAndOne2, polyjuicePotion1, polyjuicePotion2);
         }
-        // TO-DO: add other games' Hogwarts cards to hogwartsCards based on the selected game
-        
+
         // purchase a Hogwarts card
         hogwartsCards.forEach(card => {
             card.img.onclick = () => {
@@ -461,7 +461,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             }
             drawCards(numberOfCards) {
-                if (!this.petrified) {
+                if (!this.petrified && !activeVillains.includes(basilisk)) {
                     for (let i = 0; i < numberOfCards; i++) {
                         // moves a card from the draw pile to your hand
                         if (this.draw.length > 0) {
@@ -721,7 +721,6 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._health = health;
                 if (this.health <= 0) {
                     // remove villain
-                    this.reward();
                     this.img.classList.toggle("defeating");
                     setTimeout(() => {
                         this.img.remove();
@@ -765,9 +764,12 @@ document.getElementById("submitPlayers").onclick = () => {
         const crabbeAndGoyle = new Villain("Crabbe And Goyle", "Game 1", "villain", 5, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});});
         const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, "health", () => {}, () => {activeLocation.removeFromLocation();});
         const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, "health", () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
-        //const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
-        let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
+        const basilisk = new Villain("Basilisk", "Game 2", "villain", 8, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});activeLocation.removeFromLocation();});
         // TO-DO: add other games' villains to villains if selected
+        let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
+        if (activeGame !== "Game 1") {
+            villains.push(basilisk);
+        }
         shuffle(villains);
         let activeVillains = [villains[0]];
         // TO-DO: add more active villains based on selected game
@@ -940,7 +942,9 @@ document.getElementById("submitPlayers").onclick = () => {
             for (let i = 0; i < activeVillains.length; i++) {
                 if (activeVillains[i].health <= 0) {
                     if (villains.indexOf(activeVillains[i]) + 1 < villains.length) {
+                        const reward = activeVillains[i].reward;
                         activeVillains[i] = villains[villains.indexOf(activeVillains[i]) + 1];
+                        reward();
                         document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
                     }
                 }
