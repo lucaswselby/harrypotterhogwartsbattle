@@ -485,6 +485,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.stunned = true;
                 this._attack = 0;
                 this._influence = 0;
+                activeLocation.addToLocation();
                 let iterations = Math.floor(this.hand.length / 2);
                 playerChoice("Discard:", () => {return this.hand.length;}, iterations, () => {
                     for (let i = 0; i < this.hand.length; i++) {
