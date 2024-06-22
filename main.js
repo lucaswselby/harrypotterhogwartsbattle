@@ -184,7 +184,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraHermione6 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraHermione7 = new Card("Alohomora Hermione", "Game 1", "spell", 0, alohomoraEffect, false);
         const crookshanks = new Card("Crookshanks", "Game 1", "ally", 0, startingAllyEffect, false);
-        const theTalesOfBeedleTheBard = new Card("The Tales of Beedle the Bard", "Game 1", "item", 0, () => {playerChoice("Choose 1:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = influenceToken + influenceToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes: ${influenceToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.influence++;});};})}, false);
+        const theTalesOfBeedleTheBard = new Card("The Tales Of Beedle The Bard", "Game 1", "item", 0, () => {playerChoice("Choose 1:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = influenceToken + influenceToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes: ${influenceToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.influence++;});};})}, false);
         const timeTurner = new Card("Time Turner", "Game 1", "item", 0, () => {activePlayer.influence++;}, true);
         const hermioneStartingCards = [alohomoraHermione1, alohomoraHermione2, alohomoraHermione3, alohomoraHermione4, alohomoraHermione5, alohomoraHermione6, alohomoraHermione7, crookshanks, theTalesOfBeedleTheBard, timeTurner];
 
@@ -205,10 +205,10 @@ document.getElementById("submitPlayers").onclick = () => {
         const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});}, false);
         const descendo1 = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;}, false);
         const descendo2 = new Card("Descendo", "Game 1", "spell", 5, () => {activePlayer.attack += 2;}, false);
-        const essenceOfDittany1 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage.cloneNode()); choice.onclick = () => {players[i].health += 2;};}})}, false);
-        const essenceOfDittany2 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage.cloneNode()); choice.onclick = () => {players[i].health += 2;};}})}, false);
-        const essenceOfDittany3 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage.cloneNode()); choice.onclick = () => {players[i].health += 2;};}})}, false);
-        const essenceOfDittany4 = new Card("Essence of Dittany", "Game 1", "item", 2, () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage.cloneNode()); choice.onclick = () => {players[i].health += 2;};}})}, false);
+        const essenceOfDittany1 = new Card("Essence Of Dittany", "Game 1", "item", 2, () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage.cloneNode()); choice.onclick = () => {players[i].health += 2;};}})}, false);
+        const essenceOfDittany2 = new Card("Essence Of Dittany", "Game 1", "item", 2, () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage.cloneNode()); choice.onclick = () => {players[i].health += 2;};}})}, false);
+        const essenceOfDittany3 = new Card("Essence Of Dittany", "Game 1", "item", 2, () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage.cloneNode()); choice.onclick = () => {players[i].health += 2;};}})}, false);
+        const essenceOfDittany4 = new Card("Essence Of Dittany", "Game 1", "item", 2, () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) { const choice = document.getElementsByClassName("choice")[i]; choice.appendChild(players[i].heroImage.cloneNode()); choice.onclick = () => {players[i].health += 2;};}})}, false);
         const goldenSnitch = new Card("Golden Snitch", "Game 1", "item", 5, () => {activePlayer.influence += 2; activePlayer.drawCards(1);}, false);
         const incendio1 = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
         const incendio2 = new Card("Incendio", "Game 1", "spell", 4, () => {activePlayer.attack++; activePlayer.drawCards(1);}, false);
@@ -579,10 +579,10 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         const diagonAlley = new Location("Diagon Alley", "Game 1", 1, 4, 1);
-        const mirrorOfErised = new Location("Mirror of Erised", "Game 1", 2, 4, 1);
+        const mirrorOfErised = new Location("Mirror Of Erised", "Game 1", 2, 4, 1);
         const forbiddenForest = new Location("Forbidden Forest", "Game 2", 1, 4, 1);
         const quidditchPitch = new Location("Quidditch Pitch", "Game 2", 2, 4, 1);
-        const chamberOfSecrets = new Location("Chamber of Secrets", "Game 2", 3, 5, 2);
+        const chamberOfSecrets = new Location("Chamber Of Secrets", "Game 2", 3, 5, 2);
         const hogwartsExpress = new Location("Hogwarts Express", "Game 3", 1, 5, 1);
         const hogsmeadeVillage = new Location("Hogsmeade Village", "Game 3", 2, 6, 2);
         const shriekingShack = new Location("Shrieking Shack", "Game 3", 3, 6, 2);
@@ -590,14 +590,14 @@ document.getElementById("submitPlayers").onclick = () => {
         const triwizardTournament = new Location("Triwizard Tournament", "Game 4", 2, 6, 2);
         const graveyard = new Location("Graveyard", "Game 4", 3, 7, 2);
         const azkaban = new Location("Azkaban", "Game 5", 1, 7, 1);
-        const hallOfProphecy = new Location("Hall of Prophecy", "Game 5", 2, 7, 2);
-        const ministryOfMagic = new Location("Ministry of Magic", "Game 5", 3, 7, 2);
+        const hallOfProphecy = new Location("Hall Of Prophecy", "Game 5", 2, 7, 2);
+        const ministryOfMagic = new Location("Ministry Of Magic", "Game 5", 3, 7, 2);
         const knockturnAlley = new Location("Knockturn Alley", "Game 6", 1, 7, 1);
         const theBurrow = new Location("The Burrow", "Game 6", 2, 7, 2);
         const astronomyTower = new Location("Astronomy Tower", "Game 6", 3, 8, 3);
         const godricsHollow = new Location("Godric's Hollow", "Game 7", 1, 6, 1);
         const gringotts = new Location("Gringotts", "Game 7", 2, 6, 2);
-        const roomOfRequirement = new Location("Room of Requirement", "Game 7", 3, 7, 2);
+        const roomOfRequirement = new Location("Room Of Requirement", "Game 7", 3, 7, 2);
         const hogwartsCastle = new Location("Hogwarts Castle", "Game 7", 4, 8, 3);
         const castleGates = new Location("Castle Gates", "Box 1", 1, 5, 1);
         const hagridsHut = new Location("Hagrid's Hut", "Box 1", 2, 6, 2);
@@ -608,19 +608,19 @@ document.getElementById("submitPlayers").onclick = () => {
         const unicornHollow = new Location("Unicorn Hollow", "Box 3", 1, 5, 1);
         const aragogsLair = new Location("Aragog's Lair", "Box 3", 2, 6, 2);
         const giantClearing = new Location("Giat Clearing", "Box 3", 3, 7, 3);
-        const selectionOfChampions = new Location("Selection of Champions", "Box 4", 1, 5, 1);
+        const selectionOfChampions = new Location("Selection Of Champions", "Box 4", 1, 5, 1);
         const dragonArena = new Location("Dragon Arena", "Box 4", 2, 6, 2);
         const mermaidVillage = new Location("Mermaid Village", "Box 4", 3, 6, 2);
         const triwizardMaze = new Location("Triwizard Maze", "Box 4", 4, 7, 3);
         const theBlackLake = new Location("The Black Lake", "Pack 1", 1, 5, 1);
         const theHospitalWing = new Location("The Hospital Wing", "Pack 1", 2, 7, 2);
         const theHogwartsLibrary = new Location("The Hogwarts Library", "Pack 1", 3, 7, 3);
-        const ministryOfMagicAtrium = new Location("Ministry of Magic Atrium", "Pack 2", 1, 6, 1);
+        const ministryOfMagicAtrium = new Location("Ministry Of Magic Atrium", "Pack 2", 1, 6, 1);
         const ministryCourtroom = new Location("Ministry Courtroom", "Pack 2", 2, 6, 2);
         const ministryLift = new Location("Ministry Lift", "Pack 2", 3, 7, 3);
         const malfoyManor = new Location("Malfoy Manor", "Pack 3", 1, 5, 1);
         const cave = new Location("Cave", "Pack 3", 2, 6, 2);
-        const atopTheTower = new Location("Atop the Tower", "Pack 3", 3, 6, 3);
+        const atopTheTower = new Location("Atop The Tower", "Pack 3", 3, 6, 3);
         const greatHallPack = new Location("Great Hall", "Pack 4", 1, 6, 1);
         const forestClearing = new Location("Forest Clearing", "Pack 4", 2, 6, 2);
         const castleCourtyard = new Location("Castle Courtyard", "Pack 4", 3, 7, 3);
@@ -730,7 +730,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._reward();
             }
         }
-        const crabbeAndGoyle = new Villain("Crabbe and Goyle", "Game 1", "villain", 5, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});});
+        const crabbeAndGoyle = new Villain("Crabbe And Goyle", "Game 1", "villain", 5, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});});
         const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, "health", () => {}, () => {activeLocation.removeFromLocation();});
         const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, "health", () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
         //const troll = new Villain("Troll", "creature", 7, "health", () => {}, () => {}); // TO-DO: add effect and reward
