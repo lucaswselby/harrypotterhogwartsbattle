@@ -236,7 +236,7 @@ document.getElementById("submitPlayers").onclick = () => {
         if (activeGame === "Game 2") {
             const arthurWeasley = new Card("Arthur Weasley", "Game 2", "ally", 6, () => {players.forEach(player => {player.influence += 2;});}, false);
             const dobbyTheHouseElf = new Card("Dobby The House-Elf", "Game 1", "ally", 4, () => {activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false);
-            hogwartsCards.push(arthurWeasley, dobbyTheHouseElf);
+            const expelliarmus = new Card("Expelliarmus", "Game 2", "spell", 6, () => {activePlayer.attack += 2; activePlayer.drawCards(1);}, false);
         }
         // TO-DO: add other games' Hogwarts cards to hogwartsCards based on the selected game
         // purchase a Hogwarts card
