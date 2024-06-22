@@ -540,6 +540,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 locationToken.className = "locationToken";
                 locationToken.style.top = this.added % 2 === 0 ? "78%" : "82%";
                 locationToken.style.left = `${15 + (this.added * 11)}%`;
+                locationToken.classList.toggle("adding");
                 document.getElementById("locations").appendChild(locationToken);
                 if (this.added > this.spaces) {
                     // Game Over
@@ -564,7 +565,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (this === locations[0]) {
                     if (this.added > 0) {
                         this.added--;
-                        document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1].remove();
+                        const locationToken = document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1];
+                        locationToken.classList.toggle("adding");
+                        locationToken.classList.toggle("removing");
+                        setTimeout(() => {locationToken.remove();}, 1000);
                     }
                 }
                 else {
@@ -576,7 +580,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     else {
                         this.added--;
-                        document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1].remove();
+                        const locationToken = document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1];
+                        locationToken.classList.toggle("adding");
+                        locationToken.classList.toggle("removing");
+                        setTimeout(() => {locationToken.remove();}, 1000);
                     }
                 }
             }

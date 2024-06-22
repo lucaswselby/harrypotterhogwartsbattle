@@ -172,17 +172,17 @@ main {
     left: 46%;
 }
 
-.villain.defeating {
+.villain.defeating, .locationToken.removing {
     opacity: 0;
 
     /* https://stackoverflow.com/questions/11679567/using-css-for-a-fade-in-effect-on-page-load */
-    -webkit-animation: defeat 1s; /* Safari, Chrome and Opera > 12.1 */
-       -moz-animation: defeat 1s; /* Firefox < 16 */
-        -ms-animation: defeat 1s; /* Internet Explorer */
-         -o-animation: defeat 1s; /* Opera < 12.1 */
-            animation: defeat 1s;
+    -webkit-animation: fadeOut 1s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadeOut 1s; /* Firefox < 16 */
+        -ms-animation: fadeOut 1s; /* Internet Explorer */
+         -o-animation: fadeOut 1s; /* Opera < 12.1 */
+            animation: fadeOut 1s;
 }
-@keyframes defeat {
+@keyframes fadeOut {
     from {
         opacity: 1;
     }
@@ -191,7 +191,7 @@ main {
     }
 }   
 /* Firefox < 16 */
-@-moz-keyframes defeat {
+@-moz-keyframes fadeOut {
     from {
         opacity: 1;
     }
@@ -200,7 +200,7 @@ main {
     }
 }
 /* Safari, Chrome, and Opera > 12.1 */
-@-webkit-keyframes defeat {
+@-webkit-keyframes fadeOut {
     from {
         opacity: 1;
     }
@@ -209,7 +209,7 @@ main {
     }
 }
 /* Internet Explorer */
-@-ms-keyframes defeat {
+@-ms-keyframes fadeOut {
     from {
         opacity: 1;
     }
@@ -218,7 +218,7 @@ main {
     }
 }
 /* Opera < 12.1 */
-@-o-keyframes defeat {
+@-o-keyframes fadeOut {
     from {
         opacity: 1;
     }
@@ -226,17 +226,17 @@ main {
         opacity: 0;
     }
 }
-.villain.defeated {
+.villain.defeated, .locationToken.adding {
     opacity: 1;
 
     /* https://stackoverflow.com/questions/11679567/using-css-for-a-fade-in-effect-on-page-load */
-    -webkit-animation: defeated 1s; /* Safari, Chrome and Opera > 12.1 */
-       -moz-animation: defeated 1s; /* Firefox < 16 */
-        -ms-animation: defeated 1s; /* Internet Explorer */
-         -o-animation: defeated 1s; /* Opera < 12.1 */
-            animation: defeated 1s;
+    -webkit-animation: fadeIn 1s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadeIn 1s; /* Firefox < 16 */
+        -ms-animation: fadeIn 1s; /* Internet Explorer */
+         -o-animation: fadeIn 1s; /* Opera < 12.1 */
+            animation: fadeIn 1s;
 }
-@keyframes defeated {
+@keyframes fadeIn {
     from {
         opacity: 0;
     }
@@ -245,7 +245,7 @@ main {
     }
 }   
 /* Firefox < 16 */
-@-moz-keyframes defeated {
+@-moz-keyframes fadeIn {
     from {
         opacity: 0;
     }
@@ -254,7 +254,7 @@ main {
     }
 }
 /* Safari, Chrome, and Opera > 12.1 */
-@-webkit-keyframes defeated {
+@-webkit-keyframes fadeIn {
     from {
         opacity: 0;
     }
@@ -263,7 +263,7 @@ main {
     }
 }
 /* Internet Explorer */
-@-ms-keyframes defeated {
+@-ms-keyframes fadeIn {
     from {
         opacity: 0;
     }
@@ -272,7 +272,7 @@ main {
     }
 }
 /* Opera < 12.1 */
-@-o-keyframes defeated {
+@-o-keyframes fadeIn {
     from {
         opacity: 0;
     }
