@@ -880,20 +880,24 @@ document.getElementById("submitPlayers").onclick = () => {
             const darkArtsEventsElement = document.getElementById("darkArtsEvents");
             darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
             activeDarkArtsEvent.img.classList.toggle("flipped");
-            activeDarkArtsEvent.effect();
+            setTimeout(() => {
+                activeDarkArtsEvent.effect();
 
-            // remove previous dark arts card
-            if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
-                darkArtsEventsElement.removeChild(lastCardImg);
-            }
-            else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
-                darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
-            }
-
-            // villain effects
-            activeVillains.forEach(villain => {
-                villain.effect();
-            });
+                // remove previous dark arts card
+                if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
+                    darkArtsEventsElement.removeChild(lastCardImg);
+                }
+                else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
+                    darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
+                }
+    
+                setTimeout(() => {
+                    // villain effects
+                    activeVillains.forEach(villain => {
+                        villain.effect();
+                    });
+                }, 1000);
+            }, 1000);
         };
         document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
 

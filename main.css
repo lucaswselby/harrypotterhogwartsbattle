@@ -84,7 +84,7 @@ main {
         opacity: 1;
         transform: rotateY(0) translateX(var(--translate));
     }
-}   
+}
 /* Firefox < 16 */
 @-moz-keyframes flip {
     from {
@@ -189,7 +189,7 @@ main {
     to {
         opacity: 0;
     }
-}   
+}
 /* Firefox < 16 */
 @-moz-keyframes fadeOut {
     from {
@@ -243,7 +243,7 @@ main {
     to {
         opacity: 1;
     }
-}   
+}
 /* Firefox < 16 */
 @-moz-keyframes fadeIn {
     from {
