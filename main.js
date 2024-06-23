@@ -235,7 +235,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const wingardiumLeviosa2 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
         const wingardiumLeviosa3 = new Card("Wingardium Leviosa", "Game 1", "spell", 2, () => {activePlayer.influence++;}, true);
         const arthurWeasley = new Card("Arthur Weasley", "Game 2", "ally", 6, () => {players.forEach(player => {player.influence += 2;});}, false);
-        const dobbyTheHouseElf = new Card("Dobby The House-Elf", "Game 1", "ally", 4, () => {activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false);
+        const dobbyTheHouseElf = new Card("Dobby The House-Elf", "Game 2", "ally", 4, () => {activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false);
         const expelliarmus1 = new Card("Expelliarmus", "Game 2", "spell", 6, () => {activePlayer.attack += 2; activePlayer.drawCards(1);}, false);
         const expelliarmus2 = new Card("Expelliarmus", "Game 2", "spell", 6, () => {activePlayer.attack += 2; activePlayer.drawCards(1);}, false);
         const fawkesThePhoenix = new Card("Fawkes The Phoenix", "Game 2", "ally", 5, () => {playerChoice("Pick one:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = attackToken + attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes:</br>${healthToken}${healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.health += 2;});}});}, false);
@@ -578,6 +578,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activeVillains.includes(dracoMalfoy)) {
                     activePlayer.health -= 2;
                 }
+                // Lucius Malfoy effect
+                if (activeVillains.includes(luciusMalfoy)) {
+                    activeVillains.forEach(villain => {villain.health++;});
+                }
             }
             removeFromLocation() {
                 if (this === locations[0]) {
@@ -703,6 +707,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._img.src = `./images/${game}/${src(name)}`;
                 this._img.alt = name;
                 this._type = type;
+                this._maxHealth = health;
                 this._health = health;
                 this._healthType = healthType;
                 this._effect = effect;
@@ -719,6 +724,10 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             set health(health) {
                 this._health = health;
+                document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
+                for (let i = 0; i < this._maxHealth - this.health; i++) {
+                    document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                }
                 if (this.health <= 0) {
                     // remove villain
                     this.img.classList.toggle("defeating");
@@ -765,10 +774,11 @@ document.getElementById("submitPlayers").onclick = () => {
         const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, "health", () => {}, () => {activeLocation.removeFromLocation();});
         const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, "health", () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
         const basilisk = new Villain("Basilisk", "Game 2", "villain", 8, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});activeLocation.removeFromLocation();});
+        const luciusMalfoy = new Villain("Lucius Malfoy", "Game 2", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.influence++;}); activeLocation.removeFromLocation();});
         // TO-DO: add other games' villains to villains if selected
         let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
-            villains.push(basilisk);
+            villains.push(basilisk, luciusMalfoy);
         }
         shuffle(villains);
         let activeVillains = [villains[0]];
@@ -854,7 +864,6 @@ document.getElementById("submitPlayers").onclick = () => {
             const dealDamage = () => {
                 if (activePlayer.attack > 0 && document.getElementsByClassName("activeVillain")[i].getElementsByClassName("villain")[0]) {
                     activePlayer.attack--;
-                    document.getElementsByClassName("villainDamage")[i].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
                     activeVillains[i].health--;
                 }
             }
@@ -942,7 +951,7 @@ document.getElementById("submitPlayers").onclick = () => {
             for (let i = 0; i < activeVillains.length; i++) {
                 if (activeVillains[i].health <= 0) {
                     if (villains.indexOf(activeVillains[i]) + 1 < villains.length) {
-                        const reward = activeVillains[i].reward;
+                        const reward = activeVillains[i]._reward;
                         activeVillains[i] = villains[villains.indexOf(activeVillains[i]) + 1];
                         reward();
                         document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
