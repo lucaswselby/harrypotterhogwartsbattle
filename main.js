@@ -48,7 +48,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // some cards give the players a choice of action
         const playerChoice = (description, choices, iterations, populateFunction) => {
-            if (choices) {
+            if (choices()) {
                 // queue playerChoices in case there are multiple
                 if (document.getElementById("playerChoice")) {
                     document.getElementById("playerChoice").addEventListener("click", () => {playerChoice(description, choices, iterations, populateFunction);});
