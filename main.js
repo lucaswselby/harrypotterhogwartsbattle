@@ -416,6 +416,9 @@ document.getElementById("submitPlayers").onclick = () => {
             get discard() {
                 return this._discard;
             }
+            set discard(discard) {
+                this._discard = discard;
+            }
             get passives() {
                 return this._passives;
             }
@@ -775,14 +778,17 @@ document.getElementById("submitPlayers").onclick = () => {
         const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, "health", () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
         const basilisk = new Villain("Basilisk", "Game 2", "villain", 8, "health", () => {players.forEach(player => {player.petrified = true;});}, () => {players.forEach(player => {player.petrified = false; player.drawCards(1);}); activeLocation.removeFromLocation();});
         const luciusMalfoy = new Villain("Lucius Malfoy", "Game 2", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.influence++;}); activeLocation.removeFromLocation();});
+        const tomRiddle = new Villain("Tom Riddle", "Game 2", "villain", 6, "health", () => {let allies = activePlayer.hand.filter(card => {return card.type === "ally";}); const tomRiddleEffect = () => {playerChoice("Choose an ally to lose 2 health or discard a card:", () => {allies = allies.filter(ally => {return activePlayer.hand.includes(ally)}); return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {allies.splice(allies.indexOf(allies[i]), 1); playerChoice("Lose:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = healthToken + healthToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2; tomRiddleEffect();}; document.getElementsByClassName("choice")[1].innerHTML = hogwartsCardBack; document.getElementsByClassName("choice")[1].onclick = () => {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let j = 0; j < activePlayer.hand.length; j++) {document.getElementsByClassName("choice")[j].innerHTML = `<img src="${activePlayer.hand[j].img.src}">`; document.getElementsByClassName("choice")[j].onclick = () => {if (allies.includes(activePlayer.hand[j])) allies.splice(allies.indexOf(activePlayer.hand[j]), 1); activePlayer.forcedDiscardAt(j); tomRiddleEffect();};}});};});};}});}; tomRiddleEffect();}, () => {players.forEach(player => {playerChoice(`Choose for ${player.hero}:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = healthToken + healthToken; document.getElementsByClassName("choice")[0].onclick = () => {player.health += 2;}; document.getElementsByClassName("choice")[1].innerHTML = "Search your discard pile for an Ally and put it in your hand."; document.getElementsByClassName("choice")[1].onclick = () => {const allies = player.discard.filter(card => {return card.type === "ally"}); playerChoice("Add to hand:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {const tempPetrified = player.petrified; player.petrified = false; player.draw.unshift(allies[i]); player.drawCards(1); player.discard.splice(player.discard.indexOf(allies[i]), 1); player.petrified = tempPetrified;};}});};});});});
         // TO-DO: add other games' villains to villains if selected
         let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
-            villains.push(basilisk, luciusMalfoy);
+            villains.push(basilisk, luciusMalfoy, tomRiddle);
+            if (activeGame !== "Game 2") {
+                // TO-DO: add Game 3 villains
+            }
         }
         shuffle(villains);
         let activeVillains = [villains[0]];
-        // TO-DO: add more active villains based on selected game
 
         // events (horcruxes)
         class Event {

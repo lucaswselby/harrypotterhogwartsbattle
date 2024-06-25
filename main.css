@@ -392,6 +392,6 @@ main {
     align-items: center;
 }
 .choice img {
-    max-height: 100%;
+    max-height: 60vh;
     max-width: 100%;
 }
