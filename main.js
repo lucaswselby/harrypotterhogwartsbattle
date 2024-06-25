@@ -461,7 +461,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             }
             drawCards(numberOfCards) {
-                if (!this.petrified && !activeVillains.includes(basilisk)) {
+                if (!this.petrified) {
                     for (let i = 0; i < numberOfCards; i++) {
                         // moves a card from the draw pile to your hand
                         if (this.draw.length > 0) {
@@ -773,7 +773,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const crabbeAndGoyle = new Villain("Crabbe And Goyle", "Game 1", "villain", 5, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});});
         const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, "health", () => {}, () => {activeLocation.removeFromLocation();});
         const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, "health", () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
-        const basilisk = new Villain("Basilisk", "Game 2", "villain", 8, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});activeLocation.removeFromLocation();});
+        const basilisk = new Villain("Basilisk", "Game 2", "villain", 8, "health", () => {players.forEach(player => {player.petrified = true;});}, () => {players.forEach(player => {player.petrified = false; player.drawCards(1);}); activeLocation.removeFromLocation();});
         const luciusMalfoy = new Villain("Lucius Malfoy", "Game 2", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.influence++;}); activeLocation.removeFromLocation();});
         // TO-DO: add other games' villains to villains if selected
         let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
