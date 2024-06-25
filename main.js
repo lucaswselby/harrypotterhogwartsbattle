@@ -789,6 +789,12 @@ document.getElementById("submitPlayers").onclick = () => {
         }
         shuffle(villains);
         let activeVillains = [villains[0]];
+        if (activeGame !== "Game 1" && activeGame !== "Game 2") {
+            activeVillains.push(villains[1]);
+            if (activeGame !== "Game 3" && activeGame !== "Game 4") {
+                activeVillains.push(villains[2]);
+            }
+        }
 
         // events (horcruxes)
         class Event {
