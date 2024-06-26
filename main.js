@@ -601,6 +601,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (this.added === 0) {
                         while (document.getElementsByClassName("locationToken")[0]) document.getElementsByClassName("locationToken")[0].remove();
                         activeLocation = locations[this.number - 2];
+                        activeLocation.added = activeLocation.spaces;
                         document.getElementById(`location${this.number - 1}`).style.display = "initial";
                     }
                     else {
