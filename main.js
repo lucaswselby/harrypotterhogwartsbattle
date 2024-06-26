@@ -770,6 +770,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (activePlayer.passives.includes(oliverWood)) {
                         playerChoice("Pick a hero to heal:", () => {return players.length;}, 1, () => {
                             for (let i = 0; i < players.length; i++) {
+                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].img.src}">`;
                                 document.getElementsByClassName("choice")[i].onclick = () => {
                                     players[i].health += 2;
                                 };
