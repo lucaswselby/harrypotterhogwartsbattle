@@ -136,7 +136,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._img.onclick = () => {
                     this._effect();
 
-                    // Every Flavour Beans effect
+                    // Every-Flavour Beans effect
                     if (activePlayer.passives.includes(everyFlavourBeans) && this.type === "ally") {
                         activePlayer.attack++;
                     }
