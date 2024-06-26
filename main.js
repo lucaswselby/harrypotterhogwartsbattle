@@ -450,10 +450,12 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.drawCards(1);
                 }
 
-                // Crabbe and Goyle effect
-                if (activeVillains.includes(crabbeAndGoyle)) {
-                    this.health--;
-                }
+                setTimeout(() => {
+                    // Crabbe and Goyle effect
+                    if (activeVillains.includes(crabbeAndGoyle)) {
+                        this.health--;
+                    }
+                }, 1000);
 
                 this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
                 this.discardAt(index);
@@ -578,14 +580,16 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
 
-                // Draco Malfoy effect
-                if (activeVillains.includes(dracoMalfoy)) {
-                    activePlayer.health -= 2;
-                }
-                // Lucius Malfoy effect
-                if (activeVillains.includes(luciusMalfoy)) {
-                    activeVillains.forEach(villain => {villain.health++;});
-                }
+                setTimeout(() => {
+                    // Draco Malfoy effect
+                    if (activeVillains.includes(dracoMalfoy)) {
+                        activePlayer.health -= 2;
+                    }
+                    // Lucius Malfoy effect
+                    if (activeVillains.includes(luciusMalfoy)) {
+                        activeVillains.forEach(villain => {villain.health++;});
+                    }
+                }, 1000);
             }
             removeFromLocation() {
                 if (this === locations[0]) {
