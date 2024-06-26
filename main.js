@@ -607,6 +607,15 @@ document.getElementById("submitPlayers").onclick = () => {
                         while (document.getElementsByClassName("locationToken")[0]) document.getElementsByClassName("locationToken")[0].remove();
                         activeLocation = locations[this.number - 2];
                         activeLocation.added = activeLocation.spaces;
+                        for (let i = 0; i < activeLocation.added; i++) {
+                            const locationToken = document.createElement("img");
+                            locationToken.src = "./images/locationToken.png";
+                            locationToken.alt = "Location token";
+                            locationToken.className = "locationToken";
+                            locationToken.style.top = i % 2 === 1 ? "78%" : "82%";
+                            locationToken.style.left = `${27 + (i * 11)}%`;
+                            document.getElementById("locations").appendChild(locationToken);
+                        }
                         document.getElementById(`location${this.number - 1}`).style.display = "initial";
                     }
                     else {
