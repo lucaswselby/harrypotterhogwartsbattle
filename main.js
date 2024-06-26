@@ -455,7 +455,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.health--;
                 }
 
-                this._passives.splice(this.passives.indexOf(this.hand[i]), 1);
+                this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
                 this.discardAt(index);
             }
             populateHand() {
