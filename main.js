@@ -749,6 +749,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (document.getElementById("villainDiscard").getElementsByTagName("IMG")[0]) setTimeout(() => {document.getElementById("villainDiscard").getElementsByTagName("IMG")[0].remove();}, 1000);
                         document.getElementById("villainDiscard").appendChild(this.img);
                         this.img.classList.toggle("defeated");
+                        this.reward();
                     }, 1000);
 
                     // Firebolt and Cleansweep 11 effects
@@ -920,6 +921,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const startTurn = () => {
             // new active player
             activePlayer = players.indexOf(activePlayer) < players.length - 1 ? players[players.indexOf(activePlayer) + 1] : players[0];
+            activePlayer.health = activePlayer.health; // moves health token to correct location
             if (firstTurn) {
                 players.forEach(player => {player.drawCards(5);});
                 firstTurn = false;
@@ -931,23 +933,25 @@ document.getElementById("submitPlayers").onclick = () => {
             // reveal Dark Arts Event
             const darkArtsEventsElement = document.getElementById("darkArtsEvents");
             darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
-            activeDarkArtsEvent.img.classList.toggle("flipped");
             setTimeout(() => {
-                activeDarkArtsEvent.effect();
-
-                // remove previous dark arts card
-                if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
-                    darkArtsEventsElement.removeChild(lastCardImg);
-                }
-                else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
-                    darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
-                }
-    
+                activeDarkArtsEvent.img.classList.toggle("flipped");
                 setTimeout(() => {
-                    // villain effects
-                    activeVillains.forEach(villain => {
-                        villain.effect();
-                    });
+                    activeDarkArtsEvent.effect();
+
+                    // remove previous dark arts card
+                    if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
+                        darkArtsEventsElement.removeChild(lastCardImg);
+                    }
+                    else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
+                        darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
+                    }
+        
+                    setTimeout(() => {
+                        // villain effects
+                        activeVillains.forEach(villain => {
+                            villain.effect();
+                        });
+                    }, 1000);
                 }, 1000);
             }, 1000);
         };
@@ -971,9 +975,7 @@ document.getElementById("submitPlayers").onclick = () => {
             for (let i = 0; i < activeVillains.length; i++) {
                 if (activeVillains[i].health <= 0) {
                     if (villains.indexOf(activeVillains[i]) + 1 < villains.length) {
-                        const reward = activeVillains[i]._reward;
                         activeVillains[i] = villains[villains.indexOf(activeVillains[i]) + 1];
-                        reward();
                         document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
                     }
                 }
