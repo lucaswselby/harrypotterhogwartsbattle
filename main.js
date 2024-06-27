@@ -97,15 +97,14 @@ document.getElementById("submitPlayers").onclick = () => {
         // shuffles cards in a random order
         // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
         const shuffle = array => {
-            let currentIndex = array.length;          
+            let currentIndex = array.length;
             // While there remain elements to shuffle...
-            while (currentIndex != 0) {          
-            // Pick a remaining element...
-            let randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;          
-            // And swap it with the current element.
-            [array[currentIndex], array[randomIndex]] = [
-                array[randomIndex], array[currentIndex]];
+            while (currentIndex != 0) {
+                // Pick a remaining element...
+                let randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                // And swap it with the current element.
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
             }
         }
 
@@ -197,7 +196,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraNeville5 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraNeville6 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
         const alohomoraNeville7 = new Card("Alohomora Neville", "Game 1", "spell", 0, alohomoraEffect, false);
-        const mandrake = new Card("Mandrake", "Game 1", "item", 0, () => {playerChoice("Choose 1:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack++}; document.getElementsByClassName("choice")[1].innerHTML = `Any one Hero${healthToken}${healthToken}`;  document.getElementsByClassName("choice")[1].onclick = () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage); document.getElementsByClassName("choice")[i].onclick = () => {players[i].health += 2;};}});};})}, false);
+        const mandrake = new Card("Mandrake", "Game 1", "item", 0, () => {playerChoice("Choose 1:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = attackToken; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack++}; document.getElementsByClassName("choice")[1].innerHTML = `Any one Hero${healthToken}${healthToken}`; document.getElementsByClassName("choice")[1].onclick = () => {playerChoice("Pick a player to heal:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage); document.getElementsByClassName("choice")[i].onclick = () => {players[i].health += 2;};}});};})}, false);
         const remembrall = new Card("Remembrall", "Game 1", "item", 0, () => {activePlayer.influence++;}, false);
         const trevor = new Card("Trevor", "Game 1", "ally", 0, startingAllyEffect, false);
         const nevilleStartingCards = [alohomoraNeville1, alohomoraNeville2, alohomoraNeville3, alohomoraNeville4, alohomoraNeville5, alohomoraNeville6, alohomoraNeville7, mandrake, remembrall, trevor];
