@@ -391,6 +391,7 @@ main {
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
+    overflow: auto;
 }
 .choice img {
     max-height: 60vh;
