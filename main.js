@@ -150,6 +150,9 @@ document.getElementById("submitPlayers").onclick = () => {
             get passive() {
                 return this._passive;
             }
+            effect() {
+                this._effect();
+            }
         }
 
         // Harry starting cards
