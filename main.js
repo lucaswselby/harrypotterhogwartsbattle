@@ -475,7 +475,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.drawCards(1);
                 }
                 // Chocolate Frog effect
-                else if (this.hand[index] === chocolateFrog) {
+                else if (this.hand[index].name === "Chocolate Frog") {
                     this.influence++;
                     this.health++;
                 }
