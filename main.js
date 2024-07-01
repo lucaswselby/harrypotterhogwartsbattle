@@ -568,8 +568,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 locationToken.src = "./images/locationToken.png";
                 locationToken.alt = "Location token";
                 locationToken.className = "locationToken";
-                locationToken.style.top = this.added % 2 === 0 ? "78%" : "82%";
-                locationToken.style.left = `${15 + (this.added * 11)}%`;
+                if ((this.spaces - 1) % 3 === 0) locationToken.style.top = this.added % 2 === 0 ? "78%" : "82%";
+                else locationToken.style.top = this.added % 2 === 0 ? "82%" : "78%";
+                locationToken.style.left = `${39 + this.added * 11 - this.spaces * 6}%`;
                 locationToken.classList.toggle("adding");
                 document.getElementById("locations").appendChild(locationToken);
                 if (this.added > this.spaces) {
