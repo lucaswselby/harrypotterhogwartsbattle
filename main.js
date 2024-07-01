@@ -1065,19 +1065,21 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (!villain.petrifiedBy) villain.effect();
                 });
             }, villainTimeout);
-        };
-        document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
 
-        // end turn
-        document.getElementById("endTurn").onclick = () => {
-            // unpetrify and unstun everyone
+            // unstun everyone
             players.forEach(player => {
-                player.petrified = false;
                 if (player.stunned) {
                     player.stunned = false;
                     player.health = 10;
                 }
             });
+        };
+        document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
+
+        // end turn
+        document.getElementById("endTurn").onclick = () => {
+            // unpetrify everyone
+            players.forEach(player => {player.petrified = false;});
 
             // player resets for next turn
             activePlayer.endTurn();
