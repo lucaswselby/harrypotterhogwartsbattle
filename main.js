@@ -286,7 +286,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     activePlayer.influence -= card.cost;
 
                     // Time Turner, Sorting Hat, and Wingardium Leviosa effects
-                    if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(timeTurner) && card.type === "ally") || ((activePlayer.passives.includes(wingardiumLeviosa1) || activePlayer.passives.includes(wingardiumLeviosa2) || activePlayer.passives.includes(wingardiumLeviosa3)) && card.type === "item")) {
+                    if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(sortingHat) && card.type === "ally") || ((activePlayer.passives.includes(wingardiumLeviosa1) || activePlayer.passives.includes(wingardiumLeviosa2) || activePlayer.passives.includes(wingardiumLeviosa3)) && card.type === "item")) {
                         playerChoice("Choose 1:", () => {return 2;}, 1, () => {
                             document.getElementsByClassName("choice")[0].innerHTML = "<p>Top of deck</p>";
                             document.getElementsByClassName("choice")[0].appendChild(card.img.cloneNode());
