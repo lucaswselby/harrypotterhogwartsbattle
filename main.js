@@ -398,7 +398,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._attack;
             }
             set attack(attack) {
-                if (!this.stunned) {
+                if (!this.stunned || activePlayer === this) {
                     // sets attack
                     this._attack = attack;
                     if (this._attack < 0) {
@@ -418,7 +418,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._influence;
             }
             set influence(influence) {
-                if (!this.stunned) {
+                if (!this.stunned || activePlayer === this) {
                     // sets influence
                     this._influence = influence;
                     if (this.influence < 0) {
