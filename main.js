@@ -405,9 +405,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // adds attack tokens to board
-                    document.getElementById("attackTokens").innerHTML = "";
-                    for (let i = 0; i < attack; i++) {
-                        document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                    if (activePlayer === this) {
+                        document.getElementById("attackTokens").innerHTML = "";
+                        for (let i = 0; i < attack; i++) {
+                            document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                        }
                     }
                 }
             }
@@ -423,9 +425,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // adds influence tokens to board
-                    document.getElementById("influenceTokens").innerHTML = "";
-                    for (let i = 0; i < this.influence; i++) {
-                        document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
+                    if (activePlayer === this) {
+                        document.getElementById("influenceTokens").innerHTML = "";
+                        for (let i = 0; i < this.influence; i++) {
+                            document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
+                        }
                     }
                 }
             }
