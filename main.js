@@ -556,6 +556,9 @@ document.getElementById("submitPlayers").onclick = () => {
             get spaces() {
                 return this._spaces;
             }
+            get darkArtsEventDraws() {
+                return this._darkArtsEventDraws;
+            }
             get game() {
                 return this._game;
             }
