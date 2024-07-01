@@ -254,10 +254,29 @@ document.getElementById("submitPlayers").onclick = () => {
         const nimbusTwoThousandAndOne2 = new Card("Nimbus Two Thousand And One", "Game 2", "item", 5, () => {activePlayer.attack += 2;}, true);
         const polyjuicePotion1 = new Card("Polyjuice Potion", "Game 2", "item", 3, () => {const allies = activePlayer.hand.filter(card => {return card.type === "ally";}); playerChoice("Pick an ally to copy:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {allies[i].effect(); if (allies[i].passive) activePlayer.passives.push(allies[i]);};}});}, false);
         const polyjuicePotion2 = new Card("Polyjuice Potion", "Game 2", "item", 3, () => {const allies = activePlayer.hand.filter(card => {return card.type === "ally";}); playerChoice("Pick an ally to copy:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {allies[i].effect(); if (allies[i].passive) activePlayer.passives.push(allies[i]);};}});}, false);
+        const butterbeer1 = new Card("Butterbeer", "Game 3", "item", 3, () => {if (players.length > 2) {playerChoice(`Give ${influenceToken + healthToken} to:`, () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++; players[i].health++; const remainingPlayers = players.filter(player => {return players[i] !== player;}); playerChoice(`Give ${influenceToken + healthToken} to:`, () => {return remainingPlayers.length;}, 1, () => {for (let j = 0; j < remainingPlayers.length; j++) {document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode()); document.getElementsByClassName("choice")[j].innerHTML += `<p>Influence: ${remainingPlayers[j].influence}</p><p>Health: ${remainingPlayers[j].health}</p>`; document.getElementsByClassName("choice")[j].onclick = () => {remainingPlayers[j].influence++; remainingPlayers[j].health++;};}});};}});} else {players.forEach(player => {player.influence++; player.health++;});}}, false);
+        const butterbeer2 = new Card("Butterbeer", "Game 3", "item", 3, () => {if (players.length > 2) {playerChoice(`Give ${influenceToken + healthToken} to:`, () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++; players[i].health++; const remainingPlayers = players.filter(player => {return players[i] !== player;}); playerChoice(`Give ${influenceToken + healthToken} to:`, () => {return remainingPlayers.length;}, 1, () => {for (let j = 0; j < remainingPlayers.length; j++) {document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode()); document.getElementsByClassName("choice")[j].innerHTML += `<p>Influence: ${remainingPlayers[j].influence}</p><p>Health: ${remainingPlayers[j].health}</p>`; document.getElementsByClassName("choice")[j].onclick = () => {remainingPlayers[j].influence++; remainingPlayers[j].health++;};}});};}});} else {players.forEach(player => {player.influence++; player.health++;});}}, false);
+        const butterbeer3 = new Card("Butterbeer", "Game 3", "item", 3, () => {if (players.length > 2) {playerChoice(`Give ${influenceToken + healthToken} to:`, () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++; players[i].health++; const remainingPlayers = players.filter(player => {return players[i] !== player;}); playerChoice(`Give ${influenceToken + healthToken} to:`, () => {return remainingPlayers.length;}, 1, () => {for (let j = 0; j < remainingPlayers.length; j++) {document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode()); document.getElementsByClassName("choice")[j].innerHTML += `<p>Influence: ${remainingPlayers[j].influence}</p><p>Health: ${remainingPlayers[j].health}</p>`; document.getElementsByClassName("choice")[j].onclick = () => {remainingPlayers[j].influence++; remainingPlayers[j].health++;};}});};}});} else {players.forEach(player => {player.influence++; player.health++;});}}, false);
+        const chocolateFrog1 = new Card("Chocolate Frog", "Game 3", "item", 2, () => {playerChoice(`Give ${influenceToken + healthToken} to:`, () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++; players[i].health++;};}});}, false);
+        const chocolateFrog2 = new Card("Chocolate Frog", "Game 3", "item", 2, () => {playerChoice(`Give ${influenceToken + healthToken} to:`, () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++; players[i].health++;};}});}, false);
+        const chocolateFrog3 = new Card("Chocolate Frog", "Game 3", "item", 2, () => {playerChoice(`Give ${influenceToken + healthToken} to:`, () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++; players[i].health++;};}});}, false);
+        const crystalBall1 = new Card("Crystal Ball", "Game 3", "item", 3, () => {if (!activePlayer.petrified) {activePlayer.drawCards(2); playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});}}, false);
+        const crystalBall2 = new Card("Crystal Ball", "Game 3", "item", 3, () => {if (!activePlayer.petrified) {activePlayer.drawCards(2); playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});}}, false);
+        const expectoPatronum1 = new Card("Expecto Patronum", "Game 3", "spell", 5, () => {activePlayer.attack++; activeLocation.removeFromLocation();}, false);
+        const expectoPatronum2 = new Card("Expecto Patronum", "Game 3", "spell", 5, () => {activePlayer.attack++; activeLocation.removeFromLocation();}, false);
+        const maraudersMap = new Card("Marauder's Map", "Game 3", "item", 5, () => {activePlayer.drawCards(2);}, false);
+        const petrificusTotalus1 = new Card("Petrificus Totalus", "Game 3", "spell", 6, () => {activePlayer.attack++; if (activeVillains.length > 1) {playerChoice("Petrify:", () => {return activeVillains.length;}, 1, () => {for (let i = 0; i < activeVillains.length; i++) {document.getElementsByClassName("choice")[i].appendChild(activeVillains[i].img.cloneNode()); document.getElementsByClassName("choice")[i].onclick = () => {activeVillains[i].petrifiedBy = activePlayer;};}});} else activeVillains[0].petrifiedBy = activePlayer;}, false);
+        const petrificusTotalus2 = new Card("Petrificus Totalus", "Game 3", "spell", 6, () => {activePlayer.attack++; if (activeVillains.length > 1) {playerChoice("Petrify:", () => {return activeVillains.length;}, 1, () => {for (let i = 0; i < activeVillains.length; i++) {document.getElementsByClassName("choice")[i].appendChild(activeVillains[i].img.cloneNode()); document.getElementsByClassName("choice")[i].onclick = () => {activeVillains[i].petrifiedBy = activePlayer;};}});} else activeVillains[0].petrifiedBy = activePlayer;}, false);
+        const remusLupin = new Card("Remus Lupin", "Game 3", "ally", 4, () => {activePlayer.attack++; const hurtPlayers = players.filter(player => {return player.health < 10;}); if (hurtPlayers.length) {if (hurtPlayers.length > 1) {playerChoice("Heal for 3:", () => {return hurtPlayers.length;}, 1, () => {for (let i = 0; i < hurtPlayers.length; i++) {document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 3;};}});} else hurtPlayers[0].health += 3;}}, false);
+        const siriusBlack = new Card("Sirius Black", "Game 3", "ally", 6, () => {activePlayer.attack += 2; activePlayer.influence++;}, false);
+        const sybillTrelawney = new Card("Sybill Trelawney", "Game 3", "ally", () => {if (!activePlayer.petrified) {activePlayer.drawCards(2); playerChoice("Discard", () => {return activePlayer.hand.length}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false)};}});}}, false);
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         // TO-DO: add other games' Hogwarts cards to hogwartsCards based on the selected game
         if (activeGame !== "Game 1") {
             hogwartsCards.push(arthurWeasley, dobbyTheHouseElf, expelliarmus1, expelliarmus2, fawkesThePhoenix, finite1, finite2, gilderoyLockhart, ginnyWeasley, mollyWeasley, nimbusTwoThousandAndOne1, nimbusTwoThousandAndOne2, polyjuicePotion1, polyjuicePotion2);
+            if (activeGame !== "Game 2") {
+                hogwartsCards.push(butterbeer1, butterbeer2, butterbeer3, chocolateFrog1, chocolateFrog2, chocolateFrog3, crystalBall1, crystalBall2, expectoPatronum1, expectoPatronum2, maraudersMap, petrificusTotalus1, petrificusTotalus2, remusLupin, siriusBlack, sybillTrelawney);
+            }
         }
 
         // purchase a Hogwarts card
@@ -454,6 +473,15 @@ document.getElementById("submitPlayers").onclick = () => {
                 // Gilderoy Lockhart effect
                 else if (this.hand[index] === gilderoyLockhart) {
                     this.drawCards(1);
+                }
+                // Chocolate Frog effect
+                else if (this.hand[index] === chocolateFrog) {
+                    this.influence++;
+                    this.health++;
+                }
+                // Marauder's Map effect
+                else if (this.hand[index] === maraudersMap) {
+                    players.forEach(player => {player.drawCards(1);});
                 }
 
                 setTimeout(() => {
@@ -729,11 +757,18 @@ document.getElementById("submitPlayers").onclick = () => {
         const obliviate = new DarkArtsEvent("Obliviate", "Game 2", () => {players.forEach(player => {const spells = player.hand.filter(card => {return card.type === "spell";}); if (spells.length) {if (spells.length > 1) {playerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(spells); document.getElementsByClassName("choice")[0].onclick = () => {playerChoice(`${player.hero} discards:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(spells[i]), true);};}});}; document.getElementsByClassName("choice")[1].innerHTML = `<div>${healthToken + healthToken}</div>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.forcedDiscardAt(player.hand.indexOf(spells[0]), true);} else player.health -= 2;});});
         const poison = new DarkArtsEvent("Poison", "Game 2", () => {players.forEach(player => {const allies = player.hand.filter(card => {return card.type === "ally";}); if (allies.length) {if (allies.length > 1) {playerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(allies); document.getElementsByClassName("choice")[0].onclick = () => {playerChoice(`${player.hero} discards:`, () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(allies[i]), true);};}});}; document.getElementsByClassName("choice")[1].innerHTML = `<div>${healthToken + healthToken}</div>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.forcedDiscardAt(player.hand.indexOf(allies[0]), true);} else player.health -= 2;});});
         const relashio = new DarkArtsEvent("Relashio", "Game 2", () => {players.forEach(player => {const items = player.hand.filter(card => {return card.type === "item";}); if (items.length) {if (items.length > 1) {playerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(items); document.getElementsByClassName("choice")[0].onclick = () => {playerChoice(`${player.hero} discards:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(items[i]), true);};}});}; document.getElementsByClassName("choice")[1].innerHTML = `<div>${healthToken + healthToken}</div>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.forcedDiscardAt(player.hand.indexOf(items[0]), true);} else player.health -= 2;});});
+        const dementorsKiss1 = new DarkArtsEvent("Dementor's Kiss", "Game 3", () => {players.forEach(player => {player.health--;}); activePlayer.health--;});
+        const dementorsKiss2 = new DarkArtsEvent("Dementor's Kiss", "Game 3", () => {players.forEach(player => {player.health--;}); activePlayer.health--;});
+        const oppugno = new DarkArtsEvent("Oppugno", "Game 3", () => {players.forEach(player => {if (player.draw.length < 1) player.shuffle(); if (player.draw[0].value > 0) {player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
+        const tarantallegra = new DarkArtsEvent("Tarantallegra", "Game 3", () => {activePlayer.health--;});
         //const menacingGrowl = new DarkArtsEvent("Menacing Growl", "Box 1", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         if (activeGame !== "Game 1") {
             darkArtsEvents.push(handOfGlory1, handOfGlory2, obliviate, poison, relashio);
-            // TO-DO: add future games' DAEs to darkArtsEvents if selected
+            if (activeGame !== "Game 2") {
+                darkArtsEvents.push(dementorsKiss1, dementorsKiss2, oppugno, tarantallegra);
+                // TO-DO: add future games' DAEs to darkArtsEvents if selected
+            }
         }
         shuffle(darkArtsEvents);
         let activeDarkArtsEvent = darkArtsEvents[0];
@@ -748,9 +783,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._type = type;
                 this._maxHealth = health;
                 this._health = health;
+                this._takenDamage = false;
                 this._healthType = healthType;
                 this._effect = effect;
                 this._reward = reward;
+                this._petrifiedBy = null;
             }
             get img() {
                 return this._img;
@@ -808,6 +845,12 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
             }
+            get takenDamage() {
+                return this._takenDamage;
+            }
+            set takenDamage(takenDamage) {
+                this._takenDamage = takenDamage;
+            }
             get healthType() {
                 return this._healthType;
             }
@@ -817,6 +860,19 @@ document.getElementById("submitPlayers").onclick = () => {
             reward() {
                 this._reward();
             }
+            get petrifiedBy() {
+                return this._petrifiedBy;
+            }
+            set petrifiedBy(petrifiedBy) {
+                this._petrifiedBy = petrifiedBy;
+                const activeVillainElement = document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)];
+                if (this.petrifiedBy) {
+                    activeVillainElement.innerHTML += `<img src="./images/petrifiedToken.png" class="petrifiedToken">`;
+                }
+                else {
+                    activeVillainElement.getElementsByClassName("petrifiedToken")[0].remove();
+                }
+            }
         }
         const crabbeAndGoyle = new Villain("Crabbe And Goyle", "Game 1", "villain", 5, "health", () => {}, () => {players.forEach(player => {player.drawCards(1);});});
         const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, "health", () => {}, () => {activeLocation.removeFromLocation();});
@@ -824,12 +880,16 @@ document.getElementById("submitPlayers").onclick = () => {
         const basilisk = new Villain("Basilisk", "Game 2", "villain", 8, "health", () => {players.forEach(player => {player.petrified = true;});}, () => {players.forEach(player => {player.petrified = false; player.drawCards(1);}); activeLocation.removeFromLocation();});
         const luciusMalfoy = new Villain("Lucius Malfoy", "Game 2", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.influence++;}); activeLocation.removeFromLocation();});
         const tomRiddle = new Villain("Tom Riddle", "Game 2", "villain", 6, "health", () => {let allies = activePlayer.hand.filter(card => {return card.type === "ally";}); const tomRiddleEffect = () => {allies = activePlayer.hand.filter(card => {return card.type === "ally";}); const loseHealthOrDiscard = index => {allies.splice(allies.indexOf(allies[index]), 1); playerChoice("Lose:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div>${healthToken + healthToken}</div>`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2; tomRiddleEffect();}; document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); document.getElementsByClassName("choice")[1].onclick = () => {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let j = 0; j < activePlayer.hand.length; j++) {document.getElementsByClassName("choice")[j].innerHTML = `<img src="${activePlayer.hand[j].img.src}">`; document.getElementsByClassName("choice")[j].onclick = () => {if (allies.includes(activePlayer.hand[j])) allies.splice(allies.indexOf(activePlayer.hand[j]), 1); activePlayer.forcedDiscardAt(j, true); tomRiddleEffect();};}});};});}; if (allies.length === 1) loseHealthOrDiscard(0); else {playerChoice("Choose an ally to lose 2 health or discard a card:", () => {allies = activePlayer.hand.filter(card => {return card.type === "ally";}); return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {loseHealthOrDiscard(i)};}});}}; tomRiddleEffect();}, () => {players.forEach(player => {const allies = player.discard.filter(card => {return card.type === "ally"}); const drawAllyFromDiscard = () => {const putAllyInHand = index => {const tempPetrified = player.petrified; player.petrified = false; player.draw.unshift(allies[index]); player.drawCards(1); player.discard.splice(player.discard.indexOf(allies[index]), 1); player.petrified = tempPetrified;}; if (allies.length === 1) putAllyInHand(0); playerChoice("Add to hand:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {putAllyInHand(i)};}});}; if (allies.length && player.health < 10) {playerChoice(`Choose for ${player.hero}:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div>${healthToken + healthToken}</div>`; document.getElementsByClassName("choice")[0].onclick = () => {player.health += 2;}; document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(allies); document.getElementsByClassName("choice")[1].onclick = drawAllyFromDiscard;});} else if (allies.length) drawAllyFromDiscard(); else player.health += 2;});});
+        const dementor = new Villain("Dementor", "Game 3", "villain", 8, "health", () => {activePlayer.health -= 2;}, () => {players.forEach(player => {player.health += 2;}); activeLocation.removeFromLocation();});
         // TO-DO: add other games' villains to villains if selected
         let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
             villains.push(basilisk, luciusMalfoy, tomRiddle);
             if (activeGame !== "Game 2") {
-                // TO-DO: add Game 3 villains
+                villains.push(dementor);
+                if (activeGame !== "Game 3") {
+                    // TO-DO: add Game 4 villains
+                }
             }
         }
         shuffle(villains);
@@ -919,9 +979,16 @@ document.getElementById("submitPlayers").onclick = () => {
         // deal damage by clicking on a villain or villain's damage area
         for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
             const dealDamage = () => {
-                if (activePlayer.attack > 0 && document.getElementsByClassName("activeVillain")[i].getElementsByClassName("villain")[0]) {
-                    activePlayer.attack--;
-                    activeVillains[i].health--;
+                if (document.getElementsByClassName("activeVillain")[i].getElementsByClassName("villain")[0] && (activeDarkArtsEvent !== tarantallegra || !activeVillains[i].takenDamage)) {
+                    if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
+                        activePlayer.attack--;
+                        activeVillains[i].health--;
+                    }
+                    else if (activePlayer.influence > 0 && activeVillains[i].healthType === "influence") {
+                        activePlayer.influence--;
+                        activeVillains[i].health--;
+                    }
+                    activeVillains[i].takenDamage = true;
                 }
             }
             document.getElementsByClassName("activeVillain")[i].onclick = dealDamage;
@@ -965,6 +1032,9 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.populateHand();
             document.getElementById("heroImage").appendChild(activePlayer.heroImage);
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
+
+            // unpetrify villain
+            activeVillains.forEach(villain => {if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; villain.takenDamage = false;});
 
             // reveal Dark Arts Event
             let villainTimeout = 1000;

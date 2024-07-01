@@ -153,6 +153,17 @@ main {
 #villain3 {
     left: 46%;
 }
+.villain {
+    z-index: 0;
+}
+.petrifiedToken {
+    --height: 80%;
+    z-index: 1;
+    height: var(--height);
+    position: absolute;
+    top: calc((100% - var(--height)) / 2);
+    transform: translateX(calc(115% - var(--height)));
+}
 
 .villainDamage {
     position: absolute;
