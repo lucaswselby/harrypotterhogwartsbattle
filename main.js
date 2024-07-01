@@ -964,29 +964,33 @@ document.getElementById("submitPlayers").onclick = () => {
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
 
             // reveal Dark Arts Event
-            const darkArtsEventsElement = document.getElementById("darkArtsEvents");
-            darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
-            setTimeout(() => {
-                activeDarkArtsEvent.img.classList.toggle("flipped");
+            let villainTimeout = 1000;
+            for (let i = 0; i < activeLocation.darkArtsEventDraws; i++) {
                 setTimeout(() => {
-                    activeDarkArtsEvent.effect();
-
-                    // remove previous dark arts card
-                    if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
-                        darkArtsEventsElement.removeChild(lastCardImg);
-                    }
-                    else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
-                        darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
-                    }
-        
+                    const darkArtsEventsElement = document.getElementById("darkArtsEvents");
+                    darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
+                    activeDarkArtsEvent.img.classList.toggle("flipped");
                     setTimeout(() => {
-                        // villain effects
-                        activeVillains.forEach(villain => {
-                            villain.effect();
-                        });
+                        activeDarkArtsEvent.effect();
+
+                        // remove previous dark arts card
+                        if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
+                            darkArtsEventsElement.removeChild(lastCardImg);
+                        }
+                        else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
+                            darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
+                        }
                     }, 1000);
                 }, 1000);
-            }, 1000);
+                villainTimeout += 2000;
+            }
+        
+            // villain effects
+            setTimeout(() => {
+                activeVillains.forEach(villain => {
+                    if (!villain.petrifiedBy) villain.effect();
+                });
+            }, villainTimeout);
         };
         document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
 
