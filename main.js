@@ -1082,8 +1082,14 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // end turn
         document.getElementById("endTurn").onclick = () => {
-            // unpetrify everyone
-            players.forEach(player => {player.petrified = false;});
+            // unstun and unpetrify everyone
+            players.forEach(player => {
+                player.petrified = false;
+                if (player.stunned) {
+                    player.stunned = false;
+                    player.health = 10;
+                }
+            });
 
             // player resets for next turn
             activePlayer.endTurn();
