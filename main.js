@@ -472,6 +472,14 @@ document.getElementById("submitPlayers").onclick = () => {
                     document.getElementById("playerHand").appendChild(card.img);
                 });
             }
+            shuffle() {
+                // shuffle discard pile
+                shuffle(this._discard);
+
+                // add discard pile to draw pile
+                this._draw = this.draw.concat(this.discard);
+                this._discard = [];
+            }
             drawCards(numberOfCards) {
                 if (!this.petrified) {
                     for (let i = 0; i < numberOfCards; i++) {
@@ -489,12 +497,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         // shuffles the discard pile into the draw pile
                         else {
-                            // shuffle discard pile
-                            shuffle(this._discard);
-            
-                            // add discard pile to draw pile
-                            this._draw = this.draw.concat(this.discard);
-                            this._discard = [];
+                            this.shuffle();
                             i--;
                         }
                     }
