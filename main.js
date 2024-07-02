@@ -887,12 +887,15 @@ document.getElementById("submitPlayers").onclick = () => {
             get health() {
                 return this._health;
             }
-            set health(health) {
-                this._health = health;
+            displayDamage() {
                 document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
                 for (let i = 0; i < this._maxHealth - this.health; i++) {
                     document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
                 }
+            }
+            set health(health) {
+                this._health = health;
+                this.displayDamage();
                 if (this.health <= 0) {
                     // remove villain
                     this.img.classList.toggle("defeating");
