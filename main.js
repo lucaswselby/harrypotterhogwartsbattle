@@ -706,7 +706,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             removeFromLocation() {
                 // Harry Potter special
-                if (!removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
                     playerChoice(`Gain ${attackToken}:`, () => {return players.length;}, 1, () => {
                         for (let i = 0; i < players.length; i++) {
                             document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
