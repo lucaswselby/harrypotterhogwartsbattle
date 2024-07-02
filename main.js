@@ -968,22 +968,25 @@ document.getElementById("submitPlayers").onclick = () => {
         const dementor = new Villain("Dementor", "Game 3", "villain", 8, "health", () => {activePlayer.health -= 2;}, () => {players.forEach(player => {player.health += 2;}); activeLocation.removeFromLocation();});
         const peterPettigrew = new Villain("Peter Pettigrew", "Game 3", "villain", 7, "health", () => {if (!activePlayer.draw.length) activePlayer.shuffle(); if (activePlayer.draw[0].value > 0) {activePlayer.drawCards(1); activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, true); activeLocation.addToLocation();}}, () => {players.forEach(player => {const spells = player.discard.filter(card => {return card.type === "spell";}); if (spells.length) {const discardToHand = index => {player.discard.splice(player.discard.indexOf(spells[index]), 1); player.draw.unshift(spells[index]); const tempPetrified = player.petrified; player.petrified = false; player.drawCards(1); player.petrified = tempPetrified;}; if (spells.length === 1) discardToHand(0); else {playerChoice("Move from Discard to Hand:", () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});}}}); activeLocation.removeFromLocation();});
         // TO-DO: add other games' villains to villains if selected
-        let villains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
+        let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
-            villains.push(basilisk, luciusMalfoy, tomRiddle);
+            inactiveVillains.push(basilisk, luciusMalfoy, tomRiddle);
             if (activeGame !== "Game 2") {
-                villains.push(dementor, peterPettigrew);
+                inactiveVillains.push(dementor, peterPettigrew);
                 if (activeGame !== "Game 3") {
                     // TO-DO: add Game 4 villains
                 }
             }
         }
-        shuffle(villains);
-        let activeVillains = [villains[0]];
+        shuffle(inactiveVillains);
+        let activeVillains = [inactiveVillains[0]];
+        inactiveVillains.shift();
         if (activeGame !== "Game 1" && activeGame !== "Game 2") {
-            activeVillains.push(villains[1]);
+            activeVillains.push(inactiveVillains[0]);
+            inactiveVillains.shift();
             if (activeGame !== "Game 3" && activeGame !== "Game 4") {
-                activeVillains.push(villains[2]);
+                activeVillains.push(inactiveVillains[0]);
+                inactiveVillains.shift();
             }
         }
 
@@ -1120,6 +1123,7 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.populateHand();
             document.getElementById("heroImage").appendChild(activePlayer.heroImage);
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
+            activePlayer.attack += 10; // DEBUG
 
             // unpetrify villain
             activeVillains.forEach(villain => {if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; villain.takenDamage = false;});
@@ -1180,11 +1184,10 @@ document.getElementById("submitPlayers").onclick = () => {
 
             // replace with new villain
             for (let i = 0; i < activeVillains.length; i++) {
-                if (activeVillains[i].health <= 0) {
-                    if (villains.indexOf(activeVillains[i]) + 1 < villains.length) {
-                        activeVillains[i] = villains[villains.indexOf(activeVillains[i]) + 1];
-                        document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
-                    }
+                if (activeVillains[i].health <= 0 && inactiveVillains.length) {
+                    activeVillains[i] = inactiveVillains[0];
+                    inactiveVillains.shift();
+                    document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
                 }
             }
 
