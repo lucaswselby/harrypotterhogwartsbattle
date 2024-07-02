@@ -543,7 +543,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.drawCards(1);
                 }
                 // Chocolate Frog effect
-                else if (this.hand[index].name === "Chocolate Frog") {
+                else if (this.hand[index] === chocolateFrog1 || this.hand[index] === chocolateFrog2 || this.hand[index] === chocolateFrog3) {
                     this.influence++;
                     this.health++;
                 }
