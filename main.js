@@ -477,7 +477,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 // Hermione Granger special
                 if (this.spellsCast === 4 && this.hero === "Hermione Granger" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                    playerChoice(`Gain ${influenceToken}:`, () => {return players.length;}, 1, () => {
+                    playerChoice(`Gain 1 influence:`, () => {return players.length;}, 1, () => {
                         for (let i = 0; i < players.length; i++) {
                             document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
                             document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p>`;
@@ -509,7 +509,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     const hurtPlayers = players.filter(player => {return player.health < 10;});
                     if (hurtPlayers.length) {
                         if (hurtPlayers.length > 1) {
-                            playerChoice(`Gain ${healthToken + healthToken}:`, () => {return hurtPlayers.length;}, 1, () => {
+                            playerChoice(`Gain 2 health:`, () => {return hurtPlayers.length;}, 1, () => {
                                 for (let i = 0; i < hurtPlayers.length; i++) {
                                     document.getElementsByClassName("choice")[i].appendChild(hurtPlayers.heroImage.cloneNode());
                                     document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
@@ -707,7 +707,7 @@ document.getElementById("submitPlayers").onclick = () => {
             removeFromLocation() {
                 // Harry Potter special
                 if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                    playerChoice(`Gain ${attackToken}:`, () => {return players.length;}, 1, () => {
+                    playerChoice(`Gain 1 attack:`, () => {return players.length;}, 1, () => {
                         for (let i = 0; i < players.length; i++) {
                             document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
                             document.getElementsByClassName("choice")[i].onclick = () => {players[i].attack++;};
