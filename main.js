@@ -519,7 +519,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 for (let i = 0; i < hurtPlayers.length; i++) {
                                     document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
                                     document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
-                                    document.getElementsByClassName("choice").onclick = () => {hurtPlayers[i].health += 2;};
+                                    document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
                                 }
                             });
                         }
