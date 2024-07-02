@@ -979,14 +979,11 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         shuffle(inactiveVillains);
-        let activeVillains = [inactiveVillains[0]];
-        inactiveVillains.shift();
+        let activeVillains = [inactiveVillains.shift()];
         if (activeGame !== "Game 1" && activeGame !== "Game 2") {
-            activeVillains.push(inactiveVillains[0]);
-            inactiveVillains.shift();
+            activeVillains.push(inactiveVillains.shift());
             if (activeGame !== "Game 3" && activeGame !== "Game 4") {
-                activeVillains.push(inactiveVillains[0]);
-                inactiveVillains.shift();
+                activeVillains.push(inactiveVillains.shift());
             }
         }
 
@@ -1184,8 +1181,7 @@ document.getElementById("submitPlayers").onclick = () => {
             // replace with new villain
             for (let i = 0; i < activeVillains.length; i++) {
                 if (activeVillains[i].health <= 0 && inactiveVillains.length) {
-                    activeVillains[i] = inactiveVillains[0];
-                    inactiveVillains.shift();
+                    activeVillains[i] = inactiveVillains.shift();
                     document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
                 }
             }
