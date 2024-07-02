@@ -511,7 +511,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (hurtPlayers.length > 1) {
                             playerChoice(`Gain 2 health:`, () => {return hurtPlayers.length;}, 1, () => {
                                 for (let i = 0; i < hurtPlayers.length; i++) {
-                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers.heroImage.cloneNode());
+                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
                                     document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
                                     document.getElementsByClassName("choice").onclick = () => {hurtPlayers[i].health += 2;};
                                 }
