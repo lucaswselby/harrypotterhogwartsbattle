@@ -579,6 +579,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._darkArtsEventDraws = darkArtsEventDraws;
                 this._game = game;
                 this._added = 0;
+                this._removed = false;
             }
             get img() {
                 return this._img;
@@ -600,6 +601,12 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             set added(added) {
                 this._added = added;
+            }
+            get removed() {
+                return this._removed;
+            }
+            set removed(removed) {
+                this._removed = removed;
             }
             addToLocation() {
                 this.added++;
@@ -638,6 +645,17 @@ document.getElementById("submitPlayers").onclick = () => {
                 }, 1000);
             }
             removeFromLocation() {
+                // Harry Potter special
+                if (!removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                    playerChoice(`Gain ${attackToken}:`, () => {return players.length;}, 1, () => {
+                        for (let i = 0; i < players.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
+                            document.getElementsByClassName("choice")[i].onclick = () => {players[i].attack++;};
+                        }
+                    });
+                }
+
+                this.removed = true;
                 if (this === locations[0]) {
                     if (this.added > 0) {
                         this.added--;
@@ -1096,6 +1114,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
             // player resets for next turn
             activePlayer.endTurn();
+            activeLocation.removed = false;
 
             // replace with new villain
             for (let i = 0; i < activeVillains.length; i++) {
