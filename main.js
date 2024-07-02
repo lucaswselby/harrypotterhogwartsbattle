@@ -139,13 +139,14 @@ document.getElementById("submitPlayers").onclick = () => {
             generateOnClick() {
                 this._img.onclick = () => {
                     activePlayer.discardAt(activePlayer.hand.indexOf(this));
-                    if (this.type === "spell") activePlayer.spellsCast++;
                     this._effect();
 
                     // Every-Flavour Beans effect
                     if (activePlayer.passives.includes(everyFlavourBeans) && this.type === "ally") {
                         activePlayer.attack++;
                     }
+
+                    if (this.type === "spell") activePlayer.spellsCast++;
                 }
             }
             get passive() {
@@ -411,6 +412,14 @@ document.getElementById("submitPlayers").onclick = () => {
             get attack() {
                 return this._attack;
             }
+            displayAttack() {
+                if (activePlayer === this) {
+                    document.getElementById("attackTokens").innerHTML = "";
+                    for (let i = 0; i < attack; i++) {
+                        document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                    }
+                }                
+            }
             set attack(attack) {
                 if (!this.stunned || activePlayer === this) {
                     // sets attack
@@ -418,18 +427,19 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (this._attack < 0) {
                         this._attack = 0;
                     }
-
-                    // adds attack tokens to board
-                    if (activePlayer === this) {
-                        document.getElementById("attackTokens").innerHTML = "";
-                        for (let i = 0; i < attack; i++) {
-                            document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
-                        }
-                    }
+                    this.displayAttack();
                 }
             }
             get influence() {
                 return this._influence;
+            }
+            displayInfluence() {
+                if (activePlayer === this) {
+                    document.getElementById("influenceTokens").innerHTML = "";
+                    for (let i = 0; i < this.influence; i++) {
+                        document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
+                    }
+                }
             }
             set influence(influence) {
                 if (!this.stunned || activePlayer === this) {
@@ -438,14 +448,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (this.influence < 0) {
                         this._influence = 0;
                     }
-
-                    // adds influence tokens to board
-                    if (activePlayer === this) {
-                        document.getElementById("influenceTokens").innerHTML = "";
-                        for (let i = 0; i < this.influence; i++) {
-                            document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
-                        }
-                    }
+                    this.displayInfluence();
                 }
             }
             get draw() {
@@ -1123,6 +1126,8 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.populateHand();
             document.getElementById("heroImage").appendChild(activePlayer.heroImage);
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
+            activePlayer.displayAttack();
+            activePlayer.displayInfluence();
 
             // unpetrify villain
             activeVillains.forEach(villain => {if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; villain.takenDamage = false;});
