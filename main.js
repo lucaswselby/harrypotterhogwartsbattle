@@ -893,9 +893,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     setTimeout(() => {
                         this.img.remove();
                         document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
-                        this.img.classList.toggle("defeating");
                         if (document.getElementById("villainDiscard").getElementsByTagName("IMG")[0]) setTimeout(() => {document.getElementById("villainDiscard").getElementsByTagName("IMG")[0].remove();}, 1000);
                         document.getElementById("villainDiscard").appendChild(this.img);
+                        this.img.classList.toggle("defeating");
                         this.img.classList.toggle("defeated");
                         this.reward();
                     }, 1000);
