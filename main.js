@@ -1189,9 +1189,12 @@ document.getElementById("submitPlayers").onclick = () => {
 
             // replace with new villain
             for (let i = 0; i < activeVillains.length; i++) {
-                if (activeVillains[i].health <= 0 && inactiveVillains.length) {
-                    activeVillains[i] = inactiveVillains.shift();
-                    document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
+                if (activeVillains[i].health <= 0) {
+                    if (inactiveVillains.length) {
+                        activeVillains[i] = inactiveVillains.shift();
+                        document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
+                    }
+                    else activeVillains.splice(i, 1);
                 }
             }
 
