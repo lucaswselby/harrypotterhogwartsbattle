@@ -415,7 +415,7 @@ document.getElementById("submitPlayers").onclick = () => {
             displayAttack() {
                 if (activePlayer === this) {
                     document.getElementById("attackTokens").innerHTML = "";
-                    for (let i = 0; i < attack; i++) {
+                    for (let i = 0; i < this.attack; i++) {
                         document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
                     }
                 }                
