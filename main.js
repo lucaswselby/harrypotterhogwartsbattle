@@ -353,6 +353,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._stunned = false;
                 this._spellsCast = 0;
                 this._gainedHealth = false;
+                this._attacks = 0;
             }
             get hero() {
                 return this._hero;
@@ -497,6 +498,29 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._gainedHealth = gainedHealth;
                 this.health += nevilleSpecial;
             }
+            get attacks() {
+                return this._attacks;
+            }
+            set attacks(attacks) {
+                this._attacks = attacks;
+
+                // Ron Weasley special
+                if (this.attacks === 3 && this.hero === "Ron Weasley" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                    const hurtPlayers = players.filter(player => {return player.health < 10;});
+                    if (hurtPlayers.length) {
+                        if (hurtPlayers.length > 1) {
+                            playerChoice(`Gain ${healthToken + healthToken}:`, () => {return hurtPlayers.length;}, 1, () => {
+                                for (let i = 0; i < hurtPlayers.length; i++) {
+                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers.heroImage.cloneNode());
+                                    document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
+                                    document.getElementsByClassName("choice").onclick = () => {hurtPlayers[i].health += 2;};
+                                }
+                            });
+                        }
+                        else hurtPlayers[0].health += 2;
+                    }
+                }
+            }
 
             discardAt(index) {
                 this._discard.push(this.hand[index]);
@@ -579,6 +603,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._passives = [];
                 this.spellsCast = 0;
                 this.gainedHealth = false;
+                this.attacks = 0;
                 this.drawCards(5);
             }
             stun() {
@@ -1044,12 +1069,14 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
                         activePlayer.attack--;
                         activeVillains[i].health--;
+                        activeVillains[i].takenDamage = true;
+                        activePlayer.attacks++;
                     }
                     else if (activePlayer.influence > 0 && activeVillains[i].healthType === "influence") {
                         activePlayer.influence--;
                         activeVillains[i].health--;
+                        activeVillains[i].takenDamage = true;
                     }
-                    activeVillains[i].takenDamage = true;
                 }
             }
             document.getElementsByClassName("activeVillain")[i].onclick = dealDamage;
