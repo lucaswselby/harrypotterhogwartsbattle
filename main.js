@@ -139,6 +139,7 @@ document.getElementById("submitPlayers").onclick = () => {
             generateOnClick() {
                 this._img.onclick = () => {
                     activePlayer.discardAt(activePlayer.hand.indexOf(this));
+                    if (this.type === "spell") activePlayer.spellsCast++;
                     this._effect();
 
                     // Every-Flavour Beans effect
@@ -350,6 +351,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 // TO-DO: add other heroes
                 this._petrified = false;
                 this._stunned = false;
+                this._spellsCast = 0;
+                this._gainedHealth = false;
             }
             get hero() {
                 return this._hero;
@@ -374,6 +377,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // sets health
+                    if (this.health < health) this.gainedHealth = true;
                     this._health = health;
                     if (this.health <= 0) {
                         this._health = 0;
@@ -464,6 +468,35 @@ document.getElementById("submitPlayers").onclick = () => {
             set stunned(stunned) {
                 this._stunned = stunned;
             }
+            get spellsCast() {
+                return this._spellsCast;
+            }
+            set spellsCast(spellsCast) {
+                this._spellsCast = spellsCast;
+
+                // Hermione Granger special
+                if (this.spellsCast === 4 && this.hero === "Hermione Granger" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                    playerChoice(`Gain ${influenceToken}:`, () => {return players.length;}, 1, () => {
+                        for (let i = 0; i < players.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
+                            document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p>`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++;};
+                        }
+                    });
+                }
+            }
+            get gainedHealth() {
+                return this._gainedHealth;
+            }
+            set gainedHealth(gainedHealth) {
+                // Neville Longbottom special
+                let nevilleSpecial = 0;
+                if (!this.gainedHealth && gainedHealth && activePlayer.hero === "Neville Longbottom" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                    nevilleSpecial++;
+                }
+                this._gainedHealth = gainedHealth;
+                this.health += nevilleSpecial;
+            }
 
             discardAt(index) {
                 this._discard.push(this.hand[index]);
@@ -544,6 +577,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.attack = 0;
                 this.influence = 0;
                 this._passives = [];
+                this.spellsCast = 0;
+                this.gainedHealth = false;
                 this.drawCards(5);
             }
             stun() {
