@@ -377,8 +377,17 @@ document.getElementById("submitPlayers").onclick = () => {
                         health = this.health - 1;
                     }
 
+                    // Neville Longbottom special
+                    if (this.health < health && !this.gainedHealth) {
+                        let nevilleSpecial = 0;
+                        if (activePlayer.hero === "Neville Longbottom" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                            nevilleSpecial++;
+                        }
+                        this.gainedHealth = true;
+                        health += nevilleSpecial;
+                    }
+
                     // sets health
-                    if (this.health < health) this.gainedHealth = true;
                     this._health = health;
                     if (this.health <= 0) {
                         this._health = 0;
@@ -490,13 +499,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._gainedHealth;
             }
             set gainedHealth(gainedHealth) {
-                // Neville Longbottom special
-                let nevilleSpecial = 0;
-                if (!this.gainedHealth && gainedHealth && activePlayer.hero === "Neville Longbottom" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                    nevilleSpecial++;
-                }
                 this._gainedHealth = gainedHealth;
-                this.health += nevilleSpecial;
             }
             get attacks() {
                 return this._attacks;
