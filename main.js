@@ -1148,10 +1148,22 @@ document.getElementById("submitPlayers").onclick = () => {
             // unpetrify villain
             activeVillains.forEach(villain => {if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; villain.takenDamage = false;});
 
-            // reveal Dark Arts Event
-            let villainTimeout = 1000;
+            // flip Dark Arts Event(s)
+            let villainTimeout = 2000 - activeLocation.darkArtsEventDraws * 1000;
             for (let i = 0; i < activeLocation.darkArtsEventDraws; i++) {
                 setTimeout(() => {
+                    // updates activeDarkArtsEvent
+                    if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) {
+                        activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
+                    }
+                    else {
+                        lastCardImg = activeDarkArtsEvent.img;
+                        darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
+                        shuffle(darkArtsEvents);
+                        activeDarkArtsEvent = darkArtsEvents[0];
+                    }
+
+                    // reveal Dark Arts Event
                     const darkArtsEventsElement = document.getElementById("darkArtsEvents");
                     darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
                     activeDarkArtsEvent.img.classList.toggle("flipped");
@@ -1159,26 +1171,23 @@ document.getElementById("submitPlayers").onclick = () => {
                         activeDarkArtsEvent.effect();
 
                         // remove previous dark arts card
-                        if (darkArtsEventsElement.contains(lastCardImg) && darkArtsEventsElement.contains(darkArtsEvents[0].img)) {
-                            darkArtsEventsElement.removeChild(lastCardImg);
+                        if (lastCardImg && activeDarkArtsEvent === darkArtsEvents[0]) {
+                            lastCardImg.remove();
                         }
                         else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
-                            darkArtsEventsElement.removeChild(darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img);
+                            darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img.remove();
                         }
                     }, 1000);
-                }, 1000);
-                villainTimeout += 2000;
+                }, i ? ((i * 2000) + 1000) : 1000);
+                villainTimeout += i ? 3000 : 2000;
             }
         
             // villain effects
             setTimeout(() => {
-                activeVillains.forEach(villain => {
-                    if (!villain.petrifiedBy) villain.effect();
-                });
-            }, villainTimeout);
-
+                for (let i = 0; i < activeVillains.length; i++) {
+                    if (!activeVillains[i].petrifiedBy) setTimeout(() => {activeVillains[i].effect();}, i * 1000);
                 }
-            });
+            }, villainTimeout);
         };
         document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
 
@@ -1206,24 +1215,6 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     else activeVillains.splice(i, 1);
                 }
-            }
-
-            // check if all villains are defeated
-            let villainsDefeated = true;
-            for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
-                if (document.getElementsByClassName("activeVillain")[i].getElementsByClassName("villain")[0]) villainsDefeated = false;
-            }
-            if (villainsDefeated) alert("Victory!");
-
-            // updates activeDarkArtsEvent
-            if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) {
-                activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
-            }
-            else {
-                lastCardImg = darkArtsEvents[darkArtsEvents.length - 1].img;
-                darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
-                shuffle(darkArtsEvents);
-                activeDarkArtsEvent = darkArtsEvents[0];
             }
 
             // start new turn
