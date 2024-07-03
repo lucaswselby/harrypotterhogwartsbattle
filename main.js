@@ -536,7 +536,7 @@ document.getElementById("submitPlayers").onclick = () => {
             forcedDiscardAt(index, evil) {
                 // Remembrall effect
                 if (this.hand[index] === remembrall) {
-                    activePlayer.influence += 2;
+                    this.influence += 2;
                 }
                 // Gilderoy Lockhart effect
                 else if (this.hand[index] === gilderoyLockhart) {
