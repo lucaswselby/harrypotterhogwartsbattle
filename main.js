@@ -898,6 +898,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._health = health;
                 this.displayDamage();
                 if (this.health <= 0) {
+                    // check for victory
+                    if (activeVillains.length === 1) {
+                        alert("Victory!");
+                    }
+
                     // remove villain
                     this.img.classList.toggle("defeating");
                     const petrifiedToken = this.petrifiedBy ? document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].getElementsByClassName("petrifiedToken")[0] : null;
@@ -930,9 +935,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     for (let i = 0; i < hurtPlayers.length; i++) {
                                         document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
                                         document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
-                                        document.getElementsByClassName("choice")[i].onclick = () => {
-                                            hurtPlayers[i].health += 2;
-                                        };
+                                        document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
                                     }                            
                                 });
                             }
@@ -1134,6 +1137,14 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.displayAttack();
             activePlayer.displayInfluence();
 
+            // unstun everyone
+            players.forEach(player => {
+                if (player.stunned) {
+                    player.stunned = false;
+                    player.health = 10;
+                }
+            });
+
             // unpetrify villain
             activeVillains.forEach(villain => {if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; villain.takenDamage = false;});
 
@@ -1166,11 +1177,6 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             }, villainTimeout);
 
-            // unstun everyone
-            players.forEach(player => {
-                if (player.stunned) {
-                    player.stunned = false;
-                    player.health = 10;
                 }
             });
         };
