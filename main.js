@@ -894,6 +894,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
             set health(health) {
+                if (health < 0) health = 0;
                 this._health = health;
                 this.displayDamage();
                 if (this.health <= 0) {
