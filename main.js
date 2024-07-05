@@ -899,7 +899,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.displayDamage();
                 if (this.health <= 0) {
                     // check for victory
-                    if (activeVillains.length === 1) {
+                    if (activeVillains.length === 1 && !inactiveVillains.length) {
                         alert("Victory!");
                     }
 
@@ -1211,6 +1211,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (inactiveVillains.length) {
                         activeVillains[i] = inactiveVillains.shift();
                         document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
+                        if (!inactiveVillains.length) document.getElementById("villainDraw").innerHTML = "";
                     }
                     else activeVillains.splice(i, 1);
                 }
