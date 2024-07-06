@@ -113,6 +113,38 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
 
+        // Hogwarts die
+        const rollHogwartsDie = (color, evil) => {
+            let sides = ["influence", "draw", "attack", "health"];
+            if (color === "red") sides.push("influence", "influence", "influence");
+            else if (color === "green") sides.push("attack", "attack", "attack");
+            else if (color === "yellow") sides.push("health", "health", "health");
+            else if (color === "blue") sides.push("draw", "draw", "draw");
+            else alert(`${color} is not a Hogwarts die color.`);
+            const result = sides[Math.floor(Math.random() * sides.length)];
+            if (evil) {
+                if (result === "influence") activeLocation.addToLocation();
+                else if (result === "draw") players.forEach(player => {
+                    playerChoice("Discard:", () => {return player.hand.length;}, 1, () => {
+                        for (let i = 0; i < player.hand; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i]}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, true);};
+                        }
+                    });
+                });
+                else if (result === "attack") players.forEach(player => {player.health--;});
+                else if (result === "health") activeVillains.forEach(villain => {villain.health++;});
+                else alert(`But seriously, ${color} is not a Hogwarts die color.`);
+            }
+            else {
+                if (result === "influence") activePlayer.influence++;
+                else if (result === "draw") activePlayer.drawCards(1);
+                else if (result === "attack") activePlayer.attack++;
+                else if (result === "health") activePlayer.health++;
+                else alert(`But seriously, ${color} is not a Hogwarts die color.`);
+            }
+        };
+
         // cards
         class Card {
             constructor(name, game, type, cost, effect, passive) {
