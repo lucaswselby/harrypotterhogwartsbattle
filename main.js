@@ -1137,10 +1137,16 @@ document.getElementById("submitPlayers").onclick = () => {
             if (activeVillains.length > 1) document.getElementById("villain2").appendChild(activeVillains[1].img);
             if (activeVillains.length > 2) document.getElementById("villain3").appendChild(activeVillains[2].img);
 
+            // remove villain damage from board
+            for (let i = 0; i < document.getElementsByClassName("villainDamage").length; i++) {
+                document.getElementsByClassName("villainDamage")[i].innerHTML = "";
+            }
+
             // deal damage by clicking on a villain or villain's damage area
-            for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
+            for (let i = 0; i < activeVillains.length; i++) {
+                activeVillains[i].health = activeVillains[i].health;
                 const dealDamage = () => {
-                    if (document.getElementsByClassName("activeVillain")[i].getElementsByClassName("villain")[0] && (activeDarkArtsEvent !== tarantallegra || !activeVillains[i].takenDamage)) {
+                    if (activeDarkArtsEvent !== tarantallegra || !activeVillains[i].takenDamage) {
                         if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
                             activePlayer.attack--;
                             activeVillains[i].health--;
@@ -1275,6 +1281,8 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (inactiveVillains.length) {
                         activeVillains[i] = inactiveVillains.shift();
                         document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
+
+                        // remove villain card back and add Lord Voldemort
                         if (!inactiveVillains.length) {
                             document.getElementById("villainDraw").innerHTML = "";
                             if (activeGame !== "Game 1" && activeGame !== "Game 2" && activeGame !== "Game 3" && activeGame !== "Game 4") {
