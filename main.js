@@ -1131,31 +1131,34 @@ document.getElementById("submitPlayers").onclick = () => {
             <input type="button" id="endTurn" value="End Turn">
         </div>`;
 
-        // add villains to board
-        document.getElementById("villain1").appendChild(activeVillains[0].img);
-        if (activeVillains.length > 1) document.getElementById("villain2").appendChild(activeVillains[1].img);
-        if (activeVillains.length > 2) document.getElementById("villain3").appendChild(activeVillains[2].img);
+        const populateVillains = () => {
+            // add villains to board
+            document.getElementById("villain1").appendChild(activeVillains[0].img);
+            if (activeVillains.length > 1) document.getElementById("villain2").appendChild(activeVillains[1].img);
+            if (activeVillains.length > 2) document.getElementById("villain3").appendChild(activeVillains[2].img);
 
-        // deal damage by clicking on a villain or villain's damage area
-        for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
-            const dealDamage = () => {
-                if (document.getElementsByClassName("activeVillain")[i].getElementsByClassName("villain")[0] && (activeDarkArtsEvent !== tarantallegra || !activeVillains[i].takenDamage)) {
-                    if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
-                        activePlayer.attack--;
-                        activeVillains[i].health--;
-                        activeVillains[i].takenDamage = true;
-                        activePlayer.attacks++;
-                    }
-                    else if (activePlayer.influence > 0 && activeVillains[i].healthType === "influence") {
-                        activePlayer.influence--;
-                        activeVillains[i].health--;
-                        activeVillains[i].takenDamage = true;
+            // deal damage by clicking on a villain or villain's damage area
+            for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
+                const dealDamage = () => {
+                    if (document.getElementsByClassName("activeVillain")[i].getElementsByClassName("villain")[0] && (activeDarkArtsEvent !== tarantallegra || !activeVillains[i].takenDamage)) {
+                        if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
+                            activePlayer.attack--;
+                            activeVillains[i].health--;
+                            activeVillains[i].takenDamage = true;
+                            activePlayer.attacks++;
+                        }
+                        else if (activePlayer.influence > 0 && activeVillains[i].healthType === "influence") {
+                            activePlayer.influence--;
+                            activeVillains[i].health--;
+                            activeVillains[i].takenDamage = true;
+                        }
                     }
                 }
+                document.getElementsByClassName("activeVillain")[i].onclick = dealDamage;
+                document.getElementsByClassName("villainDamage")[i].onclick = dealDamage;
             }
-            document.getElementsByClassName("activeVillain")[i].onclick = dealDamage;
-            document.getElementsByClassName("villainDamage")[i].onclick = dealDamage;
-        }
+        };
+        populateVillains();
 
         // populate shop
         const populateShop = () => {
@@ -1279,7 +1282,10 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                         }
                     }
-                    else activeVillains.splice(i, 1);
+                    else {
+                        activeVillains.splice(i, 1);
+                        populateVillains();
+                    }
                 }
             }
 
