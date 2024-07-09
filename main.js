@@ -615,7 +615,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 setTimeout(() => {
                     // Crabbe and Goyle effect
-                    if (activeVillains.includes(crabbeAndGoyle) && evil) {
+                    if (activeVillains.includes(crabbeAndGoyle) && !crabbeAndGoyle.petrifiedBy && evil) {
                         this.health--;
                     }
                 }, 1000);
@@ -762,11 +762,11 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 setTimeout(() => {
                     // Draco Malfoy effect
-                    if (activeVillains.includes(dracoMalfoy)) {
+                    if (activeVillains.includes(dracoMalfoy) && !dracoMalfoy.petrifiedBy) {
                         activePlayer.health -= 2;
                     }
                     // Lucius Malfoy effect
-                    if (activeVillains.includes(luciusMalfoy)) {
+                    if (activeVillains.includes(luciusMalfoy) && !luciusMalfoy.petrifiedBy) {
                         activeVillains.forEach(villain => {villain.health++;});
                     }
                 }, 1000);
