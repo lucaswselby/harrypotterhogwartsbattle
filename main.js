@@ -1151,15 +1151,16 @@ document.getElementById("submitPlayers").onclick = () => {
         </div>`;
 
         const populateVillains = () => {
+            // remove villains and villain damage from board
+            for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
+                document.getElementsByClassName("activeVillain")[i].innerHTML = "";
+                document.getElementsByClassName("villainDamage")[i].innerHTML = "";
+            }
+
             // add villains to board
             document.getElementById("villain1").appendChild(activeVillains[0].img);
             if (activeVillains.length > 1) document.getElementById("villain2").appendChild(activeVillains[1].img);
             if (activeVillains.length > 2) document.getElementById("villain3").appendChild(activeVillains[2].img);
-
-            // remove villain damage from board
-            for (let i = 0; i < document.getElementsByClassName("villainDamage").length; i++) {
-                document.getElementsByClassName("villainDamage")[i].innerHTML = "";
-            }
 
             // deal damage by clicking on a villain or villain's damage area
             for (let i = 0; i < activeVillains.length; i++) {
