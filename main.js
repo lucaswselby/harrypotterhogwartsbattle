@@ -925,13 +925,17 @@ document.getElementById("submitPlayers").onclick = () => {
         const dementorsKiss2 = new DarkArtsEvent("Dementor's Kiss", "Game 3", () => {players.forEach(player => {player.health--;}); activePlayer.health--;});
         const oppugno = new DarkArtsEvent("Oppugno", "Game 3", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].cost) {player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
         const tarantallegra = new DarkArtsEvent("Tarantallegra", "Game 3", () => {activePlayer.health--;});
+        const avadaKedavra = new DarkArtsEvent("Avada Kedavra", "Game 4", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
         //const menacingGrowl = new DarkArtsEvent("Menacing Growl", "Box 1", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         if (activeGame !== "Game 1") {
             darkArtsEvents.push(handOfGlory1, handOfGlory2, obliviate, poison, relashio);
             if (activeGame !== "Game 2") {
                 darkArtsEvents.push(dementorsKiss1, dementorsKiss2, oppugno, tarantallegra);
-                // TO-DO: add future games' DAEs to darkArtsEvents if selected
+                if (activeGame !== "Game 3") {
+                    darkArtsEvents.push(avadaKedavra);
+                    // TO-DO: add future games' DAEs to darkArtsEvents if selected
+                }
             }
         }
         shuffle(darkArtsEvents);
@@ -1248,6 +1252,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
                 }
                 darkArtsEvents[0].generateImg();
+                if (darkArtsEvents[0] === avadaKedavra) i--; // some DAEs draw additional DAEs
                 activeDarkArtsEvents.push(darkArtsEvents.shift());
             }
 
