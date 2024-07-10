@@ -929,14 +929,14 @@ document.getElementById("submitPlayers").onclick = () => {
         const crucio = new DarkArtsEvent("Crucio", "Game 4", () => {activePlayer.health--;});
         const heirOfSlytherin1 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true);});
         const heirOfSlytherin2 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true);});
-        //const menacingGrowl = new DarkArtsEvent("Menacing Growl", "Box 1", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
+        const imperio = new DarkArtsEvent("Imperio", "Game 4", () => {const otherPlayers = players.filter(player => {return player !== activePlayer;}); if (otherPlayers.length) {if (otherPlayers.length > 1) {playerChoice("Choose to lose 2 health:", () => {return otherPlayers.length;}, 1, () => {for (let i = 0; i < otherPlayers.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${otherPlayers[i].img.src}"><p>Health: ${otherPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {otherPlayers[i].health -= 2;};}});} else otherPlayers[0].health -= 2;}});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         if (activeGame !== "Game 1") {
             darkArtsEvents.push(handOfGlory1, handOfGlory2, obliviate, poison, relashio);
             if (activeGame !== "Game 2") {
                 darkArtsEvents.push(dementorsKiss1, dementorsKiss2, oppugno, tarantallegra);
                 if (activeGame !== "Game 3") {
-                    darkArtsEvents.push(avadaKedavra, crucio, heirOfSlytherin1, heirOfSlytherin2);
+                    darkArtsEvents.push(avadaKedavra, crucio, heirOfSlytherin1, heirOfSlytherin2, imperio);
                     // TO-DO: add future games' DAEs to darkArtsEvents if selected
                 }
             }
@@ -1255,7 +1255,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
                 }
                 darkArtsEvents[0].generateImg();
-                if (darkArtsEvents[0] === avadaKedavra || darkArtsEvents[0] === crucio) i--; // some DAEs draw additional DAEs
+                if (darkArtsEvents[0] === avadaKedavra || darkArtsEvents[0] === crucio || darkArtsEvents[0] === imperio) i--; // some DAEs draw additional DAEs
                 activeDarkArtsEvents.push(darkArtsEvents.shift());
             }
 
