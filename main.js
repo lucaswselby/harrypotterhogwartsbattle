@@ -1267,7 +1267,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img.remove();
                         }
                     }, 1000);
-                }, i ? ((i * 2000) + 1000) : 1000);
+                }, i * 2000 + 1000);
                 villainTimeout += i ? 3000 : 2000;
             }
         
