@@ -1235,7 +1235,10 @@ document.getElementById("submitPlayers").onclick = () => {
             });
 
             // unpetrify villain
-            activeVillains.forEach(villain => {if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; villain.takenDamage = false;});
+            activeVillains.forEach(villain => {
+                if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; 
+                villain.takenDamage = false;
+            });
 
             // flip Dark Arts Event(s)
             for (let i = 0; i < activeLocation.darkArtsEventDraws; i++) {
