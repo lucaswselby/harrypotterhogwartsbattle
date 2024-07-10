@@ -927,6 +927,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const tarantallegra = new DarkArtsEvent("Tarantallegra", "Game 3", () => {activePlayer.health--;});
         const avadaKedavra = new DarkArtsEvent("Avada Kedavra", "Game 4", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
         const crucio = new DarkArtsEvent("Crucio", "Game 4", () => {activePlayer.health--;});
+        const heirOfSlytherin1 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true);});
+        const heirOfSlytherin2 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true);});
         //const menacingGrowl = new DarkArtsEvent("Menacing Growl", "Box 1", () => {players.forEach(player => {let lostHealth = 0; player.hand.forEach(card => {if (card.cost === 3) lostHealth++; player.health -= lostHealth;});});});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         if (activeGame !== "Game 1") {
@@ -934,7 +936,7 @@ document.getElementById("submitPlayers").onclick = () => {
             if (activeGame !== "Game 2") {
                 darkArtsEvents.push(dementorsKiss1, dementorsKiss2, oppugno, tarantallegra);
                 if (activeGame !== "Game 3") {
-                    darkArtsEvents.push(avadaKedavra, crucio);
+                    darkArtsEvents.push(avadaKedavra, crucio, heirOfSlytherin1, heirOfSlytherin2);
                     // TO-DO: add future games' DAEs to darkArtsEvents if selected
                 }
             }
