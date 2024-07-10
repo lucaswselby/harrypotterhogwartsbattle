@@ -1238,7 +1238,6 @@ document.getElementById("submitPlayers").onclick = () => {
             activeVillains.forEach(villain => {if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; villain.takenDamage = false;});
 
             // flip Dark Arts Event(s)
-            let villainTimeout = 2000 - activeLocation.darkArtsEventDraws * 1000;
             for (let i = 0; i < activeLocation.darkArtsEventDraws; i++) {
                 setTimeout(() => {
                     // updates activeDarkArtsEvent
@@ -1266,17 +1265,18 @@ document.getElementById("submitPlayers").onclick = () => {
                         else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
                             darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img.remove();
                         }
+        
+                        // villain effects
+                        if (i === activeLocation.darkArtsEventDraws - 1) {
+                            setTimeout(() => {
+                                for (let i = 0; i < activeVillains.length; i++) {
+                                    if (!activeVillains[i].petrifiedBy) setTimeout(() => {activeVillains[i].effect();}, i * 1000);
+                                }
+                            }, 1000);
+                        }
                     }, 1000);
                 }, i * 2000 + 1000);
-                villainTimeout += i ? 3000 : 2000;
             }
-        
-            // villain effects
-            setTimeout(() => {
-                for (let i = 0; i < activeVillains.length; i++) {
-                    if (!activeVillains[i].petrifiedBy) setTimeout(() => {activeVillains[i].effect();}, i * 1000);
-                }
-            }, villainTimeout);
         };
         document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
 
