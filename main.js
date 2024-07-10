@@ -935,7 +935,8 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         shuffle(darkArtsEvents);
-        let activeDarkArtsEvent = darkArtsEvents[0];
+        let activeDarkArtsEvents = [];
+        let inactiveDarkArtsEvents = [];
 
         // villains
         class Villain {
@@ -1166,7 +1167,7 @@ document.getElementById("submitPlayers").onclick = () => {
             for (let i = 0; i < activeVillains.length; i++) {
                 activeVillains[i].health = activeVillains[i].health;
                 const dealDamage = () => {
-                    if (activeDarkArtsEvent !== tarantallegra || !activeVillains[i].takenDamage) {
+                    if (!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].takenDamage) {
                         if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
                             activePlayer.attack--;
                             activeVillains[i].health--;
@@ -1240,37 +1241,31 @@ document.getElementById("submitPlayers").onclick = () => {
                 villain.takenDamage = false;
             });
 
-            // flip Dark Arts Event(s)
+            // update activeDarkArtsEvents
             for (let i = 0; i < activeLocation.darkArtsEventDraws; i++) {
-                setTimeout(() => {
-                    // updates activeDarkArtsEvent
-                    if (darkArtsEvents.indexOf(activeDarkArtsEvent) < darkArtsEvents.length - 1) {
-                        activeDarkArtsEvent = darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) + 1];
-                    }
-                    else {
-                        lastCardImg = activeDarkArtsEvent.img;
-                        darkArtsEvents.forEach(darkArtsEvent => {darkArtsEvent.generateImg();});
-                        shuffle(darkArtsEvents);
-                        activeDarkArtsEvent = darkArtsEvents[0];
-                    }
+                if (!darkArtsEvents.length) {
+                    shuffle(inactiveDarkArtsEvents);
+                    while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
+                }
+                darkArtsEvents[0].generateImg();
+                activeDarkArtsEvents.push(darkArtsEvents.shift());
+            }
 
+            // flip Dark Arts Event(s)
+            for (let i = 0; i < activeDarkArtsEvents.length; i++) {
+                setTimeout(() => {
                     // reveal Dark Arts Event
                     const darkArtsEventsElement = document.getElementById("darkArtsEvents");
-                    darkArtsEventsElement.appendChild(activeDarkArtsEvent.img);
-                    activeDarkArtsEvent.img.classList.toggle("flipped");
+                    darkArtsEventsElement.appendChild(activeDarkArtsEvents[i].img);
+                    activeDarkArtsEvents[i].img.classList.toggle("flipped");
                     setTimeout(() => {
-                        activeDarkArtsEvent.effect();
+                        activeDarkArtsEvents[i].effect();
 
-                        // remove previous dark arts card
-                        if (lastCardImg && activeDarkArtsEvent === darkArtsEvents[0]) {
-                            lastCardImg.remove();
-                        }
-                        else if (darkArtsEvents.indexOf(activeDarkArtsEvent) > 0) {
-                            darkArtsEvents[darkArtsEvents.indexOf(activeDarkArtsEvent) - 1].img.remove();
-                        }
+                        // remove the previous Dark Arts Event card
+                        if (darkArtsEventsElement.getElementsByClassName("darkArtsEvent").length > 1) darkArtsEventsElement.getElementsByClassName("darkArtsEvent")[0].remove();
         
                         // villain effects
-                        if (i === activeLocation.darkArtsEventDraws - 1) {
+                        if (activeDarkArtsEvents.indexOf(activeDarkArtsEvents[i]) === activeDarkArtsEvents.length - 1) {
                             setTimeout(() => {
                                 for (let i = 0; i < activeVillains.length; i++) {
                                     if (!activeVillains[i].petrifiedBy) setTimeout(() => {activeVillains[i].effect();}, i * 1000);
@@ -1297,6 +1292,9 @@ document.getElementById("submitPlayers").onclick = () => {
             // player resets for next turn
             activePlayer.endTurn();
             activeLocation.removed = false;
+
+            // reset activeDarkArtsEvents
+            while (activeDarkArtsEvents.length) inactiveDarkArtsEvents.push(activeDarkArtsEvents.shift());
 
             // replace with new villain
             for (let i = 0; i < activeVillains.length; i++) {
