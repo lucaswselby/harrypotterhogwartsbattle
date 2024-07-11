@@ -786,49 +786,53 @@ document.getElementById("submitPlayers").onclick = () => {
                 }, 1000);
             }
             removeFromLocation() {
-                // Harry Potter special
-                if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                    playerChoice(`Gain 1 attack:`, () => {return players.length;}, 1, () => {
-                        for (let i = 0; i < players.length; i++) {
-                            document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
-                            document.getElementsByClassName("choice")[i].onclick = () => {players[i].attack++;};
-                        }
-                    });
-                }
+                // Barty Crouch Jr effect
+                if (!activeVillains.includes(bartyCrouchJr) && !bartyCrouchJr.petrifiedBy) {
+                    // Harry Potter special
+                    if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                        playerChoice(`Gain 1 attack:`, () => {return players.length;}, 1, () => {
+                            for (let i = 0; i < players.length; i++) {
+                                document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
+                                document.getElementsByClassName("choice")[i].onclick = () => {players[i].attack++;};
+                            }
+                        });
+                    }
 
-                this.removed = true;
-                if (this === locations[0]) {
-                    if (this.added > 0) {
-                        this.added--;
-                        const locationToken = document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1];
-                        locationToken.classList.toggle("adding");
-                        locationToken.classList.toggle("removing");
-                        setTimeout(() => {locationToken.remove();}, 1000);
-                    }
-                }
-                else {
-                    // new location
-                    if (this.added === 0) {
-                        while (document.getElementsByClassName("locationToken")[0]) document.getElementsByClassName("locationToken")[0].remove();
-                        activeLocation = locations[this.number - 2];
-                        activeLocation.added = activeLocation.spaces;
-                        for (let i = 0; i < activeLocation.added; i++) {
-                            const locationToken = document.createElement("img");
-                            locationToken.src = "./images/locationToken.png";
-                            locationToken.alt = "Location token";
-                            locationToken.className = "locationToken";
-                            locationToken.style.top = i % 2 === 1 ? "78%" : "82%";
-                            locationToken.style.left = `${27 + (i * 11)}%`;
-                            document.getElementById("locations").appendChild(locationToken);
+                    // removes location token
+                    this.removed = true;
+                    if (this === locations[0]) {
+                        if (this.added > 0) {
+                            this.added--;
+                            const locationToken = document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1];
+                            locationToken.classList.toggle("adding");
+                            locationToken.classList.toggle("removing");
+                            setTimeout(() => {locationToken.remove();}, 1000);
                         }
-                        document.getElementById(`location${this.number - 1}`).style.display = "initial";
                     }
+                    // new location
                     else {
-                        this.added--;
-                        const locationToken = document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1];
-                        locationToken.classList.toggle("adding");
-                        locationToken.classList.toggle("removing");
-                        setTimeout(() => {locationToken.remove();}, 1000);
+                        if (this.added === 0) {
+                            while (document.getElementsByClassName("locationToken")[0]) document.getElementsByClassName("locationToken")[0].remove();
+                            activeLocation = locations[this.number - 2];
+                            activeLocation.added = activeLocation.spaces;
+                            for (let i = 0; i < activeLocation.added; i++) {
+                                const locationToken = document.createElement("img");
+                                locationToken.src = "./images/locationToken.png";
+                                locationToken.alt = "Location token";
+                                locationToken.className = "locationToken";
+                                locationToken.style.top = i % 2 === 1 ? "78%" : "82%";
+                                locationToken.style.left = `${27 + (i * 11)}%`;
+                                document.getElementById("locations").appendChild(locationToken);
+                            }
+                            document.getElementById(`location${this.number - 1}`).style.display = "initial";
+                        }
+                        else {
+                            this.added--;
+                            const locationToken = document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1];
+                            locationToken.classList.toggle("adding");
+                            locationToken.classList.toggle("removing");
+                            setTimeout(() => {locationToken.remove();}, 1000);
+                        }
                     }
                 }
             }
@@ -930,8 +934,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const heirOfSlytherin1 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true);});
         const heirOfSlytherin2 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true);});
         const imperio = new DarkArtsEvent("Imperio", "Game 4", () => {const otherPlayers = players.filter(player => {return player !== activePlayer;}); if (otherPlayers.length) {if (otherPlayers.length > 1) {playerChoice("Choose to lose 2 health:", () => {return otherPlayers.length;}, 1, () => {for (let i = 0; i < otherPlayers.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${otherPlayers[i].img.src}"><p>Health: ${otherPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {otherPlayers[i].health -= 2;};}});} else otherPlayers[0].health -= 2;}});
-        const morsmordre1 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation();});
-        const morsmordre2 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation();});
+        const morsmordre1 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater) && !deathEater.petrifiedBy) players.forEach(player => {player.health--;});});
+        const morsmordre2 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater) && !deathEater.petrifiedBy) players.forEach(player => {player.health--;});});
         const regeneration = new DarkArtsEvent("Regeneration", "Game 4", () => {activeVillains.forEach(villain => {villain.health += 2;})});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         if (activeGame !== "Game 1") {
@@ -1071,6 +1075,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const tomRiddle = new Villain("Tom Riddle", "Game 2", "villain", 6, "health", () => {let allies = activePlayer.hand.filter(card => {return card.type === "ally";}); const tomRiddleEffect = () => {const loseHealthOrDiscard = index => {playerChoice("Lose:", () => {allies = allies.filter(card => {return activePlayer.hand.includes(card);}); if (allies.length) return 2; return 0;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div>${healthToken + healthToken}</div>`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2; tomRiddleEffect();}; document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); document.getElementsByClassName("choice")[1].onclick = () => {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let j = 0; j < activePlayer.hand.length; j++) {document.getElementsByClassName("choice")[j].innerHTML = `<img src="${activePlayer.hand[j].img.src}">`; document.getElementsByClassName("choice")[j].onclick = () => {if (allies.includes(activePlayer.hand[j])) allies.splice(allies.indexOf(activePlayer.hand[j]), 1); activePlayer.forcedDiscardAt(j, true); tomRiddleEffect();};}});}; allies.splice(allies.indexOf(allies[index]), 1);});}; if (allies.length === 1) loseHealthOrDiscard(0); else {playerChoice("Choose an ally to lose 2 health or discard a card:", () => {allies = allies.filter(card => {return activePlayer.hand.includes(card);}); return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {loseHealthOrDiscard(i)};}});}}; tomRiddleEffect();}, () => {players.forEach(player => {const allies = player.discard.filter(card => {return card.type === "ally"}); const drawAllyFromDiscard = () => {const putAllyInHand = index => {const tempPetrified = player.petrified; player.petrified = false; player.draw.unshift(allies[index]); player.drawCards(1); player.discard.splice(player.discard.indexOf(allies[index]), 1); player.petrified = tempPetrified;}; if (allies.length === 1) putAllyInHand(0); else {playerChoice("Add to hand:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {putAllyInHand(i)};}});}}; if (allies.length && player.health < 10) {playerChoice(`Choose for ${player.hero}:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div>${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[0].onclick = () => {player.health += 2;}; document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(allies); document.getElementsByClassName("choice")[1].onclick = drawAllyFromDiscard;});} else if (allies.length) drawAllyFromDiscard(); else player.health += 2;});});
         const dementor = new Villain("Dementor", "Game 3", "villain", 8, "health", () => {activePlayer.health -= 2;}, () => {players.forEach(player => {player.health += 2;}); activeLocation.removeFromLocation();});
         const peterPettigrew = new Villain("Peter Pettigrew", "Game 3", "villain", 7, "health", () => {if (!activePlayer.draw.length) activePlayer.shuffle(); if (activePlayer.draw[0].cost) {activePlayer.drawCards(1); activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, true); activeLocation.addToLocation();}}, () => {players.forEach(player => {const spells = player.discard.filter(card => {return card.type === "spell";}); if (spells.length) {const discardToHand = index => {player.discard.splice(player.discard.indexOf(spells[index]), 1); player.draw.unshift(spells[index]); const tempPetrified = player.petrified; player.petrified = false; player.drawCards(1); player.petrified = tempPetrified;}; if (spells.length === 1) discardToHand(0); else {playerChoice("Move from Discard to Hand:", () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});}}}); activeLocation.removeFromLocation();});
+        const bartyCrouchJr = new Villain("Barty Crouch Jr", "Game 4", "villain", 7, "health", () => {}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
+        const deathEater = new Villain("Death Eater", "Game 4", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();});
         // TO-DO: add other games' villains to villains if selected
         let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
@@ -1310,7 +1316,11 @@ document.getElementById("submitPlayers").onclick = () => {
             // replace with new villain
             for (let i = 0; i < activeVillains.length; i++) {
                 if (activeVillains[i].health <= 0) {
+                    // add new villain
                     if (inactiveVillains.length) {
+                        // Death Eater effect
+                        if (activeVillains.includes(deathEater) && !deathEater.petrifiedBy) players.forEach(player => {player.health--;});
+
                         activeVillains[i] = inactiveVillains.shift();
                         document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
 
@@ -1322,6 +1332,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                         }
                     }
+                    // shift remaining villains to the left
                     else {
                         activeVillains.splice(i, 1);
                         populateVillains();
