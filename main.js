@@ -187,6 +187,22 @@ document.getElementById("submitPlayers").onclick = () => {
                         activePlayer.attack++;
                         activePlayer.passives.splice(activePlayer.passives.indexOf(lunaLovegood), 1);
                     }
+                    // OWLS effect
+                    if (activePlayer.passives.includes(owls1) && this.type === "spell") {
+                        owlsSpells1++;
+                        if (owlsSpells1 === 2) {
+                            activePlayer.attack++;
+                            activePlayer.health++;
+                        }
+                    }
+                    // OWLS effect
+                    if (activePlayer.passives.includes(owls2) && this.type === "spell") {
+                        owlsSpells2++;
+                        if (owlsSpells2 === 2) {
+                            activePlayer.attack++;
+                            activePlayer.health++;
+                        }
+                    }
 
                     if (this.type === "spell") activePlayer.spellsCast++;
                 }
@@ -350,6 +366,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const kingsleyShacklebolt = new Card("Kingsley Shacklebolt", "Game 5", "ally", 7, () => {activePlayer.attack += 2; activePlayer.health++; activeLocation.removeFromLocation();}, false);
         const lunaLovegood = new Card("Luna Lovegood", "Game 5", "ally", 5, () => {activePlayer.influence++; rollHouseDie("blue");}, true);
         const nymphadoraTonks = new Card("Nymphadora Tonks", "Game 5", "ally", 5, () => {playerChoice("Choose:", () => {return 3;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div>${influenceToken + influenceToken + influenceToken}</div>`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 3;}; document.getElementsByClassName("choice")[1].innerHTML = `<div>${attackToken + attackToken}</div>`; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.attack += 2;}; document.getElementsByClassName("choice")[2].innerHTML = "<p>Remove from Location</p>"; document.getElementsByClassName("choice")[2].onclick = () => {activeLocation.removeFromLocation();};});}, false);
+        const owls1 = new Card("OWLS", "Game 5", "item", 4, () => {activePlayer.influence += 2;}, true); let owlsSpells1 = 0;
+        const owls2 = new Card("OWLS", "Game 5", "item", 4, () => {activePlayer.influence += 2;}, true); let owlsSpells2 = 0;
 
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
@@ -361,7 +379,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activeGame !== "Game 3") {
                     hogwartsCards.push(accio1, accio2, alastorMadEyeMoody, cedricDiggory, filiusFlitwick, fleurDelacour, hogwartsAHistory1, hogwartsAHistory2, hogwartsAHistory3, hogwartsAHistory4, hogwartsAHistory5, hogwartsAHistory6, minervaMcgonagall, pensieve, pomonaSprout, protego1, protego2, protego3, severusSnape, triwizardCup, viktorKrum);
                     if (activeGame !== "Game 4") {
-                        hogwartsCards.push(choChang, fredWeasley, georgeWeasley, kingsleyShacklebolt, lunaLovegood, nymphadoraTonks);
+                        hogwartsCards.push(choChang, fredWeasley, georgeWeasley, kingsleyShacklebolt, lunaLovegood, nymphadoraTonks, owls1, owls2);
                     }
                 }
             }
@@ -701,6 +719,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.spellsCast = 0;
                 this.gainedHealth = false;
                 this.attacks = 0;
+                owlsSpells1 = 0;
+                owlsSpells2 = 0;
                 this.drawCards(5);
             }
             stun() {
