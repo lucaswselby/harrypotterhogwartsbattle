@@ -712,12 +712,13 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // locations
         class Location {
-            constructor(name, game, number, spaces, darkArtsEventDraws) {
+            constructor(name, game, number, spaces, darkArtsEventDraws, revealEffect) {
                 this._name = name;
                 this._img = `<img id="location${number}" class="location" src="./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
                 this._number = number;
                 this._spaces = spaces;
                 this._darkArtsEventDraws = darkArtsEventDraws;
+                this._revealEffect = revealEffect;
                 this._game = game;
                 this._added = 0;
                 this._removed = false;
@@ -768,6 +769,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     // new location
                     else {
+                        this._revealEffect();
                         while (document.getElementsByClassName("locationToken")[0]) document.getElementsByClassName("locationToken")[0].remove();
                         activeLocation = locations[this.number];
                         document.getElementById(`location${this.number}`).style.display = "none";
@@ -837,52 +839,52 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
         }
-        const diagonAlley = new Location("Diagon Alley", "Game 1", 1, 4, 1);
-        const mirrorOfErised = new Location("Mirror Of Erised", "Game 1", 2, 4, 1);
-        const forbiddenForest = new Location("Forbidden Forest", "Game 2", 1, 4, 1);
-        const quidditchPitch = new Location("Quidditch Pitch", "Game 2", 2, 4, 1);
-        const chamberOfSecrets = new Location("Chamber Of Secrets", "Game 2", 3, 5, 2);
-        const hogwartsExpress = new Location("Hogwarts Express", "Game 3", 1, 5, 1);
-        const hogsmeadeVillage = new Location("Hogsmeade Village", "Game 3", 2, 6, 2);
-        const shriekingShack = new Location("Shrieking Shack", "Game 3", 3, 6, 2);
-        const quidditchWorldCup = new Location("Quidditch World Cup", "Game 4", 1, 6, 1);
-        const triwizardTournament = new Location("Triwizard Tournament", "Game 4", 2, 6, 2);
-        const graveyard = new Location("Graveyard", "Game 4", 3, 7, 2);
-        const azkaban = new Location("Azkaban", "Game 5", 1, 7, 1);
-        const hallOfProphecy = new Location("Hall Of Prophecy", "Game 5", 2, 7, 2);
-        const ministryOfMagic = new Location("Ministry Of Magic", "Game 5", 3, 7, 2);
-        const knockturnAlley = new Location("Knockturn Alley", "Game 6", 1, 7, 1);
-        const theBurrow = new Location("The Burrow", "Game 6", 2, 7, 2);
-        const astronomyTower = new Location("Astronomy Tower", "Game 6", 3, 8, 3);
-        const godricsHollow = new Location("Godric's Hollow", "Game 7", 1, 6, 1);
-        const gringotts = new Location("Gringotts", "Game 7", 2, 6, 2);
-        const roomOfRequirement = new Location("Room Of Requirement", "Game 7", 3, 7, 2);
-        const hogwartsCastle = new Location("Hogwarts Castle", "Game 7", 4, 8, 3);
-        const castleGates = new Location("Castle Gates", "Box 1", 1, 5, 1);
-        const hagridsHut = new Location("Hagrid's Hut", "Box 1", 2, 6, 2);
-        const greatHallBox = new Location("Great Hall", "Box 1", 3, 7, 3);
-        const dADAClassroom = new Location("DADA Classroom", "Box 2", 1, 6, 1);
-        const castleHallways = new Location("Castle Hallways", "Box 2", 2, 6, 2);
-        const whompingWillow = new Location("Whomping Willow", "Box 2", 3, 7, 3);
-        const unicornHollow = new Location("Unicorn Hollow", "Box 3", 1, 5, 1);
-        const aragogsLair = new Location("Aragog's Lair", "Box 3", 2, 6, 2);
-        const giantClearing = new Location("Giat Clearing", "Box 3", 3, 7, 3);
-        const selectionOfChampions = new Location("Selection Of Champions", "Box 4", 1, 5, 1);
-        const dragonArena = new Location("Dragon Arena", "Box 4", 2, 6, 2);
-        const mermaidVillage = new Location("Mermaid Village", "Box 4", 3, 6, 2);
-        const triwizardMaze = new Location("Triwizard Maze", "Box 4", 4, 7, 3);
-        const theBlackLake = new Location("The Black Lake", "Pack 1", 1, 5, 1);
-        const theHospitalWing = new Location("The Hospital Wing", "Pack 1", 2, 7, 2);
-        const theHogwartsLibrary = new Location("The Hogwarts Library", "Pack 1", 3, 7, 3);
-        const ministryOfMagicAtrium = new Location("Ministry Of Magic Atrium", "Pack 2", 1, 6, 1);
-        const ministryCourtroom = new Location("Ministry Courtroom", "Pack 2", 2, 6, 2);
-        const ministryLift = new Location("Ministry Lift", "Pack 2", 3, 7, 3);
-        const malfoyManor = new Location("Malfoy Manor", "Pack 3", 1, 5, 1);
-        const cave = new Location("Cave", "Pack 3", 2, 6, 2);
-        const atopTheTower = new Location("Atop The Tower", "Pack 3", 3, 6, 3);
-        const greatHallPack = new Location("Great Hall", "Pack 4", 1, 6, 1);
-        const forestClearing = new Location("Forest Clearing", "Pack 4", 2, 6, 2);
-        const castleCourtyard = new Location("Castle Courtyard", "Pack 4", 3, 7, 3);
+        const diagonAlley = new Location("Diagon Alley", "Game 1", 1, 4, 1, () => {});
+        const mirrorOfErised = new Location("Mirror Of Erised", "Game 1", 2, 4, 1, () => {});
+        const forbiddenForest = new Location("Forbidden Forest", "Game 2", 1, 4, 1, () => {});
+        const quidditchPitch = new Location("Quidditch Pitch", "Game 2", 2, 4, 1, () => {});
+        const chamberOfSecrets = new Location("Chamber Of Secrets", "Game 2", 3, 5, 2, () => {});
+        const hogwartsExpress = new Location("Hogwarts Express", "Game 3", 1, 5, 1, () => {});
+        const hogsmeadeVillage = new Location("Hogsmeade Village", "Game 3", 2, 6, 2, () => {});
+        const shriekingShack = new Location("Shrieking Shack", "Game 3", 3, 6, 2, () => {});
+        const quidditchWorldCup = new Location("Quidditch World Cup", "Game 4", 1, 6, 1, () => {});
+        const triwizardTournament = new Location("Triwizard Tournament", "Game 4", 2, 6, 2, () => {});
+        const graveyard = new Location("Graveyard", "Game 4", 3, 7, 2, () => {players.forEach(player => {const allies = player.hand.filter(card => {return card.type === "ally"}); if (allies.length) {if (allies.length > 1) {playerChoice("Discard:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(allies[i]), false);};}});} else player.forcedDiscardAt(player.hand.indexOf(allies[0]), false);}});});
+        const azkaban = new Location("Azkaban", "Game 5", 1, 7, 1, () => {});
+        const hallOfProphecy = new Location("Hall Of Prophecy", "Game 5", 2, 7, 2, () => {});
+        const ministryOfMagic = new Location("Ministry Of Magic", "Game 5", 3, 7, 2, () => {players.forEach(player => {const spells = player.hand.filter(card => {return card.type === "spell"}); if (spells.length) {if (spells.length > 1) {playerChoice("Discard:", () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(spells[i]), false);};}});} else player.forcedDiscardAt(player.hand.indexOf(spells[0]), false);}});});
+        const knockturnAlley = new Location("Knockturn Alley", "Game 6", 1, 7, 1, () => {});
+        const theBurrow = new Location("The Burrow", "Game 6", 2, 7, 2, () => {});
+        const astronomyTower = new Location("Astronomy Tower", "Game 6", 3, 8, 3, () => {players.forEach(player => {const items = player.hand.filter(card => {return card.type === "item"}); if (items.length) {if (items.length > 1) {playerChoice("Discard:", () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(items[i]), false);};}});} else player.forcedDiscardAt(player.hand.indexOf(items[0]), false);}});});
+        const godricsHollow = new Location("Godric's Hollow", "Game 7", 1, 6, 1, () => {});
+        const gringotts = new Location("Gringotts", "Game 7", 2, 6, 2, () => {});
+        const roomOfRequirement = new Location("Room Of Requirement", "Game 7", 3, 7, 2, () => {});
+        const hogwartsCastle = new Location("Hogwarts Castle", "Game 7", 4, 8, 3, () => {players.forEach(player => {player.health -= 2;});});
+        const castleGates = new Location("Castle Gates", "Box 1", 1, 5, 1, () => {});
+        const hagridsHut = new Location("Hagrid's Hut", "Box 1", 2, 6, 2, () => {});
+        const greatHallBox = new Location("Great Hall", "Box 1", 3, 7, 3, () => {});
+        const dADAClassroom = new Location("DADA Classroom", "Box 2", 1, 6, 1, () => {});
+        const castleHallways = new Location("Castle Hallways", "Box 2", 2, 6, 2, () => {});
+        const whompingWillow = new Location("Whomping Willow", "Box 2", 3, 7, 3, () => {});
+        const unicornHollow = new Location("Unicorn Hollow", "Box 3", 1, 5, 1, () => {});
+        const aragogsLair = new Location("Aragog's Lair", "Box 3", 2, 6, 2, () => {});
+        const giantClearing = new Location("Giat Clearing", "Box 3", 3, 7, 3, () => {});
+        const selectionOfChampions = new Location("Selection Of Champions", "Box 4", 1, 5, 1, () => {});
+        const dragonArena = new Location("Dragon Arena", "Box 4", 2, 6, 2, () => {});
+        const mermaidVillage = new Location("Mermaid Village", "Box 4", 3, 6, 2, () => {});
+        const triwizardMaze = new Location("Triwizard Maze", "Box 4", 4, 7, 3, () => {});
+        const theBlackLake = new Location("The Black Lake", "Pack 1", 1, 5, 1, () => {});
+        const theHospitalWing = new Location("The Hospital Wing", "Pack 1", 2, 7, 2, () => {});
+        const theHogwartsLibrary = new Location("The Hogwarts Library", "Pack 1", 3, 7, 3, () => {});
+        const ministryOfMagicAtrium = new Location("Ministry Of Magic Atrium", "Pack 2", 1, 6, 1, () => {});
+        const ministryCourtroom = new Location("Ministry Courtroom", "Pack 2", 2, 6, 2, () => {});
+        const ministryLift = new Location("Ministry Lift", "Pack 2", 3, 7, 3, () => {});
+        const malfoyManor = new Location("Malfoy Manor", "Pack 3", 1, 5, 1, () => {});
+        const cave = new Location("Cave", "Pack 3", 2, 6, 2, () => {});
+        const atopTheTower = new Location("Atop The Tower", "Pack 3", 3, 6, 3, () => {});
+        const greatHallPack = new Location("Great Hall", "Pack 4", 1, 6, 1, () => {});
+        const forestClearing = new Location("Forest Clearing", "Pack 4", 2, 6, 2, () => {});
+        const castleCourtyard = new Location("Castle Courtyard", "Pack 4", 3, 7, 3, () => {});
         let locations = [diagonAlley, mirrorOfErised, forbiddenForest, quidditchPitch, chamberOfSecrets, hogwartsExpress, hogsmeadeVillage, shriekingShack, quidditchWorldCup, triwizardTournament, graveyard, azkaban, hallOfProphecy, ministryOfMagic, knockturnAlley, theBurrow, astronomyTower, godricsHollow, gringotts, roomOfRequirement, hogwartsCastle, castleGates, hagridsHut, greatHallBox, dADAClassroom, castleHallways, whompingWillow, unicornHollow, aragogsLair, giantClearing, selectionOfChampions, dragonArena, mermaidVillage, triwizardMaze, theBlackLake, theHospitalWing, theHogwartsLibrary, ministryOfMagicAtrium, ministryCourtroom, ministryLift, malfoyManor, cave, atopTheTower, greatHallPack, forestClearing, castleCourtyard].filter(loc => {return loc.game === activeGame});
         let activeLocation = locations[0];
 
@@ -1137,7 +1139,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 <img class="villain" src="./images/villainBack.png" alt="Back of villain card">
             </div>
             <div id="events">
-                ${game === "Game 7" ? activeEvent.img : ""}
+                ${activeGame === "Game 7" ? activeEvent.img : ""}
             </div>
             <div id="villainDiscard"></div>
             <div class="activeVillain" id="villain1"></div>
@@ -1167,6 +1169,16 @@ document.getElementById("submitPlayers").onclick = () => {
             <div id="playerHand"></div>
             <input type="button" id="endTurn" value="End Turn">
         </div>`;
+
+        // Hogwarts Castle special
+        if (hogwartsCastle.img) {
+            hogwartsCastle.img.onclick = () => {
+                if (activePlayer.attack >= 5) {
+                    hogwartsCastle.removeFromLocation();
+                    activePlayer.attack -= 5;
+                }
+            };
+        }
 
         const populateVillains = () => {
             // remove villains and villain damage from board
