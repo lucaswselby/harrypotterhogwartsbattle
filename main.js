@@ -1084,7 +1084,8 @@ document.getElementById("submitPlayers").onclick = () => {
             if (activeGame !== "Game 2") {
                 inactiveVillains.push(dementor, peterPettigrew);
                 if (activeGame !== "Game 3") {
-                    // TO-DO: add Game 4 villains
+                    inactiveVillains.push(bartyCrouchJr, deathEater);
+                    // TO-DO: add Game 5 villains
                 }
             }
         }
