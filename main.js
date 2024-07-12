@@ -969,7 +969,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const dementorsKiss2 = new DarkArtsEvent("Dementor's Kiss", "Game 3", () => {players.forEach(player => {player.health--;}); activePlayer.health--;});
         const oppugno = new DarkArtsEvent("Oppugno", "Game 3", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].cost) {player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
         const tarantallegra = new DarkArtsEvent("Tarantallegra", "Game 3", () => {activePlayer.health--;});
-        const avadaKedavra = new DarkArtsEvent("Avada Kedavra", "Game 4", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
+        const avadaKedavra1 = new DarkArtsEvent("Avada Kedavra", "Game 4", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
         const crucio = new DarkArtsEvent("Crucio", "Game 4", () => {activePlayer.health--;});
         const heirOfSlytherin1 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true);});
         const heirOfSlytherin2 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true);});
@@ -977,14 +977,18 @@ document.getElementById("submitPlayers").onclick = () => {
         const morsmordre1 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater) && !deathEater.petrifiedBy) players.forEach(player => {player.health--;});});
         const morsmordre2 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater) && !deathEater.petrifiedBy) players.forEach(player => {player.health--;});});
         const regeneration = new DarkArtsEvent("Regeneration", "Game 4", () => {activeVillains.forEach(villain => {villain.health += 2;})});
+        const avadaKedavra2 = new DarkArtsEvent("Avada Kedavra", "Game 5", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         if (activeGame !== "Game 1") {
             darkArtsEvents.push(handOfGlory1, handOfGlory2, obliviate, poison, relashio);
             if (activeGame !== "Game 2") {
                 darkArtsEvents.push(dementorsKiss1, dementorsKiss2, oppugno, tarantallegra);
                 if (activeGame !== "Game 3") {
-                    darkArtsEvents.push(avadaKedavra, crucio, heirOfSlytherin1, heirOfSlytherin2, imperio, morsmordre1, morsmordre2, regeneration);
-                    // TO-DO: add future games' DAEs to darkArtsEvents if selected
+                    darkArtsEvents.push(avadaKedavra1, crucio, heirOfSlytherin1, heirOfSlytherin2, imperio, morsmordre1, morsmordre2, regeneration);
+                    if (activeGame !== "Game 4") {
+                    darkArtsEvents.push(avadaKedavra2);
+                        // TO-DO: add future games' DAEs to darkArtsEvents if selected
+                    }
                 }
             }
         }
@@ -1315,7 +1319,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
                 }
                 darkArtsEvents[0].generateImg();
-                if (darkArtsEvents[0] === avadaKedavra || darkArtsEvents[0] === crucio || darkArtsEvents[0] === imperio) i--; // some DAEs draw additional DAEs
+                if (darkArtsEvents[0] === avadaKedavra1 || darkArtsEvents[0] === crucio || darkArtsEvents[0] === imperiodarkArtsEvents[0] === avadaKedavra2) i--; // some DAEs draw additional DAEs
                 activeDarkArtsEvents.push(darkArtsEvents.shift());
             }
 
