@@ -36,10 +36,10 @@ document.getElementById("submitPlayers").onclick = () => {
     if (continueGame) {
         document.getElementsByTagName("MAIN")[0].style.display = "flex";
         let activeGame = document.getElementById("game").value;
-        const attackToken = "<img src=\"./images/attackToken.png\" alt=\"Choose Attack Token\" style=\"width: 50%;\">";
-        const influenceToken = "<img src=\"./images/influenceToken.png\" alt=\"Choose Influece Token\" style=\"width: 50%;\">";
-        const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Choose Health Token\" style=\"width: 50%;\">";
-        const hogwartsCardBack = "<img src=\"./images/hogwartsCardBack.png\" alt=\"Draw card\" style=\"width: 50%;\">";
+        const attackToken = "<img src=\"./images/attackToken.png\" alt=\"Choose Attack Token\" style=\"width: 33%;\">";
+        const influenceToken = "<img src=\"./images/influenceToken.png\" alt=\"Choose Influece Token\" style=\"width: 33%;\">";
+        const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Choose Health Token\" style=\"width: 33%;\">";
+        const hogwartsCardBack = "<img src=\"./images/hogwartsCardBack.png\" alt=\"Draw card\" style=\"width: 33%;\">";
 
         // convert card name to src
         const src = name => {
@@ -349,6 +349,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const georgeWeasley = new Card("George Weasley", "Game 5", "ally", 4, () => {activePlayer.attack++; if (players.filter(player => {return player !== activePlayer && player.hand.map(card => {return card.name;}).filter(name => {return name.includes("Weasley");}).length;}).length) players.forEach(player => {player.health++;}); rollHouseDie("red");}, false);
         const kingsleyShacklebolt = new Card("Kingsley Shacklebolt", "Game 5", "ally", 7, () => {activePlayer.attack += 2; activePlayer.health++; activeLocation.removeFromLocation();}, false);
         const lunaLovegood = new Card("Luna Lovegood", "Game 5", "ally", 5, () => {activePlayer.influence++; rollHouseDie("blue");}, true);
+        const nymphadoraTonks = new Card("Nymphadora Tonks", "Game 5", "ally", 5, () => {playerChoice("Choose:", () => {return 3;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div>${influenceToken + influenceToken + influenceToken}</div>`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 3;}; document.getElementsByClassName("choice")[1].innerHTML = `<div>${attackToken + attackToken}</div>`; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.attack += 2;}; document.getElementsByClassName("choice")[2].innerHTML = "<p>Remove from Location</p>"; document.getElementsByClassName("choice")[2].onclick = () => {activeLocation.removeFromLocation();};});}, false);
 
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
@@ -360,7 +361,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activeGame !== "Game 3") {
                     hogwartsCards.push(accio1, accio2, alastorMadEyeMoody, cedricDiggory, filiusFlitwick, fleurDelacour, hogwartsAHistory1, hogwartsAHistory2, hogwartsAHistory3, hogwartsAHistory4, hogwartsAHistory5, hogwartsAHistory6, minervaMcgonagall, pensieve, pomonaSprout, protego1, protego2, protego3, severusSnape, triwizardCup, viktorKrum);
                     if (activeGame !== "Game 4") {
-                        hogwartsCards.push(choChang, fredWeasley, georgeWeasley, kingsleyShacklebolt, lunaLovegood);
+                        hogwartsCards.push(choChang, fredWeasley, georgeWeasley, kingsleyShacklebolt, lunaLovegood, nymphadoraTonks);
                     }
                 }
             }
