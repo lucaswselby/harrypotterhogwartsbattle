@@ -830,7 +830,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             removeFromLocation() {
                 // Barty Crouch Jr effect
-                if (!activeVillains.includes(bartyCrouchJr) && !bartyCrouchJr.petrifiedBy) {
+                if (!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy) {
                     // Harry Potter special
                     if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
                         playerChoice(`Gain 1 attack:`, () => {return players.length;}, 1, () => {
