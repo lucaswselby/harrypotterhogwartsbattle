@@ -1053,6 +1053,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     setTimeout(() => {
                         document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].innerHTML = "";
                         document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
+                        document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].onclick = () => {};
                         if (document.getElementById("villainDiscard").getElementsByTagName("IMG")[0]) setTimeout(() => {document.getElementById("villainDiscard").getElementsByTagName("IMG")[0].remove();}, 1000);
                         document.getElementById("villainDiscard").appendChild(this.img);
                         this.img.classList.toggle("defeating");
