@@ -414,6 +414,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     card.generateOnClick();
 
+                    // Dolores Umbridge effect
+                    if (activeVillains.includes(doloresUmbridge) && card.cost >= 4) activePlayer.health--;
+
                     // replaces previous card with next card in store
                     document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
                     hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
@@ -1128,6 +1131,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const bartyCrouchJr = new Villain("Barty Crouch Jr", "Game 4", "villain", 7, "health", () => {}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
         const deathEater1 = new Villain("Death Eater", "Game 4", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();});
         const deathEater2 = new Villain("Death Eater", "Game 5", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();});
+        const doloresUmbridge = new Villain("Dolores Umbridge", "Game 5", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.influence++; player.health += 2;});});
         // TO-DO: add other games' villains to villains if selected
         let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
@@ -1137,7 +1141,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activeGame !== "Game 3") {
                     inactiveVillains.push(bartyCrouchJr, deathEater1);
                     if (activeGame !== "Game 4") {
-                        inactiveVillains.push(deathEater2);
+                        inactiveVillains.push(deathEater2, doloresUmbridge);
                         // TO-DO: add Game 5 villains
                     }
                 }
