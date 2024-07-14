@@ -126,7 +126,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (result === "influence") activeLocation.addToLocation();
                 else if (result === "draw") players.forEach(player => {
                     playerChoice("Discard:", () => {return player.hand.length;}, 1, () => {
-                        for (let i = 0; i < player.hand; i++) {
+                        for (let i = 0; i < player.hand.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                             document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, true);};
                         }
