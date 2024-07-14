@@ -1297,7 +1297,6 @@ document.getElementById("submitPlayers").onclick = () => {
         populateShop();
 
         // start a new turn
-        let lastCardImg = null;
         let firstTurn = true;
         const startTurn = () => {
             // new active player
