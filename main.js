@@ -1042,8 +1042,12 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.displayDamage();
                 if (this.health <= 0) {
                     // check for victory
-                    if (activeVillains.length === 1 && !inactiveVillains.length) {
-                        alert("Victory!");
+                    if (!activeVillains.filter(villain => {return villain.health}).length && !inactiveVillains.length) {
+                        // Voldemort
+                        if (activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
+                            inactiveVillains.push(lordVoldemort1);
+                        }
+                        else alert("Victory!");
                     }
 
                     // remove villain
@@ -1051,9 +1055,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     const petrifiedToken = this.petrifiedBy ? document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].getElementsByClassName("petrifiedToken")[0] : null;
                     if (this.petrifiedBy) petrifiedToken.classList.toggle("defeating");
                     setTimeout(() => {
-                        document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].innerHTML = "";
-                        document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
-                        document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].onclick = () => {};
+                        if (activeVillains.includes(this)) {
+                            document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].innerHTML = "";
+                            document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
+                            document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].onclick = () => {};
+                        }
                         if (document.getElementById("villainDiscard").getElementsByTagName("IMG")[0]) setTimeout(() => {document.getElementById("villainDiscard").getElementsByTagName("IMG")[0].remove();}, 1000);
                         document.getElementById("villainDiscard").appendChild(this.img);
                         this.img.classList.toggle("defeating");
@@ -1133,16 +1139,17 @@ document.getElementById("submitPlayers").onclick = () => {
         const deathEater1 = new Villain("Death Eater", "Game 4", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();});
         const deathEater2 = new Villain("Death Eater", "Game 5", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();});
         const doloresUmbridge = new Villain("Dolores Umbridge", "Game 5", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.influence++; player.health += 2;});});
+        const lordVoldemort1 = new Villain("Lord Voldemort", "Game 5", "villain", 10, "health", () => {activePlayer.health--; if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true);};}});} else activePlayer.forcedDiscardAt(0, true);}}, () => {});
         // TO-DO: add other games' villains to villains if selected
         let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
-            inactiveVillains.push(basilisk, luciusMalfoy, tomRiddle);
+            inactiveVillains.push(basilisk/*, luciusMalfoy, tomRiddle*/);
             if (activeGame !== "Game 2") {
-                inactiveVillains.push(dementor, peterPettigrew);
+                //inactiveVillains.push(dementor, peterPettigrew);
                 if (activeGame !== "Game 3") {
-                    inactiveVillains.push(bartyCrouchJr, deathEater1);
+                    //inactiveVillains.push(bartyCrouchJr, deathEater1);
                     if (activeGame !== "Game 4") {
-                        inactiveVillains.push(deathEater2, doloresUmbridge);
+                        //inactiveVillains.push(deathEater2, doloresUmbridge);
                         // TO-DO: add Game 5 villains
                     }
                 }
@@ -1242,6 +1249,7 @@ document.getElementById("submitPlayers").onclick = () => {
             for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
                 document.getElementsByClassName("activeVillain")[i].innerHTML = "";
                 document.getElementsByClassName("villainDamage")[i].innerHTML = "";
+                document.getElementsByClassName("villainDamage")[i].onclick = () => {};
             }
 
             // add villains to board
@@ -1309,6 +1317,7 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.populateHand();
             document.getElementById("heroImage").appendChild(activePlayer.heroImage);
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
+            activePlayer.attack = 20;
             activePlayer.displayAttack();
             activePlayer.displayInfluence();
 
@@ -1354,7 +1363,15 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (activeDarkArtsEvents.indexOf(activeDarkArtsEvents[i]) === activeDarkArtsEvents.length - 1) {
                             setTimeout(() => {
                                 for (let i = 0; i < activeVillains.length; i++) {
-                                    if (!activeVillains[i].petrifiedBy) setTimeout(() => {activeVillains[i].effect();}, i * 1000);
+                                    if (!activeVillains[i].petrifiedBy) {
+                                        setTimeout(() => {
+                                            activeVillains[i].effect();
+                                            // Voldemort
+                                            if (inactiveVillains.length === 0 && i === activeVillains.length - 1 && activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
+                                                setTimeout(() => {lordVoldemort1.effect();}, 1000);
+                                            }
+                                        }, i * 1000);
+                                    }
                                 }
                             }, 1000);
                         }
@@ -1388,25 +1405,27 @@ document.getElementById("submitPlayers").onclick = () => {
                     // add new villain
                     if (inactiveVillains.length) {
                         // Death Eater effect
-                        if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;});
-                        if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});
+                        if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy && deathEater1.health) players.forEach(player => {player.health--;});
+                        if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy && deathEater2.health) players.forEach(player => {player.health--;});
 
+                        // add new villain
                         activeVillains[i] = inactiveVillains.shift();
                         document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
 
                         // remove villain card back and add Lord Voldemort
                         if (!inactiveVillains.length) {
                             document.getElementById("villainDraw").innerHTML = "";
-                            if (activeGame !== "Game 1" && activeGame !== "Game 2" && activeGame !== "Game 3" && activeGame !== "Game 4") {
-                                // TO-DO: add Voldemort to villainDraw
+                            if (activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
+                                document.getElementById("villainDraw").appendChild(lordVoldemort1.img);
                             }
                         }
                     }
                     // shift remaining villains to the left
                     else {
                         activeVillains.splice(i, 1);
-                        populateVillains();
+                        i--;
                     }
+                    populateVillains();
                 }
             }
 
