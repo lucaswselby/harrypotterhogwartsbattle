@@ -1143,13 +1143,13 @@ document.getElementById("submitPlayers").onclick = () => {
         // TO-DO: add other games' villains to villains if selected
         let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
-            inactiveVillains.push(basilisk/*, luciusMalfoy, tomRiddle*/);
+            inactiveVillains.push(basilisk, luciusMalfoy, tomRiddle);
             if (activeGame !== "Game 2") {
-                //inactiveVillains.push(dementor, peterPettigrew);
+                inactiveVillains.push(dementor, peterPettigrew);
                 if (activeGame !== "Game 3") {
-                    //inactiveVillains.push(bartyCrouchJr, deathEater1);
+                    inactiveVillains.push(bartyCrouchJr, deathEater1);
                     if (activeGame !== "Game 4") {
-                        //inactiveVillains.push(deathEater2, doloresUmbridge);
+                        inactiveVillains.push(deathEater2, doloresUmbridge);
                         // TO-DO: add Game 5 villains
                     }
                 }
