@@ -734,7 +734,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._influence = 0;
                 activeLocation.addToLocation();
                 let iterations = Math.floor(this.hand.length / 2);
-                playerChoice("Discard:", () => {return this.hand.length;}, iterations, () => {
+                playerChoice(`${this.hero} discard:`, () => {return this.hand.length;}, iterations, () => {
                     for (let i = 0; i < this.hand.length; i++) {
                         document.getElementsByClassName("choice")[i].innerHTML += `<img src="${this.hand[i].img.src}">`;
                         document.getElementsByClassName("choice")[i].onclick = () => {
