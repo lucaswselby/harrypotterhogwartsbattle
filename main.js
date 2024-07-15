@@ -730,8 +730,8 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             stun() {
                 this.stunned = true;
-                this._attack = 0;
-                this._influence = 0;
+                this.attack = 0;
+                this.influence = 0;
                 activeLocation.addToLocation();
                 let iterations = Math.floor(this.hand.length / 2);
                 playerChoice(`${this.hero} discard:`, () => {return this.hand.length;}, iterations, () => {
