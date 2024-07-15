@@ -1328,12 +1328,6 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             });
 
-            // unpetrify villain
-            activeVillains.forEach(villain => {
-                if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; 
-                villain.takenDamage = false;
-            });
-
             // update activeDarkArtsEvents
             for (let i = 0; i < activeLocation.darkArtsEventDraws; i++) {
                 if (!darkArtsEvents.length) {
@@ -1377,6 +1371,12 @@ document.getElementById("submitPlayers").onclick = () => {
                     }, 1000);
                 }, i * 2000 + 1000);
             }
+
+            // unpetrify villain
+            activeVillains.forEach(villain => {
+                if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; 
+                villain.takenDamage = false;
+            });
         };
         document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
 
