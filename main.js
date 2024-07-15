@@ -1317,7 +1317,6 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.populateHand();
             document.getElementById("heroImage").appendChild(activePlayer.heroImage);
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
-            activePlayer.attack = 20;
             activePlayer.displayAttack();
             activePlayer.displayInfluence();
 
