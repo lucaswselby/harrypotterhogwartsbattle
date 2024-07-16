@@ -145,6 +145,17 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         };
 
+        // check if Voldemort is in the draw villain spot
+        const invulnerableVoldemort = () => {
+            if (!inactiveVillains.length) {
+                if (activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
+                    return lordVoldemort1;
+                }
+                // add other games' Voldemorts
+            }
+            else return null;
+        };
+
         // cards
         class Card {
             constructor(name, game, type, cost, effect, passive) {
@@ -330,8 +341,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const expectoPatronum1 = new Card("Expecto Patronum", "Game 3", "spell", 5, () => {activePlayer.attack++; activeLocation.removeFromLocation();}, false);
         const expectoPatronum2 = new Card("Expecto Patronum", "Game 3", "spell", 5, () => {activePlayer.attack++; activeLocation.removeFromLocation();}, false);
         const maraudersMap = new Card("Marauder's Map", "Game 3", "item", 5, () => {activePlayer.drawCards(2);}, false);
-        const petrificusTotalus1 = new Card("Petrificus Totalus", "Game 3", "spell", 6, () => {activePlayer.attack++; const unpetrifiedVillains = activeVillains.filter(villain => {return !villain.petrifiedBy && villain.health > 0;}); if (unpetrifiedVillains.length) {if (unpetrifiedVillains.length > 1) {playerChoice("Petrify:", () => {return unpetrifiedVillains.length;}, 1, () => {for (let i = 0; i < unpetrifiedVillains.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedVillains[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedVillains[i].petrifiedBy = activePlayer;};}});} else unpetrifiedVillains[0].petrifiedBy = activePlayer;}}, false);
-        const petrificusTotalus2 = new Card("Petrificus Totalus", "Game 3", "spell", 6, () => {activePlayer.attack++; const unpetrifiedVillains = activeVillains.filter(villain => {return !villain.petrifiedBy && villain.health > 0;}); if (unpetrifiedVillains.length) {if (unpetrifiedVillains.length > 1) {playerChoice("Petrify:", () => {return unpetrifiedVillains.length;}, 1, () => {for (let i = 0; i < unpetrifiedVillains.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedVillains[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedVillains[i].petrifiedBy = activePlayer;};}});} else unpetrifiedVillains[0].petrifiedBy = activePlayer;}}, false);
+        const petrificusTotalus1 = new Card("Petrificus Totalus", "Game 3", "spell", 6, () => {activePlayer.attack++; let unpetrifiedVillains = activeVillains.concat(invulnerableVoldemort() ? invulnerableVoldemort() : []).filter(villain => {return !villain.petrifiedBy && villain.health > 0;}); if (unpetrifiedVillains.length) {if (unpetrifiedVillains.length > 1) {playerChoice("Petrify:", () => {return unpetrifiedVillains.length;}, 1, () => {for (let i = 0; i < unpetrifiedVillains.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedVillains[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedVillains[i].petrifiedBy = activePlayer;};}});} else unpetrifiedVillains[0].petrifiedBy = activePlayer;}}, false);
+        const petrificusTotalus2 = new Card("Petrificus Totalus", "Game 3", "spell", 6, () => {activePlayer.attack++; let unpetrifiedVillains = activeVillains.concat(invulnerableVoldemort() ? invulnerableVoldemort() : []).filter(villain => {return !villain.petrifiedBy && villain.health > 0;}); if (unpetrifiedVillains.length) {if (unpetrifiedVillains.length > 1) {playerChoice("Petrify:", () => {return unpetrifiedVillains.length;}, 1, () => {for (let i = 0; i < unpetrifiedVillains.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedVillains[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedVillains[i].petrifiedBy = activePlayer;};}});} else unpetrifiedVillains[0].petrifiedBy = activePlayer;}}, false);
         const remusLupin = new Card("Remus Lupin", "Game 3", "ally", 4, () => {activePlayer.attack++; const hurtPlayers = players.filter(player => {return player.health < 10;}); if (hurtPlayers.length) {if (hurtPlayers.length > 1) {playerChoice("Heal for 3:", () => {return hurtPlayers.length;}, 1, () => {for (let i = 0; i < hurtPlayers.length; i++) {document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 3;};}});} else hurtPlayers[0].health += 3;}}, false);
         const siriusBlack = new Card("Sirius Black", "Game 3", "ally", 6, () => {activePlayer.attack += 2; activePlayer.influence++;}, false);
         const sybillTrelawney = new Card("Sybill Trelawney", "Game 3", "ally", 4, () => {if (!activePlayer.petrified) {activePlayer.drawCards(2); playerChoice("Discard", () => {return activePlayer.hand.length}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.hand[i].type === "spell") activePlayer.influence += 2; activePlayer.forcedDiscardAt(i, false);};}});}}, false);
@@ -1008,6 +1019,7 @@ document.getElementById("submitPlayers").onclick = () => {
         // villains
         class Villain {
             constructor(name, game, type, health, healthType, effect, reward) {
+                this._name = name;
                 this._img = document.createElement("img");
                 this._img.className = "villain";
                 this._img.src = `./images/${game}/${src(name)}`;
@@ -1020,6 +1032,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._effect = effect;
                 this._reward = reward;
                 this._petrifiedBy = null;
+            }
+            get name() {
+                return this._name;
             }
             get img() {
                 return this._img;
@@ -1118,11 +1133,11 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             set petrifiedBy(petrifiedBy) {
                 this._petrifiedBy = petrifiedBy;
-                const activeVillainElement = document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)];
+                const activeVillainElement = this === invulnerableVoldemort() ? document.getElementById("villainDraw") : document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)];
                 if (this.petrifiedBy) {
                     activeVillainElement.innerHTML += `<img src="./images/petrifiedToken.png" class="petrifiedToken">`;
                 }
-                else {
+                else if (activeVillainElement.getElementsByClassName("petrifiedToken")[0]) {
                     activeVillainElement.getElementsByClassName("petrifiedToken")[0].remove();
                 }
             }
@@ -1257,6 +1272,9 @@ document.getElementById("submitPlayers").onclick = () => {
             if (activeVillains.length > 1) document.getElementById("villain2").appendChild(activeVillains[1].img);
             if (activeVillains.length > 2) document.getElementById("villain3").appendChild(activeVillains[2].img);
 
+            // repetrify villains
+            activeVillains.forEach(villain => {villain.petrifiedBy = villain.petrifiedBy});
+
             // deal damage by clicking on a villain or villain's damage area
             for (let i = 0; i < activeVillains.length; i++) {
                 activeVillains[i].health = activeVillains[i].health;
@@ -1360,8 +1378,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                         setTimeout(() => {
                                             activeVillains[i].effect();
                                             // Voldemort
-                                            if (inactiveVillains.length === 0 && i === activeVillains.length - 1 && activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
-                                                setTimeout(() => {lordVoldemort1.effect();}, 1000);
+                                            if (i === activeVillains.length - 1 && invulnerableVoldemort() && !invulnerableVoldemort().petrifiedBy) {
+                                                setTimeout(() => {invulnerableVoldemort().effect();}, 1000);
                                             }
                                         }, i * 1000);
                                     }
@@ -1373,8 +1391,8 @@ document.getElementById("submitPlayers").onclick = () => {
             }
 
             // unpetrify villain
-            activeVillains.forEach(villain => {
-                if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null; 
+            activeVillains.concat(invulnerableVoldemort() ? [invulnerableVoldemort()] : []).forEach(villain => {
+                if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null;
                 villain.takenDamage = false;
             });
         };
@@ -1382,7 +1400,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // end turn
         document.getElementById("endTurn").onclick = () => {
-            // unstun and unpetrify everyone
+            // unstun and unpetrify players
             players.forEach(player => {
                 player.petrified = false;
                 if (player.stunned) {
