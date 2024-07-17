@@ -1374,27 +1374,27 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (activeDarkArtsEvents.indexOf(activeDarkArtsEvents[i]) === activeDarkArtsEvents.length - 1) {
                             setTimeout(() => {
                                 for (let i = 0; i < activeVillains.length; i++) {
-                                    if (!activeVillains[i].petrifiedBy) {
-                                        setTimeout(() => {
-                                            activeVillains[i].effect();
-                                            // Voldemort
-                                            if (i === activeVillains.length - 1 && invulnerableVoldemort() && !invulnerableVoldemort().petrifiedBy) {
-                                                setTimeout(() => {invulnerableVoldemort().effect();}, 1000);
-                                            }
-                                        }, i * 1000);
-                                    }
+                                    setTimeout(() => {
+                                        if (!activeVillains[i].petrifiedBy) {
+                                                activeVillains[i].effect();
+                                                // Voldemort
+                                                if (i === activeVillains.length - 1 && invulnerableVoldemort()) {
+                                                    setTimeout(() => {
+                                                        if (!invulnerableVoldemort().petrifiedBy) invulnerableVoldemort().effect();
+                                                        else if (invulnerableVoldemort().petrifiedBy === activePlayer) invulnerableVoldemort().petrifiedBy = null;
+                                                    }, 1000);
+                                                }
+                                        }
+                                        // unpetrify villain
+                                        else if (activeVillains[i].petrifiedBy === activePlayer) activeVillains[i].petrifiedBy = null;
+                                        activeVillains[i].takenDamage = false;
+                                    }, i * 1000);
                                 }
                             }, 1000);
                         }
                     }, 1000);
                 }, i * 2000 + 1000);
             }
-
-            // unpetrify villain
-            activeVillains.concat(invulnerableVoldemort() ? [invulnerableVoldemort()] : []).forEach(villain => {
-                if (villain.petrifiedBy === activePlayer) villain.petrifiedBy = null;
-                villain.takenDamage = false;
-            });
         };
         document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
 
