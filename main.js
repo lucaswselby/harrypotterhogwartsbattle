@@ -854,40 +854,29 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     // removes location token
                     this.removed = true;
-                    if (this === locations[0]) {
-                        if (this.added > 0) {
-                            this.added--;
-                            const locationToken = document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1];
-                            locationToken.classList.toggle("adding");
-                            locationToken.classList.toggle("removing");
-                            setTimeout(() => {locationToken.remove();}, 1000);
-                        }
+                    if (this === locations[0] || this.added > 0) {
+                        this.added--;
+                        const locationToken = document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1];
+                        locationToken.classList.toggle("adding");
+                        locationToken.classList.toggle("removing");
+                        setTimeout(() => {locationToken.remove();}, 1000);
                     }
                     // new location
-                    else {
-                        if (this.added === 0) {
-                            while (document.getElementsByClassName("locationToken")[0]) document.getElementsByClassName("locationToken")[0].remove();
-                            activeLocation = locations[this.number - 2];
-                            activeLocation.added = activeLocation.spaces;
-                            for (let i = 0; i < activeLocation.added; i++) {
-                                const locationToken = document.createElement("img");
-                                locationToken.src = "./images/locationToken.png";
-                                locationToken.alt = "Location token";
-                                locationToken.className = "locationToken";
-                                if ((this.spaces - 1) % 3 === 0) locationToken.style.top = i % 2 === 0 ? "82%" : "78%";
-                                else locationToken.style.top = i % 2 === 0 ? "78%" : "82%";
-                                locationToken.style.left = `${56 + i * 11 - this.spaces * 6}%`;
-                                document.getElementById("locations").appendChild(locationToken);
-                            }
-                            document.getElementById(`location${this.number - 1}`).style.display = "initial";
+                    else if (this.added === 0) {
+                        while (document.getElementsByClassName("locationToken")[0]) document.getElementsByClassName("locationToken")[0].remove();
+                        activeLocation = locations[this.number - 2];
+                        activeLocation.added = activeLocation.spaces;
+                        for (let i = 0; i < activeLocation.added; i++) {
+                            const locationToken = document.createElement("img");
+                            locationToken.src = "./images/locationToken.png";
+                            locationToken.alt = "Location token";
+                            locationToken.className = "locationToken";
+                            if ((this.spaces - 1) % 3 === 0) locationToken.style.top = i % 2 === 0 ? "82%" : "78%";
+                            else locationToken.style.top = i % 2 === 0 ? "78%" : "82%";
+                            locationToken.style.left = `${56 + i * 11 - this.spaces * 6}%`;
+                            document.getElementById("locations").appendChild(locationToken);
                         }
-                        else {
-                            this.added--;
-                            const locationToken = document.getElementsByClassName("locationToken")[document.getElementsByClassName("locationToken").length - 1];
-                            locationToken.classList.toggle("adding");
-                            locationToken.classList.toggle("removing");
-                            setTimeout(() => {locationToken.remove();}, 1000);
-                        }
+                        document.getElementById(`location${this.number - 1}`).style.display = "initial";
                     }
                 }
             }
