@@ -59,15 +59,32 @@ document.getElementById("submitPlayers").onclick = () => {
                     document.getElementById("playerChoice").addEventListener("click", () => {playerChoice(description, choices, iterations, populateFunction);});
                 }
                 else {
+                    // create playerChoice label
+                    const playerChoiceLabel = document.createElement("h1");
+                    playerChoiceLabel.id = "playerChoiceLabel";
+                    playerChoiceLabel.innerHTML = description;
+
                     // create playerChoice element
                     const playerChoiceElement = document.createElement("div");
                     playerChoiceElement.id = "playerChoice";
                     playerChoiceElement.className = iterations;
 
-                    // create playerChoice label
-                    const playerChoiceLabel = document.createElement("h1");
-                    playerChoiceLabel.id = "playerChoiceLabel";
-                    playerChoiceLabel.innerHTML = description;
+                    // create revealBoard button
+                    const revealBoard = document.createElement("button");
+                    revealBoard.id = "revealBoard";
+                    revealBoard.innerHTML = "Reveal Board";
+                    revealBoard.onclick = () => {
+                        playerChoiceElement.classList.toggle("revealBoard");
+                        playerChoiceLabel.classList.toggle("revealBoard");
+                        revealBoard.innerHTML = revealBoard.innerHTML === "Reveal Board" ? "Hide Board" : "Reveal Board";
+                    };
+
+                    // create playerChoiceContainer
+                    const playerChoiceContainer = document.createElement("div");
+                    playerChoiceContainer.id = "playerChoiceContainer";
+                    playerChoiceContainer.appendChild(playerChoiceLabel);
+                    playerChoiceContainer.appendChild(playerChoiceElement);
+                    playerChoiceContainer.appendChild(revealBoard);
 
                     // add columns to playerChoice
                     let gridTemplateColumns = "";
@@ -81,8 +98,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     playerChoiceElement.onclick = () => {
                         // remove playerChoice when clicked
-                        playerChoiceElement.remove();
-                        playerChoiceLabel.remove();
+                        playerChoiceContainer.remove();
 
                         // increment and display a new playerChoice for multiple iterations
                         if (--iterations > 0) {
@@ -91,9 +107,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // add playerChoice to main
-                    document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceElement);
-                    playerChoiceLabel.style.width = `${playerChoiceElement.offsetWidth + 10 * (choices() - 1)}px`;
-                    document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceLabel);
+                    document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceContainer);
                     populateFunction();
                 }
             }
