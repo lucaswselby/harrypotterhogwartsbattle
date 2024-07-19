@@ -57,6 +57,12 @@ main {
 
 #darkArtsEvents {
     left: 31%;
+    width: 29%;
+    z-index: 1;
+}
+#darkArtsEvents.display {
+    display: flex;
+    flex-flow: row nowrap;
 }
 .darkArtsEvent {
     transform: rotateY(180deg) translateX(0);
@@ -127,6 +133,21 @@ main {
     to {
         opacity: 1;
         transform: rotateY(0) translateX(var(--translate));
+    }
+}
+.darkArtsEvent.display {
+    position: static;
+    transform: translateX(0);
+}
+.darkArtsEvent.fadeOut {
+    animation: fadeOut 1s;
+}
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
     }
 }
 

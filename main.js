@@ -1272,6 +1272,14 @@ document.getElementById("submitPlayers").onclick = () => {
             };
         }
 
+        // display Dark Arts Events when clicked
+        document.getElementById("darkArtsEvents").onclick = () => {
+            if (activeDarkArtsEvents.length > 1) {
+                document.getElementById("darkArtsEvents").classList.toggle("display");
+                activeDarkArtsEvents.forEach(dae => {dae.img.classList.toggle("display");});
+            }
+        };
+
         const populateVillains = () => {
             // remove villains and villain damage from board
             for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
@@ -1379,9 +1387,6 @@ document.getElementById("submitPlayers").onclick = () => {
                     activeDarkArtsEvents[i].img.classList.toggle("flipped");
                     setTimeout(() => {
                         activeDarkArtsEvents[i].effect();
-
-                        // remove the previous Dark Arts Event card
-                        if (darkArtsEventsElement.getElementsByClassName("darkArtsEvent").length > 1) darkArtsEventsElement.getElementsByClassName("darkArtsEvent")[0].remove();
         
                         // villain effects
                         if (activeDarkArtsEvents.indexOf(activeDarkArtsEvents[i]) === activeDarkArtsEvents.length - 1) {
@@ -1427,7 +1432,14 @@ document.getElementById("submitPlayers").onclick = () => {
             activeLocation.removed = false;
 
             // reset activeDarkArtsEvents
-            while (activeDarkArtsEvents.length) inactiveDarkArtsEvents.push(activeDarkArtsEvents.shift());
+            while (activeDarkArtsEvents.length) {
+                inactiveDarkArtsEvents.push(activeDarkArtsEvents.shift());
+                document.getElementsByClassName("darkArtsEvent")[0].classList.toggle("fadeOut");
+                setTimeout(() => {document.getElementsByClassName("darkArtsEvent")[0].remove();}, 1000);
+            };
+            if (document.getElementById("darkArtsEvents").classList.contains("display")) {
+                document.getElementById("darkArtsEvents").classList.toggle("display");
+            }
 
             // replace with new villain
             for (let i = 0; i < activeVillains.length; i++) {
