@@ -87,14 +87,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     playerChoiceContainer.appendChild(revealBoard);
 
                     // add columns to playerChoice
-                    let gridTemplateColumns = "";
                     for (let i = 1; i <= choices(); i++) {
-                        gridTemplateColumns += ` ${100 / choices()}%`;
                         const choice = document.createElement("div");
                         choice.className = "choice";
                         playerChoiceElement.appendChild(choice);
                     }
-                    playerChoiceElement.style.gridTemplateColumns = gridTemplateColumns.substring(1);
 
                     playerChoiceElement.onclick = () => {
                         // remove playerChoice when clicked
@@ -108,10 +105,11 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     // add playerChoice to main
                     document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceContainer);
+                    playerChoiceElement.style.gridTemplateColumns = `repeat(${choices()}, calc((100% - ${getComputedStyle(playerChoiceElement).getPropertyValue("gap")} * ${choices() - 1}) / ${choices()}))`;
                     populateFunction();
                 }
             }
-        }
+        };
 
         // shuffles cards in a random order
         // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -125,7 +123,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 // And swap it with the current element.
                 [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
             }
-        }
+        };
 
         // Hogwarts die
         const rollHouseDie = (color, evil) => {
