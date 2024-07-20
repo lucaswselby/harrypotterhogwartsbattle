@@ -1067,14 +1067,6 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._health = health;
                 this.displayDamage();
                 if (this.health <= 0) {
-                    // check for victory
-                    if (!activeVillains.filter(villain => {return villain.health}).length && !inactiveVillains.length) {
-                        // Voldemort
-                        if (activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
-                            inactiveVillains.push(lordVoldemort1);
-                        }
-                        else alert("Victory!");
-                    }
 
                     // remove villain
                     this.img.classList.toggle("defeating");
@@ -1091,37 +1083,50 @@ document.getElementById("submitPlayers").onclick = () => {
                         this.img.classList.toggle("defeating");
                         this.img.classList.toggle("defeated");
                         this.reward();
-                    }, 1000);
 
-                    // Firebolt and Cleansweep 11 effects
-                    if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11)) {
-                        activePlayer.influence++;
-                    }
-                    // Nimbus Two Thousand and One effect
-                    if (activePlayer.passives.includes(nimbusTwoThousandAndOne1) || activePlayer.passives.includes(nimbusTwoThousandAndOne2)) {
-                        activePlayer.influence += 2;
-                    }
-                    // Oliver Wood effect
-                    if (activePlayer.passives.includes(oliverWood)) {
-                        const hurtPlayers = players.filter(player => {return player.health < 10});
-                        if (hurtPlayers.length) {
-                            if (hurtPlayers.length > 1) {
-                                playerChoice("Pick a hero to heal:", () => {return hurtPlayers.length;}, 1, () => {
-                                    for (let i = 0; i < hurtPlayers.length; i++) {
-                                        document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
-                                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
-                                        document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
-                                    }                            
-                                });
-                            }
-                            else hurtPlayers[0].health += 2;
+                        // Firebolt and Cleansweep 11 effects
+                        if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11)) {
+                            activePlayer.influence++;
                         }
-                    }
-                    // Viktor Krum effect
-                    if (activePlayer.passives.includes(viktorKrum)) {
-                        activePlayer.influence++;
-                        activePlayer.health++;
-                    }
+                        // Nimbus Two Thousand and One effect
+                        if (activePlayer.passives.includes(nimbusTwoThousandAndOne1) || activePlayer.passives.includes(nimbusTwoThousandAndOne2)) {
+                            activePlayer.influence += 2;
+                        }
+                        // Oliver Wood effect
+                        if (activePlayer.passives.includes(oliverWood)) {
+                            const hurtPlayers = players.filter(player => {return player.health < 10});
+                            if (hurtPlayers.length) {
+                                if (hurtPlayers.length > 1) {
+                                    playerChoice("Pick a hero to heal:", () => {return hurtPlayers.length;}, 1, () => {
+                                        for (let i = 0; i < hurtPlayers.length; i++) {
+                                            document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
+                                            document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
+                                            document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                        }                            
+                                    });
+                                }
+                                else hurtPlayers[0].health += 2;
+                            }
+                        }
+                        // Viktor Krum effect
+                        if (activePlayer.passives.includes(viktorKrum)) {
+                            activePlayer.influence++;
+                            activePlayer.health++;
+                        }
+
+                        // check for victory
+                        if (!activeVillains.filter(villain => {return villain.health}).length && !inactiveVillains.length) {
+                            // Voldemort
+                            if (activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
+                                setTimeout(() => {
+                                    activeVillains = [];
+                                    activeVillains.push(lordVoldemort1);
+                                    populateVillains();
+                                }, 1000);
+                            }
+                            else alert("Victory!");
+                        }
+                    }, 1000);
                 }
             }
             get takenDamage() {
@@ -1176,7 +1181,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     inactiveVillains.push(bartyCrouchJr, deathEater1);
                     if (activeGame !== "Game 4") {
                         inactiveVillains.push(deathEater2, doloresUmbridge);
-                        // TO-DO: add Game 5 villains
+                        // TO-DO: add Game 6 villains
                     }
                 }
             }
@@ -1458,6 +1463,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
                                 document.getElementById("villainDraw").appendChild(lordVoldemort1.img);
                             }
+                            // TO-DO: add other games' Voldemorts
                         }
                     }
                     // shift remaining villains to the left
