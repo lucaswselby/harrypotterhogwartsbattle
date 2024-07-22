@@ -218,13 +218,17 @@ document.getElementById("submitPlayers").onclick = () => {
                             activePlayer.health++;
                         }
                     }
-                    // OWLS effect
                     if (activePlayer.passives.includes(owls2) && this.type === "spell") {
                         owlsSpells2++;
                         if (owlsSpells2 === 2) {
                             activePlayer.attack++;
                             activePlayer.health++;
                         }
+                    }
+                    // Elder Wand effect
+                    if (activePlayer.passives.includes(elderWand) && this.type === "spell") {
+                        activePlayer.attack++;
+                        activePlayer.health++;
                     }
 
                     if (this.type === "spell") activePlayer.spellsCast++;
@@ -400,6 +404,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const bezoar2 = new Card("Bezoar", "Game 6", "item", 4, () => {playerChoice("Heal for 3:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].img.src}"><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].health += 3;};}}); activePlayer.drawCards(1);}, false);
         const confundus1 = new Card("Confundus", "Game 6", "item", 3, () => {activePlayer.attack++;}, true);
         const confundus2 = new Card("Confundus", "Game 6", "item", 3, () => {activePlayer.attack++;}, true);
+        const deluminator = new Card("Deluminator", "Game 6", "item", 6, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, false);
+        const elderWand = new Card("Elder Wand", "Game 6", "item", 7, () => {}, true);
 
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
@@ -413,7 +419,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (activeGame !== "Game 4") {
                         hogwartsCards.push(choChang, fredWeasley, georgeWeasley, kingsleyShacklebolt, lunaLovegood, nymphadoraTonks, owls1, owls2, stupefy1, stupefy2);
                         if (activeGame !== "Game 5") {
-                            hogwartsCards.push(advancedPotionMaking, bezoar1, bezoar2, confundus1, confundus2);
+                            hogwartsCards.push(advancedPotionMaking, bezoar1, bezoar2, confundus1, confundus2, deluminator, elderWand);
                         }
                     }
                 }
