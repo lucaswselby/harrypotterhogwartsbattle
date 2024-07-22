@@ -522,7 +522,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._health;
             }
             set health(health) {
-                if (!this.stunned) {
+                // can't heal if stunned or sectumsempra
+                if (!this.stunned && !activeDarkArtsEvents.includes(sectumsempra1) && !activeDarkArtsEvents.includes(sectumsempra2)) {
                     // Invisibility Cloak effect
                     if (this.passives.includes(invisibilityCloak) && health < this.health) {
                         health = this.health - 1;
@@ -1026,7 +1027,10 @@ document.getElementById("submitPlayers").onclick = () => {
         const educationalDecree2 = new DarkArtsEvent("Educational Decree", "Game 5", () => {activePlayer.hand.forEach(card => {if (card.cost >= 4) activePlayer.health--;});});
         const imperio2 = new DarkArtsEvent("Imperio", "Game 5", () => {const otherPlayers = players.filter(player => {return player !== activePlayer;}); if (otherPlayers.length) {if (otherPlayers.length > 1) {playerChoice("Choose to lose 2 health:", () => {return otherPlayers.length;}, 1, () => {for (let i = 0; i < otherPlayers.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${otherPlayers[i].img.src}"><p>Health: ${otherPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {otherPlayers[i].health -= 2;};}});} else otherPlayers[0].health -= 2;}});
         const legilimency = new DarkArtsEvent("Legilimency", "Game 5", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].type === "spell") {player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
-        const morsmordre3 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
+        const morsmordre3 = new DarkArtsEvent("Morsmordre", "Game 5", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
+        const morsmordre4 = new DarkArtsEvent("Morsmordre", "Game 6", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
+        const sectumsempra1 = new DarkArtsEvent("Sectumsempra", "Game 6", () => {players.forEach(player => {player.health -= 2;});});
+        const sectumsempra2 = new DarkArtsEvent("Sectumsempra", "Game 6", () => {players.forEach(player => {player.health -= 2;});});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         if (activeGame !== "Game 1") {
             darkArtsEvents.push(handOfGlory1, handOfGlory2, obliviate, poison, relashio);
@@ -1036,7 +1040,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     darkArtsEvents.push(avadaKedavra1, crucio1, heirOfSlytherin1, heirOfSlytherin2, imperio1, morsmordre1, morsmordre2, regeneration);
                     if (activeGame !== "Game 4") {
                         darkArtsEvents.push(avadaKedavra2, crucio2, educationalDecree1, educationalDecree2, imperio2, legilimency, morsmordre3);
-                        // TO-DO: add future games' DAEs to darkArtsEvents if selected
+                        if (activeGame !== "Game 5") {
+                            darkArtsEvents.push(morsmordre4, sectumsempra1, sectumsempra2);
+                            // TO-DO: add future games' DAEs to darkArtsEvents if selected
+                        }
                     }
                 }
             }
