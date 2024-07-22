@@ -394,6 +394,13 @@ document.getElementById("submitPlayers").onclick = () => {
         const stupefy1 = new Card("Stupefy", "Game 5", "spell", 6, () => {activePlayer.attack++; activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false);
         const stupefy2 = new Card("Stupefy", "Game 5", "spell", 6, () => {activePlayer.attack++; activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false);
 
+        // Game 6
+        const advancedPotionMaking = new Card("Advanced Potion-Making", "Game 6", "item", 6, () => {players.forEach(player => {player.health += 2; if (player.health === 10) {player.attack++; player.drawCards(1);}});}, false);
+        const bezoar1 = new Card("Bezoar", "Game 6", "item", 4, () => {playerChoice("Heal for 3:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].img.src}"><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].health += 3;};}}); activePlayer.drawCards(1);}, false);
+        const bezoar2 = new Card("Bezoar", "Game 6", "item", 4, () => {playerChoice("Heal for 3:", () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].img.src}"><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].health += 3;};}}); activePlayer.drawCards(1);}, false);
+        const confundus1 = new Card("Confundus", "Game 6", "item", 3, () => {activePlayer.attack++;}, true);
+        const confundus2 = new Card("Confundus", "Game 6", "item", 3, () => {activePlayer.attack++;}, true);
+
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         // TO-DO: add other games' Hogwarts cards to hogwartsCards based on the selected game
@@ -405,6 +412,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     hogwartsCards.push(accio1, accio2, alastorMadEyeMoody, cedricDiggory, filiusFlitwick, fleurDelacour, hogwartsAHistory1, hogwartsAHistory2, hogwartsAHistory3, hogwartsAHistory4, hogwartsAHistory5, hogwartsAHistory6, minervaMcgonagall, pensieve, pomonaSprout, protego1, protego2, protego3, severusSnape, triwizardCup, viktorKrum);
                     if (activeGame !== "Game 4") {
                         hogwartsCards.push(choChang, fredWeasley, georgeWeasley, kingsleyShacklebolt, lunaLovegood, nymphadoraTonks, owls1, owls2, stupefy1, stupefy2);
+                        if (activeGame !== "Game 5") {
+                            hogwartsCards.push(advancedPotionMaking, bezoar1, bezoar2, confundus1, confundus2);
+                        }
                     }
                 }
             }
@@ -1064,6 +1074,12 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             set health(health) {
                 if (health > this._maxHealth) health = this._maxHealth;
+                else if (health < this.health) {
+                    this.takenDamage = true;
+
+                    // Confundus effect
+                    if (activeVillains.every(villain => {return villain.takenDamage}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) activeLocation.removeFromLocation();
+                }
                 this._health = health;
                 this.displayDamage();
                 if (this.health <= 0) {
@@ -1308,13 +1324,11 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
                             activePlayer.attack--;
                             activeVillains[i].health--;
-                            activeVillains[i].takenDamage = true;
                             activePlayer.attacks++;
                         }
                         else if (activePlayer.influence > 0 && activeVillains[i].healthType === "influence") {
                             activePlayer.influence--;
                             activeVillains[i].health--;
-                            activeVillains[i].takenDamage = true;
                         }
                     }
                 }
