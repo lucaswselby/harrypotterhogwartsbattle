@@ -523,7 +523,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             set health(health) {
                 // can't heal if stunned, sectumsempra, or Fenrir Greyback
-                if (!this.stunned && !activeDarkArtsEvents.includes(sectumsempra1) && !activeDarkArtsEvents.includes(sectumsempra2) && !activeVillains.includes(fenrirGreyback)) {
+                if (!this.stunned && !activeDarkArtsEvents.includes(sectumsempra1) && !activeDarkArtsEvents.includes(sectumsempra2) && (!activeVillains.includes(fenrirGreyback) || fenrirGreyback.health <= 0 || fenrirGreyback.petrifiedBy)) {
                     // Invisibility Cloak effect
                     if (this.passives.includes(invisibilityCloak) && health < this.health) {
                         health = this.health - 1;
