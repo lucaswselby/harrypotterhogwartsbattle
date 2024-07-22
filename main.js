@@ -1203,6 +1203,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const deathEater2 = new Villain("Death Eater", "Game 5", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();});
         const doloresUmbridge = new Villain("Dolores Umbridge", "Game 5", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.influence++; player.health += 2;});});
         const lordVoldemort1 = new Villain("Lord Voldemort", "Game 5", "villain", 10, "health", () => {activePlayer.health--; if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true);};}});} else activePlayer.forcedDiscardAt(0, true);}}, () => {});
+        const bellatrixLestrange = new Villain("Bellatrix Lestrange", "Game 6", "villain", 9, "health", () => {}, () => {players.forEach(player => {const items = player.discard.filter(card => {return card.type === "item"}); if (items.length) {const discardToHand = index => {player.draw.unshift(items[index]); player.discard.splice(index, 1); player.drawCards(1);}; if (items.length > 1) {playerChoice(`${player.hero} move from discard to hand:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
         const fenrirGreyback = new Villain("Fenrir Greyback", "Game 6", "villain", 8, "health", () => {}, () => {players.forEach(player => {player.health += 3;}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
         // TO-DO: add other games' villains to villains if selected
         let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
@@ -1215,7 +1216,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (activeGame !== "Game 4") {
                         inactiveVillains.push(deathEater2, doloresUmbridge);
                         if (activeGame !== "Game 5") {
-                            inactiveVillains.push(fenrirGreyback);
+                            inactiveVillains.push(bellatrixLestrange, fenrirGreyback);
                             // TO-DO: add Game 6 villains
                         }
                     }
@@ -1405,7 +1406,7 @@ document.getElementById("submitPlayers").onclick = () => {
             });
 
             // update activeDarkArtsEvents
-            for (let i = 0; i < activeLocation.darkArtsEventDraws; i++) {
+            for (let i = 0; i < activeLocation.darkArtsEventDraws + (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) ? 1 : 0; i++) {
                 if (!darkArtsEvents.length) {
                     shuffle(inactiveDarkArtsEvents);
                     while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
