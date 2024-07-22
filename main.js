@@ -1122,6 +1122,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     activeVillains = [];
                                     activeVillains.push(lordVoldemort1);
                                     populateVillains();
+                                    document.getElementById("villainDraw").innerHTML = "";
                                 }
                                 else alert("Victory!");
                             }
