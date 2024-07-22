@@ -522,8 +522,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._health;
             }
             set health(health) {
-                // can't heal if stunned or sectumsempra
-                if (!this.stunned && !activeDarkArtsEvents.includes(sectumsempra1) && !activeDarkArtsEvents.includes(sectumsempra2)) {
+                // can't heal if stunned, sectumsempra, or Fenrir Greyback
+                if (!this.stunned && !activeDarkArtsEvents.includes(sectumsempra1) && !activeDarkArtsEvents.includes(sectumsempra2) && !activeVillains.includes(fenrirGreyback)) {
                     // Invisibility Cloak effect
                     if (this.passives.includes(invisibilityCloak) && health < this.health) {
                         health = this.health - 1;
@@ -1203,6 +1203,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const deathEater2 = new Villain("Death Eater", "Game 5", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();});
         const doloresUmbridge = new Villain("Dolores Umbridge", "Game 5", "villain", 7, "health", () => {}, () => {players.forEach(player => {player.influence++; player.health += 2;});});
         const lordVoldemort1 = new Villain("Lord Voldemort", "Game 5", "villain", 10, "health", () => {activePlayer.health--; if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true);};}});} else activePlayer.forcedDiscardAt(0, true);}}, () => {});
+        const fenrirGreyback = new Villain("Fenrir Greyback", "Game 6", "villain", 8, "health", () => {}, () => {players.forEach(player => {player.health += 3;}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
         // TO-DO: add other games' villains to villains if selected
         let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
@@ -1213,7 +1214,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     inactiveVillains.push(bartyCrouchJr, deathEater1);
                     if (activeGame !== "Game 4") {
                         inactiveVillains.push(deathEater2, doloresUmbridge);
-                        // TO-DO: add Game 6 villains
+                        if (activeGame !== "Game 5") {
+                            inactiveVillains.push(fenrirGreyback);
+                            // TO-DO: add Game 6 villains
+                        }
                     }
                 }
             }
