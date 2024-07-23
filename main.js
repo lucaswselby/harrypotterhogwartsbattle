@@ -141,6 +141,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         else if (result === "draw") document.getElementsByClassName("choice")[0].innerHTML = hogwartsCardBack;
                         else if (result === "attack") document.getElementsByClassName("choice")[0].innerHTML = attackToken;
                         else if (result === "health") document.getElementsByClassName("choice")[0].innerHTML = healthToken;
+                        else alert(`But seriously, ${color} is not a Hogwarts die color.`);
                         document.getElementsByClassName("choice")[0].onclick = effect;
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Re-roll</p>";
                         document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie(color, evil, true);};
@@ -1116,6 +1117,22 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     // Confundus effect
                     if (activeVillains.every(villain => {return villain.takenDamage}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) activeLocation.removeFromLocation();
+
+                    // Care of Magical Creatures
+                    if (this.health === this._maxHealth && activePlayer.proficiency === "Care of Magical Creatures" && this.type === "creature") {
+                        const hurtPlayers = players.filter(player => {return player.health < 10;});
+                        if (hurtPlayers.length) {
+                            if (hurtPlayers.length > 1) {
+                                playerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
+                                    for (let i = 0; i < hurtPlayers.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${hurtPlayers[i].heroImage.src}"><p>Health: ${hurtPlayers[i].health}</p>`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                    }
+                                });
+                            }
+                        }
+                        else hurtPlayers[0].health += 2;
+                    }
                 }
                 this._health = health;
                 this.displayDamage();
@@ -1166,6 +1183,10 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activePlayer.passives.includes(viktorKrum)) {
                                 activePlayer.influence++;
                                 activePlayer.health++;
+                            }
+                            // Care of Magical Creatures
+                            if (activePlayer.proficiency === "Care of Magical Creatures" && this.type === "creature") {
+                                activeLocation.removeFromLocation();
                             }
 
                             // check for victory
