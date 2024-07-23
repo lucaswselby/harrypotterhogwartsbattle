@@ -471,6 +471,16 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activePlayer.influence >= cost) {
                     activePlayer.influence -= cost;
 
+                    // History of Magic proficiency
+                    if (activePlayer === "History of Magic" && card.type === "spell") {
+                        playerChoice("Give 1 influence to:", () => {return players.length;}, 1, () => {
+                            for (let i = 0; i < players.length; i++) {
+                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].heroImage.src}">`;
+                                document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++;};
+                            }
+                        });
+                    }
+
                     // Time Turner, Sorting Hat, and Wingardium Leviosa effects
                     if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(sortingHat) && card.type === "ally") || ((activePlayer.passives.includes(wingardiumLeviosa1) || activePlayer.passives.includes(wingardiumLeviosa2) || activePlayer.passives.includes(wingardiumLeviosa3)) && card.type === "item")) {
                         playerChoice("Choose 1:", () => {return 2;}, 1, () => {
