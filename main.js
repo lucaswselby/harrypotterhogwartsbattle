@@ -249,6 +249,20 @@ document.getElementById("submitPlayers").onclick = () => {
                         activePlayer.attack++;
                         activePlayer.health++;
                     }
+                    // Divination proficiency
+                    if (activePlayer.proficiency === "Divination" && this.type === "item") {
+                        playerChoice("Choose:", () => {return 2;}, 1, () => {
+                            document.getElementsByClassName("choice")[0].innerHTML = `<p>Top of deck</p><img src="${activePlayer.draw[0].img.src}">`;
+                            document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p><img src="${activePlayer.draw[0].img.src}">`;
+                            document.getElementsByClassName("choice")[1].onclick = () => {
+                                let tempPetrified = activePlayer.petrified;
+                                activePlayer.petrified = false;
+                                activePlayer.drawCards(1);
+                                activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, false);
+                                activePlayer.petrified = tempPetrified;
+                            };
+                        });
+                    }
 
                     if (this.type === "spell") activePlayer.spellsCast++;
                 }
