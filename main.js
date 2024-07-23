@@ -542,6 +542,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._spellsCast = 0;
                 this._gainedHealth = false;
                 this._attacks = 0;
+                this._healthGained = 0;
             }
             get hero() {
                 return this._hero;
@@ -566,14 +567,23 @@ document.getElementById("submitPlayers").onclick = () => {
                         health = this.health - 1;
                     }
 
-                    // Neville Longbottom special
-                    if (this.health < health && !this.gainedHealth) {
-                        let nevilleSpecial = 0;
-                        if (activePlayer.hero === "Neville Longbottom" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                            nevilleSpecial++;
+                    if (this.health < health) {
+                        // Neville Longbottom special
+                        if (!this.gainedHealth) {
+                            let nevilleSpecial = 0;
+                            if (activePlayer.hero === "Neville Longbottom" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                                nevilleSpecial++;
+                            }
+                            this.gainedHealth = true;
+                            health += nevilleSpecial;
                         }
-                        this.gainedHealth = true;
-                        health += nevilleSpecial;
+
+                        // Herbology proficiency
+                        this._healthGained += health - this.health;
+                        if (activePlayer.proficiency === "Herbology" && this.healthGained >= 3) {
+                            this.drawCards(1);
+                            this._healthGained = -99;
+                        }
                     }
 
                     // sets health
@@ -715,6 +725,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
             }
+            get healthGained() {
+                return this._healthGained;
+            }
 
             discardAt(index) {
                 this._discard.push(this.hand[index]);
@@ -813,6 +826,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.attacks = 0;
                 owlsSpells1 = 0;
                 owlsSpells2 = 0;
+                this._healthGained = 0;
                 this.drawCards(5);
             }
             stun() {
