@@ -1118,7 +1118,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     // Confundus effect
                     if (activeVillains.every(villain => {return villain.takenDamage}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) activeLocation.removeFromLocation();
 
-                    // Care of Magical Creatures
+                    // Care of Magical Creatures proficiency
                     if (this.health === this._maxHealth && activePlayer.proficiency === "Care of Magical Creatures" && this.type === "creature") {
                         const hurtPlayers = players.filter(player => {return player.health < 10;});
                         if (hurtPlayers.length) {
@@ -1184,7 +1184,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 activePlayer.influence++;
                                 activePlayer.health++;
                             }
-                            // Care of Magical Creatures
+                            // Care of Magical Creatures proficiency
                             if (activePlayer.proficiency === "Care of Magical Creatures" && this.type === "creature") {
                                 activeLocation.removeFromLocation();
                             }
@@ -1451,6 +1451,26 @@ document.getElementById("submitPlayers").onclick = () => {
                     player.health = 10;
                 }
             });
+
+            // Charms proficiency
+            if (activePlayer.proficiency === "charms") {
+                document.getElementById("playerProficiency").onclick = () => {
+                    let spells = activePlayer.hand.filter(card => {return card.type === "spell";});
+                    if (spells.length >= 2) {
+                        if (spells.length > 2) {
+                            playerChoice("Discard:", () => {spells = spells.filter(spell => {return activePlayer.hand.includes(spell);}); return spells.length;}, 2, () => {
+                                for (let i = 0; i < spells.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[i]), false)};
+                                }
+                            });
+                        }
+                        else spells.forEach(spell => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spell), false);});
+                        players.forEach(player => {player.influence++; player.drawCards(1);});
+                    }
+                    document.getElementById("playerProficiency").onclick = () => {};
+                };
+            }
 
             // update activeDarkArtsEvents
             for (let i = 0; i < activeLocation.darkArtsEventDraws + (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) ? 1 : 0; i++) {
