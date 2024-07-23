@@ -1475,7 +1475,7 @@ document.getElementById("submitPlayers").onclick = () => {
             });
 
             // Charms proficiency
-            if (activePlayer.proficiency === "charms") {
+            if (activePlayer.proficiency === "Charms") {
                 document.getElementById("playerProficiency").onclick = () => {
                     let spells = activePlayer.hand.filter(card => {return card.type === "spell";});
                     if (spells.length >= 2) {
@@ -1492,6 +1492,16 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     document.getElementById("playerProficiency").onclick = () => {};
                 };
+            }
+            // Flying Lessons proficiency
+            else if (activePlayer.proficiency === "Flying Lessons") {
+                document.getElementById("playerProficiency").onclick = () => {
+                    if (activePlayer.influence >= 5) {
+                        activePlayer.influence -= 5;
+                        activeLocation.removeFromLocation();
+                        document.getElementById("playerProficiency").onclick = () => {};
+                    }
+                }
             }
 
             // update activeDarkArtsEvents
