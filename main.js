@@ -731,12 +731,20 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.health++;
                 }
 
-                setTimeout(() => {
+                if (evil) {
                     // Crabbe and Goyle effect
-                    if (activeVillains.includes(crabbeAndGoyle) && !crabbeAndGoyle.petrifiedBy && evil) {
-                        this.health--;
+                    setTimeout(() => {
+                        if (activeVillains.includes(crabbeAndGoyle) && !crabbeAndGoyle.petrifiedBy) {
+                            this.health--;
+                        }
+                    }, 1000);
+
+                    // Defense Against the Dark Arts proficiency
+                    if (this.proficiency === "Defense Against the Dark Arts") {
+                        this.attack++;
+                        this.health++;
                     }
-                }, 1000);
+                }
 
                 this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
                 this.discardAt(index);
