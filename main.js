@@ -438,8 +438,9 @@ document.getElementById("submitPlayers").onclick = () => {
         // purchase a Hogwarts card
         hogwartsCards.forEach(card => {
             card.img.onclick = () => {
-                if (activePlayer.influence >= card.cost) {
-                    activePlayer.influence -= card.cost;
+                const cost = card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie) ? 1 : 0;
+                if (activePlayer.influence >= cost) {
+                    activePlayer.influence -= cost;
 
                     // Time Turner, Sorting Hat, and Wingardium Leviosa effects
                     if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(sortingHat) && card.type === "ally") || ((activePlayer.passives.includes(wingardiumLeviosa1) || activePlayer.passives.includes(wingardiumLeviosa2) || activePlayer.passives.includes(wingardiumLeviosa3)) && card.type === "item")) {
@@ -463,7 +464,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     card.generateOnClick();
 
                     // Dolores Umbridge effect
-                    if (activeVillains.includes(doloresUmbridge) && card.cost >= 4 && !doloresUmbridge.petrifiedBy && doloresUmbridge.health > 0) activePlayer.health--;
+                    if (activeVillains.includes(doloresUmbridge) && cost >= 4 && !doloresUmbridge.petrifiedBy && doloresUmbridge.health > 0) activePlayer.health--;
 
                     // replaces previous card with next card in store
                     document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
@@ -1030,8 +1031,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const regeneration = new DarkArtsEvent("Regeneration", "Game 4", () => {activeVillains.forEach(villain => {villain.health += 2;})});
         const avadaKedavra2 = new DarkArtsEvent("Avada Kedavra", "Game 5", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
         const crucio2 = new DarkArtsEvent("Crucio", "Game 5", () => {activePlayer.health--;});
-        const educationalDecree1 = new DarkArtsEvent("Educational Decree", "Game 5", () => {activePlayer.hand.forEach(card => {if (card.cost >= 4) activePlayer.health--;});});
-        const educationalDecree2 = new DarkArtsEvent("Educational Decree", "Game 5", () => {activePlayer.hand.forEach(card => {if (card.cost >= 4) activePlayer.health--;});});
+        const educationalDecree1 = new DarkArtsEvent("Educational Decree", "Game 5", () => {activePlayer.hand.forEach(card => {if (card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie) ? 1 : 0 >= 4) activePlayer.health--;});});
+        const educationalDecree2 = new DarkArtsEvent("Educational Decree", "Game 5", () => {activePlayer.hand.forEach(card => {if (card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie) ? 1 : 0 >= 4) activePlayer.health--;});});
         const imperio2 = new DarkArtsEvent("Imperio", "Game 5", () => {const otherPlayers = players.filter(player => {return player !== activePlayer;}); if (otherPlayers.length) {if (otherPlayers.length > 1) {playerChoice("Choose to lose 2 health:", () => {return otherPlayers.length;}, 1, () => {for (let i = 0; i < otherPlayers.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${otherPlayers[i].img.src}"><p>Health: ${otherPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {otherPlayers[i].health -= 2;};}});} else otherPlayers[0].health -= 2;}});
         const legilimency = new DarkArtsEvent("Legilimency", "Game 5", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].type === "spell") {player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
         const morsmordre3 = new DarkArtsEvent("Morsmordre", "Game 5", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
