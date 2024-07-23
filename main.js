@@ -453,7 +453,7 @@ document.getElementById("submitPlayers").onclick = () => {
         // purchase a Hogwarts card
         hogwartsCards.forEach(card => {
             card.img.onclick = () => {
-                const cost = card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie) ? 1 : 0;
+                const cost = card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie ? 1 : 0);
                 if (activePlayer.influence >= cost) {
                     activePlayer.influence -= cost;
 
