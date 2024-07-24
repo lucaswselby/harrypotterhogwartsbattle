@@ -191,6 +191,12 @@ document.getElementById("submitPlayers").onclick = () => {
             return !activeDarkArtsEvents.includes(sectumsempra1) && !activeDarkArtsEvents.includes(sectumsempra2) && (!activeVillains.includes(fenrirGreyback) || fenrirGreyback.petrifiedBy || fenrirGreyback.health <= 0);
         };
 
+        // darken and brighten image
+        const darken = element => {
+            element.classList.toggle("darken");
+            setTimeout(() => {element.classList.toggle("darken");}, 2000);
+        };
+
         // cards
         class Card {
             constructor(name, game, type, cost, effect, passive, houseDie) {
@@ -1307,9 +1313,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._healthType;
             }
             effect() {
-                this._img.classList.toggle("darken");
+                darken(this._img);
                 this._effect();
-                setTimeout(() => {this._img.classList.toggle("darken");}, 2000);
             }
             reward() {
                 this._reward();
