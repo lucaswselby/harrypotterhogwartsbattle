@@ -1526,6 +1526,9 @@ document.getElementById("submitPlayers").onclick = () => {
         // start a new turn
         let firstTurn = true;
         const startTurn = () => {
+            // deactivate end turn
+            document.getElementById("endTurn").style.display = "none";
+
             // new active player
             activePlayer = players.indexOf(activePlayer) < players.length - 1 ? players[players.indexOf(activePlayer) + 1] : players[0];
             activePlayer.health = activePlayer.health; // moves health token to correct location
@@ -1644,16 +1647,22 @@ document.getElementById("submitPlayers").onclick = () => {
                             setTimeout(() => {
                                 for (let i = 0; i < activeVillains.length; i++) {
                                     setTimeout(() => {
-                                        if (!activeVillains[i].petrifiedBy) {
-                                                activeVillains[i].effect();
-                                                // Voldemort
-                                                if (i === activeVillains.length - 1 && invulnerableVoldemort()) {
-                                                    setTimeout(() => {
-                                                        if (!invulnerableVoldemort().petrifiedBy) invulnerableVoldemort().effect();
-                                                        else if (invulnerableVoldemort().petrifiedBy === activePlayer) invulnerableVoldemort().petrifiedBy = null;
-                                                    }, 1000);
-                                                }
+                                        if (!activeVillains[i].petrifiedBy) activeVillains[i].effect();
+
+                                        if (i === activeVillains.length - 1) {
+                                            // Voldemort
+                                            if (invulnerableVoldemort()) {
+                                                setTimeout(() => {
+                                                    if (!invulnerableVoldemort().petrifiedBy) invulnerableVoldemort().effect();
+                                                    else if (invulnerableVoldemort().petrifiedBy === activePlayer) invulnerableVoldemort().petrifiedBy = null;
+                                                    // reactivate end turn
+                                                    document.getElementById("endTurn").style.display = "initial";
+                                                }, 1000);
+                                            }
+                                            // reactivate end turn
+                                            else document.getElementById("endTurn").style.display = "initial";
                                         }
+
                                         // unpetrify villain
                                         else if (activeVillains[i].petrifiedBy === activePlayer) activeVillains[i].petrifiedBy = null;
                                         activeVillains[i].takenDamage = false;
