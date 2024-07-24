@@ -1562,6 +1562,47 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
             }
+            // Transfiguration proficiency
+            else if (activePlayer.proficiency === "Transfiguration") {
+                document.getElementById("playerProficiency").onclick = () => {
+                    const items = activePlayer.hand.filter(card => {return card.type === "item";});
+                    if (items.length) {
+                        const transfigure = index => {
+                            activePlayer.shuffle();
+                            const cheapos = activePlayer.draw.filter(card => {return card.cost <= 5;});
+                            if (cheapos.length) {
+                                const drawCheapo = index => {
+                                    const tempCard = activePlayer.draw[index];
+                                    activePlayer.draw[index] = activePlayer.draw[0];
+                                    activePlayer.draw[0] = tempCard;
+                                    activePlayer.drawCards(1);
+                                };
+                                if (cheapos.length > 1) {
+                                    playerChoice("Add to hand:", () => {return cheapos.length;}, 1, () => {
+                                        for (let i = 0; i < cheapos.length; i++) {
+                                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapos[i].img.src}">`;
+                                            document.getElementsByClassName("choice")[i].onclick = () => {drawCheapo(i)};
+                                        }
+                                    });
+                                }
+                                else drawCheapo(0);
+                            }
+                            activePlayer.forcedDiscardAt(index, false);
+                            activePlayer.shuffle();                         
+                        };
+                        if (items.length > 1) {
+                            playerChoice("Discard:", () => {return items.length;}, 1, () => {
+                                for (let i = 0; i < items.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {transfigure(i)};
+                                }
+                            });
+                        }
+                        else transfigure(0);
+                        document.getElementById("playerProficiency").onclick = () => {};
+                    }
+                };
+            }
 
             // update activeDarkArtsEvents
             for (let i = 0; i < activeLocation.darkArtsEventDraws + (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) ? 1 : 0; i++) {
