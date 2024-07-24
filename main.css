@@ -178,6 +178,20 @@ main {
 .villain {
     z-index: 0;
 }
+.villain.darken {
+    animation: darken 2s;
+}
+@keyframes darken {
+    0% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(.5);
+    }
+    100% {
+        filter: brightness(1);
+    }
+}
 .petrifiedToken {
     --height: 80%;
     z-index: 1;

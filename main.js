@@ -1307,7 +1307,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._healthType;
             }
             effect() {
+                this._img.classList.toggle("darken");
                 this._effect();
+                setTimeout(() => {this._img.classList.toggle("darken");}, 2000);
             }
             reward() {
                 this._reward();
