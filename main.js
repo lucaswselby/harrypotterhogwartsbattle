@@ -188,6 +188,9 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // check if player can heal
         const canHeal = () => {
+            if (activeDarkArtsEvents.includes(sectumsempra1)) darken(sectumsempra1.img);
+            if (activeDarkArtsEvents.includes(sectumsempra2)) darken(sectumsempra2.img);
+            if (activeVillains.includes(fenrirGreyback) && !fenrirGreyback.petrifiedBy && fenrirGreyback.health > 0) darken(fenrirGreyback.img);
             return !activeDarkArtsEvents.includes(sectumsempra1) && !activeDarkArtsEvents.includes(sectumsempra2) && (!activeVillains.includes(fenrirGreyback) || fenrirGreyback.petrifiedBy || fenrirGreyback.health <= 0);
         };
 
