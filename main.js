@@ -585,14 +585,14 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._health;
             }
             set health(health) {
-                // can't heal if stunned, sectumsempra, or Fenrir Greyback
+                // can't heal if stunned
                 if (!this.stunned) {
                     // Invisibility Cloak effect
                     if (this.passives.includes(invisibilityCloak) && health < this.health) {
                         health = this.health - 1;
                     }
                     else if (this.health < health) {
-                        if (!canHeal()) {
+                        if (!canHeal() && this.health > 0) {
                             health = this.health;
                         }
                         else {
