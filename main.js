@@ -1551,7 +1551,7 @@ document.getElementById("submitPlayers").onclick = () => {
             });
 
             // Charms proficiency
-            if (activePlayer.proficiency === "Charms") {
+            if (activePlayer.proficiency === "Charms" && !activePlayer.petrified) {
                 document.getElementById("playerProficiency").onclick = () => {
                     let spells = activePlayer.hand.filter(card => {return card.type === "spell";});
                     if (spells.length >= 2) {
