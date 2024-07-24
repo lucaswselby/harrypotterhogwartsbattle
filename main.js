@@ -472,7 +472,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     activePlayer.influence -= cost;
 
                     // History of Magic proficiency
-                    if (activePlayer === "History of Magic" && card.type === "spell") {
+                    if (activePlayer === "History Of Magic" && card.type === "spell") {
                         playerChoice("Give 1 influence to:", () => {return players.length;}, 1, () => {
                             for (let i = 0; i < players.length; i++) {
                                 document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].heroImage.src}">`;
@@ -1200,7 +1200,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (activeVillains.every(villain => {return villain.takenDamage}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) activeLocation.removeFromLocation();
 
                     // Care of Magical Creatures proficiency
-                    if (this.health === this._maxHealth && activePlayer.proficiency === "Care of Magical Creatures" && this.type === "creature") {
+                    if (this.health === this._maxHealth && activePlayer.proficiency === "Care Of Magical Creatures" && this.type === "creature") {
                         const hurtPlayers = players.filter(player => {return player.health < 10;});
                         if (hurtPlayers.length) {
                             if (hurtPlayers.length > 1) {
@@ -1266,7 +1266,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 activePlayer.health++;
                             }
                             // Care of Magical Creatures proficiency
-                            if (activePlayer.proficiency === "Care of Magical Creatures" && this.type === "creature") {
+                            if (activePlayer.proficiency === "Care Of Magical Creatures" && this.type === "creature") {
                                 activeLocation.removeFromLocation();
                             }
 
