@@ -550,6 +550,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._petrified = false;
                 this._stunned = false;
                 this._spellsCast = 0;
+                this._itemsCast = 0;
+                this._alliesCast = 0;
+                this._potionsProficiencyUsed = false;
                 this._gainedHealth = false;
                 this._attacks = 0;
                 this._healthGained = 0;
@@ -689,6 +692,17 @@ document.getElementById("submitPlayers").onclick = () => {
             set stunned(stunned) {
                 this._stunned = stunned;
             }
+            potionsProficiency() {
+                if (this.proficiency === "Potions" && this.spellsCast > 0 && this.itemsCast > 0 && this.alliesCast > 0 && !this._potionsProficiencyUsed) {
+                    playerChoice("Heal for 1 and gain 1 attack:", () => {return players.length;}, 1, () => {
+                        for (let i = 0; i < players.length; i++) {
+                            document.getElementsByClassName("choice").innerHTML = `<img src="${players[i].heroImage.src}"><p>Health: ${players[i].health}</p><p>Attack: ${players[i].attack}</p>`;
+                            document.getElementsByClassName("choice").onclick = () => {players[i].health++; players[i].attack++;};
+                        }
+                    });
+                    this._potionsProficiencyUsed = true;
+                }
+            }
             get spellsCast() {
                 return this._spellsCast;
             }
@@ -705,6 +719,24 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     });
                 }
+
+                this.potionsProficiency();
+            }
+            get itemsCast() {
+                return this._itemsCast;
+            }
+            set itemsCast(itemsCast) {
+                this._itemsCast = itemsCast;
+
+                this.potionsProficiency();
+            }
+            get alliesCast() {
+                return this._alliesCast;
+            }
+            set alliesCast(alliesCast) {
+                this._alliesCast = alliesCast;
+
+                this.potionsProficiency();
             }
             get gainedHealth() {
                 return this._gainedHealth;
@@ -832,6 +864,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.influence = 0;
                 this._passives = [];
                 this.spellsCast = 0;
+                this.itemsCast = 0;
+                this.alliesCast = 0;
+                this._potionsProficiencyUsed = false;
                 this.gainedHealth = false;
                 this.attacks = 0;
                 owlsSpells1 = 0;
