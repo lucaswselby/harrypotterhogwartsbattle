@@ -495,13 +495,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     // Time Turner, Sorting Hat, and Wingardium Leviosa effects
                     if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(sortingHat) && card.type === "ally") || ((activePlayer.passives.includes(wingardiumLeviosa1) || activePlayer.passives.includes(wingardiumLeviosa2) || activePlayer.passives.includes(wingardiumLeviosa3)) && card.type === "item")) {
                         playerChoice("Choose 1:", () => {return 2;}, 1, () => {
-                            document.getElementsByClassName("choice")[0].innerHTML = "<p>Top of deck</p>";
-                            document.getElementsByClassName("choice")[0].appendChild(card.img.cloneNode());
+                            document.getElementsByClassName("choice")[0].innerHTML = `<p>Top of deck</p><img src="${card.img.src}">`;
                             document.getElementsByClassName("choice")[0].onclick = () => {
                                 activePlayer.draw.unshift(card);
                             };
-                            document.getElementsByClassName("choice")[1].innerHTML = "<p>Discard</p>";
-                            document.getElementsByClassName("choice")[1].appendChild(card.img.cloneNode());
+                            document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p><img src="${card.img.src}">`;
                             document.getElementsByClassName("choice")[1].onclick = () => {
                                 activePlayer.discard.push(card);
                             };
