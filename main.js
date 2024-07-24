@@ -574,28 +574,33 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             set health(health) {
                 // can't heal if stunned, sectumsempra, or Fenrir Greyback
-                if (!this.stunned && !activeDarkArtsEvents.includes(sectumsempra1) && !activeDarkArtsEvents.includes(sectumsempra2) && (!activeVillains.includes(fenrirGreyback) || fenrirGreyback.health <= 0 || fenrirGreyback.petrifiedBy)) {
+                if (!this.stunned) {
                     // Invisibility Cloak effect
                     if (this.passives.includes(invisibilityCloak) && health < this.health) {
                         health = this.health - 1;
                     }
-
-                    if (this.health < health) {
-                        // Neville Longbottom special
-                        if (!this.gainedHealth) {
-                            let nevilleSpecial = 0;
-                            if (activePlayer.hero === "Neville Longbottom" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                                nevilleSpecial++;
-                            }
-                            this.gainedHealth = true;
-                            health += nevilleSpecial;
+                    else if (this.health < health) {
+                        // Sectumsempra and Fenrir Greyback effects
+                        if (activeDarkArtsEvents.includes(sectumsempra1) || activeDarkArtsEvents.includes(sectumsempra2) || (activeVillains.includes(fenrirGreyback) && fenrirGreyback.health > 0 && !fenrirGreyback.petrifiedBy)) {
+                            health = this.health;
                         }
+                        else {
+                            // Neville Longbottom special
+                            if (!this.gainedHealth) {
+                                let nevilleSpecial = 0;
+                                if (activePlayer.hero === "Neville Longbottom" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                                    nevilleSpecial++;
+                                }
+                                this.gainedHealth = true;
+                                health += nevilleSpecial;
+                            }
 
-                        // Herbology proficiency
-                        this._healthGained += health - this.health;
-                        if (activePlayer.proficiency === "Herbology" && this.healthGained >= 3) {
-                            this.drawCards(1);
-                            this._healthGained = -99;
+                            // Herbology proficiency
+                            this._healthGained += health - this.health;
+                            if (activePlayer.proficiency === "Herbology" && this.healthGained >= 3) {
+                                this.drawCards(1);
+                                this._healthGained = -99;
+                            }
                         }
                     }
 
