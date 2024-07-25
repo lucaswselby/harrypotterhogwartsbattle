@@ -183,7 +183,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
                 // add other games' Voldemorts
             }
-            else return null;
+            return null;
         };
 
         // check if player can heal
@@ -1723,7 +1723,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
                                 document.getElementById("villainDraw").appendChild(lordVoldemort1.img);
                             }
-                            if (activeGame === "Game 6" && activeVillains[0] !== lordVoldemort2) {
+                            else if (activeGame === "Game 6" && activeVillains[0] !== lordVoldemort2) {
                                 document.getElementById("villainDraw").appendChild(lordVoldemort2.img);
                             }
                             // TO-DO: add other games' Voldemorts
