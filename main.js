@@ -554,7 +554,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._hand = [];
                 this._discard = []; 
                 this._passives = [];
-                if (hero === "Harry Potter") this._discard = harryStartingCards.concat(felixFelicis);
+                if (hero === "Harry Potter") this._discard = harryStartingCards;
                 else if (hero === "Ron Weasley") this._discard = ronStartingCards;
                 else if (hero === "Hermione Granger") this._discard = hermioneStartingCards;
                 else if (hero === "Neville Longbottom") this._discard = nevilleStartingCards;
