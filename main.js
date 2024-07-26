@@ -917,7 +917,11 @@ document.getElementById("submitPlayers").onclick = () => {
         class Location {
             constructor(name, game, number, spaces, darkArtsEventDraws, revealEffect) {
                 this._name = name;
-                this._img = `<img id="location${number}" class="location" src="./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png" alt="${name}">`;
+                this._img = document.createElement("IMG");
+                this._img.id = `location${number}`;
+                this._img.className = "location";
+                this._img.src = `./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png`;
+                this._img.alt = name;
                 this._number = number;
                 this._spaces = spaces;
                 this._darkArtsEventDraws = darkArtsEventDraws;
@@ -1068,9 +1072,9 @@ document.getElementById("submitPlayers").onclick = () => {
         const dADAClassroom = new Location("DADA Classroom", "Box 2", 1, 6, 1, () => {});
         const castleHallways = new Location("Castle Hallways", "Box 2", 2, 6, 2, () => {});
         const whompingWillow = new Location("Whomping Willow", "Box 2", 3, 7, 3, () => {});
-        const unicornHollow = new Location("Unicorn Hollow", "Box 3", 1, 5, 1, () => {});
+        const unicornHallow = new Location("Unicorn Hallow", "Box 3", 1, 5, 1, () => {});
         const aragogsLair = new Location("Aragog's Lair", "Box 3", 2, 6, 2, () => {});
-        const giantClearing = new Location("Giat Clearing", "Box 3", 3, 7, 3, () => {});
+        const giantClearing = new Location("Giant Clearing", "Box 3", 3, 7, 3, () => {});
         const selectionOfChampions = new Location("Selection Of Champions", "Box 4", 1, 5, 1, () => {});
         const dragonArena = new Location("Dragon Arena", "Box 4", 2, 6, 2, () => {});
         const mermaidVillage = new Location("Mermaid Village", "Box 4", 3, 6, 2, () => {});
@@ -1087,7 +1091,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const greatHallPack = new Location("Great Hall", "Pack 4", 1, 6, 1, () => {});
         const forestClearing = new Location("Forest Clearing", "Pack 4", 2, 6, 2, () => {});
         const castleCourtyard = new Location("Castle Courtyard", "Pack 4", 3, 7, 3, () => {});
-        let locations = [diagonAlley, mirrorOfErised, forbiddenForest, quidditchPitch, chamberOfSecrets, hogwartsExpress, hogsmeadeVillage, shriekingShack, quidditchWorldCup, triwizardTournament, graveyard, azkaban, hallOfProphecy, ministryOfMagic, knockturnAlley, theBurrow, astronomyTower, godricsHollow, gringotts, roomOfRequirement, hogwartsCastle, castleGates, hagridsHut, greatHallBox, dADAClassroom, castleHallways, whompingWillow, unicornHollow, aragogsLair, giantClearing, selectionOfChampions, dragonArena, mermaidVillage, triwizardMaze, theBlackLake, theHospitalWing, theHogwartsLibrary, ministryOfMagicAtrium, ministryCourtroom, ministryLift, malfoyManor, cave, atopTheTower, greatHallPack, forestClearing, castleCourtyard].filter(loc => {return loc.game === activeGame});
+        let locations = [diagonAlley, mirrorOfErised, forbiddenForest, quidditchPitch, chamberOfSecrets, hogwartsExpress, hogsmeadeVillage, shriekingShack, quidditchWorldCup, triwizardTournament, graveyard, azkaban, hallOfProphecy, ministryOfMagic, knockturnAlley, theBurrow, astronomyTower, godricsHollow, gringotts, roomOfRequirement, hogwartsCastle, castleGates, hagridsHut, greatHallBox, dADAClassroom, castleHallways, whompingWillow, unicornHallow, aragogsLair, giantClearing, selectionOfChampions, dragonArena, mermaidVillage, triwizardMaze, theBlackLake, theHospitalWing, theHogwartsLibrary, ministryOfMagicAtrium, ministryCourtroom, ministryLift, malfoyManor, cave, atopTheTower, greatHallPack, forestClearing, castleCourtyard].filter(loc => {return loc.game === activeGame});
         let activeLocation = locations[0];
 
         // dark arts events
@@ -1411,9 +1415,7 @@ document.getElementById("submitPlayers").onclick = () => {
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
             <img id="gameBoard" src="./images/board.png" alt="game board">
-            <div id="locations">
-                ${stackCards(locations.toReversed())}
-            </div>
+            <div id="locations"></div>
             <div id="darkArtsEvents">
                 <img id="darkArtsEventBack" src="./images/darkArtsEventBack.png" alt="Back of Dark Arts Event card">
             </div>
@@ -1451,6 +1453,9 @@ document.getElementById("submitPlayers").onclick = () => {
             <div id="playerHand"></div>
             <input type="button" id="endTurn" value="End Turn">
         </div>`;
+
+        // add locations to board
+        locations.toReversed().forEach(location => {document.getElementById("locations").appendChild(location.img);});
 
         // Hogwarts Castle special
         if (hogwartsCastle.img) {
