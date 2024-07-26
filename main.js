@@ -1672,7 +1672,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                         }
 
                                         // unpetrify villain
-                                        else if (activeVillains[i].petrifiedBy === activePlayer) activeVillains[i].petrifiedBy = null;
+                                        if (activeVillains[i].petrifiedBy === activePlayer) activeVillains[i].petrifiedBy = null;
                                         activeVillains[i].takenDamage = false;
                                     }, i * 1000);
                                 }
