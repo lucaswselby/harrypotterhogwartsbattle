@@ -1328,6 +1328,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 const activeVillainElement = this === invulnerableVoldemort() ? document.getElementById("villainDraw") : document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)];
                 if (this.petrifiedBy) {
                     activeVillainElement.innerHTML += `<img src="./images/petrifiedToken.png" class="petrifiedToken">`;
+
+                    // Basilisk
+                    if (this === basilisk && !activeDarkArtsEvents.includes(petrification1) && !activeDarkArtsEvents.includes(petrification2)) {
+                        players.forEach(player => {player.petrified = false});
+                    }
                 }
                 else if (activeVillainElement.getElementsByClassName("petrifiedToken")[0]) {
                     activeVillainElement.getElementsByClassName("petrifiedToken")[0].remove();
