@@ -443,6 +443,23 @@ main {
     width: fit-content;
 }
 
+#enhanceContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#enhanceContainer img {
+    all: unset;
+    max-height: 100%;
+    max-width: 100%;
+}
+
 .darken {
     animation: darken 2s;
 }
