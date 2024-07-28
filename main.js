@@ -1602,8 +1602,9 @@ document.getElementById("submitPlayers").onclick = () => {
                             const cheapos = activePlayer.draw.filter(card => {return card.cost <= 5;});
                             if (cheapos.length) {
                                 const drawCheapo = index => {
-                                    const tempCard = activePlayer.draw[index];
-                                    activePlayer.draw[index] = activePlayer.draw[0];
+                                    const drawIndex = activePlayer.draw.indexOf(cheapo[index]);
+                                    const tempCard = activePlayer.draw[drawIndex];
+                                    activePlayer.draw[drawIndex] = activePlayer.draw[0];
                                     activePlayer.draw[0] = tempCard;
                                     activePlayer.drawCards(1);
                                 };
@@ -1616,9 +1617,9 @@ document.getElementById("submitPlayers").onclick = () => {
                                     });
                                 }
                                 else drawCheapo(0);
+                                activePlayer.forcedDiscardAt(index, false);
+                                activePlayer.shuffle();
                             }
-                            activePlayer.forcedDiscardAt(index, false);
-                            activePlayer.shuffle();                         
                         };
                         if (items.length > 1) {
                             playerChoice("Discard:", () => {return items.length;}, 1, () => {
