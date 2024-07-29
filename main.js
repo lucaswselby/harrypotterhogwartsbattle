@@ -32,7 +32,7 @@ document.getElementById("submitPlayers").onclick = () => {
         }
     }
     for (let i = 0; i < document.getElementsByClassName("playerProficiency").length - 1; i++) {
-        if (document.getElementsByClassName("playerProficiency")[i].value) {
+        if (document.getElementsByClassName("playerProficiency")[i].style.display === "initial") {
             for (let j = i + 1; j < document.getElementsByClassName("playerProficiency").length; j++) {
                 if (document.getElementsByClassName("playerProficiency")[i].value === document.getElementsByClassName("playerProficiency")[j].value) {
                     continueGame = false;
@@ -1691,7 +1691,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 const magnify = event => {
                                                     event.preventDefault();
                                                     const magnifyContainer = document.createElement("div");
-                                                    magnifyContainer.id = "enhanceContainer";
+                                                    magnifyContainer.id = "magnifyContainer";
                                                     magnifyContainer.onclick = () => {magnifyContainer.remove();};
                                                     const magnifiedImg = img.cloneNode();
                                                     magnifiedImg.classList = [];
