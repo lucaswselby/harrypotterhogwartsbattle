@@ -1700,12 +1700,12 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
                                                 };
                                                 img.addEventListener("contextmenu", magnify);
-                                                img.addEventListener("mousedown", event => {
+                                                img.addEventListener("touchstart", event => {
                                                     event.preventDefault();
                                                     const longPressMagnify = setTimeout(() => {
                                                         magnify(event);
                                                     }, 500);
-                                                    img.addEventListener("mouseup", () => {clearTimeout(longPressMagnify);});
+                                                    img.addEventListener("touchend", () => {clearTimeout(longPressMagnify);});
                                                 });
                                             }
                                         }
