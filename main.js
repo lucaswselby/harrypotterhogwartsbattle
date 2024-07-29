@@ -1616,7 +1616,10 @@ document.getElementById("submitPlayers").onclick = () => {
                                     const tempCard = activePlayer.draw[drawIndex];
                                     activePlayer.draw[drawIndex] = activePlayer.draw[0];
                                     activePlayer.draw[0] = tempCard;
+                                    const tempPetrify = activePlayer.petrified;
+                                    activePlayer.petrified = false;
                                     activePlayer.drawCards(1);
+                                    activePlayer.petrified = tempPetrify;
                                 };
                                 if (cheapos.length > 1) {
                                     playerChoice("Add to hand:", () => {return cheapos.length;}, 1, () => {
