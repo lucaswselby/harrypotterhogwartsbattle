@@ -35,7 +35,6 @@ document.getElementById("submitPlayers").onclick = () => {
         if (document.getElementsByClassName("playerProficiency")[i].style.display === "initial") {
             for (let j = i + 1; j < document.getElementsByClassName("playerProficiency").length; j++) {
                 if (document.getElementsByClassName("playerProficiency")[j].style.display === "initial" && document.getElementsByClassName("playerProficiency")[i].value === document.getElementsByClassName("playerProficiency")[j].value) {
-                    alert(document.getElementsByClassName("playerProficiency")[i].value + " = " + document.getElementsByClassName("playerProficiency")[j].value);
                     continueGame = false;
                 }
             }
@@ -1607,12 +1606,12 @@ document.getElementById("submitPlayers").onclick = () => {
                 document.getElementById("playerProficiency").onclick = () => {
                     const items = activePlayer.hand.filter(card => {return card.type === "item";});
                     if (items.length) {
-                        const transfigure = index => {
+                        const transfigure = itemIndex => {
                             activePlayer.shuffle();
                             const cheapos = activePlayer.draw.filter(card => {return card.cost <= 5;});
                             if (cheapos.length) {
-                                const drawCheapo = index => {
-                                    const drawIndex = activePlayer.draw.indexOf(cheapo[index]);
+                                const drawCheapo = cheapoIndex => {
+                                    const drawIndex = activePlayer.draw.indexOf(cheapos[cheapoIndex]);
                                     const tempCard = activePlayer.draw[drawIndex];
                                     activePlayer.draw[drawIndex] = activePlayer.draw[0];
                                     activePlayer.draw[0] = tempCard;
@@ -1620,18 +1619,18 @@ document.getElementById("submitPlayers").onclick = () => {
                                     activePlayer.petrified = false;
                                     activePlayer.drawCards(1);
                                     activePlayer.petrified = tempPetrify;
+                                    activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(items[itemIndex]), false);
+                                    activePlayer.shuffle();
                                 };
                                 if (cheapos.length > 1) {
                                     playerChoice("Add to hand:", () => {return cheapos.length;}, 1, () => {
                                         for (let i = 0; i < cheapos.length; i++) {
                                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapos[i].img.src}">`;
-                                            document.getElementsByClassName("choice")[i].onclick = () => {drawCheapo(i)};
+                                            document.getElementsByClassName("choice")[i].onclick = () => {drawCheapo(i);};
                                         }
                                     });
                                 }
                                 else drawCheapo(0);
-                                activePlayer.forcedDiscardAt(index, false);
-                                activePlayer.shuffle();
                             }
                         };
                         if (items.length > 1) {
