@@ -862,7 +862,6 @@ document.getElementById("submitPlayers").onclick = () => {
                     for (let i = 0; i < numberOfCards; i++) {
                         // moves a card from the draw pile to your hand
                         if (this.draw.length > 0) {
-                            this.draw[0].generateOnClick();
                             this.hand.push(this.draw[0]);
                             if (this.draw[0].passive) {
                                 this._passives.push(this.draw[0]);
@@ -878,6 +877,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             i--;
                         }
                     }
+                    this.hand.forEach(card => {card.generateOnClick();});
                 }
             }
             endTurn() {
