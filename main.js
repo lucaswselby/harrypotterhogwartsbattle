@@ -1676,18 +1676,25 @@ document.getElementById("submitPlayers").onclick = () => {
                                             // reactivate end turn
                                             else document.getElementById("endTurn").style.display = "initial";
 
-                                            // make images bigger
+                                            // magnify images
                                             for (let i = 0; i < document.getElementsByTagName("IMG").length; i++) {
                                                 const img = document.getElementsByTagName("IMG")[i];
-                                                img.addEventListener("contextmenu", event => { 
+                                                const magnify = event => {
                                                     event.preventDefault();
-                                                    const enhanceContainer = document.createElement("div");
-                                                    enhanceContainer.id = "enhanceContainer";
-                                                    enhanceContainer.onclick = () => {enhanceContainer.remove();};
-                                                    const enhancedImg = img.cloneNode();
-                                                    enhancedImg.classList = [];
-                                                    enhanceContainer.appendChild(enhancedImg);
-                                                    document.getElementsByTagName("MAIN")[0].appendChild(enhanceContainer);
+                                                    const magnifyContainer = document.createElement("div");
+                                                    magnifyContainer.id = "enhanceContainer";
+                                                    magnifyContainer.onclick = () => {magnifyContainer.remove();};
+                                                    const magnifiedImg = img.cloneNode();
+                                                    magnifiedImg.classList = [];
+                                                    magnifyContainer.appendChild(magnifiedImg);
+                                                    document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
+                                                };
+                                                img.addEventListener("contextmenu", magnify);
+                                                img.addEventListener("mousedown", event => {
+                                                    const longPressMagnify = setTimeout(() => {
+                                                        magnify(event);
+                                                    }, 500);
+                                                    img.addEventListener("mouseup", () => {clearTimeout(longPressMagnify);});
                                                 });
                                             }
                                         }
