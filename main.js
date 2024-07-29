@@ -20,12 +20,21 @@ document.getElementById("game").onchange = () => {
 }
 
 document.getElementById("submitPlayers").onclick = () => {
-    // can't have more than one of each hero
+    // can't have more than one of each hero or proficiency
     let continueGame = true;
     for (let i = 0; i < document.getElementsByClassName("playerHero").length - 1; i++) {
         if (document.getElementsByClassName("playerHero")[i].value) {
             for (let j = i + 1; j < document.getElementsByClassName("playerHero").length; j++) {
                 if (document.getElementsByClassName("playerHero")[i].value === document.getElementsByClassName("playerHero")[j].value) {
+                    continueGame = false;
+                }
+            }
+        }
+    }
+    for (let i = 0; i < document.getElementsByClassName("playerProficiency").length - 1; i++) {
+        if (document.getElementsByClassName("playerProficiency")[i].value) {
+            for (let j = i + 1; j < document.getElementsByClassName("playerProficiency").length; j++) {
+                if (document.getElementsByClassName("playerProficiency")[i].value === document.getElementsByClassName("playerProficiency")[j].value) {
                     continueGame = false;
                 }
             }
@@ -1776,6 +1785,6 @@ document.getElementById("submitPlayers").onclick = () => {
         }
     }
     else {
-        alert("Can't have more than one of each hero.");
+        alert("Can't have more than one of each hero or proficiency.");
     }
 }
