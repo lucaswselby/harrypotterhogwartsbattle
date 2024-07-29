@@ -1701,6 +1701,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 };
                                                 img.addEventListener("contextmenu", magnify);
                                                 img.addEventListener("mousedown", event => {
+                                                    event.preventDefault();
                                                     const longPressMagnify = setTimeout(() => {
                                                         magnify(event);
                                                     }, 500);
