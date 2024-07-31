@@ -1703,7 +1703,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 img.addEventListener("contextmenu", magnify);
                                                 const tempOnClick = img.onclick;
                                                 img.addEventListener("touchstart", event => {
-                                                    event.preventDefault();
+                                                    //event.preventDefault();
                                                     const longPressMagnify = setTimeout(() => {
                                                         magnify(event);
                                                         img.onclick = tempOnClick;
