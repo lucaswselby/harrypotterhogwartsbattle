@@ -1701,7 +1701,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
                                                 };
                                                 img.addEventListener("contextmenu", magnify);
-                                                const tempOnClick = img.onclick;
+                                                img.onLongPress = magnify;
+                                                /*const tempOnClick = img.onclick;
                                                 img.addEventListener("touchstart", event => {
                                                     const longPressMagnify = setTimeout(() => {
                                                         event.preventDefault();
@@ -1712,7 +1713,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                         clearTimeout(longPressMagnify);
                                                         img.onclick = tempOnClick;
                                                     });
-                                                });
+                                                });*/
                                             }
                                         }
 
