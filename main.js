@@ -862,11 +862,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     for (let i = 0; i < numberOfCards; i++) {
                         // moves a card from the draw pile to your hand
                         if (this.draw.length > 0) {
-                            this.hand.push(this.draw[0]);
-                            if (this.draw[0].passive) {
-                                this._passives.push(this.draw[0]);
+                            this.hand.push(this._draw.shift());
+                            if (this.hand[this.hand.length - 1].passive) {
+                                this._passives.push(this.hand[this.hand.length - 1]);
                             }
-                            this._draw.shift();
                             if (this === activePlayer) {
                                 document.getElementById("playerHand").appendChild(this.hand[this.hand.length - 1].img);
                             }
