@@ -1701,9 +1701,9 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
                                                 };
                                                 img.addEventListener("contextmenu", magnify);
+                                                const tempOnClick = img.onclick;
                                                 img.addEventListener("touchstart", event => {
                                                     event.preventDefault();
-                                                    const tempOnClick = img.onclick;
                                                     const longPressMagnify = setTimeout(() => {
                                                         magnify(event);
                                                         img.onclick = tempOnClick;
@@ -1711,6 +1711,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     img.addEventListener("touchend", () => {
                                                         clearTimeout(longPressMagnify);
                                                         img.onclick = tempOnClick;
+                                                        tempOnClick();
                                                     });
                                                 });
                                             }
