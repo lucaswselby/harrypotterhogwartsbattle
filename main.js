@@ -1704,10 +1704,15 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 img.addEventListener("contextmenu", magnify);
                                                 img.addEventListener("touchstart", event => {
                                                     event.preventDefault();
+                                                    const tempOnClick = img.onclick;
                                                     const longPressMagnify = setTimeout(() => {
                                                         magnify(event);
+                                                        img.onclick = tempOnClick;
                                                     }, 500);
-                                                    img.addEventListener("touchend", () => {clearTimeout(longPressMagnify);});
+                                                    img.addEventListener("touchend", () => {
+                                                        clearTimeout(longPressMagnify);
+                                                        img.onclick = tempOnClick;
+                                                    });
                                                 });
                                             }
                                         }
