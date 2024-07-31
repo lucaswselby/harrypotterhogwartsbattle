@@ -1701,19 +1701,18 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
                                                 };
                                                 img.addEventListener("contextmenu", magnify);
-                                                img.onLongPress = magnify;
-                                                /*const tempOnClick = img.onclick;
+                                                const tempOnClick = img.onclick;
                                                 img.addEventListener("touchstart", event => {
                                                     const longPressMagnify = setTimeout(() => {
                                                         event.preventDefault();
                                                         magnify(event);
                                                         img.onclick = tempOnClick;
-                                                    }, 500);
+                                                    }, getLongPressTimeout() - 100);
                                                     img.addEventListener("touchend", () => {
                                                         clearTimeout(longPressMagnify);
                                                         img.onclick = tempOnClick;
                                                     });
-                                                });*/
+                                                });
                                             }
                                         }
 
