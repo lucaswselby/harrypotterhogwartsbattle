@@ -1707,7 +1707,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                         event.preventDefault();
                                                         magnify(event);
                                                         img.onclick = tempOnClick;
-                                                    }, getLongPressTimeout() - 100);
+                                                    }, 400);
                                                     img.addEventListener("touchend", () => {
                                                         clearTimeout(longPressMagnify);
                                                         img.onclick = tempOnClick;
