@@ -1689,6 +1689,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                                             // magnify images
                                             let timer;
+                                            let isLongPress = false;
                                             for (let i = 0; i < document.getElementsByTagName("IMG").length; i++) {
                                                 const img = document.getElementsByTagName("IMG")[i];
                                                 const magnify = event => {
@@ -1701,21 +1702,22 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     magnifyContainer.appendChild(magnifiedImg);
                                                     document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
                                                 };
-                                                img.addEventListener("contextmenu", magnify);
-                                                const image = document.getElementsByTagName("IMG")[i];
-                                                image.addEventListener('mousedown', (event) => {
+                                                img.addEventListener("contextmenu", event => {magnify(event);});
+                                                img.addEventListener('touchstart', (event) => {
+                                                    isLongPress = false;
                                                     timer = setTimeout(() => {
+                                                        isLongPress = true;
                                                         magnify(event);
-                                                    }, 800); // 800ms for long press detection
-                                                });
-                                                image.addEventListener('mouseup', () => {
+                                                    }, 500);
+                                                });                                    
+                                                img.addEventListener('touchend', () => {
                                                     clearTimeout(timer);
-                                                });
-                                                image.addEventListener('mouseleave', () => {
+                                                });                                    
+                                                img.addEventListener('touchmove', () => {
                                                     clearTimeout(timer);
-                                                });
-                                                image.addEventListener('click', () => {
-                                                    if (timer) clearTimeout(timer);
+                                                });                                    
+                                                img.addEventListener('touchcancel', () => {
+                                                    clearTimeout(timer);
                                                 });
                                             }
                                         }
