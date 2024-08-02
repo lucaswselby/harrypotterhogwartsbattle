@@ -1688,6 +1688,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                             else document.getElementById("endTurn").style.display = "initial";
 
                                             // magnify images
+                                            let timer;
                                             for (let i = 0; i < document.getElementsByTagName("IMG").length; i++) {
                                                 const img = document.getElementsByTagName("IMG")[i];
                                                 const magnify = event => {
@@ -1701,6 +1702,21 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
                                                 };
                                                 img.addEventListener("contextmenu", magnify);
+                                                const image = document.getElementsByTagName("IMG")[i];
+                                                image.addEventListener('mousedown', (event) => {
+                                                    timer = setTimeout(() => {
+                                                        magnify(event);
+                                                    }, 800); // 800ms for long press detection
+                                                });
+                                                image.addEventListener('mouseup', () => {
+                                                    clearTimeout(timer);
+                                                });
+                                                image.addEventListener('mouseleave', () => {
+                                                    clearTimeout(timer);
+                                                });
+                                                image.addEventListener('click', () => {
+                                                    if (timer) clearTimeout(timer);
+                                                });
                                             }
                                         }
 
