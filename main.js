@@ -1309,10 +1309,10 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (!activeVillains.filter(villain => {return villain.health}).length && !inactiveVillains.length) {
                                 // Voldemort
                                 activeVillains = [];
-                                if (activeGame === "Game 5" && activeVillains[0] !== lordVoldemort1) {
+                                if (activeGame === "Game 5" && this !== lordVoldemort1) {
                                     activeVillains.push(lordVoldemort1);
                                 }
-                                else if (activeGame === "Game 6" && activeVillains[0] !== lordVoldemort2) {
+                                else if (activeGame === "Game 6" && this !== lordVoldemort2) {
                                     activeVillains.push(lordVoldemort2);
                                 }
                                 else alert("Victory!");
@@ -1711,20 +1711,6 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
                                                 };
                                                 img.oncontextmenu = event => {magnify(event);};
-                                                /*img.addEventListener('touchstart', event => {
-                                                    timer = setTimeout(() => {
-                                                        magnify(event);
-                                                    }, 500);
-                                                });                                    
-                                                img.addEventListener('touchend', () => {
-                                                    clearTimeout(timer);
-                                                });                                    
-                                                img.addEventListener('touchmove', () => {
-                                                    clearTimeout(timer);
-                                                });                                    
-                                                img.addEventListener('touchcancel', () => {
-                                                    clearTimeout(timer);
-                                                });*/
                                             }
                                         }
 
