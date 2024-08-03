@@ -443,7 +443,7 @@ main {
     width: fit-content;
 }
 
-#magnifyContainer {
+.magnifyContainer {
     position: fixed;
     top: 0;
     left: 0;
@@ -454,7 +454,7 @@ main {
     justify-content: center;
     align-items: center;
 }
-#magnifyContainer img {
+.magnifyContainer img {
     all: unset;
     max-height: 100%;
     max-width: 100%;

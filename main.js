@@ -19,6 +19,13 @@ document.getElementById("game").onchange = () => {
     }
 }
 
+// prep for mobile magnify
+window.oncontextmenu = event => {
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+};
+
 document.getElementById("submitPlayers").onclick = () => {
     // can't have more than one of each hero or proficiency
     let continueGame = true;
@@ -1689,24 +1696,23 @@ document.getElementById("submitPlayers").onclick = () => {
 
                                             // magnify images
                                             let timer;
-                                            let isLongPress = false;
                                             for (let i = 0; i < document.getElementsByTagName("IMG").length; i++) {
                                                 const img = document.getElementsByTagName("IMG")[i];
                                                 const magnify = event => {
                                                     event.preventDefault();
                                                     const magnifyContainer = document.createElement("div");
-                                                    magnifyContainer.id = "magnifyContainer";
-                                                    magnifyContainer.onclick = () => {magnifyContainer.remove();};
+                                                    magnifyContainer.className = "magnifyContainer";
+                                                    magnifyContainer.onclick = () => {
+                                                        while(document.getElementsByClassName("magnifyContainer")[0]) document.getElementsByClassName("magnifyContainer")[0].remove();
+                                                    };
                                                     const magnifiedImg = img.cloneNode();
                                                     magnifiedImg.classList = [];
                                                     magnifyContainer.appendChild(magnifiedImg);
                                                     document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
                                                 };
-                                                img.addEventListener("contextmenu", event => {magnify(event);});
-                                                img.addEventListener('touchstart', (event) => {
-                                                    isLongPress = false;
+                                                img.oncontextmenu = event => {magnify(event);};
+                                                /*img.addEventListener('touchstart', event => {
                                                     timer = setTimeout(() => {
-                                                        isLongPress = true;
                                                         magnify(event);
                                                     }, 500);
                                                 });                                    
@@ -1718,7 +1724,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 });                                    
                                                 img.addEventListener('touchcancel', () => {
                                                     clearTimeout(timer);
-                                                });
+                                                });*/
                                             }
                                         }
 
