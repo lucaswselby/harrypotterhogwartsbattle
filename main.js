@@ -250,7 +250,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         activePlayer.attack++;
                     }
                     // Fleur Delacour effect
-                    if (activePlayer.passives.includes(fleurDelacour) && this.type === "ally") {
+                    if (activePlayer.passives.includes(fleurDelacour) && this.type === "ally" && this !== fleurDelacour) {
                         activePlayer.health += 2;
                         activePlayer.passives.splice(activePlayer.passives.indexOf(fleurDelacour), 1);
                     }
