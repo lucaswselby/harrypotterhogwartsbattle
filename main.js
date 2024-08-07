@@ -212,8 +212,8 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // darken and brighten image
         const darken = element => {
-            element.classList.toggle("darken");
-            setTimeout(() => {element.classList.toggle("darken");}, 2000);
+            element.style.animation = "darken 2s";
+            setTimeout(() => {element.style.animation = "none";}, 2000);
         };
 
         // cards
