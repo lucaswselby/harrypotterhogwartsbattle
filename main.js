@@ -1468,6 +1468,9 @@ document.getElementById("submitPlayers").onclick = () => {
             <div id="playerHand"></div>
             <input type="button" id="endTurn" value="End Turn">
         </div>`;
+        const disableScreen = document.createElement("DIV");
+        disableScreen.id = "disableScreen";
+        document.getElementsByTagName("MAIN")[0].appendChild(disableScreen);
 
         // add locations to board
         locations.toReversed().forEach(location => {document.getElementById("locations").appendChild(location.img);});
@@ -1554,8 +1557,8 @@ document.getElementById("submitPlayers").onclick = () => {
         // start a new turn
         let firstTurn = true;
         const startTurn = () => {
-            // deactivate end turn
-            document.getElementById("endTurn").style.display = "none";
+            // disable all events
+            disableScreen.style.display = "block";
 
             // new active player
             activePlayer = players.indexOf(activePlayer) < players.length - 1 ? players[players.indexOf(activePlayer) + 1] : players[0];
@@ -1691,8 +1694,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementById("endTurn").style.display = "initial";
                                                 }, 1000);
                                             }
-                                            // reactivate end turn
-                                            else document.getElementById("endTurn").style.display = "initial";
+                                            // disable all events
+                                            disableScreen.style.display = "none";
 
                                             // magnify images
                                             let timer;

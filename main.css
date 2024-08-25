@@ -393,6 +393,14 @@ main {
     width: fit-content;
 }
 
+#disableScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+}
+
 .magnifyContainer {
     position: fixed;
     top: 0;
