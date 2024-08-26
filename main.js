@@ -1170,6 +1170,10 @@ document.getElementById("submitPlayers").onclick = () => {
         const morsmordre4 = new DarkArtsEvent("Morsmordre", "Game 6", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
         const sectumsempra1 = new DarkArtsEvent("Sectumsempra", "Game 6", () => {players.forEach(player => {player.health -= 2;});});
         const sectumsempra2 = new DarkArtsEvent("Sectumsempra", "Game 6", () => {players.forEach(player => {player.health -= 2;});});
+        const avadaKedavra3 = new DarkArtsEvent("Avada Kedavra", "Game 7", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
+        const crucio3 = new DarkArtsEvent("Crucio", "Game 7", () => {activePlayer.health--;});
+        const fiendfyre = new DarkArtsEvent("Fiendfyre", "Game 7", () => {players.forEach(player => {player.health -= 3;});});
+        const imperio3 = new DarkArtsEvent("Imperio", "Game 7", () => {const otherPlayers = players.filter(player => {return player !== activePlayer;}); if (otherPlayers.length) {if (otherPlayers.length > 1) {playerChoice("Choose to lose 2 health:", () => {return otherPlayers.length;}, 1, () => {for (let i = 0; i < otherPlayers.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${otherPlayers[i].img.src}"><p>Health: ${otherPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {otherPlayers[i].health -= 2;};}});} else otherPlayers[0].health -= 2;}});
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         if (activeGame !== "Game 1") {
             darkArtsEvents.push(handOfGlory1, handOfGlory2, obliviate, poison, relashio);
@@ -1181,7 +1185,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         darkArtsEvents.push(avadaKedavra2, crucio2, educationalDecree1, educationalDecree2, imperio2, legilimency, morsmordre3);
                         if (activeGame !== "Game 5") {
                             darkArtsEvents.push(morsmordre4, sectumsempra1, sectumsempra2);
-                            // TO-DO: add future games' DAEs to darkArtsEvents if selected
+                            if (activeGame !== "Game 6")
+                                darkArtsEvents.push(avadaKedavra3, crucio3, fiendfyre, imperio3);
                         }
                     }
                 }
