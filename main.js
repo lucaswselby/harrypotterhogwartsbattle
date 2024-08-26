@@ -197,7 +197,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (activeGame === "Game 6" && activeVillains[0] !== lordVoldemort2) {
                     return lordVoldemort2;
                 }
-                // add other games' Voldemorts
+                else if (activeGame === "Game 7" && activeVillains[0] !== lordVoldemort3) {
+                    return lordVoldemort3;
+                }
             }
             return null;
         };
@@ -480,7 +482,6 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
-        // TO-DO: add other games' Hogwarts cards to hogwartsCards based on the selected game
         if (activeGame !== "Game 1") {
             hogwartsCards.push(arthurWeasley, dobbyTheHouseElf, expelliarmus1, expelliarmus2, fawkesThePhoenix, finite1, finite2, gilderoyLockhart, ginnyWeasley, mollyWeasley, nimbusTwoThousandAndOne1, nimbusTwoThousandAndOne2, polyjuicePotion1, polyjuicePotion2);
             if (activeGame !== "Game 2") {
@@ -1039,6 +1040,11 @@ document.getElementById("submitPlayers").onclick = () => {
                         });
                     }
 
+                    // Lord Voldemort Game 7
+                    if (activeVillains.includes(lordVoldemort3)) {
+                        players.forEach(player => {player.health--;});
+                    }
+
                     // removes location token
                     this.removed = true;
                     if (this === locations[0]) {
@@ -1337,6 +1343,9 @@ document.getElementById("submitPlayers").onclick = () => {
                                 else if (activeGame === "Game 6" && this !== lordVoldemort2) {
                                     activeVillains.push(lordVoldemort2);
                                 }
+                                else if (activeGame === "Game 7" && this !== lordVoldemort3) {
+                                    activeVillains.push(lordVoldemort3);
+                                }
                                 else alert("Victory!");
                                 populateVillains();
                                 document.getElementById("villainDraw").innerHTML = "";
@@ -1396,7 +1405,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const bellatrixLestrange = new Villain("Bellatrix Lestrange", "Game 6", "villain", 9, "health", () => {}, () => {players.forEach(player => {const items = player.discard.filter(card => {return card.type === "item"}); if (items.length) {const discardToHand = index => {player.draw.unshift(items[index]); player.discard.splice(index, 1); player.drawCards(1);}; if (items.length > 1) {playerChoice(`${player.hero} move from discard to hand:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
         const fenrirGreyback = new Villain("Fenrir Greyback", "Game 6", "villain", 8, "health", () => {}, () => {players.forEach(player => {player.health += 3;}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
         const lordVoldemort2 = new Villain("Lord Voldemort", "Game 6", "villain", 15, "health", () => {rollHouseDie("green", true, false);}, () => {});
-        // TO-DO: add other games' villains to villains if selected
+        const lordVoldemort3 = new Villain("Lord Voldemort", "Game 7", "villain", 20, "health", () => {activeLocation.addToLocation();}, () => {});
         let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
             inactiveVillains.push(basilisk, luciusMalfoy, tomRiddle);
@@ -1408,7 +1417,6 @@ document.getElementById("submitPlayers").onclick = () => {
                         inactiveVillains.push(deathEater2, doloresUmbridge);
                         if (activeGame !== "Game 5") {
                             inactiveVillains.push(bellatrixLestrange, fenrirGreyback);
-                            // TO-DO: add Game 6 villains
                         }
                     }
                 }
@@ -1799,7 +1807,9 @@ document.getElementById("submitPlayers").onclick = () => {
                             else if (activeGame === "Game 6" && activeVillains[0] !== lordVoldemort2) {
                                 document.getElementById("villainDraw").appendChild(lordVoldemort2.img);
                             }
-                            // TO-DO: add other games' Voldemorts
+                            else if (activeGame === "Game 7" && activeVillains[0] !== lordVoldemort3) {
+                                document.getElementById("villainDraw").appendChild(lordVoldemort3.img);
+                            }
                         }
                     }
                     // shift remaining villains to the left
