@@ -614,12 +614,13 @@ document.getElementById("submitPlayers").onclick = () => {
                         else {
                             // Neville Longbottom special
                             if (!this.gainedHealth) {
-                                let nevilleSpecial = 0;
                                 if (activePlayer.hero === "Neville Longbottom" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                                    nevilleSpecial++;
+                                    health++;
                                 }
                                 this.gainedHealth = true;
-                                health += nevilleSpecial;
+                            }
+                            else if (activePlayer.hero === "Neville Longbottom" && activeGame === "Game 7") {
+                                health++;
                             }
 
                             // Herbology proficiency
@@ -743,13 +744,18 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 // Hermione Granger special
                 if (this.spellsCast === 4 && this.hero === "Hermione Granger" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                    playerChoice(`Gain 1 influence:`, () => {return players.length;}, 1, () => {
-                        for (let i = 0; i < players.length; i++) {
-                            document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
-                            document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p>`;
-                            document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++;};
-                        }
-                    });
+                    if (activeGame === "Game 7") {
+                        players.forEach(player => {player.influence++;});
+                    }
+                    else {
+                        playerChoice(`Gain 1 influence:`, () => {return players.length;}, 1, () => {
+                            for (let i = 0; i < players.length; i++) {
+                                document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
+                                document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p>`;
+                                document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++;};
+                            }
+                        });
+                    }
                 }
 
                 this.potionsProficiency();
@@ -784,18 +790,23 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 // Ron Weasley special
                 if (this.attacks === 3 && this.hero === "Ron Weasley" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                    const hurtPlayers = players.filter(player => {return player.health < 10 && !player.stunned;});
-                    if (hurtPlayers.length && canHeal()) {
-                        if (hurtPlayers.length > 1) {
-                            playerChoice(`Gain 2 health:`, () => {return hurtPlayers.length;}, 1, () => {
-                                for (let i = 0; i < hurtPlayers.length; i++) {
-                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
-                                    document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
-                                    document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
-                                }
-                            });
+                    if (activeGame === "Game 7") {
+                        players.forEach(player => {player.health += 2;});
+                    }
+                    else {
+                        const hurtPlayers = players.filter(player => {return player.health < 10 && !player.stunned;});
+                        if (hurtPlayers.length && canHeal()) {
+                            if (hurtPlayers.length > 1) {
+                                playerChoice(`Gain 2 health:`, () => {return hurtPlayers.length;}, 1, () => {
+                                    for (let i = 0; i < hurtPlayers.length; i++) {
+                                        document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
+                                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                    }
+                                });
+                            }
+                            else hurtPlayers[0].health += 2;
                         }
-                        else hurtPlayers[0].health += 2;
                     }
                 }
             }
@@ -1014,7 +1025,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy || bartyCrouchJr.health === 0) {
                     // Harry Potter special
                     if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                        playerChoice(`Gain 1 attack:`, () => {return players.length;}, 1, () => {
+                        playerChoice(`Gain 1 attack:`, () => {return players.length;}, activeGame === "Game 7" ? 2 : 1, () => {
                             for (let i = 0; i < players.length; i++) {
                                 document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
                                 document.getElementsByClassName("choice")[i].onclick = () => {players[i].attack++;};
