@@ -185,6 +185,12 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (result === "attack") arithmancyCheck(() => {activePlayer.attack++;});
                 else if (result === "health") arithmancyCheck(() => {activePlayer.health++;});
                 else alert(`But seriously, ${color} is not a Hogwarts die color.`);
+
+                // Destroy Horcrux
+                if (events.length && events[0].destroys.includes(result)) {
+                    activePlayer.horcruxesDestroyed.push(events.shift());
+                    if (events.length) document.getElementById("events").appendChild(events[0].img);
+                }
             }
         };
 
@@ -197,7 +203,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (activeGame === "Game 6" && activeVillains[0] !== lordVoldemort2) {
                     return lordVoldemort2;
                 }
-                else if (activeGame === "Game 7" && activeVillains[0] !== lordVoldemort3) {
+                else if (activeGame === "Game 7" && (activeVillains[0] !== lordVoldemort3 || events.length)) {
                     return lordVoldemort3;
                 }
             }
@@ -295,8 +301,16 @@ document.getElementById("submitPlayers").onclick = () => {
                             };
                         });
                     }
+                    // Horcrux 1 effect
+                    if (events.length && events[0] === horcrux1 && this.type === "ally") {
+                        activePlayer.health--;
+                        darken(horcrux1.img);
+                    }
 
                     if (this.type === "spell") activePlayer.spellsCast++;
+                    else if (this.type === "ally") activePlayer.alliesCast++;
+                    else if (this.type === "item") activePlayer.itemsCast++;
+                    else alert(`ERROR: ${this._name} has type "${this.type}".`);
                 }
             }
             get passive() {
@@ -591,6 +605,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._gainedHealth = false;
                 this._attacks = 0;
                 this._healthGained = 0;
+                this._horcruxesDestroyed = [];
             }
             get hero() {
                 return this._hero;
@@ -782,6 +797,26 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._alliesCast = alliesCast;
 
                 this.potionsProficiency();
+
+                // Horcrux 1 reward
+                if (this.horcruxesDestroyed.includes(horcrux1) && this.alliesCast === 2) {
+                    const hurtPlayers = players.filter(player => {return player.health < 10});
+                    if (hurtPlayers.length) {
+                        if (hurtPlayers.length > 1) {
+                            playerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
+                                for (let i = 0; i < hurtPlayers.length; i++) {
+                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers.img.cloneNode());
+                                    document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers.health}</p>`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                }
+                            });
+                        }
+                        else {
+                            hurtPlayers[0].health += 2;
+                            darken(horcrux1.img);
+                        }
+                    }
+                }
             }
             get gainedHealth() {
                 return this._gainedHealth;
@@ -819,6 +854,13 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             get healthGained() {
                 return this._healthGained;
+            }
+            get horcruxesDestroyed() {
+                return this.horcruxesDestroyed;
+            }
+            addDestroyedHorcrux(destroyedHorcrux) {
+                this._horcruxesDestroyed.push(destroyedHorcrux);
+                document.getElementById("horcruxesDestroyed").appendChild(destroyedHorcrux.img);
             }
 
             discardAt(index) {
@@ -908,6 +950,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.petrified = false;
                 this.heroImage.remove();
                 this.proficiencyImage.remove();
+                document.getElementById("horcruxesDestroyed").innerHTML = "";
                 while (this.hand.length) this.discardAt(0);
                 this.attack = 0;
                 this.influence = 0;
@@ -1230,7 +1273,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._type = type;
                 this._maxHealth = health;
                 this._health = health;
-                this._takenDamage = false;
+                this._damageTaken = 0;
                 this._healthType = healthType;
                 this._effect = effect;
                 this._reward = reward;
@@ -1257,10 +1300,10 @@ document.getElementById("submitPlayers").onclick = () => {
             set health(health) {
                 if (health > this._maxHealth) health = this._maxHealth;
                 else if (health < this.health) {
-                    this.takenDamage = true;
+                    this.damageTaken++;
 
                     // Confundus effect
-                    if (activeVillains.every(villain => {return villain.takenDamage}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) activeLocation.removeFromLocation();
+                    if (activeVillains.every(villain => {return villain.damageTaken}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) activeLocation.removeFromLocation();
 
                     // Care of Magical Creatures proficiency
                     if (this.health === this._maxHealth && activePlayer.proficiency === "Care Of Magical Creatures" && this.type === "creature") {
@@ -1276,6 +1319,12 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                             else hurtPlayers[0].health += 2;
                         }
+                    }
+
+                    // Horcrux 2 effect
+                    if (events[0] === horcrux2 && this.damageTaken === 2) {
+                        activePlayer.health -= 2;
+                        darken(horcrux2.img);
                     }
                 }
                 this._health = health;
@@ -1354,11 +1403,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     }, 1000);
                 }
             }
-            get takenDamage() {
-                return this._takenDamage;
+            get damageTaken() {
+                return this._damageTaken;
             }
-            set takenDamage(takenDamage) {
-                this._takenDamage = takenDamage;
+            set damageTaken(damageTaken) {
+                this._damageTaken = damageTaken;
             }
             get healthType() {
                 return this._healthType;
@@ -1433,10 +1482,13 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // events (horcruxes)
         class Event {
-            constructor(name, effect, reward) {
-                this._img = `<img class="event" src="./images/${activeGame}/${src(name)}" alt="${name}">`;
+            constructor(name, effect, destroys) {
+                this._img = document.createElement("IMG");
+                this._img.className = "event";
+                this._img.src = `./images/${activeGame}/${src(name)}`;
+                this._img.alt = name;
                 this._effect = effect;
-                this._reward = reward;
+                this._destroys = destroys;
             }
             get img() {
                 return this._img;
@@ -1444,18 +1496,13 @@ document.getElementById("submitPlayers").onclick = () => {
             effect() {
                 this._effect();
             }
-            reward() {
-                this._reward();
+            get destroys() {
+                return this._destroys;
             }
         }
-        const horcrux1 = new Event("Horcrux 1", () => {}, () => {}); // TO-DO: complete horcruxes
-        let events = [horcrux1];
-        let activeEvent = events[0];
-
-        // display cards in order
-        const stackCards = array => {
-            return array.reduce((prev, curr) => {return prev.concat(curr.img);}, array[0].img);
-        }
+        const horcrux1 = new Event("Horcrux 1", () => {}, ["health", "draw"]);
+        const horcrux2 = new Event("Horcrux 2", () => {}, ["attack", "influence"]);
+        let events = [horcrux1, horcrux2];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
@@ -1467,9 +1514,7 @@ document.getElementById("submitPlayers").onclick = () => {
             <div id="villainDraw">
                 <img class="villain" src="./images/villainBack.png" alt="Back of villain card">
             </div>
-            <div id="events">
-                ${activeGame === "Game 7" ? activeEvent.img : ""}
-            </div>
+            <div id="events"></div>
             <div id="villainDiscard"></div>
             <div class="activeVillain" id="villain1"></div>
             <div class="activeVillain" id="villain2"></div>
@@ -1489,6 +1534,7 @@ document.getElementById("submitPlayers").onclick = () => {
         </div>
         <div id=playerContainer>
             <div id="heroImage" style="display: flex"></div>
+            <div id="horcruxesDestroyed"></div>
             <div id="playerBoardContainer">
                 <img id="playerBoard" src="./images/playerBoard.png" alt="player board">
                 <img id="healthTracker" src="./images/healthTracker.png" alt="health tracker">
@@ -1502,8 +1548,9 @@ document.getElementById("submitPlayers").onclick = () => {
         disableScreen.id = "disableScreen";
         document.getElementsByTagName("MAIN")[0].appendChild(disableScreen);
 
-        // add locations to board
+        // add locations and events to board
         locations.toReversed().forEach(location => {document.getElementById("locations").appendChild(location.img);});
+        document.getElementById("events").appendChild(events[0].img);
 
         // Hogwarts Castle special
         if (hogwartsCastle.img) {
@@ -1543,7 +1590,7 @@ document.getElementById("submitPlayers").onclick = () => {
             for (let i = 0; i < activeVillains.length; i++) {
                 activeVillains[i].health = activeVillains[i].health;
                 const dealDamage = () => {
-                    if (!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].takenDamage) {
+                    if ((!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].damageTaken) && (activeVillains[i] !== lordVoldemort3 || !events.length)) {
                         if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
                             activePlayer.attack--;
                             activeVillains[i].health--;
@@ -1600,6 +1647,7 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.populateHand();
             document.getElementById("heroImage").appendChild(activePlayer.heroImage);
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
+            activePlayer.horcruxesDestroyed.forEach(horcrux => {document.getElementById("horcruxesDestroyed").appendChild(horcrux.img);});
             activePlayer.displayAttack();
             activePlayer.displayInfluence();
 
@@ -1686,6 +1734,28 @@ document.getElementById("submitPlayers").onclick = () => {
                 };
             }
 
+            // Horcrux 2 reward
+            if (activePlayer.horcruxesDestroyed.includes(horcrux2)) {
+                horcrux2.img.onclick = () => {
+                    if (activePlayer.hand.length >= 2) {
+                        if (activePlayer.hand.length > 2) {
+                            playerChoice("Discard:", () => {return activePlayer.hand.length;}, 2, () => {
+                                for (let i = 0; i < activePlayer.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand.img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
+                                }
+                            });
+                        }
+                        else {
+                            activePlayer.forcedDiscardAt(0, false);
+                            activePlayer.forcedDiscardAt(0, false);
+                        }
+                        activeLocation.removeFromLocation();
+                        horcrux2.img.onclick = () => {};
+                    }
+                };
+            }
+
             // update activeDarkArtsEvents
             for (let i = 0; i < activeLocation.darkArtsEventDraws + (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) ? 1 : 0; i++) {
                 if (!darkArtsEvents.length) {
@@ -1749,7 +1819,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                                         // unpetrify villain
                                         if (activeVillains[i].petrifiedBy === activePlayer) activeVillains[i].petrifiedBy = null;
-                                        activeVillains[i].takenDamage = false;
+                                        activeVillains[i].damageTaken = 0;
                                     }, i * 1000);
                                 }
                             }, 1000);

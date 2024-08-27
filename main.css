@@ -305,6 +305,13 @@ main {
     width: 50%;
 }
 
+#horcruxesDestroyed {
+    display: flex;
+}
+#horcruxesDestroyed img {
+    width: calc(100% / 6);
+}
+
 #playerBoard {
     width: 100%;
 }
