@@ -1485,12 +1485,13 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // events (horcruxes)
         class Event {
-            constructor(name, destroys) {
+            constructor(name, destroys, effect) {
                 this._img = document.createElement("IMG");
                 this._img.className = "event";
                 this._img.src = `./images/${activeGame}/${src(name)}`;
                 this._img.alt = name;
                 this._destroys = destroys;
+                this._effect = effect;
             }
             get img() {
                 return this._img;
@@ -1504,11 +1505,15 @@ document.getElementById("submitPlayers").onclick = () => {
                     else this._destroys.splice(this.destroys.indexOf(token), 1);
                 }
             }
+            effect() {
+                this._effect();
+            }
         }
-        const horcrux1 = new Event("Horcrux 1", ["health", "draw"]);
-        const horcrux2 = new Event("Horcrux 2", ["attack", "influence"]);
-        const horcrux3 = new Event("Horcrux 3", ["attack", "health"]);
-        let events = [horcrux1, horcrux2];
+        const horcrux1 = new Event("Horcrux 1", ["health", "draw"], () => {});
+        const horcrux2 = new Event("Horcrux 2", ["attack", "influence"], () => {});
+        const horcrux3 = new Event("Horcrux 3", ["attack", "health"], () => {});
+        const horcrux4 = new Event("Horcrux 4", ["health", "influence"], () => {activeVillains.forEach(villain => {villain.health++;});});
+        let events = [horcrux1, horcrux2, horcrux3, horcrux4];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
@@ -1781,6 +1786,26 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 };
             }
+            // Horcrux 4 reward
+            if (activePlayer.horcruxesDestroyed.includes(horcrux4)) {
+                horcrux4.img.onclick = () => {
+                    if (activePlayer.hand.length) {
+                        if (activePlayer.hand.length > 1) {
+                            playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
+                                for (let i = 0; i < activePlayer.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand.img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
+                                }
+                            });
+                        }
+                        else {
+                            activePlayer.forcedDiscardAt(0, false);
+                        }
+                        rollHouseDie("yellow", false, false);
+                        horcrux4.img.onclick = () => {};
+                    }
+                };
+            }
 
             // update activeDarkArtsEvents
             for (let i = 0; i < activeLocation.darkArtsEventDraws + (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) ? 1 : 0; i++) {
@@ -1820,11 +1845,19 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementById("endTurn").style.display = "initial";
                                                 }, 1000);
                                             }
+
+                                            // Horcrux effects
+                                            if (events.length) {
+                                                setTimeout(() => {
+                                                    events[0].effect();
+                                                    darken(events[0].img);
+                                                }, 1000 + (invulnerableVoldemort() ? 1000 : 0));
+                                            }
+
                                             // disable all events
-                                            disableScreen.style.display = "none";
+                                            setTimeout(() => {disableScreen.style.display = "none";}, (invulnerableVoldemort() ? 1000 : 0) + (events.length ? 1000 : 0));
 
                                             // magnify images
-                                            let timer;
                                             for (let i = 0; i < document.getElementsByTagName("IMG").length; i++) {
                                                 const img = document.getElementsByTagName("IMG")[i];
                                                 const magnify = event => {
