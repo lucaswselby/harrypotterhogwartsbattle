@@ -187,9 +187,12 @@ document.getElementById("submitPlayers").onclick = () => {
                 else alert(`But seriously, ${color} is not a Hogwarts die color.`);
 
                 // Destroy Horcrux
-                if (events.length && events[0].destroys.includes(result)) {
-                    activePlayer.horcruxesDestroyed.push(events.shift());
-                    if (events.length) document.getElementById("events").appendChild(events[0].img);
+                if (events.length) {
+                    events[0].addToken(result);
+                    if (!events[0].destroys.length) {
+                        activePlayer.horcruxesDestroyed.push(events.shift());
+                        if (events.length) document.getElementById("events").appendChild(events[0].img);
+                    }
                 }
             }
         };
@@ -687,7 +690,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }                
             }
             set attack(attack) {
-                if (!this.stunned || activePlayer === this) {
+                if ((!this.stunned && (!events.length || events[0] !== horcrux3)) || activePlayer === this) {
                     // sets attack
                     this._attack = attack;
                     if (this._attack < 0) {
@@ -708,7 +711,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
             set influence(influence) {
-                if (!this.stunned || activePlayer === this) {
+                if ((!this.stunned && (!events.length || events[0] !== horcrux3)) || activePlayer === this) {
                     // sets influence
                     this._influence = influence;
                     if (this.influence < 0) {
@@ -1482,26 +1485,29 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // events (horcruxes)
         class Event {
-            constructor(name, effect, destroys) {
+            constructor(name, destroys) {
                 this._img = document.createElement("IMG");
                 this._img.className = "event";
                 this._img.src = `./images/${activeGame}/${src(name)}`;
                 this._img.alt = name;
-                this._effect = effect;
                 this._destroys = destroys;
             }
             get img() {
                 return this._img;
             }
-            effect() {
-                this._effect();
-            }
             get destroys() {
                 return this._destroys;
             }
+            addToken(token) {
+                if (this._destroys.includes(token)) {
+                    if (this._name.includes("1") || this._name.includes("2")) this._destroys = [];
+                    else this._destroys.splice(this.destroys.indexOf(token), 1);
+                }
+            }
         }
-        const horcrux1 = new Event("Horcrux 1", () => {}, ["health", "draw"]);
-        const horcrux2 = new Event("Horcrux 2", () => {}, ["attack", "influence"]);
+        const horcrux1 = new Event("Horcrux 1", ["health", "draw"]);
+        const horcrux2 = new Event("Horcrux 2", ["attack", "influence"]);
+        const horcrux3 = new Event("Horcrux 3", ["attack", "health"]);
         let events = [horcrux1, horcrux2];
 
         // display game
@@ -1752,6 +1758,26 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         activeLocation.removeFromLocation();
                         horcrux2.img.onclick = () => {};
+                    }
+                };
+            }
+            // Horcrux 3 reward
+            if (activePlayer.horcruxesDestroyed.includes(horcrux3)) {
+                horcrux3.img.onclick = () => {
+                    if (activePlayer.hand.length) {
+                        if (activePlayer.hand.length > 1) {
+                            playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
+                                for (let i = 0; i < activePlayer.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand.img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
+                                }
+                            });
+                        }
+                        else {
+                            activePlayer.forcedDiscardAt(0, false);
+                        }
+                        rollHouseDie("green", false, false);
+                        horcrux3.img.onclick = () => {};
                     }
                 };
             }
