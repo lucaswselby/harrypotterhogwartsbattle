@@ -1143,6 +1143,9 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                 }
+                else {
+                    darken(bartyCrouchJr.img);
+                }
             }
         }
         const diagonAlley = new Location("Diagon Alley", "Game 1", 1, 4, 1, () => {});
