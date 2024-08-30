@@ -682,14 +682,6 @@ document.getElementById("submitPlayers").onclick = () => {
             get attack() {
                 return this._attack;
             }
-            displayAttack() {
-                if (activePlayer === this) {
-                    document.getElementById("attackTokens").innerHTML = "";
-                    for (let i = 0; i < this.attack; i++) {
-                        document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
-                    }
-                }                
-            }
             set attack(attack) {
                 if ((!this.stunned && (!horcruxes.length || horcruxes[0] !== horcrux3)) || activePlayer === this) {
                     // sets attack
@@ -697,19 +689,18 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (this._attack < 0) {
                         this._attack = 0;
                     }
-                    this.displayAttack();
+
+                    // display attack icons
+                    if (activePlayer === this) {
+                        document.getElementById("attackTokens").innerHTML = "";
+                        for (let i = 0; i < this.attack; i++) {
+                            document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                        }
+                    }
                 }
             }
             get influence() {
                 return this._influence;
-            }
-            displayInfluence() {
-                if (activePlayer === this) {
-                    document.getElementById("influenceTokens").innerHTML = "";
-                    for (let i = 0; i < this.influence; i++) {
-                        document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
-                    }
-                }
             }
             set influence(influence) {
                 if ((!this.stunned && (!horcruxes.length || horcruxes[0] !== horcrux3)) || activePlayer === this) {
@@ -718,7 +709,14 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (this.influence < 0) {
                         this._influence = 0;
                     }
-                    this.displayInfluence();
+                    
+                    // display influence icons
+                    if (activePlayer === this) {
+                        document.getElementById("influenceTokens").innerHTML = "";
+                        for (let i = 0; i < this.influence; i++) {
+                            document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
+                        }
+                    }
                 }
             }
             get draw() {
@@ -1662,8 +1660,8 @@ document.getElementById("submitPlayers").onclick = () => {
             document.getElementById("heroImage").appendChild(activePlayer.heroImage);
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
             activePlayer.horcruxesDestroyed.forEach(horcrux => {document.getElementById("horcruxesDestroyed").appendChild(horcrux.img);});
-            activePlayer.displayAttack();
-            activePlayer.displayInfluence();
+            activePlayer.attack = activePlayer.attack;
+            activePlayer.influence = activePlayer.influence;
 
             // unstun everyone
             players.forEach(player => {
