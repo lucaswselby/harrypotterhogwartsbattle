@@ -228,6 +228,20 @@ document.getElementById("submitPlayers").onclick = () => {
             setTimeout(() => {element.style.animation = "none";}, 2000);
         };
 
+        // magnify an image
+        const magnify = event => {
+            event.preventDefault();
+            const magnifyContainer = document.createElement("div");
+            magnifyContainer.className = "magnifyContainer";
+            magnifyContainer.onclick = () => {
+                while(document.getElementsByClassName("magnifyContainer")[0]) document.getElementsByClassName("magnifyContainer")[0].remove();
+            };
+            const magnifiedImg = event.target.cloneNode();
+            magnifiedImg.classList = [];
+            magnifyContainer.appendChild(magnifiedImg);
+            document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
+        };
+
         // cards
         class Card {
             constructor(name, game, type, cost, effect, passive, houseDie) {
@@ -1908,18 +1922,6 @@ document.getElementById("submitPlayers").onclick = () => {
                                             // magnify images
                                             for (let i = 0; i < document.getElementsByTagName("IMG").length; i++) {
                                                 const img = document.getElementsByTagName("IMG")[i];
-                                                const magnify = event => {
-                                                    event.preventDefault();
-                                                    const magnifyContainer = document.createElement("div");
-                                                    magnifyContainer.className = "magnifyContainer";
-                                                    magnifyContainer.onclick = () => {
-                                                        while(document.getElementsByClassName("magnifyContainer")[0]) document.getElementsByClassName("magnifyContainer")[0].remove();
-                                                    };
-                                                    const magnifiedImg = img.cloneNode();
-                                                    magnifiedImg.classList = [];
-                                                    magnifyContainer.appendChild(magnifiedImg);
-                                                    document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
-                                                };
                                                 img.oncontextmenu = event => {magnify(event);};
                                             }
                                         }
