@@ -891,6 +891,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             addDestroyedHorcrux(destroyedHorcrux) {
                 this._horcruxesDestroyed.push(destroyedHorcrux);
+                destroyedHorcrux.img.classList.toggle("event");
                 document.getElementById("horcruxesDestroyed").appendChild(destroyedHorcrux.img);
             }
 
@@ -1517,23 +1518,36 @@ document.getElementById("submitPlayers").onclick = () => {
         // events (horcruxes)
         class Horcrux {
             constructor(name, destroys, effect) {
+                this._name = name;
                 this._img = document.createElement("IMG");
                 this._img.className = "event";
                 this._img.src = `./images/Game 7/${src(name)}`;
                 this._img.alt = name;
                 this._destroys = destroys;
+                this._remaining = destroys;
                 this._effect = effect;
             }
             get img() {
                 return this._img;
             }
-            get destroys() {
-                return this._destroys;
+            get remaining() {
+                return this._remaining;
             }
             addToken(token) {
                 if (this._destroys.includes(token)) {
-                    if (this._name.includes("1") || this._name.includes("2")) this._destroys = [];
-                    else this._destroys.splice(this.destroys.indexOf(token), 1);
+                    if (this._name.includes("1") || this._name.includes("2")) this._remaining = [];
+                    else {                        
+                        this._remaining.splice(this.remaining.indexOf(token), 1);
+
+                        // add token img
+                        if (this._remaining.length) {
+                            const tokenImg = document.createElement("IMG");
+                            tokenImg.className = "token";
+                            tokenImg.src = `./images/${token}Token.png`;
+                            token.style.left = `${10 + 10 * this._destroys.indexOf(token)}%`;
+                            document.getElementById("events").appendChild(tokenImg);
+                        }
+                    }
                 }
             }
             effect() {

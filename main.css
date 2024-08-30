@@ -107,9 +107,16 @@ main {
     position: absolute;
     top: 39%;
 }
+
 #events {
     left: 27%;
 }
+.token {
+    position: absolute;
+    top: 62%;
+    height: 12%;
+}
+
 #villainDiscard {
     left: 46%;
 }
