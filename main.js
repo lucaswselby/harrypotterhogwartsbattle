@@ -151,6 +151,21 @@ document.getElementById("submitPlayers").onclick = () => {
             else alert(`${color} is not a Hogwarts die color.`);
             const result = sides[Math.floor(Math.random() * sides.length)];
             const arithmancyCheck = effect => {
+                // Destroy Horcrux
+                const destroyedHorcrux = () => {
+                    if (horcruxes.length && !evil) {
+                        horcruxes[0].addToken(result);
+                        if (!horcruxes[0].remaining.length) {
+                            activePlayer.addDestroyedHorcrux(horcruxes.shift());
+                            if (horcruxes.length) {
+                                document.getElementById("events").appendChild(horcruxes[0].img);
+                                horcruxes[0].img.oncontextmenu = event => {magnify(event);};
+                            }
+                        }
+                    }
+                };
+
+                // check for Arithmancy
                 if (activePlayer.proficiency === "Arithmancy" && !arithmancyUsed) {
                     playerChoice("Choose:", () => {return 2;}, 1, () => {
                         if (result === "influence") document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
@@ -158,12 +173,18 @@ document.getElementById("submitPlayers").onclick = () => {
                         else if (result === "attack") document.getElementsByClassName("choice")[0].innerHTML = attackToken;
                         else if (result === "health") document.getElementsByClassName("choice")[0].innerHTML = healthToken;
                         else alert(`But seriously, ${color} is not a Hogwarts die color.`);
-                        document.getElementsByClassName("choice")[0].onclick = effect;
+                        document.getElementsByClassName("choice")[0].onclick = () => {
+                            effect();
+                            destroyedHorcrux();
+                        };
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Re-roll</p>";
                         document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie(color, evil, true);};
                     });
                 }
-                else effect();
+                else {
+                    effect();
+                    destroyedHorcrux();
+                }
             };
             if (evil) {
                 if (result === "influence") arithmancyCheck(() => {activeLocation.addToLocation();});
@@ -185,15 +206,6 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (result === "attack") arithmancyCheck(() => {activePlayer.attack++;});
                 else if (result === "health") arithmancyCheck(() => {activePlayer.health++;});
                 else alert(`But seriously, ${color} is not a Hogwarts die color.`);
-
-                // Destroy Horcrux
-                if (horcruxes.length) {
-                    horcruxes[0].addToken(result);
-                    if (!horcruxes[0].destroys.length) {
-                        activePlayer.horcruxesDestroyed.push(horcruxes.shift());
-                        if (horcruxes.length) document.getElementById("events").appendChild(horcruxes[0].img);
-                    }
-                }
             }
         };
 
