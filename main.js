@@ -257,6 +257,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._passive = passive;
                 this._houseDie = houseDie;
             }
+            get name() {
+                return this._name;
+            }
             get img() {
                 return this._img;
             }
