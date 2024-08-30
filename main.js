@@ -849,8 +849,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (hurtPlayers.length > 1) {
                             playerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
                                 for (let i = 0; i < hurtPlayers.length; i++) {
-                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers.heroImage.cloneNode());
-                                    document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers.health}</p>`;
+                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
+                                    document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
                                     document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
                                 }
                             });
