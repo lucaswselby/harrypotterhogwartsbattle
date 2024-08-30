@@ -831,12 +831,12 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 // Horcrux 1 reward
                 if (this.horcruxesDestroyed.includes(horcrux1) && this.alliesCast === 2) {
-                    const hurtPlayers = players.filter(player => {return player.health < 10});
+                    const hurtPlayers = players.filter(player => {return player.health < 10 && canHeal(player) && !player.stunned});
                     if (hurtPlayers.length) {
                         if (hurtPlayers.length > 1) {
                             playerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
                                 for (let i = 0; i < hurtPlayers.length; i++) {
-                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers.img.cloneNode());
+                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers.heroImage.cloneNode());
                                     document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers.health}</p>`;
                                     document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
                                 }
