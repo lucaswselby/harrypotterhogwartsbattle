@@ -154,7 +154,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 // Destroy Horcrux
                 const destroyedHorcrux = () => {
                     if (horcruxes.length && !evil) {
-                        horcruxes[0].addToken(result);
+                        horcruxes[0].addSymbol(result);
                         if (!horcruxes[0].remaining.length) {
                             activePlayer.addDestroyedHorcrux(horcruxes.shift());
                             if (horcruxes.length) {
@@ -301,6 +301,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     // Every-Flavour Beans effect
                     if (activePlayer.passives.includes(everyFlavourBeans) && this.type === "ally") {
+                        console.log("Adding attack from Every Flavour Beans.");
                         activePlayer.attack++;
                     }
                     // Fleur Delacour effect
@@ -1546,19 +1547,19 @@ document.getElementById("submitPlayers").onclick = () => {
             get remaining() {
                 return this._remaining;
             }
-            addToken(token) {
-                if (this._destroys.includes(token)) {
+            addSymbol(symbol) {
+                if (this._destroys.includes(symbol)) {
                     if (this._name.includes("1") || this._name.includes("2")) this._remaining = [];
                     else {                        
-                        this._remaining.splice(this.remaining.indexOf(token), 1);
+                        this._remaining.splice(this.remaining.indexOf(symbol), 1);
 
                         // add token img
                         if (this._remaining.length) {
-                            const tokenImg = document.createElement("IMG");
-                            tokenImg.className = "token";
-                            tokenImg.src = `./images/${token}Token.png`;
-                            token.style.left = `${10 + 10 * this._destroys.indexOf(token)}%`;
-                            document.getElementById("events").appendChild(tokenImg);
+                            const symbolImg = document.createElement("IMG");
+                            symbolImg.className = "symbol";
+                            symbolImg.src = `./images/${symbol}Symbol.png`;
+                            symbolImg.style.left = `${10 + 10 * this._destroys.indexOf(symbol)}%`;
+                            document.getElementById("events").appendChild(symbolImg);
                         }
                     }
                 }
