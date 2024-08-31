@@ -301,7 +301,6 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     // Every-Flavour Beans effect
                     if (activePlayer.passives.includes(everyFlavourBeans) && this.type === "ally") {
-                        console.log("Adding attack from Every Flavour Beans.");
                         activePlayer.attack++;
                     }
                     // Fleur Delacour effect
