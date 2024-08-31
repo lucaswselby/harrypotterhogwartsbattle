@@ -1813,7 +1813,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activePlayer.hand.length > 2) {
                                 playerChoice("Discard:", () => {return activePlayer.hand.length;}, 2, () => {
                                     for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand.img.src}">`;
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
                                         document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
                                     }
                                 });
@@ -1834,7 +1834,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activePlayer.hand.length > 1) {
                                 playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
                                     for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand.img.src}">`;
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
                                         document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
                                     }
                                 });
@@ -1854,7 +1854,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activePlayer.hand.length > 1) {
                                 playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
                                     for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand.img.src}">`;
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
                                         document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
                                     }
                                 });
@@ -1874,7 +1874,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activePlayer.hand.length > 1) {
                                 playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
                                     for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand.img.src}">`;
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
                                         document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
                                     }
                                 });
@@ -1894,7 +1894,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activePlayer.hand.length > 1) {
                                 playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
                                     for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand.img.src}">`;
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
                                         document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
                                     }
                                 });
