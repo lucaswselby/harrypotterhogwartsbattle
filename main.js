@@ -1991,7 +1991,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 player.petrified = false;
                 if (player.stunned) {
                     player.stunned = false;
-                    player.health = 10;
+                    player._health = 10;
                 }
             });
 
