@@ -598,7 +598,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     card.generateOnClick();
 
                     // Dolores Umbridge effect
-                    if (activeVillains.includes(doloresUmbridge) && cost >= 4 && !doloresUmbridge.petrifiedBy && doloresUmbridge.health > 0) activePlayer.health--;
+                    if (activeVillains.includes(doloresUmbridge) && cost >= 4 && !doloresUmbridge.petrifiedBy && doloresUmbridge.health > 0) {
+                        activePlayer.health--;
+                        darken(doloresUmbridge.img);
+                    }
 
                     // replaces previous card with next card in store
                     document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
@@ -784,6 +787,11 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             set petrified(petrified) {
                 this._petrified = petrified;
+                if (this.petrified) {
+                    if (petrification1.img) darken(petrification1.img);
+                    if (petrification2.img) darken(petrification2.img);
+                    if (activeVillains.includes(basilisk)) darken(basilisk.img);
+                }
             }
             get stunned() {
                 return this._stunned;
@@ -1477,7 +1485,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (this.petrifiedBy) {
                     activeVillainElement.innerHTML += `<img src="./images/petrifiedToken.png" class="petrifiedToken">`;
 
-                    // Basilisk
+                    // petrify the Basilisk
                     if (this === basilisk && !activeDarkArtsEvents.includes(petrification1) && !activeDarkArtsEvents.includes(petrification2)) {
                         players.forEach(player => {player.petrified = false});
                     }
