@@ -906,6 +906,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._horcruxesDestroyed.push(destroyedHorcrux);
                 destroyedHorcrux.img.classList.toggle("event");
                 document.getElementById("horcruxesDestroyed").appendChild(destroyedHorcrux.img);
+                destroyedHorcrux.img.onclick = destroyedHorcrux.reward;
             }
 
             discardAt(index) {
@@ -1530,7 +1531,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // events (horcruxes)
         class Horcrux {
-            constructor(name, destroys, effect) {
+            constructor(name, destroys, effect, reward) {
                 this._name = name;
                 this._img = document.createElement("IMG");
                 this._img.className = "event";
@@ -1539,6 +1540,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._destroys = destroys;
                 this._remaining = destroys;
                 this._effect = effect;
+                this._reward = reward;
             }
             get img() {
                 return this._img;
@@ -1566,13 +1568,16 @@ document.getElementById("submitPlayers").onclick = () => {
             effect() {
                 this._effect();
             }
+            get reward() {
+                return this._reward;
+            }
         }
-        const horcrux1 = new Horcrux("Horcrux 1", ["health", "draw"], () => {});
-        const horcrux2 = new Horcrux("Horcrux 2", ["attack", "influence"], () => {});
-        const horcrux3 = new Horcrux("Horcrux 3", ["attack", "health"], () => {});
-        const horcrux4 = new Horcrux("Horcrux 4", ["health", "influence"], () => {activeVillains.forEach(villain => {villain.health++;});});
-        const horcrux5 = new Horcrux("Horcrux 5", ["draw", "attack"], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length && activePlayer.hand.filter(card => {return card.type === "item"}).length && activePlayer.hand.filter(card => {return card.type === "spell"}).length) activePlayer.health -= 2;});
-        const horcrux6 = new Horcrux("Horcrux 6", ["attack", "draw", "health"], () => {activePlayer.health--;});
+        const horcrux1 = new Horcrux("Horcrux 1", ["health", "draw"], () => {}, () => {});
+        const horcrux2 = new Horcrux("Horcrux 2", ["attack", "influence"], () => {}, () => {if (activePlayer.hand.length >= 2) {if (activePlayer.hand.length > 2) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 2, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else {activePlayer.forcedDiscardAt(0, false); activePlayer.forcedDiscardAt(0, false);} activeLocation.removeFromLocation(); horcrux2.img.onclick = () => {};}});
+        const horcrux3 = new Horcrux("Horcrux 3", ["attack", "health"], () => {}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("green", false, false); horcrux3.img.onclick = () => {};}});
+        const horcrux4 = new Horcrux("Horcrux 4", ["health", "influence"], () => {activeVillains.forEach(villain => {villain.health++;});}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("yellow", false, false); horcrux4.img.onclick = () => {};}});
+        const horcrux5 = new Horcrux("Horcrux 5", ["draw", "attack"], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length && activePlayer.hand.filter(card => {return card.type === "item"}).length && activePlayer.hand.filter(card => {return card.type === "spell"}).length) activePlayer.health -= 2;}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("blue", false, false); horcrux5.img.onclick = () => {};}});
+        const horcrux6 = new Horcrux("Horcrux 6", ["attack", "draw", "health"], () => {activePlayer.health--;}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, 1000); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(horcrux6), 1); horcrux6.img.remove();}});
         let horcruxes = activeGame === "Game 7" ? [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6] : [];
 
         // display game
@@ -1805,113 +1810,13 @@ document.getElementById("submitPlayers").onclick = () => {
                 };
             }
 
+            // horcrux rewards
             if (activeGame === "Game 7") {
-                // Horcrux 2 reward
-                if (activePlayer.horcruxesDestroyed.includes(horcrux2)) {
-                    horcrux2.img.onclick = () => {
-                        if (activePlayer.hand.length >= 2) {
-                            if (activePlayer.hand.length > 2) {
-                                playerChoice("Discard:", () => {return activePlayer.hand.length;}, 2, () => {
-                                    for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
-                                        document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
-                                    }
-                                });
-                            }
-                            else {
-                                activePlayer.forcedDiscardAt(0, false);
-                                activePlayer.forcedDiscardAt(0, false);
-                            }
-                            activeLocation.removeFromLocation();
-                            horcrux2.img.onclick = () => {};
-                        }
-                    };
-                }
-                // Horcrux 3 reward
-                if (activePlayer.horcruxesDestroyed.includes(horcrux3)) {
-                    horcrux3.img.onclick = () => {
-                        if (activePlayer.hand.length) {
-                            if (activePlayer.hand.length > 1) {
-                                playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
-                                    for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
-                                        document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
-                                    }
-                                });
-                            }
-                            else {
-                                activePlayer.forcedDiscardAt(0, false);
-                            }
-                            rollHouseDie("green", false, false);
-                            horcrux3.img.onclick = () => {};
-                        }
-                    };
-                }
-                // Horcrux 4 reward
-                if (activePlayer.horcruxesDestroyed.includes(horcrux4)) {
-                    horcrux4.img.onclick = () => {
-                        if (activePlayer.hand.length) {
-                            if (activePlayer.hand.length > 1) {
-                                playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
-                                    for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
-                                        document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
-                                    }
-                                });
-                            }
-                            else {
-                                activePlayer.forcedDiscardAt(0, false);
-                            }
-                            rollHouseDie("yellow", false, false);
-                            horcrux4.img.onclick = () => {};
-                        }
-                    };
-                }
-                // Horcrux 5 reward
-                if (activePlayer.horcruxesDestroyed.includes(horcrux5)) {
-                    horcrux5.img.onclick = () => {
-                        if (activePlayer.hand.length) {
-                            if (activePlayer.hand.length > 1) {
-                                playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
-                                    for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
-                                        document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
-                                    }
-                                });
-                            }
-                            else {
-                                activePlayer.forcedDiscardAt(0, false);
-                            }
-                            rollHouseDie("blue", false, false);
-                            horcrux5.img.onclick = () => {};
-                        }
-                    };
-                }
-                // Horcrux 6 reward
-                if (activePlayer.horcruxesDestroyed.includes(horcrux6)) {
-                    horcrux6.img.onclick = () => {
-                        if (activePlayer.hand.length) {
-                            if (activePlayer.hand.length > 1) {
-                                playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
-                                    for (let i = 0; i < activePlayer.hand.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
-                                        document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
-                                    }
-                                });
-                            }
-                            else {
-                                activePlayer.forcedDiscardAt(0, false);
-                            }
-                            activeLocation.removeFromLocation();
-                            setTimeout(() => {
-                                activeLocation.removeFromLocation();
-                                setTimeout(() => {activeLocation.removeFromLocation();}, 1000);
-                            }, 1000);
-                            activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(horcrux6), 1);
-                            horcrux6.img.remove();
-                        }
-                    };
-                }
+                if (activePlayer.horcruxesDestroyed.includes(horcrux2)) horcrux2.img.onclick = horcrux2.reward;
+                if (activePlayer.horcruxesDestroyed.includes(horcrux3)) horcrux3.img.onclick = horcrux3.reward;
+                if (activePlayer.horcruxesDestroyed.includes(horcrux4)) horcrux4.img.onclick = horcrux4.reward;
+                if (activePlayer.horcruxesDestroyed.includes(horcrux5)) horcrux5.img.onclick = horcrux5.reward;
+                if (activePlayer.horcruxesDestroyed.includes(horcrux6)) horcrux6.img.onclick = horcrux6.reward;
             }
 
             // update activeDarkArtsEvents
