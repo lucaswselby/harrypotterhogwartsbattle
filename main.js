@@ -783,15 +783,15 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._passives;
             }
             get petrified() {
-                return this._petrified;
-            }
-            set petrified(petrified) {
-                this._petrified = petrified;
-                if (this.petrified) {
+                if (this._petrified) {
                     if (petrification1.img) darken(petrification1.img);
                     if (petrification2.img) darken(petrification2.img);
                     if (activeVillains.includes(basilisk)) darken(basilisk.img);
                 }
+                return this._petrified;
+            }
+            set petrified(petrified) {
+                this._petrified = petrified;
             }
             get stunned() {
                 return this._stunned;
