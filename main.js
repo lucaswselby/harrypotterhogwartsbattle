@@ -157,6 +157,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         horcruxes[0].addSymbol(result);
                         if (!horcruxes[0].remaining.length) {
                             activePlayer.addDestroyedHorcrux(horcruxes.shift());
+                            while (document.getElementsByClassName("symbol")[0]) document.getElementsByClassName("symbol")[0].remove();
                             if (horcruxes.length) {
                                 document.getElementById("events").appendChild(horcruxes[0].img);
                                 horcruxes[0].img.oncontextmenu = event => {magnify(event);};
