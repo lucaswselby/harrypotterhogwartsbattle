@@ -110,6 +110,7 @@ main {
 
 #events {
     left: 27%;
+    width: 12%;
 }
 .symbol {
     position: absolute;
