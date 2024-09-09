@@ -1721,6 +1721,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const startTurn = () => {
             // disable all events
             disableScreen.style.display = "block";
+            let root = document.querySelector(":root");
+            root.style.setProperty("--playerChoiceDisplay", "none");
 
             // new active player
             activePlayer = players.indexOf(activePlayer) < players.length - 1 ? players[players.indexOf(activePlayer) + 1] : players[0];
@@ -1876,7 +1878,10 @@ document.getElementById("submitPlayers").onclick = () => {
                                             }
 
                                             // disable all events
-                                            setTimeout(() => {disableScreen.style.display = "none";}, (invulnerableVoldemort() ? 1000 : 0) + (horcruxes.length ? 1000 : 0));
+                                            setTimeout(() => {
+                                                disableScreen.style.display = "none";
+                                                root.style.setProperty("--playerChoiceDisplay", "flex");
+                                            }, 1000 + (invulnerableVoldemort() ? 1000 : 0) + (horcruxes.length ? 1000 : 0));
 
                                             // magnify images
                                             for (let i = 0; i < document.getElementsByTagName("IMG").length; i++) {

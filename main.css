@@ -2,6 +2,7 @@
     --backgroundColor: white;
     --boardWidth: 74%;
     --playerChoiceLabelSize: 10vh;
+    --playerChoiceDisplay: flex;
 }
 html, body {
     height: 100vh;
@@ -362,7 +363,7 @@ main {
 }
 
 #playerChoiceContainer {
-    display: flex;
+    display: var(--playerChoiceDisplay);
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
