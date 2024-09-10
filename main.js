@@ -962,7 +962,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
 
-                this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
+                if (this.passives.includes(this.hand[index])) this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
                 this.discardAt(index);
             }
             populateHand() {
