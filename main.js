@@ -156,8 +156,8 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (horcruxes.length && !evil) {
                         horcruxes[0].addSymbol(result);
                         if (!horcruxes[0].remaining.length) {
+                            document.getElementById("events").innerHTML = "";
                             activePlayer.addDestroyedHorcrux(horcruxes.shift());
-                            while (document.getElementsByClassName("symbol")[0]) document.getElementsByClassName("symbol")[0].remove();
                             if (horcruxes.length) {
                                 document.getElementById("events").appendChild(horcruxes[0].img);
                                 horcruxes[0].img.oncontextmenu = event => {magnify(event);};
@@ -1547,7 +1547,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._img.src = `./images/Game 7/${src(name)}`;
                 this._img.alt = name;
                 this._destroys = destroys;
-                this._remaining = destroys;
+                this._remaining = [...destroys];
                 this._effect = effect;
                 this._reward = reward;
             }
@@ -1560,7 +1560,7 @@ document.getElementById("submitPlayers").onclick = () => {
             addSymbol(symbol) {
                 if (this._destroys.includes(symbol)) {
                     if (this._name.includes("1") || this._name.includes("2")) this._remaining = [];
-                    else {                        
+                    else if (this.remaining.includes(symbol)) {
                         this._remaining.splice(this.remaining.indexOf(symbol), 1);
 
                         // add token img
@@ -1568,7 +1568,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             const symbolImg = document.createElement("IMG");
                             symbolImg.className = "symbol";
                             symbolImg.src = `./images/${symbol}Symbol.png`;
-                            symbolImg.style.left = `${10 + 10 * this._destroys.indexOf(symbol)}%`;
+                            symbolImg.style.left = `${6 + 20 * this._destroys.indexOf(symbol)}%`;
                             document.getElementById("events").appendChild(symbolImg);
                         }
                     }
