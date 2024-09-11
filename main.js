@@ -1504,35 +1504,23 @@ document.getElementById("submitPlayers").onclick = () => {
         const tomRiddle = new Villain("Tom Riddle", "Game 2", "villain", 6, "health", () => {
             let allies = activePlayer.hand.filter(card => {return card.type === "ally";}); 
             const tomRiddleEffect = () => {
-                const loseHealthOrDiscard = index => {
-                    playerChoice("Lose:", () => {allies = allies.filter(card => {return activePlayer.hand.includes(card);}); if (allies.length) return 2; return 0;}, 1, () => {
-                        document.getElementsByClassName("choice")[0].innerHTML = `<div>${healthToken + healthToken}</div>`; 
-                        document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2; tomRiddleEffect();}; 
-                        document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); 
-                        document.getElementsByClassName("choice")[1].onclick = () => {
-                            playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
-                                for (let j = 0; j < activePlayer.hand.length; j++) {
-                                    document.getElementsByClassName("choice")[j].innerHTML = `<img src="${activePlayer.hand[j].img.src}">`; document.getElementsByClassName("choice")[j].onclick = () => {
-                                        if (allies.includes(activePlayer.hand[j])) allies.splice(allies.indexOf(activePlayer.hand[j]), 1); 
-                                        activePlayer.forcedDiscardAt(j, true); 
-                                        tomRiddleEffect();
-                                    };
-                                }
-                            });
-                        }; 
-                        allies.splice(allies.indexOf(allies[index]), 1);
-                    });
-                }; 
-                if (allies.length === 1) loseHealthOrDiscard(0); 
-                else {
-                    playerChoice("Choose an ally to lose 2 health or discard a card:", () => {
-                        allies = allies.filter(card => {return activePlayer.hand.includes(card);}); return allies.length;
-                    }, 1, () => {
-                        for (let i = 0; i < allies.length; i++) {
-                            loseHealthOrDiscard(i);
-                        }
-                    });
-                }
+                playerChoice("Lose:", () => {allies = allies.filter(card => {return activePlayer.hand.includes(card);}); if (allies.length) return 2; return 0;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = `<div>${healthToken + healthToken}</div>`; 
+                    document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2; allies.pop(); tomRiddleEffect();}; 
+                    document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); 
+                    document.getElementsByClassName("choice")[1].onclick = () => {
+                        playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
+                            for (let j = 0; j < activePlayer.hand.length; j++) {
+                                document.getElementsByClassName("choice")[j].innerHTML = `<img src="${activePlayer.hand[j].img.src}">`; document.getElementsByClassName("choice")[j].onclick = () => {
+                                    if (allies.includes(activePlayer.hand[j])) allies.splice(allies.indexOf(activePlayer.hand[j]), 1); 
+                                    activePlayer.forcedDiscardAt(j, true); 
+                                    allies.pop();
+                                    tomRiddleEffect();
+                                };
+                            }
+                        });
+                    };
+                });
             }; 
             tomRiddleEffect();
         }, () => {players.forEach(player => {const allies = player.discard.filter(card => {return card.type === "ally"}); const drawAllyFromDiscard = () => {const putAllyInHand = index => {const tempPetrified = player.petrified; player.petrified = false; player.draw.unshift(allies[index]); player.drawCards(1); player.discard.splice(player.discard.indexOf(allies[index]), 1); player.petrified = tempPetrified;}; if (allies.length === 1) putAllyInHand(0); else {playerChoice("Add to hand:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {putAllyInHand(i)};}});}}; if (allies.length && canHeal(player)) {playerChoice(`Choose for ${player.hero}:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div>${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[0].onclick = () => {player.health += 2;}; document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(allies); document.getElementsByClassName("choice")[1].onclick = drawAllyFromDiscard;});} else if (allies.length) drawAllyFromDiscard(); else player.health += 2;});});
@@ -1547,9 +1535,9 @@ document.getElementById("submitPlayers").onclick = () => {
         const fenrirGreyback = new Villain("Fenrir Greyback", "Game 6", "villain", 8, "health", () => {}, () => {players.forEach(player => {player.health += 3;}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
         const lordVoldemort2 = new Villain("Lord Voldemort", "Game 6", "villain", 15, "health", () => {rollHouseDie("green", true, false);}, () => {});
         const lordVoldemort3 = new Villain("Lord Voldemort", "Game 7", "villain", 20, "health", () => {activeLocation.addToLocation();}, () => {});
-        let inactiveVillains = [crabbeAndGoyle/*, dracoMalfoy, quirinusQuirrell*/];
+        let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
-            inactiveVillains.push(/*basilisk, luciusMalfoy, */tomRiddle);
+            inactiveVillains.push(basilisk, luciusMalfoy, tomRiddle);
             if (activeGame !== "Game 2") {
                 inactiveVillains.push(dementor, peterPettigrew);
                 if (activeGame !== "Game 3") {
