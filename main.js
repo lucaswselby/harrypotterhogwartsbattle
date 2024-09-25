@@ -1698,7 +1698,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
             // deal damage by clicking on a villain or villain's damage area
             for (let i = 0; i < activeVillains.length; i++) {
-                activeVillains[i].health = activeVillains[i].health;
+                activeVillains[i].displayDamage();
                 const dealDamage = () => {
                     if ((!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].damageTaken) && (activeVillains[i] !== lordVoldemort3 || !horcruxes.length)) {
                         if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
