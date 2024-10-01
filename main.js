@@ -52,10 +52,10 @@ document.getElementById("submitPlayers").onclick = () => {
     if (continueGame) {
         document.getElementsByTagName("MAIN")[0].style.display = "flex";
         let activeGame = document.getElementById("game").value;
-        const attackToken = "<img src=\"./images/attackToken.png\" alt=\"Choose Attack Token\" style=\"width: 50%;\">";
-        const influenceToken = "<img src=\"./images/influenceToken.png\" alt=\"Choose Influece Token\" style=\"width: 50%;\">";
-        const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Choose Health Token\" style=\"width: 50%;\">";
-        const hogwartsCardBack = "<img src=\"./images/hogwartsCardBack.png\" alt=\"Draw card\" style=\"width: 50%;\">";
+        const attackToken = "<img src=\"./images/attackToken.png\" alt=\"Choose Attack Token\" style=\"width: 33%;\">";
+        const influenceToken = "<img src=\"./images/influenceToken.png\" alt=\"Choose Influece Token\" style=\"width: 33%;\">";
+        const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Choose Health Token\" style=\"width: 33%;\">";
+        const hogwartsCardBack = "<img src=\"./images/hogwartsCardBack.png\" alt=\"Draw card\" style=\"width: 33%;\">";
 
         // convert card name to src
         const src = name => {
@@ -614,6 +614,8 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         });
         shuffle(hogwartsCards);
+        hogwartsCards.slice(hogwartsCards.indexOf(nymphadoraTonks), 1); // DEBUG
+        hogwartsCards.unshift(nymphadoraTonks); // DEBUG
         let activeShops = [hogwartsCards[0], hogwartsCards[1], hogwartsCards[2], hogwartsCards[3], hogwartsCards[4], hogwartsCards[5]];
         activeShops = activeShops.sort((a, b) => {return a.cost - b.cost;}); // sorts store by cost
 
@@ -1543,7 +1545,7 @@ document.getElementById("submitPlayers").onclick = () => {
             if (activeGame !== "Game 2") {
                 inactiveVillains.push(dementor, peterPettigrew);
                 if (activeGame !== "Game 3") {
-                    inactiveVillains.push(bartyCrouchJr, deathEater1);
+                    inactiveVillains.push(/*bartyCrouchJr, */deathEater1); // DEBUG
                     if (activeGame !== "Game 4") {
                         inactiveVillains.push(deathEater2, doloresUmbridge);
                         if (activeGame !== "Game 5") {
@@ -1554,6 +1556,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         shuffle(inactiveVillains);
+        inactiveVillains.unshift(bartyCrouchJr); // DEBUG
         let activeVillains = [inactiveVillains.shift()];
         if (activeGame !== "Game 1" && activeGame !== "Game 2") {
             activeVillains.push(inactiveVillains.shift());
