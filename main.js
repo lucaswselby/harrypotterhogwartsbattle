@@ -614,8 +614,6 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         });
         shuffle(hogwartsCards);
-        hogwartsCards.slice(hogwartsCards.indexOf(nymphadoraTonks), 1); // DEBUG
-        hogwartsCards.unshift(nymphadoraTonks); // DEBUG
         let activeShops = [hogwartsCards[0], hogwartsCards[1], hogwartsCards[2], hogwartsCards[3], hogwartsCards[4], hogwartsCards[5]];
         activeShops = activeShops.sort((a, b) => {return a.cost - b.cost;}); // sorts store by cost
 
@@ -1545,7 +1543,7 @@ document.getElementById("submitPlayers").onclick = () => {
             if (activeGame !== "Game 2") {
                 inactiveVillains.push(dementor, peterPettigrew);
                 if (activeGame !== "Game 3") {
-                    inactiveVillains.push(/*bartyCrouchJr, */deathEater1); // DEBUG
+                    inactiveVillains.push(bartyCrouchJr, deathEater1);
                     if (activeGame !== "Game 4") {
                         inactiveVillains.push(deathEater2, doloresUmbridge);
                         if (activeGame !== "Game 5") {
@@ -1556,7 +1554,6 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         shuffle(inactiveVillains);
-        inactiveVillains.unshift(bartyCrouchJr); // DEBUG
         let activeVillains = [inactiveVillains.shift()];
         if (activeGame !== "Game 1" && activeGame !== "Game 2") {
             activeVillains.push(inactiveVillains.shift());
