@@ -401,6 +401,11 @@ main {
     max-height: calc(100vh - var(--playerChoiceLabelSize) - 2rem);
     max-width: 100%;
 }
+.choiceContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 #playerChoice.revealBoard, #playerChoiceLabel.revealBoard {
     visibility: hidden;
 }
