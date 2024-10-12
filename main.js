@@ -249,7 +249,7 @@ document.getElementById("submitPlayers").onclick = () => {
         };
 
         // darken and brighten image
-        const darken = element => {
+        const darken = element => { // TO-DO: villain img not darkening after unpetrified
             element.style.animation = "darken 2s";
             setTimeout(() => {element.style.animation = "none";}, 2000);
         };
@@ -1361,7 +1361,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.damageTaken++;
 
                     // Confundus effect
-                    if (activeVillains.every(villain => {return villain.damageTaken}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) activeLocation.removeFromLocation();
+                    if (activeVillains.every(villain => {return villain.damageTaken}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) {
+                        if (activePlayer.passives.includes(confundus1)) activePlayer.passives.splice(activePlayer.passives.indexOf(confundus1), 1);
+                        else if (activePlayer.passives.includes(confundus2)) activePlayer.passives.splice(activePlayer.passives.indexOf(confundus2), 1);
+                        activeLocation.removeFromLocation();
+                    }
 
                     // Care of Magical Creatures proficiency
                     if (this.health === this._maxHealth && activePlayer.proficiency === "Care Of Magical Creatures" && this.type === "creature") {
@@ -1482,7 +1486,7 @@ document.getElementById("submitPlayers").onclick = () => {
             get petrifiedBy() {
                 return this._petrifiedBy;
             }
-            set petrifiedBy(petrifiedBy) { // TO-DO: villain stays petrified after removal of token
+            set petrifiedBy(petrifiedBy) {
                 this._petrifiedBy = petrifiedBy;
                 const activeVillainElement = this === invulnerableVoldemort() ? document.getElementById("villainDraw") : document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)];
                 if (this.petrifiedBy) {
