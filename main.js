@@ -1902,7 +1902,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 }, 1000 + (invulnerableVoldemort() ? 1000 : 0));
                                             }
 
-                                            // disable all events
+                                            // reenable all events
                                             setTimeout(() => {
                                                 disableScreen.style.display = "none";
                                                 root.style.setProperty("--playerChoiceDisplay", "flex");
