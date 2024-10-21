@@ -1139,7 +1139,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // Lord Voldemort Game 7
-                    if (activeVillains.includes(lordVoldemort3) && !lordVoldemort3.petrifiedBy) {
+                    if (invulnerableVoldemort() === lordVoldemort3 && !lordVoldemort3.petrifiedBy) {
                         players.forEach(player => {player.health--;});
                     }
 
