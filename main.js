@@ -249,7 +249,7 @@ document.getElementById("submitPlayers").onclick = () => {
         };
 
         // darken and brighten image
-        const darken = element => { // TO-DO: villain img not darkening after unpetrified
+        const darken = element => {
             element.style.animation = "darken 2s";
             setTimeout(() => {element.style.animation = "none";}, 2000);
         };
@@ -1477,7 +1477,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._healthType;
             }
             effect() {
-                darken(this._img);
+                darken(this.img);
                 this._effect();
             }
             reward() {
@@ -1893,6 +1893,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 setTimeout(() => {
                                                     if (!invulnerableVoldemort().petrifiedBy) invulnerableVoldemort().effect();
                                                     else if (invulnerableVoldemort().petrifiedBy === activePlayer) invulnerableVoldemort().petrifiedBy = null;
+                                                    populateVillains();
                                                     // reactivate end turn
                                                     document.getElementById("endTurn").style.display = "initial";
                                                 }, 1000);
@@ -1920,7 +1921,10 @@ document.getElementById("submitPlayers").onclick = () => {
                                         }
 
                                         // unpetrify villain
-                                        if (activeVillains[i].petrifiedBy === activePlayer) activeVillains[i].petrifiedBy = null;
+                                        if (activeVillains[i].petrifiedBy === activePlayer) {
+                                            activeVillains[i].petrifiedBy = null;
+                                            populateVillains();
+                                        }
                                         activeVillains[i].damageTaken = 0;
                                     }, i * 1000);
                                 }
