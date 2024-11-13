@@ -1893,7 +1893,6 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 setTimeout(() => {
                                                     if (!invulnerableVoldemort().petrifiedBy) invulnerableVoldemort().effect();
                                                     else if (invulnerableVoldemort().petrifiedBy === activePlayer) invulnerableVoldemort().petrifiedBy = null;
-                                                    populateVillains();
                                                     // reactivate end turn
                                                     document.getElementById("endTurn").style.display = "initial";
                                                 }, 1000);
@@ -1923,7 +1922,6 @@ document.getElementById("submitPlayers").onclick = () => {
                                         // unpetrify villain
                                         if (activeVillains[i].petrifiedBy === activePlayer) {
                                             activeVillains[i].petrifiedBy = null;
-                                            populateVillains();
                                         }
                                         activeVillains[i].damageTaken = 0;
                                     }, i * 1000);
