@@ -1499,6 +1499,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
                 else if (activeVillainElement.getElementsByClassName("petrifiedToken")[0]) {
                     activeVillainElement.getElementsByClassName("petrifiedToken")[0].remove();
+                    setTimeout(() => {populateVillains();}, 1000); // fixes bug where darken doesn't work after petrification
                 }
             }
         }
