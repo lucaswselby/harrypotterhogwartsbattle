@@ -1597,8 +1597,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             const symbolImg = document.createElement("IMG");
                             symbolImg.className = "symbol";
                             symbolImg.src = `./images/${symbol}Symbol.png`;
-                            symbolImg.style.left = `${6 + 20 * this._destroys.indexOf(symbol)}%`;
-                            // TO-DO: fix symbols for horcrux6
+                            symbolImg.style.left = `${this === horcrux6 ? (6 + 12 * this._destroys.indexOf(symbol)) : (6 + 20 * this._destroys.indexOf(symbol))}%`;
                             document.getElementById("events").appendChild(symbolImg);
                         }
                     }
