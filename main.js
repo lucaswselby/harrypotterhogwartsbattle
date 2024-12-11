@@ -1229,6 +1229,10 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                         });
                     }
+                    // Harry Potter Box expansion special
+                    else if (players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame.includes("Box")) {
+                        players.forEach(player => {player.health++;});
+                    }
 
                     // Lord Voldemort Game 7
                     if ((invulnerableVoldemort() === lordVoldemort3 || activeVillains.includes(lordVoldemort3)) && !lordVoldemort3.petrifiedBy) {
