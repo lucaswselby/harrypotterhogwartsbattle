@@ -1,6 +1,6 @@
 // display player proficiecy choice
 const displayProficiencyChoice = playerNumber => {
-    if (document.getElementById(`player${playerNumber}Hero`).value && (document.getElementById("game").value === "Game 6" || document.getElementById("game").value === "Game 7")) {
+    if (document.getElementById(`player${playerNumber}Hero`).value && (document.getElementById("game").value === "Game 6" || document.getElementById("game").value === "Game 7" || document.getElementById("game").value.includes("Box"))) {
         document.getElementById(`player${playerNumber}Proficiency`).style.display = "initial";
     }
     else {
@@ -556,12 +556,24 @@ document.getElementById("submitPlayers").onclick = () => {
                     hogwartsCards.push(accio1, accio2, alastorMadEyeMoody, cedricDiggory, filiusFlitwick, fleurDelacour, hogwartsAHistory1, hogwartsAHistory2, hogwartsAHistory3, hogwartsAHistory4, hogwartsAHistory5, hogwartsAHistory6, minervaMcgonagall, pensieve, pomonaSprout, protego1, protego2, protego3, severusSnape, triwizardCup, viktorKrum);
                     if (activeGame !== "Game 4") {
                         hogwartsCards.push(choChang, fredWeasley, georgeWeasley, kingsleyShacklebolt, lunaLovegood, nymphadoraTonks, owls1, owls2, stupefy1, stupefy2);
-                        if (activeGame !== "Game 5") {
+                        if (activeGame !== "Game 5" && activeGame !== "Box 1") {
                             hogwartsCards.push(advancedPotionMaking, bezoar1, bezoar2, confundus1, confundus2, deluminator, elderWand, felixFelicis, horaceSlughorn);
-                            if (activeGame !== "Game 6") {
+                            if (activeGame !== "Game 6" && activeGame !== "Box 2") {
                                 hogwartsCards.push(swordOfGryffindor);
                             }
                         }
+                    }
+                }
+            }
+        }
+        // adds Box expansion Hogwarts Cards
+        if (activeGame.includes("Box")) {
+            if (activeGame !== "Box 1") {
+                // TO-DO: add Box 2 hogwarts cards
+                if (activeGame !== "Box 2") {
+                    // TO-DO: add Box 3 hogwarts cards                    
+                    if (activeGame !== "Box 3") {
+                        // TO-DO: add Box 4 hogwarts cards
                     }
                 }
             }
@@ -628,11 +640,14 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._hero = hero;
                 this._heroImage = document.createElement("img");
                 this._heroImage.id = "playerHero";
-                this._heroImage.src = `./images/${parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : (parseInt(activeGame[activeGame.length - 1]) < 7 ? "Game 3" : "Game 7")}/${src(hero)}`;
+                this._heroImage.src = "./images/";
+                if (activeGame.includes("Game")) this._heroImage.src += parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : (parseInt(activeGame[activeGame.length - 1]) < 7 ? "Game 3" : "Game 7");
+                else this._heroImage.src += "Box 1";
+                this._heroImage.src += `/${src(hero)}`;
                 this._heroImage.alt = hero;
                 this._proficiency = "";
                 this._proficiencyImage = document.createElement("div");
-                if (activeGame === "Game 6" || activeGame === "Game 7") {
+                if (activeGame === "Game 6" || activeGame === "Game 7" || activeGame.includes("Box")) {
                     this._proficiency = proficiency;
                     this._proficiencyImage = document.createElement("img");
                     this._proficiencyImage.id = "playerProficiency";
@@ -691,7 +706,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         else {
                             // Neville Longbottom special
                             if (!this.gainedHealth) {
-                                if (activePlayer.hero === "Neville Longbottom" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                                if (activePlayer.hero === "Neville Longbottom" && (activeGame === "Game 3" || activeGame === "Game 4" || activeGame === "Game 5" || activeGame === "Game 6")) {
                                     health++;
                                 }
                                 this.gainedHealth = true;
@@ -1138,7 +1153,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 // Barty Crouch Jr effect
                 if (!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy || bartyCrouchJr.health <= 0) {
                     // Harry Potter special
-                    if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                    if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2" && activeGame.includes("Game")) {
                         playerChoice(`Gain 1 attack:`, () => {return players.length;}, activeGame === "Game 7" ? 2 : 1, () => {
                             for (let i = 0; i < players.length; i++) {
                                 document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
@@ -1316,9 +1331,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     darkArtsEvents.push(avadaKedavra1, crucio1, heirOfSlytherin1, heirOfSlytherin2, imperio1, morsmordre1, morsmordre2, regeneration);
                     if (activeGame !== "Game 4") {
                         darkArtsEvents.push(avadaKedavra2, crucio2, educationalDecree1, educationalDecree2, imperio2, legilimency, morsmordre3);
-                        if (activeGame !== "Game 5") {
+                        if (activeGame !== "Game 5" && activeGame !== "Box 1") {
                             darkArtsEvents.push(morsmordre4, sectumsempra1, sectumsempra2);
-                            if (activeGame !== "Game 6")
+                            if (activeGame !== "Game 6" && activeGame !== "Box 2")
                                 darkArtsEvents.push(avadaKedavra3, crucio3, fiendfyre, imperio3);
                         }
                     }
@@ -1560,7 +1575,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     inactiveVillains.push(bartyCrouchJr, deathEater1);
                     if (activeGame !== "Game 4") {
                         inactiveVillains.push(deathEater2, doloresUmbridge);
-                        if (activeGame !== "Game 5") {
+                        if (activeGame !== "Game 5" && activeGame !== "Box 1") {
                             inactiveVillains.push(bellatrixLestrange, fenrirGreyback);
                         }
                     }
