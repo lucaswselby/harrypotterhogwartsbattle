@@ -340,7 +340,7 @@ main {
     flex-flow: row wrap;
 }
 #attackTokens {
-    left: 3%;    
+    left: 3%;
 }
 #influenceTokens {
     left: 50%;
@@ -398,7 +398,7 @@ main {
     overflow: auto;
 }
 .choice img {
-    max-height: calc(100vh - var(--playerChoiceLabelSize) - 2rem);
+    max-height: calc(100vh - var(--playerChoiceLabelSize) - 5rem);
     max-width: 100%;
 }
 .choiceContainer {
