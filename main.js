@@ -739,14 +739,11 @@ document.getElementById("submitPlayers").onclick = () => {
                         else {
                             // Neville Longbottom special
                             // TO-DO: add Box expansion special
-                            if (!this.gainedHealth) {
-                                if (activePlayer.hero === "Neville Longbottom" && (activeGame === "Game 3" || activeGame === "Game 4" || activeGame === "Game 5" || activeGame === "Game 6")) {
+                            if (activePlayer.hero === "Neville Longbottom") {
+                                if ((!this.gainedHealth && (activeGame === "Game 3" || activeGame === "Game 4" || activeGame === "Game 5" || activeGame === "Game 6")) || activeGame === "Game 7") {
                                     health++;
+                                    this.gainedHealth = true;
                                 }
-                                this.gainedHealth = true;
-                            }
-                            else if (activePlayer.hero === "Neville Longbottom" && activeGame === "Game 7") {
-                                health++;
                             }
 
                             // Herbology proficiency
