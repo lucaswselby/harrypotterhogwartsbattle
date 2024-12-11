@@ -738,13 +738,26 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         else {
                             // Neville Longbottom special
-                            // TO-DO: add Box expansion special
                             if (activePlayer.hero === "Neville Longbottom") {
                                 if ((!this.gainedHealth && (activeGame === "Game 3" || activeGame === "Game 4" || activeGame === "Game 5" || activeGame === "Game 6")) || activeGame === "Game 7") {
                                     health++;
-                                    this.gainedHealth = true;
+                                }
+                                // Neville Longbottom Box expansion special
+                                else if (activeGame.includes("Box")) {
+                                    if (!this.gainedHealth) {
+                                        if (this.health + health < 10) {
+                                            playerChoice(`Pick one for ${this.hero}:`, () => {return 2;}, 1, () => {
+                                                document.getElementsByClassName("choice")[0].innerHTML = `${healthToken}<p>Health: ${this.health + health}</p>`;
+                                                document.getElementsByClassName("choice")[0].onclick = () => {health++;};
+                                                document.getElementsByClassName("choice")[1].innerHTML = `${influenceToken}<p>Influence: ${this.influence}</p>`;
+                                                document.getElementsByClassName("choice")[1].onclick = () => {this.influence++;};
+                                            });
+                                        }
+                                        else this.influence++;
+                                    }
                                 }
                             }
+                            this.gainedHealth = true;
 
                             // Herbology proficiency
                             this._healthGained += health - this.health;
