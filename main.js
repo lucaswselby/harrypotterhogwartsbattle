@@ -738,6 +738,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         else {
                             // Neville Longbottom special
+                            // TO-DO: add Box expansion special
                             if (!this.gainedHealth) {
                                 if (activePlayer.hero === "Neville Longbottom" && (activeGame === "Game 3" || activeGame === "Game 4" || activeGame === "Game 5" || activeGame === "Game 6")) {
                                     health++;
@@ -1843,6 +1844,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const horcrux5 = new Horcrux("Horcrux 5", ["draw", "attack"], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length && activePlayer.hand.filter(card => {return card.type === "item"}).length && activePlayer.hand.filter(card => {return card.type === "spell"}).length) activePlayer.health -= 2;}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("blue", false, false); horcrux5.img.onclick = () => {};}});
         const horcrux6 = new Horcrux("Horcrux 6", ["attack", "draw", "health"], () => {activePlayer.health--;}, () => {if (activePlayer.hand.length) {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, 1000); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(horcrux6), 1); horcrux6.img.remove();}});
         let horcruxes = activeGame === "Game 7" ? [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6] : [];
+
+        // TO-DO: add Box events
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
