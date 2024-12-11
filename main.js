@@ -1865,7 +1865,9 @@ document.getElementById("submitPlayers").onclick = () => {
             }
 
             // update activeDarkArtsEvents
-            for (let i = 0; i < activeLocation.darkArtsEventDraws + (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) ? 1 : 0; i++) {
+            let daeDraws = activeLocation.darkArtsEventDraws;
+            if (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) daeDraws++; // Bellatrix adds 1 draw
+            for (let i = 0; i < daeDraws; i++) {
                 if (!darkArtsEvents.length) {
                     shuffle(inactiveDarkArtsEvents);
                     while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
