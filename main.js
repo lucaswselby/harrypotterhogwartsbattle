@@ -562,11 +562,20 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // Box 1
         const detention = new Card("Detention", "Box 1", "item", 0, () => {}, false, false);
+        const argusFilchAndMrsNorris = new Card("Argus Filch And Mrs Norris", "Box 1", "ally", 4, () => {activePlayer.drawCards(2); playerChoice("Choose a card to discard or banish:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {playerChoice("Discard or banish:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<img src="${activePlayer.hand[i].img.src}"><p>Discard</p>`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.forcedDiscardAt(i, false)}; document.getElementsByClassName("choice")[1].innerHTML = `<img src="${activePlayer.hand[i].img.src}"><p>Banish</p>`; document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.banishAt(i)};});};}});}, false, false);
+        const fang = new Card("Fang", "Box 1", "ally", 3, () => {playerChoice(`Give 1 ${influenceToken} and 2 ${healthToken} to:`, () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++; players[i].health += 2;};}});}, false, false);
         const finiteIncantatem1 = new Card("Finite Incantatem", "Box 1", "spell", 6, () => {activeLocation.removeFromLocation();}, true, false);
         const finiteIncantatem2 = finiteIncantatem1.clone();
         const harp = new Card("Harp", "Box 1", "item", 6, () => {activePlayer.attack++; let unpetrifiedCreatures = activeVillains.filter(villain => {return !villain.petrifiedBy && villain.health > 0 && villain.type === "creature";}); if (unpetrifiedCreatures.length) {if (unpetrifiedCreatures.length > 1) {playerChoice("Petrify:", () => {return unpetrifiedCreatures.length;}, 1, () => {for (let i = 0; i < unpetrifiedCreatures.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedCreatures[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedCreatures[i].petrifiedBy = activePlayer;};}});} else unpetrifiedCreatures[0].petrifiedBy = activePlayer;}}, false, false);
         const oldSock1 = new Card("Old Sock", "Box 1", "item", 1, () => {activePlayer.influence++; if (players.filter(player => {return player !== activePlayer && (player.hand.includes(dobbyTheHouseElf)/* || player.hand.includes(other house elves)*/)}).length) activePlayer.attack += 2;}, false, false);
         const oldSock2 = oldSock1.clone();
+        const tergeo1 = new Card("Tergeo", "Box 1", "spell", 2, () => {activePlayer.influence++; playerChoice("Do you want to banish a card?", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = "<p>Yes</p>"; document.getElementsByClassName("choice")[0].onclick = () => {playerChoice("Banish:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.hand[i].type === "item") activePlayer.drawCards(1); activePlayer.banishAt(i);};}});}; document.getElementsByClassName("choice")[1].innerHTML = "<p>No</p>";});}, false, false);
+        const tergeo2 = tergeo1.clone();
+        const tergeo3 = tergeo1.clone();
+        const tergeo4 = tergeo1.clone();
+        const tergeo5 = tergeo1.clone();
+        const tergeo6 = tergeo1.clone();
+
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         if (activeGame !== "Game 1") {
@@ -589,6 +598,7 @@ document.getElementById("submitPlayers").onclick = () => {
         }
         // adds Box expansion Hogwarts Cards
         if (activeGame.includes("Box")) {
+            hogwartsCards.push(argusFilchAndMrsNorris, fang, finiteIncantatem1, finiteIncantatem2, harp, oldSock1, oldSock2, tergeo1, tergeo2, tergeo3, tergeo4, tergeo5, tergeo6);
             if (activeGame !== "Box 1") {
                 // TO-DO: add Box 2 hogwarts cards
                 if (activeGame !== "Box 2") {
