@@ -942,23 +942,29 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 // Ron Weasley special
                 if (this.attacks === 3 && this.hero === "Ron Weasley" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                    if (activeGame === "Game 7") {
-                        players.forEach(player => {player.health += 2;});
-                    }
-                    else {
-                        const hurtPlayers = players.filter(player => {return canHeal(player);});
-                        if (hurtPlayers.length) {
-                            if (hurtPlayers.length > 1) {
-                                playerChoice(`Gain 2 health:`, () => {return hurtPlayers.length;}, 1, () => {
-                                    for (let i = 0; i < hurtPlayers.length; i++) {
-                                        document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
-                                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
-                                        document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
-                                    }
-                                });
-                            }
-                            else hurtPlayers[0].health += 2;
+                    if (activeGame.includes("Game")) {
+                        if (activeGame === "Game 7") {
+                            players.forEach(player => {player.health += 2;});
                         }
+                        else {
+                            const hurtPlayers = players.filter(player => {return canHeal(player);});
+                            if (hurtPlayers.length) {
+                                if (hurtPlayers.length > 1) {
+                                    playerChoice(`Gain 2 health:`, () => {return hurtPlayers.length;}, 1, () => {
+                                        for (let i = 0; i < hurtPlayers.length; i++) {
+                                            document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
+                                            document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
+                                            document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                        }
+                                    });
+                                }
+                                else hurtPlayers[0].health += 2;
+                            }
+                        }
+                    }
+                    // Ron Weasley Box expansion special
+                    else {
+                        players.forEach(player => {player.health++;});
                     }
                 }
             }
