@@ -562,6 +562,8 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // Box 1
         const detention = new Card("Detention", "Box 1", "item", 0, () => {}, false, false);
+        const finiteIncantatem1 = new Card("Finite Incantatem", "Box 1", "spell", 6, () => {activeLocation.removeFromLocation();}, true, false);
+        const finiteIncantatem2 = finiteIncantatem1.clone();
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         if (activeGame !== "Game 1") {
@@ -1966,13 +1968,14 @@ document.getElementById("submitPlayers").onclick = () => {
             // update activeDarkArtsEvents
             let daeDraws = activeLocation.darkArtsEventDraws;
             if (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) daeDraws++; // Bellatrix adds 1 draw
+            if (activePlayer.passives.includes(finiteIncantatem1) || activePlayer.passives.includes(finiteIncantatem2)) daeDraws = 1; // Finite Incantatem limits draws to 1
             for (let i = 0; i < daeDraws; i++) {
                 if (!darkArtsEvents.length) {
                     shuffle(inactiveDarkArtsEvents);
                     while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
                 }
                 darkArtsEvents[0].generateImg();
-                if (darkArtsEvents[0] === avadaKedavra1 || darkArtsEvents[0] === crucio1 || darkArtsEvents[0] === imperio1 || darkArtsEvents[0] === avadaKedavra2 || darkArtsEvents[0] === crucio2 || darkArtsEvents[0] === imperio2 || darkArtsEvents[0] === avadaKedavra3 || darkArtsEvents[0] === crucio3 || darkArtsEvents[0] === imperio3) i--; // some DAEs draw additional DAEs
+                if ((darkArtsEvents[0] === avadaKedavra1 || darkArtsEvents[0] === crucio1 || darkArtsEvents[0] === imperio1 || darkArtsEvents[0] === avadaKedavra2 || darkArtsEvents[0] === crucio2 || darkArtsEvents[0] === imperio2 || darkArtsEvents[0] === avadaKedavra3 || darkArtsEvents[0] === crucio3 || darkArtsEvents[0] === imperio3) && !activePlayer.passives.includes(finiteIncantatem1) && !activePlayer.passives.includes(finiteIncantatem2)) i--; // some DAEs draw additional DAEs and Finite Incantatem limits draws to 1
                 activeDarkArtsEvents.push(darkArtsEvents.shift());
             }
 
