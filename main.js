@@ -560,6 +560,8 @@ document.getElementById("submitPlayers").onclick = () => {
         // Game 7
         const swordOfGryffindor = new Card("Sword Of Gryffindor", "Game 7", "item", 7, () => {activePlayer.attack += 2; rollHouseDie("red", false, false); rollHouseDie("red");}, false, true);
 
+        // Box 1
+        const detention = new Card("Detention", "Box 1", "item", 0, () => {}, false, false);
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         if (activeGame !== "Game 1") {
@@ -1014,6 +1016,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (this.hand[index] === protego1 || this.hand[index] === protego2 || this.hand[index] === protego3) {
                     this.attack++;
                     this.health++;
+                }
+                // Detention effect
+                else if (this.hand[index].name === "Detention") {
+                    this.health -= 2;
                 }
 
                 if (evil) {
