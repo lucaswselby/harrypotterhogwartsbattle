@@ -855,17 +855,38 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 // Hermione Granger special
                 if (this.spellsCast === 4 && this.hero === "Hermione Granger" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                    if (activeGame === "Game 7") {
-                        players.forEach(player => {player.influence++;});
+                    if (activeGame.includes("Game")) {
+                        if (activeGame === "Game 7") {
+                            players.forEach(player => {player.influence++;});
+                        }
+                        else {
+                            playerChoice("Gain 1 influence:", () => {return players.length;}, 1, () => {
+                                for (let i = 0; i < players.length; i++) {
+                                    document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
+                                    document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p>`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++;};
+                                }
+                            });
+                        }
                     }
+                    // Hermione Granger Box expansion special
                     else {
-                        playerChoice(`Gain 1 influence:`, () => {return players.length;}, 1, () => {
-                            for (let i = 0; i < players.length; i++) {
-                                document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
-                                document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p>`;
-                                document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++;};
+                        let remainingPlayers = players.filter(player => {return !player.stunned;});
+                        if (remainingPlayers.length) {
+                            if (remainingPlayers.length > 2) {
+                                playerChoice("Gain 1 attack:", () => {return remainingPlayers.length;}, 2, () => {
+                                    for (let i = 0; i < remainingPlayers.length; i++) {
+                                        document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Attack: ${remainingPlayers[i].attack}</p>`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {remainingPlayers[i].attack++;};
+                                    }                                
+                                });
                             }
-                        });
+                            else {
+                                remainingPlayers[0].attack++;
+                                if (remainingPlayers.length > 1) remainingPlayers[1].attack++;
+                            }
+                        }
                     }
                 }
 
