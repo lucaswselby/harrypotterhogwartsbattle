@@ -430,6 +430,19 @@ document.getElementById("submitPlayers").onclick = () => {
         const trevor = new Card("Trevor", "Game 1", "ally", 0, startingAllyEffect, false, false);
         const nevilleStartingCards = [alohomoraNeville1, alohomoraNeville2, alohomoraNeville3, alohomoraNeville4, alohomoraNeville5, alohomoraNeville6, alohomoraNeville7, mandrake, remembrall, trevor];
 
+        // Luna starting card
+        const alohomoraLuna1 = new Card("Alohomora Luna", "Box 1", "spell", 0, alohomoraEffect, false, false);
+        const alohomoraLuna2 = alohomoraLuna1.clone();
+        const alohomoraLuna3 = alohomoraLuna1.clone();
+        const alohomoraLuna4 = alohomoraLuna1.clone();
+        const alohomoraLuna5 = alohomoraLuna1.clone();
+        const alohomoraLuna6 = alohomoraLuna1.clone();
+        const alohomoraLuna7 = alohomoraLuna1.clone();
+        const crumpleHornedSnorkack = new Card("Crumple Horned Snorkack", "Box 1", "ally", 0, startingAllyEffect, false, false);
+        const lionHat = new Card("Lion Hat", "Box 1", "item", 0, () => {activePlayer.influence++; if (players.filter(player => {return player !== activePlayer && (player.hand.includes(quidditchGear1) || player.hand.includes(quidditchGear2) || player.hand.includes(quidditchGear3) || player.hand.includes(quidditchGear4) || player.hand.includes(firebolt) ||  player.hand.includes(cleansweep11) ||  player.hand.includes(nimbusTwoThousandAndOne1) ||  player.hand.includes(nimbusTwoThousandAndOne2)/* ||  player.hand.includes(ginny's broom)*/);}).length) activePlayer.attack++;}, false, false);
+        const spectrespecs = new Card("Spectrespecs", "Box 1", "item", 0, () => {/* TO-DO: spectrespecs function */}, false, false);
+        const lunaStartingCards = [alohomoraLuna1, alohomoraLuna2, alohomoraLuna3, alohomoraLuna4, alohomoraLuna5, alohomoraLuna6, alohomoraLuna7, crumpleHornedSnorkack, lionHat, spectrespecs];
+
         // Hogwarts cards
         // Game 1
         const albusDumbledore = new Card("Albus Dumbledore", "Game 1", "ally", 8, () => {players.forEach(player => {player.attack++; player.influence++; player.health++; player.drawCards(1)});}, false, false);
@@ -665,6 +678,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (hero === "Ron Weasley") this._discard = ronStartingCards;
                 else if (hero === "Hermione Granger") this._discard = hermioneStartingCards;
                 else if (hero === "Neville Longbottom") this._discard = nevilleStartingCards;
+                else if (hero === "Luna Lovegood") this._discard = lunaStartingCards;
                 // TO-DO: add other heroes
                 this._petrified = false;
                 this._stunned = false;
