@@ -1459,7 +1459,7 @@ document.getElementById("submitPlayers").onclick = () => {
             displayDamage() {
                 document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
                 for (let i = 0; i < this._maxHealth - this.health; i++) {
-                    document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                    document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML += this.type === "villain" ? "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">" : "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
                 }
             }
             set health(health) {
