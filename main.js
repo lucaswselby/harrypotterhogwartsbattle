@@ -989,6 +989,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._cardsDrawn = cardsDrawn;
             }
 
+            banishAt(index) {
+                if (document.getElementById("playerHand").contains(this.hand[index].img)) document.getElementById("playerHand").removeChild(this.hand[index].img);
+                if (this.passives.includes(this.hand[index])) this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
+                this._hand.splice(index, 1);
+            }
             discardAt(index) {
                 this._discard.push(this.hand[index]);
                 if (document.getElementById("playerHand").contains(this.hand[index].img)) document.getElementById("playerHand").removeChild(this.hand[index].img);
