@@ -1702,6 +1702,89 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         shuffle(inactiveVillains);
+        // Box expansion villains
+        const cornishPixies = new Villain("Cornish Pixies", "Box 1", "creature", 6, "health", () => {activePlayer.health -= activePlayer.hand.filter(card => {return card.cost && card.cost % 2 === 0;}).length * 2}, () => {players.forEach(player => {player.health += 2; player.influence++;});});
+        const fluffy = new Villain("Fluffy", "Box 1", "creature", 8, "health", () => {
+            let items = activePlayer.hand.filter(card => {return card.type === "item";}); 
+            const fluffyEffect = () => {
+                playerChoice("Lose:", () => {items = items.filter(card => {return activePlayer.hand.includes(card);}); if (items.length) return 2; return 0;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken}</div>`; 
+                    document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health--; items.pop(); fluffyEffect();}; 
+                    document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); 
+                    document.getElementsByClassName("choice")[1].onclick = () => {
+                        playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
+                            for (let j = 0; j < activePlayer.hand.length; j++) {
+                                document.getElementsByClassName("choice")[j].innerHTML = `<img src="${activePlayer.hand[j].img.src}">`; document.getElementsByClassName("choice")[j].onclick = () => {
+                                    if (items.includes(activePlayer.hand[j])) items.splice(items.indexOf(activePlayer.hand[j]), 1); 
+                                    activePlayer.forcedDiscardAt(j, true); 
+                                    items.pop();
+                                    fluffyEffect();
+                                };
+                            }
+                        });
+                    };
+                });
+            }; 
+            fluffyEffect();
+        }, () => {players.forEach(player => {player.health++; player.drawCards(1);});});
+        const norbert = new Villain("Norbert", "Box 1", "creature", 6, "influence", () => {activePlayer.health -= 1 + activePlayer.hand.filter(card => {card.name === "Detention"}).length}, () => {players.forEach(player => {
+            playerChoice("Banish:", () => {return 2;}, 1, () => {
+                document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(player.hand.concat(player.discard));
+                document.getElementsByClassName("choice")[0].onclick = () => {
+                    playerChoice("Banish:", () => {return player.hand.concat(player.discard).length;}, 1, () => {
+                        for (let i = 0; i < player.hand.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(i)};
+                        }
+                        for (let i = 0; i < player.discard.length; i++) {
+                            document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard[i].img.src}">`;
+                            document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(player.discard[i]), 1)};
+                        }
+                    });
+                };
+                document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
+            });
+        });});
+        const troll = new Villain("Troll", "Box 1", "creature", 7, "health", () => {playerChoice("Choose 1:", () => {return 2;}, 1, () => {
+            document.getElementsByClassName("choice")[0].innerHTML = `<p>Lose:</p><div class="choiceContainer">${healthToken + healthToken}</div>`;
+            document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2;};
+            document.getElementsByClassName("choice")[1].innerHTML = `<img src="./images/Box 1/detention.png"><p>Add to Discard</p>`;
+            document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.discard.push(detention.clone());};
+        });}, () => {
+            players.forEach(player => {
+                player.health++;
+                playerChoice("Banish:", () => {return 2;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(player.hand.concat(player.discard).filter(card => {return card.type === "item"}));
+                    document.getElementsByClassName("choice")[0].onclick = () => {
+                        playerChoice("Banish:", () => {return player.hand.concat(player.discard).filter(card => {return card.type === "item"}).length;}, 1, () => {
+                            for (let i = 0; i < player.hand.filter(card => {return card.type === "item"}).length; i++) {
+                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand.filter(card => {return card.type === "item"})[i].img.src}">`;
+                                document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(player.hand.filter(card => {return card.type === "item"})[i]))};
+                            }
+                            for (let i = 0; i < player.discard.length; i++) {
+                                document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard.filter(card => {return card.type === "item"})[i].img.src}">`;
+                                document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(player.discard.filter(card => {return card.type === "item"})[i]), 1)};
+                            }
+                        });
+                    };
+                    document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
+                });
+            });
+        });
+        if (activeGame.includes("Box")) {
+            inactiveVillains = inactiveVillains.slice(0, 5);
+            inactiveVillains.push(cornishPixies, fluffy, norbert, troll);
+            if (activeGame !== "Box 1") {
+                // TO-DO: add Box 2 villains
+                if (activeGame !== "Box 2") {
+                    // TO-DO: add Box 3 villains
+                    if (activeGame !== "Box 3") {
+                        // TO-DO: add Box 4 villains
+                    }
+                }
+            }
+            shuffle(inactiveVillains);
+        }
         let activeVillains = [inactiveVillains.shift()];
         if (activeGame !== "Game 1" && activeGame !== "Game 2") {
             activeVillains.push(inactiveVillains.shift());
