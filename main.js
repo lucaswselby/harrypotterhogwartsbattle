@@ -1551,6 +1551,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.img.classList.toggle("defeating");
                     const petrifiedToken = this.petrifiedBy ? document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].getElementsByClassName("petrifiedToken")[0] : null;
                     if (this.petrifiedBy) petrifiedToken.classList.toggle("defeating");
+                    document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].onclick = () => {};
                     setTimeout(() => {
                         if (activeVillains.includes(this)) {
                             document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].innerHTML = "";
