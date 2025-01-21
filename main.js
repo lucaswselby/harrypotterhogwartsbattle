@@ -1299,7 +1299,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 locationToken.className = "locationToken";
                                 if (Math.ceil(activeLocation.spaces / 2) === 3) locationToken.style.top = (i + 1) % 2 === 0 ? "82%" : "78%";
                                 else locationToken.style.top = (i + 1) % 2 === 0 ? "78%" : "82%";
-                                locationToken.style.left = `${56 + i * 11 - activeLocation.spaces * 6}%`;
+                                locationToken.style.left = `${56 + i * 11 - this.spaces * 6}%`;
                                 document.getElementById("locations").appendChild(locationToken);
                             }
                             document.getElementById(`location${this.number - 1}`).style.display = "initial";
