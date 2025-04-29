@@ -360,10 +360,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         darken(horcrux1.img);
                     }
 
-                    if (this.type === "spell") activePlayer.spellsCast++;
-                    else if (this.type === "ally") activePlayer.alliesCast++;
-                    else if (this.type === "item") activePlayer.itemsCast++;
-                    else alert(`ERROR: ${this._name} has type "${this.type}".`);
+                    activePlayer.playedPush(this);
                 }
             }
             get passive() {
@@ -700,9 +697,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 // TO-DO: add other heroes
                 this._petrified = false;
                 this._stunned = false;
-                this._spellsCast = 0;
-                this._itemsCast = 0;
-                this._alliesCast = 0;
+                this._played = [];
                 this._potionsProficiencyUsed = false;
                 this._gainedHealth = false;
                 this._attacks = 0;
@@ -864,25 +859,17 @@ document.getElementById("submitPlayers").onclick = () => {
             set stunned(stunned) {
                 this._stunned = stunned;
             }
-            potionsProficiency() {
-                if (this.proficiency === "Potions" && this.spellsCast > 0 && this.itemsCast > 0 && this.alliesCast > 0 && !this._potionsProficiencyUsed) {
-                    playerChoice("Heal for 1 and gain 1 attack:", () => {return players.length;}, 1, () => {
-                        for (let i = 0; i < players.length; i++) {
-                            document.getElementsByClassName("choice").innerHTML = `<img src="${players[i].heroImage.src}"><p>Health: ${players[i].health}</p><p>Attack: ${players[i].attack}</p>`;
-                            document.getElementsByClassName("choice").onclick = () => {players[i].health++; players[i].attack++;};
-                        }
-                    });
-                    this._potionsProficiencyUsed = true;
-                }
+            get played() {
+                return this._played;
             }
-            get spellsCast() {
-                return this._spellsCast;
-            }
-            set spellsCast(spellsCast) {
-                this._spellsCast = spellsCast;
+            playedPush(card) {
+                this._played.push(card);
+
+                // check for spells cast
+                let spellsCast = this.played.filter(card => {return card.type === "spell"}).length;
 
                 // Hermione Granger special
-                if (this.spellsCast === 4 && this.hero === "Hermione Granger" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                if (spellsCast === 4 && this.hero === "Hermione Granger" && activeGame !== "Game 1" && activeGame !== "Game 2") {
                     if (activeGame.includes("Game")) {
                         if (activeGame === "Game 7") {
                             players.forEach(player => {player.influence++;});
@@ -918,26 +905,14 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
 
-                this.potionsProficiency();
-            }
-            get itemsCast() {
-                return this._itemsCast;
-            }
-            set itemsCast(itemsCast) {
-                this._itemsCast = itemsCast;
+                // check for items cast
+                let itemsCast = this.played.filter(card => {return card.type === "item";}).length;
 
-                this.potionsProficiency();
-            }
-            get alliesCast() {
-                return this._alliesCast;
-            }
-            set alliesCast(alliesCast) {
-                this._alliesCast = alliesCast;
-
-                this.potionsProficiency();
+                // check for allies cast
+                let alliesCast = this.played.filter(card => {return card.type === "ally";}).length;
 
                 // Horcrux 1 reward
-                if (this.horcruxesDestroyed.includes(horcrux1) && this.alliesCast === 2) {
+                if (this.horcruxesDestroyed.includes(horcrux1) && alliesCast === 2) {
                     const hurtPlayers = players.filter(player => {return canHeal(player);});
                     if (hurtPlayers.length) {
                         if (hurtPlayers.length > 1) {
@@ -954,6 +929,17 @@ document.getElementById("submitPlayers").onclick = () => {
                             darken(horcrux1.img);
                         }
                     }
+                }
+
+                // Potions Proficiency effect
+                if (this.proficiency === "Potions" && spellsCast > 0 && itemsCast > 0 && alliesCast > 0 && !this._potionsProficiencyUsed) {
+                    playerChoice("Heal for 1 and gain 1 attack:", () => {return players.length;}, 1, () => {
+                        for (let i = 0; i < players.length; i++) {
+                            document.getElementsByClassName("choice").innerHTML = `<img src="${players[i].heroImage.src}"><p>Health: ${players[i].health}</p><p>Attack: ${players[i].attack}</p>`;
+                            document.getElementsByClassName("choice").onclick = () => {players[i].health++; players[i].attack++;};
+                        }
+                    });
+                    this._potionsProficiencyUsed = true;
                 }
             }
             get gainedHealth() {
@@ -1138,9 +1124,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.attack = 0;
                 this.influence = 0;
                 this._passives = [];
-                this.spellsCast = 0;
-                this.itemsCast = 0;
-                this.alliesCast = 0;
+                this._played = [];
                 this._potionsProficiencyUsed = false;
                 this.gainedHealth = false;
                 this.attacks = 0;
