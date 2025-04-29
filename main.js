@@ -359,6 +359,24 @@ document.getElementById("submitPlayers").onclick = () => {
                         activePlayer.health--;
                         darken(horcrux1.img);
                     }
+                    // Peskipiksi Pesternomi reward
+                    if (activePlayer.horcruxesDestroyed.includes(peskipiksiPesternomi) && this.cost && this.cost % 2 === 0) {
+                        const hurtPlayers = players.filter(player => {return player.health < 10 && canHeal(player);});
+                        if (hurtPlayers.length) {
+                            if (hurtPlayers.length > 1) {
+                                playerChoice("Heal for 1:", () => {return hurtPlayers.length;}, 1, () => {
+                                    for (let i = 0; i < hurtPlayers.length; i++) {
+                                        document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode()); 
+                                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`; 
+                                        document.getElementsByClassName("choice")[i].onclick = () => {
+                                            hurtPlayers[i].health++;
+                                        };
+                                    }
+                                });
+                            }
+                            else hurtPlayers[0].health++;
+                        }
+                    }
 
                     activePlayer.playedPush(this);
                 }
@@ -931,6 +949,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
 
+                // Peskipiksi Pesternomi completion
+                if (encounters.length && encounters[0] === peskipiksiPesternomi && this.played.filter(card => {return card.cost && card.cost % 2 === 0;}).length === 2) {
+                    this.addDestroyedHorcrux(encounters.shift());
+                }
+
                 // Potions Proficiency effect
                 if (this.proficiency === "Potions" && spellsCast > 0 && itemsCast > 0 && alliesCast > 0 && !this._potionsProficiencyUsed) {
                     playerChoice("Heal for 1 and gain 1 attack:", () => {return players.length;}, 1, () => {
@@ -1132,7 +1155,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 owlsSpells2 = 0;
                 this._healthGained = 0;
                 this.cardsDrawn = -5;
-                this.drawCards(5);
+                if (encounters.length && encounters[0] === peskipiksiPesternomi && this.health < 5) this.drawCards(4); // Peskipiksi Pesternomi effect
+                else this.drawCards(5);
             }
             stun() {
                 this.stunned = true;
@@ -1841,8 +1865,10 @@ document.getElementById("submitPlayers").onclick = () => {
         const horcrux4 = new Encounter("Horcrux 4", "Game 7", ["health", "influence"], () => {activeVillains.forEach(villain => {villain.health++;});}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("yellow", false, false); horcrux4.img.onclick = () => {};}});
         const horcrux5 = new Encounter("Horcrux 5", "Game 7", ["draw", "attack"], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length && activePlayer.hand.filter(card => {return card.type === "item"}).length && activePlayer.hand.filter(card => {return card.type === "spell"}).length) activePlayer.health -= 2;}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("blue", false, false); horcrux5.img.onclick = () => {};}});
         const horcrux6 = new Encounter("Horcrux 6", "Game 7", ["attack", "draw", "health"], () => {activePlayer.health--;}, () => {if (activePlayer.hand.length) {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, 1000); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(horcrux6), 1); horcrux6.img.remove();}});
+        const peskipiksiPesternomi = new Encounter("Peskipiksi Pesternomi", "Box 1", [], () => {}, () => {});
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
+        else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
