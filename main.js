@@ -153,14 +153,14 @@ document.getElementById("submitPlayers").onclick = () => {
             const arithmancyCheck = effect => {
                 // Destroy Horcrux
                 const destroyedHorcrux = () => {
-                    if (horcruxes.length && !evil) {
-                        horcruxes[0].addSymbol(result);
-                        if (!horcruxes[0].remaining.length) {
+                    if (encounters.length && !evil) {
+                        encounters[0].addSymbol(result);
+                        if (!encounters[0].remaining.length) {
                             document.getElementById("events").innerHTML = "";
-                            activePlayer.addDestroyedHorcrux(horcruxes.shift());
-                            if (horcruxes.length) {
-                                document.getElementById("events").appendChild(horcruxes[0].img);
-                                horcruxes[0].img.oncontextmenu = event => {magnify(event);};
+                            activePlayer.addDestroyedHorcrux(encounters.shift());
+                            if (encounters.length) {
+                                document.getElementById("events").appendChild(encounters[0].img);
+                                encounters[0].img.oncontextmenu = event => {magnify(event);};
                             }
                         }
                     }
@@ -219,7 +219,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (activeGame === "Game 6" && activeVillains[0] !== lordVoldemort2) {
                     return lordVoldemort2;
                 }
-                else if (activeGame === "Game 7" && (activeVillains[0] !== lordVoldemort3 || horcruxes.length)) {
+                else if (activeGame === "Game 7" && (activeVillains[0] !== lordVoldemort3 || encounters.length)) {
                     return lordVoldemort3;
                 }
             }
@@ -241,7 +241,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 canHeal = false;
                 darken(fenrirGreyback.img);
             }
-            if (horcruxes.length && horcruxes[0] === horcrux6 && player === activePlayer) {
+            if (encounters.length && encounters[0] === horcrux6 && player === activePlayer) {
                 canHeal = false;
                 darken(horcrux6.img);
             }
@@ -355,7 +355,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         });
                     }
                     // Horcrux 1 effect
-                    if (horcruxes.length && horcruxes[0] === horcrux1 && this.type === "ally") {
+                    if (encounters.length && encounters[0] === horcrux1 && this.type === "ally") {
                         activePlayer.health--;
                         darken(horcrux1.img);
                     }
@@ -414,7 +414,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraHermione6 = alohomoraHermione1.clone();
         const alohomoraHermione7 = alohomoraHermione1.clone();
         const crookshanks = new Card("Crookshanks", "Game 1", "ally", 0, startingAllyEffect, false, false);
-        const theTalesOfBeedleTheBard = new Card("The Tales Of Beedle The Bard", "Game 1", "item", 0, () => {if (horcruxes[0] === horcrux3) activePlayer.influence += 2; else {playerChoice("Choose 1:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${influenceToken + influenceToken}</div>`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes: ${influenceToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.influence++;});};});}}, false, false);
+        const theTalesOfBeedleTheBard = new Card("The Tales Of Beedle The Bard", "Game 1", "item", 0, () => {if (encounters[0] === horcrux3) activePlayer.influence += 2; else {playerChoice("Choose 1:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${influenceToken + influenceToken}</div>`; document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes: ${influenceToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.influence++;});};});}}, false, false);
         const timeTurner = new Card("Time Turner", "Game 1", "item", 0, () => {activePlayer.influence++;}, true, false);
         const hermioneStartingCards = [alohomoraHermione1, alohomoraHermione2, alohomoraHermione3, alohomoraHermione4, alohomoraHermione5, alohomoraHermione6, alohomoraHermione7, crookshanks, theTalesOfBeedleTheBard, timeTurner];
 
@@ -793,7 +793,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._attack;
             }
             set attack(attack) {
-                if ((!this.stunned && (!horcruxes.length || horcruxes[0] !== horcrux3)) || activePlayer === this) {
+                if ((!this.stunned && (!encounters.length || encounters[0] !== horcrux3)) || activePlayer === this) {
                     // sets attack
                     this._attack = attack;
                     if (this._attack < 0) {
@@ -813,7 +813,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._influence;
             }
             set influence(influence) {
-                if ((!this.stunned && (!horcruxes.length || horcruxes[0] !== horcrux3)) || activePlayer === this) {
+                if ((!this.stunned && (!encounters.length || encounters[0] !== horcrux3)) || activePlayer === this) {
                     // sets influence
                     this._influence = influence;
                     if (this.influence < 0) {
@@ -1538,7 +1538,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // Horcrux 2 effect
-                    if (horcruxes[0] === horcrux2 && this.damageTaken === 2) {
+                    if (encounters[0] === horcrux2 && this.damageTaken === 2) {
                         activePlayer.health -= 2;
                         darken(horcrux2.img);
                     }
@@ -1806,12 +1806,12 @@ document.getElementById("submitPlayers").onclick = () => {
         }
 
         // events (horcruxes)
-        class Horcrux {
-            constructor(name, destroys, effect, reward) {
+        class Encounter {
+            constructor(name, game, destroys, effect, reward) {
                 this._name = name;
                 this._img = document.createElement("IMG");
                 this._img.className = "event";
-                this._img.src = `./images/Game 7/${src(name)}`;
+                this._img.src = `./images/${game}/${src(name)}`;
                 this._img.alt = name;
                 this._destroys = destroys;
                 this._remaining = [...destroys];
@@ -1848,15 +1848,14 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._reward;
             }
         }
-        const horcrux1 = new Horcrux("Horcrux 1", ["health", "draw"], () => {}, () => {});
-        const horcrux2 = new Horcrux("Horcrux 2", ["attack", "influence"], () => {}, () => {if (activePlayer.hand.length >= 2 && (!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy || bartyCrouchJr.health <= 0) && (activeLocation.number > 1 || activeLocation.added)) {if (activePlayer.hand.length > 2) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 2, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else {activePlayer.forcedDiscardAt(0, false); activePlayer.forcedDiscardAt(0, false);} activeLocation.removeFromLocation(); horcrux2.img.onclick = () => {};}});
-        const horcrux3 = new Horcrux("Horcrux 3", ["attack", "health"], () => {}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("green", false, false); horcrux3.img.onclick = () => {};}});
-        const horcrux4 = new Horcrux("Horcrux 4", ["health", "influence"], () => {activeVillains.forEach(villain => {villain.health++;});}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("yellow", false, false); horcrux4.img.onclick = () => {};}});
-        const horcrux5 = new Horcrux("Horcrux 5", ["draw", "attack"], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length && activePlayer.hand.filter(card => {return card.type === "item"}).length && activePlayer.hand.filter(card => {return card.type === "spell"}).length) activePlayer.health -= 2;}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("blue", false, false); horcrux5.img.onclick = () => {};}});
-        const horcrux6 = new Horcrux("Horcrux 6", ["attack", "draw", "health"], () => {activePlayer.health--;}, () => {if (activePlayer.hand.length) {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, 1000); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(horcrux6), 1); horcrux6.img.remove();}});
-        let horcruxes = activeGame === "Game 7" ? [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6] : [];
-
-        // TO-DO: add Box events
+        const horcrux1 = new Encounter("Horcrux 1", "Game 7", ["health", "draw"], () => {}, () => {});
+        const horcrux2 = new Encounter("Horcrux 2", "Game 7", ["attack", "influence"], () => {}, () => {if (activePlayer.hand.length >= 2 && (!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy || bartyCrouchJr.health <= 0) && (activeLocation.number > 1 || activeLocation.added)) {if (activePlayer.hand.length > 2) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 2, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else {activePlayer.forcedDiscardAt(0, false); activePlayer.forcedDiscardAt(0, false);} activeLocation.removeFromLocation(); horcrux2.img.onclick = () => {};}});
+        const horcrux3 = new Encounter("Horcrux 3", "Game 7", ["attack", "health"], () => {}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("green", false, false); horcrux3.img.onclick = () => {};}});
+        const horcrux4 = new Encounter("Horcrux 4", "Game 7", ["health", "influence"], () => {activeVillains.forEach(villain => {villain.health++;});}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("yellow", false, false); horcrux4.img.onclick = () => {};}});
+        const horcrux5 = new Encounter("Horcrux 5", "Game 7", ["draw", "attack"], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length && activePlayer.hand.filter(card => {return card.type === "item"}).length && activePlayer.hand.filter(card => {return card.type === "spell"}).length) activePlayer.health -= 2;}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("blue", false, false); horcrux5.img.onclick = () => {};}});
+        const horcrux6 = new Encounter("Horcrux 6", "Game 7", ["attack", "draw", "health"], () => {activePlayer.health--;}, () => {if (activePlayer.hand.length) {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, 1000); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(horcrux6), 1); horcrux6.img.remove();}});
+        let encounters = [];
+        if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
@@ -1904,7 +1903,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // add locations and events to board
         locations.toReversed().forEach(location => {document.getElementById("locations").appendChild(location.img);});
-        if (activeGame === "Game 7") document.getElementById("events").appendChild(horcruxes[0].img);
+        if (encounters.length) document.getElementById("events").appendChild(encounters[0].img);
 
         // Hogwarts Castle special
         if (hogwartsCastle.img) {
@@ -1944,7 +1943,7 @@ document.getElementById("submitPlayers").onclick = () => {
             for (let i = 0; i < activeVillains.length; i++) {
                 activeVillains[i].displayDamage();
                 const dealDamage = () => {
-                    if ((!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].damageTaken) && (activeVillains[i] !== lordVoldemort3 || !horcruxes.length)) {
+                    if ((!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].damageTaken) && (activeVillains[i] !== lordVoldemort3 || !encounters.length)) {
                         if (activePlayer.attack > 0 && activeVillains[i].healthType === "health") {
                             activePlayer.attack--;
                             activeVillains[i].health--;
@@ -2139,10 +2138,10 @@ document.getElementById("submitPlayers").onclick = () => {
                                             }
 
                                             // Horcrux effects
-                                            if (horcruxes.length) {
+                                            if (encounters.length) {
                                                 setTimeout(() => {
-                                                    horcruxes[0].effect();
-                                                    darken(horcruxes[0].img);
+                                                    encounters[0].effect();
+                                                    darken(encounters[0].img);
                                                 }, 1000 + (invulnerableVoldemort() ? 1000 : 0));
                                             }
 
@@ -2150,7 +2149,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                             setTimeout(() => {
                                                 disableScreen.style.display = "none";
                                                 root.style.setProperty("--playerChoiceDisplay", "flex");
-                                            }, 1000 + (invulnerableVoldemort() ? 1000 : 0) + (horcruxes.length ? 1000 : 0));
+                                            }, 1000 + (invulnerableVoldemort() ? 1000 : 0) + (encounters.length ? 1000 : 0));
 
                                             // magnify images
                                             for (let i = 0; i < document.getElementsByTagName("IMG").length; i++) {
