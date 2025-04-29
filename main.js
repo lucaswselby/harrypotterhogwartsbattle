@@ -1765,22 +1765,25 @@ document.getElementById("submitPlayers").onclick = () => {
         });}, () => {
             players.forEach(player => {
                 player.health++;
-                playerChoice("Banish:", () => {return 2;}, 1, () => {
-                    document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(player.hand.concat(player.discard).filter(card => {return card.type === "item"}));
-                    document.getElementsByClassName("choice")[0].onclick = () => {
-                        playerChoice("Banish:", () => {return player.hand.concat(player.discard).filter(card => {return card.type === "item"}).length;}, 1, () => {
-                            for (let i = 0; i < player.hand.filter(card => {return card.type === "item"}).length; i++) {
-                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand.filter(card => {return card.type === "item"})[i].img.src}">`;
-                                document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(player.hand.filter(card => {return card.type === "item"})[i]))};
-                            }
-                            for (let i = 0; i < player.discard.length; i++) {
-                                document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard.filter(card => {return card.type === "item"})[i].img.src}">`;
-                                document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(player.discard.filter(card => {return card.type === "item"})[i]), 1)};
-                            }
-                        });
-                    };
-                    document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
-                });
+                const items = player.hand.concat(player.discard).filter(card => {return card.type === "item"});
+                if (items.length) {
+                    playerChoice("Banish:", () => {return 2;}, 1, () => {
+                        document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(items);
+                        document.getElementsByClassName("choice")[0].onclick = () => {
+                            playerChoice("Banish:", () => {return items.length;}, 1, () => {
+                                for (let i = 0; i < player.hand.filter(card => {return card.type === "item"}).length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand.filter(card => {return card.type === "item"})[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(player.hand.filter(card => {return card.type === "item"})[i]))};
+                                }
+                                for (let i = 0; i < player.discard.length; i++) {
+                                    document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard.filter(card => {return card.type === "item"})[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(player.discard.filter(card => {return card.type === "item"})[i]), 1)};
+                                }
+                            });
+                        };
+                        document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
+                    });
+                }
             });
         });
         if (activeGame.includes("Box")) {
