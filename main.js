@@ -147,6 +147,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 document.getElementById("encounters").appendChild(encounters[0].img);
                 encounters[0].img.oncontextmenu = event => {magnify(event);};
             }
+            else if (!activeVillains.length) alert("Victory!");
         };
 
         // Hogwarts die
@@ -1631,7 +1632,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 else if (activeGame === "Game 7" && this !== lordVoldemort3) {
                                     activeVillains.push(lordVoldemort3);
                                 }
-                                else alert("Victory!");
+                                else if (!encounters.length) alert("Victory!");
                                 populateVillains();
                                 document.getElementById("villainDraw").innerHTML = "";
                             }
