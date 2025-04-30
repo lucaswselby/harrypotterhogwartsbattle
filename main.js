@@ -716,6 +716,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._petrified = false;
                 this._stunned = false;
                 this._played = [];
+                this._hermioneSpecialUsed = false;
                 this._potionsProficiencyUsed = false;
                 this._gainedHealth = false;
                 this._attacks = 0;
@@ -887,7 +888,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 let spellsCast = this.played.filter(card => {return card.type === "spell"}).length;
 
                 // Hermione Granger special
-                if (spellsCast === 4 && this.hero === "Hermione Granger" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                if (!this._hermioneSpecialUsed && spellsCast === 4 && this.hero === "Hermione Granger" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                    this._hermioneSpecialUsed = true;
                     if (activeGame.includes("Game")) {
                         if (activeGame === "Game 7") {
                             players.forEach(player => {player.influence++;});
@@ -903,7 +905,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                     // Hermione Granger Box expansion special
-                    else {
+                    else if (activeGame.includes("Box")) {
                         let remainingPlayers = players.filter(player => {return !player.stunned;});
                         if (remainingPlayers.length) {
                             if (remainingPlayers.length > 2) {
@@ -1148,6 +1150,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.influence = 0;
                 this._passives = [];
                 this._played = [];
+                this._hermioneSpecialUsed = false;
                 this._potionsProficiencyUsed = false;
                 this.gainedHealth = false;
                 this.attacks = 0;
