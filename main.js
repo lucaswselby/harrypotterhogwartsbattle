@@ -759,10 +759,10 @@ document.getElementById("submitPlayers").onclick = () => {
                                 // Neville Longbottom Box expansion special
                                 else if (activeGame.includes("Box")) {
                                     if (!this.gainedHealth) {
-                                        if (this.health + health < 10) {
+                                        if (health < 10) {
                                             playerChoice(`Pick one for ${this.hero}:`, () => {return 2;}, 1, () => {
-                                                document.getElementsByClassName("choice")[0].innerHTML = `${healthToken}<p>Health: ${this.health + health}</p>`;
-                                                document.getElementsByClassName("choice")[0].onclick = () => {health++;};
+                                                document.getElementsByClassName("choice")[0].innerHTML = `${healthToken}<p>Health: ${health}</p>`;
+                                                document.getElementsByClassName("choice")[0].onclick = () => {this.health++;};
                                                 document.getElementsByClassName("choice")[1].innerHTML = `${influenceToken}<p>Influence: ${this.influence}</p>`;
                                                 document.getElementsByClassName("choice")[1].onclick = () => {this.influence++;};
                                             });
