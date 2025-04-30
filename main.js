@@ -141,6 +141,14 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         };
 
+        // replace encounter with next
+        const displayNextEncounter = () => {
+            if (encounters.length) {
+                document.getElementById("encounters").appendChild(encounters[0].img);
+                encounters[0].img.oncontextmenu = event => {magnify(event);};
+            }
+        };
+
         // Hogwarts die
         const rollHouseDie = (color, evil, arithmancyUsed) => {
             let sides = ["influence", "draw", "attack", "health"];
@@ -158,10 +166,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (!encounters[0].remaining.length) {
                             document.getElementById("encounters").innerHTML = "";
                             activePlayer.addDestroyedHorcrux(encounters.shift());
-                            if (encounters.length) {
-                                document.getElementById("encounters").appendChild(encounters[0].img);
-                                encounters[0].img.oncontextmenu = event => {magnify(event);};
-                            }
+                            displayNextEncounter();
                         }
                     }
                 };
@@ -954,6 +959,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 // Peskipiksi Pesternomi completion
                 if (encounters.length && encounters[0] === peskipiksiPesternomi && this.played.filter(card => {return card.cost && card.cost % 2 === 0;}).length === 2) {
                     this.addDestroyedHorcrux(encounters.shift());
+                    displayNextEncounter();
                 }
 
                 // Potions Proficiency effect
