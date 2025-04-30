@@ -156,10 +156,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (encounters.length && !evil) {
                         encounters[0].addSymbol(result);
                         if (!encounters[0].remaining.length) {
-                            document.getElementById("events").innerHTML = "";
+                            document.getElementById("encounters").innerHTML = "";
                             activePlayer.addDestroyedHorcrux(encounters.shift());
                             if (encounters.length) {
-                                document.getElementById("events").appendChild(encounters[0].img);
+                                document.getElementById("encounters").appendChild(encounters[0].img);
                                 encounters[0].img.oncontextmenu = event => {magnify(event);};
                             }
                         }
@@ -1847,7 +1847,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             symbolImg.className = "symbol";
                             symbolImg.src = `./images/${symbol}Symbol.png`;
                             symbolImg.style.left = `${this === horcrux6 ? (5 + 13 * this._destroys.indexOf(symbol)) : (6 + 20 * this._destroys.indexOf(symbol))}%`;
-                            document.getElementById("events").appendChild(symbolImg);
+                            document.getElementById("encounters").appendChild(symbolImg);
                         }
                     }
                 }
@@ -1880,7 +1880,7 @@ document.getElementById("submitPlayers").onclick = () => {
             <div id="villainDraw">
                 <img class="villain" src="./images/villainBack.png" alt="Back of villain card">
             </div>
-            <div id="events"></div>
+            <div id="encounters"></div>
             <div id="villainDiscard"></div>
             <div class="activeVillain" id="villain1"></div>
             <div class="activeVillain" id="villain2"></div>
@@ -1916,7 +1916,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // add locations and events to board
         locations.toReversed().forEach(location => {document.getElementById("locations").appendChild(location.img);});
-        if (encounters.length) document.getElementById("events").appendChild(encounters[0].img);
+        if (encounters.length) document.getElementById("encounters").appendChild(encounters[0].img);
 
         // Hogwarts Castle special
         if (hogwartsCastle.img) {

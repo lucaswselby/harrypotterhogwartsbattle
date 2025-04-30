@@ -103,13 +103,13 @@ main {
     }
 }
 
-#villainDraw, #events, #villainDiscard {
+#villainDraw, #encounters, #villainDiscard {
     height: 17%;
     position: absolute;
     top: 39%;
 }
 
-#events {
+#encounters {
     left: 27%;
     width: 12%;
 }
