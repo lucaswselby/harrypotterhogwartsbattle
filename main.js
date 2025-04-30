@@ -962,6 +962,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.addDestroyedHorcrux(encounters.shift());
                     displayNextEncounter();
                 }
+                // Third Floor Corridor completion
+                else if (encounters.length && encounters[0] === thirdFloorCorridor && spellsCast >= 2 && itemsCast >= 2 && alliesCast >= 2) {
+                    this.addDestroyedHorcrux(encounters.shift());
+                }
 
                 // Potions Proficiency effect
                 if (this.proficiency === "Potions" && spellsCast > 0 && itemsCast > 0 && alliesCast > 0 && !this._potionsProficiencyUsed) {
@@ -1654,7 +1658,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._effect();
             }
             reward() {
-                this._reward();
+                const thirdFloorCorridorEffect = encounters.length && encounters[0] === thirdFloorCorridor;
+                if (!thirdFloorCorridorEffect) {
+                    this._reward();
+                }
             }
             get petrifiedBy() {
                 return this._petrifiedBy;
@@ -1825,6 +1832,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 activeVillains.push(inactiveVillains.shift());
             }
         }
+        let defeatedVillains = [];
 
         // events (horcruxes)
         class Encounter {
@@ -1910,9 +1918,14 @@ document.getElementById("submitPlayers").onclick = () => {
                 studentsOutOfBed.img.remove();
             }
         });
+        const thirdFloorCorridor = new Encounter("Third Floor Corridor", "Box 1", [], () => {}, () => {
+            if (defeatedVillains.length) defeatedVillains[defeatedVillains.length - 1].reward();
+            activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(thirdFloorCorridor), 1);
+            thirdFloorCorridor.img.remove();
+        });
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
-        else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed];
+        else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
@@ -2154,6 +2167,7 @@ document.getElementById("submitPlayers").onclick = () => {
             // encounter rewards
             if (activeGame === "Box 1") {
                 if (activePlayer.horcruxesDestroyed.includes(studentsOutOfBed)) studentsOutOfBed.img.onclick = studentsOutOfBed.reward;
+                if (activePlayer.horcruxesDestroyed.includes(thirdFloorCorridor)) thirdFloorCorridor.img.onclick = thirdFloorCorridor.reward;   
             }
 
             // update activeDarkArtsEvents
@@ -2288,7 +2302,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     // shift remaining villains to the left
                     else {
-                        activeVillains.splice(i, 1);
+                        defeatedVillains.push(activeVillains.splice(i, 1)[0]);
                         i--;
                     }
                     populateVillains();
