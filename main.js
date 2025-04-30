@@ -1876,9 +1876,43 @@ document.getElementById("submitPlayers").onclick = () => {
         const horcrux5 = new Encounter("Horcrux 5", "Game 7", ["draw", "attack"], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length && activePlayer.hand.filter(card => {return card.type === "item"}).length && activePlayer.hand.filter(card => {return card.type === "spell"}).length) activePlayer.health -= 2;}, () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};}});} else activePlayer.forcedDiscardAt(0, false); rollHouseDie("blue", false, false); horcrux5.img.onclick = () => {};}});
         const horcrux6 = new Encounter("Horcrux 6", "Game 7", ["attack", "draw", "health"], () => {activePlayer.health--;}, () => {if (activePlayer.hand.length) {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, 1000); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(horcrux6), 1); horcrux6.img.remove();}});
         const peskipiksiPesternomi = new Encounter("Peskipiksi Pesternomi", "Box 1", [], () => {}, () => {});
+        const studentsOutOfBed = new Encounter("Students Out Of Bed", "Box 1", ["health", "draw"], () => {}, () => {
+            let allNothing = true;
+            players.forEach(player => {
+                const banishable = player.hand.concat(player.discard);
+                if (banishable.length) {
+                    playerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                        document.getElementsByClassName("choice")[0].innerHTML = `<p>Banish:</p>${choiceScroll(banishable)}`;
+                        document.getElementsByClassName("choice")[0].onclick = () => {
+                            playerChoice("Banish:", () => {return banishable.length;}, 1, () => {
+                                for (let i = 0; i < player.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                        player.banishAt(i);
+                                    };
+                                }
+                                for (let i = 0; i < player.discard.length; i++) {
+                                    document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
+                                        player.hand.unshift(player.discard.splice(i, 1)[0]);
+                                        player.banishAt(0);
+                                    };
+                                }
+                            });
+                            allNothing = false;
+                        };
+                        document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>";
+                    });
+                }
+            });
+            if (!allNothing) {
+                activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(studentsOutOfBed), 1);
+                studentsOutOfBed.img.remove();
+            }
+        });
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
-        else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi];
+        else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
@@ -2116,6 +2150,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activePlayer.horcruxesDestroyed.includes(horcrux4)) horcrux4.img.onclick = horcrux4.reward;
                 if (activePlayer.horcruxesDestroyed.includes(horcrux5)) horcrux5.img.onclick = horcrux5.reward;
                 if (activePlayer.horcruxesDestroyed.includes(horcrux6)) horcrux6.img.onclick = horcrux6.reward;
+            }
+            // encounter rewards
+            if (activeGame === "Box 1") {
+                if (activePlayer.horcruxesDestroyed.includes(studentsOutOfBed)) studentsOutOfBed.img.onclick = studentsOutOfBed.reward;
             }
 
             // update activeDarkArtsEvents
