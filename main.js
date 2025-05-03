@@ -1,21 +1,30 @@
 // display player proficiecy choice
-const displayProficiencyChoice = playerNumber => {
+const displayGameChoices = playerNumber => {
+    // display proficiency choice
     if (document.getElementById(`player${playerNumber}Hero`).value && (document.getElementById("game").value === "Game 6" || document.getElementById("game").value === "Game 7" || document.getElementById("game").value.includes("Box"))) {
         document.getElementById(`player${playerNumber}Proficiency`).style.display = "initial";
     }
     else {
         document.getElementById(`player${playerNumber}Proficiency`).style.display = "none";
     }
+
+    // display player choice for expansions
+    if (document.getElementById("game").value.includes("Box")) {
+        for (let i = 0; i < document.getElementsByClassName("playerHero").length; i++) {
+            const lunaLovegoodHTML = "<option value=\"Luna Lovegood\">Luna Lovegood</option>";
+            if (!document.getElementsByClassName("playerHero")[i].innerHTML.includes(lunaLovegoodHTML)) document.getElementsByClassName("playerHero")[i].innerHTML += lunaLovegoodHTML;
+        }
+    }
 }
 document.getElementById("player3Hero").onchange = () => {
-    displayProficiencyChoice(3);
+    displayGameChoices(3);
 }
 document.getElementById("player4Hero").onchange = () => {
-    displayProficiencyChoice(4);
+    displayGameChoices(4);
 }
 document.getElementById("game").onchange = () => {
     for (let i = 1; i <= document.getElementsByClassName("playerProficiency").length; i++) {
-        displayProficiencyChoice(i);
+        displayGameChoices(i);
     }
 }
 
@@ -1194,6 +1203,9 @@ document.getElementById("submitPlayers").onclick = () => {
         if (document.getElementById("player3Hero").value) players.push(new Player(document.getElementById("player3Hero").value, document.getElementById("player3Proficiency").value));
         if (document.getElementById("player4Hero").value) players.push(new Player(document.getElementById("player4Hero").value, document.getElementById("player4Proficiency").value));
         let activePlayer = players[players.length - 1]; // sets to last hero because turn starts with next hero
+
+        // remove Hogwarts cards for current players
+        if (players.map(player => {return player.hero;}).includes("Luna Lovegood") && hogwartsCards.includes(lunaLovegood)) hogwartsCards.splice(hogwartsCards.indexOf(lunaLovegood), 1);
 
         // locations
         class Location {
