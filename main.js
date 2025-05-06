@@ -162,11 +162,14 @@ document.getElementById("submitPlayers").onclick = () => {
         // Hogwarts die
         const rollHouseDie = (color, evil, arithmancyUsed) => {
             let sides = ["influence", "draw", "attack", "health"];
+            if (color === "phoenix") {
+                sides = ["health", "health 2", "location", "attack", "draw", "draw 2"];
+                arithmancyUsed = true;
+            }
             if (color === "red") sides.push("influence", "influence", "influence");
             else if (color === "green") sides.push("attack", "attack", "attack");
             else if (color === "yellow") sides.push("health", "health", "health");
             else if (color === "blue") sides.push("draw", "draw", "draw");
-            else alert(`${color} is not a Hogwarts die color.`);
             const result = sides[Math.floor(Math.random() * sides.length)];
             const arithmancyCheck = effect => {
                 // Destroy Horcrux
@@ -188,7 +191,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         else if (result === "draw") document.getElementsByClassName("choice")[0].innerHTML = hogwartsCardBack;
                         else if (result === "attack") document.getElementsByClassName("choice")[0].innerHTML = attackToken;
                         else if (result === "health") document.getElementsByClassName("choice")[0].innerHTML = healthToken;
-                        else alert(`But seriously, ${color} is not a Hogwarts die color.`);
+                        else alert(`${color} is not a die color.`);
                         document.getElementsByClassName("choice")[0].onclick = () => {
                             effect();
                             destroyedHorcrux();
@@ -203,9 +206,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             };
             if (evil) {
-                if (result === "influence") arithmancyCheck(() => {activeLocation.addToLocation();});
-                else if (result === "draw") arithmancyCheck(() => {players.forEach(player => {
-                    playerChoice("Discard:", () => {return player.hand.length;}, 1, () => {
+                if (result === "influence" || result === "location") arithmancyCheck(() => {activeLocation.addToLocation();});
+                else if (result.includes("draw")) arithmancyCheck(() => {players.forEach(player => {
+                    playerChoice("Discard:", () => {return player.hand.length;}, result === "draw" ? 1 : 2, () => {
                         for (let i = 0; i < player.hand.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                             document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, true);};
@@ -213,15 +216,19 @@ document.getElementById("submitPlayers").onclick = () => {
                     });
                 });});
                 else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.health--;});});
-                else if (result === "health") arithmancyCheck(() => {activeVillains.forEach(villain => {villain.health++;});});
-                else alert(`But seriously, ${color} is not a Hogwarts die color.`);
+                else if (result.includes("health")) {
+                    if (color === "phoenix" && result === "health") activeVillains.filter(villain => {return villain.type === "creature";}).forEach(villain => {villain.health++;});
+                    else arithmancyCheck(() => {activeVillains.forEach(villain => {villain.health++;});});
+                }
+                else alert(`${color} is not a die color.`);
             }
             else {
                 if (result === "influence") arithmancyCheck(() => {activePlayer.influence++;});
-                else if (result === "draw") arithmancyCheck(() => {activePlayer.drawCards(1);});
+                else if (result.includes("draw")) arithmancyCheck(() => {activePlayer.drawCards(result === "draw" ? 1 : 2);});
                 else if (result === "attack") arithmancyCheck(() => {activePlayer.attack++;});
-                else if (result === "health") arithmancyCheck(() => {activePlayer.health++;});
-                else alert(`But seriously, ${color} is not a Hogwarts die color.`);
+                else if (result.includes("health")) arithmancyCheck(() => {activePlayer.health += result === "health" ? 1 : 2;});
+                else if (result === "location") activeLocation.removeFromLocation();
+                else alert(`${color} is not a die color.`);
             }
         };
 
@@ -606,6 +613,54 @@ document.getElementById("submitPlayers").onclick = () => {
         const tergeo5 = tergeo1.clone();
         const tergeo6 = tergeo1.clone();
 
+        // Box 2
+        const buckbeak = new Card("Buckbeak", "Box 2", "ally", 4, () => {
+            activePlayer.drawCards(2);
+            playerChoice("Discard 1:", () => {return activePlayer.hand.length;}, 1, () => {
+                for (let i = 0; i < activePlayer.hand.length; i++) {
+                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
+                    document.getElementsByClassName("choice")[i].onclick = () => {
+                        if (activePlayer.hand[i].type === "ally") activePlayer.attack += 2;
+                        activePlayer.forcedDiscardAt(i, false);
+                    };
+                }
+            });
+        }, false, false);
+        const depulso1 = new Card("Depulso", "Box 2", "spell", 3, () => {playerChoice("Choose 1:", () => {return 2;}, 1, () => {
+            const handItems = activePlayer.hand.filter(card => {return card.type === "item"});
+            const discardItems = activePlayer.discard.filter(card => {return card.type === "item"});
+            if (items.length) {
+                document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${influenceToken + influenceToken}</div>`;
+                document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;};
+                document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(handItems.concat(discardItems));
+                document.getElementsByClassName("choice")[1].onclick = () => {
+                    playerChoice("Banish:", () => {return items.length;}, 1, () => {
+                        for (let i = 0; i < handItems.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[activePlayer.hand.indexOf(handItems[i])].img.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {
+                                activePlayer.banishAt(activePlayer.hand.indexOf(handItems[i]));
+                            };
+                        }
+                        for (let i = 0; i < discardItems.length; i++) {
+                            document.getElementsByClassName("choice")[handItems.length + i].innerHTML = `<img src="${activePlayer.discard[activePlayer.discard.indexOf(discardItems[i])].img.src}">`;
+                            document.getElementsByClassName("choice")[handItems.length + i].onclick = () => {
+                                activePlayer.hand.unshift(activePlayer.discard.splice(activePlayer.discard.indexOf(discardItems[i]))[0]);
+                                activePlayer.banishAt(0);
+                            };
+                        }
+                    });
+                };
+            }
+            else activePlayer.influence += 2;
+        });}, false, false);
+        const depulso2 = depulso1.clone();
+        const immobulus1 = new Card("Immobulus", "Box 2", "spell", 3, () => {activePlayer.attack++;}, true, false);
+        const immobulus2 = immobulus1.clone();
+        const immobulus3 = immobulus1.clone();
+        const monsterBookOfMonsters1 = new Card("Monster Book of Monsters", "Box 2", "item", 5, () => {activePlayer.attack++; rollHouseDie("phoenix", false, false);}, false, true);
+        const monsterBookOfMonsters2 = monsterBookOfMonsters1.clone();
+        const monsterBookOfMonsters3 = monsterBookOfMonsters1.clone();
+
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         if (activeGame !== "Game 1") {
@@ -630,7 +685,7 @@ document.getElementById("submitPlayers").onclick = () => {
         if (activeGame.includes("Box")) {
             hogwartsCards.push(argusFilchAndMrsNorris, fang, finiteIncantatem1, finiteIncantatem2, harp, oldSock1, oldSock2, tergeo1, tergeo2, tergeo3, tergeo4, tergeo5, tergeo6);
             if (activeGame !== "Box 1") {
-                // TO-DO: add Box 2 hogwarts cards
+                hogwartsCards.push(buckbeak, depulso1, depulso2, immobulus1, immobulus2, immobulus3, monsterBookOfMonsters1, monsterBookOfMonsters2, monsterBookOfMonsters3);
                 if (activeGame !== "Box 2") {
                     // TO-DO: add Box 3 hogwarts cards                    
                     if (activeGame !== "Box 3") {
@@ -1629,6 +1684,12 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activePlayer.passives.includes(viktorKrum)) {
                                 activePlayer.influence++;
                                 activePlayer.health++;
+                            }
+                            // Immobulus effect
+                            if (this.type === "creature") {
+                                if (activePlayer.passives.includes(immobulus1)) activeLocation.removeFromLocation();
+                                if (activePlayer.passives.includes(immobulus2)) activeLocation.removeFromLocation();
+                                if (activePlayer.passives.includes(immobulus3)) activeLocation.removeFromLocation();
                             }
                             // Care of Magical Creatures proficiency
                             if (activePlayer.proficiency === "Care Of Magical Creatures" && this.type === "creature") {
