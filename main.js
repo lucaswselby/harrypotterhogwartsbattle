@@ -1496,48 +1496,51 @@ document.getElementById("submitPlayers").onclick = () => {
             effect() {
                 this._effect();
             }
+            clone() {
+                return new DarkArtsEvent(this._name, this._game, this._effect);
+            }
         }
         const expulso1 = new DarkArtsEvent("Expulso", "Game 1", () => {activePlayer.health -= 2;});
-        const expulso2 = new DarkArtsEvent("Expulso", "Game 1", () => {activePlayer.health -= 2;});
-        const expulso3 = new DarkArtsEvent("Expulso", "Game 1", () => {activePlayer.health -= 2;});
+        const expulso2 = expulso1.clone();
+        const expulso3 = expulso1.clone();
         const flipendo1 = new DarkArtsEvent("Flipendo", "Game 1", () => {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true);};}}); activePlayer.health--;});
-        const flipendo2 = new DarkArtsEvent("Flipendo", "Game 1", () => {playerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true);};}}); activePlayer.health--;});
+        const flipendo2 = flipendo1.clone();
         const heWhoMustNotBeNamed1 = new DarkArtsEvent("He Who Must Not Be Named", "Game 1", () => {activeLocation.addToLocation()});
-        const heWhoMustNotBeNamed2 = new DarkArtsEvent("He Who Must Not Be Named", "Game 1", () => {activeLocation.addToLocation()});
-        const heWhoMustNotBeNamed3 = new DarkArtsEvent("He Who Must Not Be Named", "Game 1", () => {activeLocation.addToLocation()});
+        const heWhoMustNotBeNamed2 = heWhoMustNotBeNamed1.clone();
+        const heWhoMustNotBeNamed3 = heWhoMustNotBeNamed1.clone();
         const petrification1 = new DarkArtsEvent("Petrification", "Game 1", () => {players.forEach(player => {player.health--; player.petrified = true;});});
-        const petrification2 = new DarkArtsEvent("Petrification", "Game 1", () => {players.forEach(player => {player.health--; player.petrified = true;});});
+        const petrification2 = petrification1.clone();
         const handOfGlory1 = new DarkArtsEvent("Hand Of Glory", "Game 2", () => {activePlayer.health--; activeLocation.addToLocation();});
-        const handOfGlory2 = new DarkArtsEvent("Hand Of Glory", "Game 2", () => {activePlayer.health--; activeLocation.addToLocation();});
+        const handOfGlory2 = handOfGlory1.clone();
         const obliviate = new DarkArtsEvent("Obliviate", "Game 2", () => {players.forEach(player => {const spells = player.hand.filter(card => {return card.type === "spell";}); if (spells.length) {playerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(spells); document.getElementsByClassName("choice")[0].onclick = () => {if (spells.length > 1) {playerChoice(`${player.hero} discards:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(spells[i]), true);};}});} else player.forcedDiscardAt(player.hand.indexOf(spells[0]), true);}; document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.health -= 2;});});
         const poison = new DarkArtsEvent("Poison", "Game 2", () => {players.forEach(player => {const allies = player.hand.filter(card => {return card.type === "ally";}); if (allies.length) {playerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(allies); document.getElementsByClassName("choice")[0].onclick = () => {if (allies.length > 1) {playerChoice(`${player.hero} discards:`, () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(allies[i]), true);};}});} else player.forcedDiscardAt(player.hand.indexOf(allies[0]), true);}; document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.health -= 2;});});
         const relashio = new DarkArtsEvent("Relashio", "Game 2", () => {players.forEach(player => {const items = player.hand.filter(card => {return card.type === "item";}); if (items.length) {playerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(items); document.getElementsByClassName("choice")[0].onclick = () => {if (items.length > 1) {playerChoice(`${player.hero} discards:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(items[i]), true);};}});} else player.forcedDiscardAt(player.hand.indexOf(items[0]), true);}; document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.health -= 2;});});
         const dementorsKiss1 = new DarkArtsEvent("Dementor's Kiss", "Game 3", () => {players.forEach(player => {player.health--;}); activePlayer.health--;});
-        const dementorsKiss2 = new DarkArtsEvent("Dementor's Kiss", "Game 3", () => {players.forEach(player => {player.health--;}); activePlayer.health--;});
+        const dementorsKiss2 = dementorsKiss1.clone();
         const oppugno = new DarkArtsEvent("Oppugno", "Game 3", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].cost) {activePlayer.cardsDrawn--; player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
         const tarantallegra = new DarkArtsEvent("Tarantallegra", "Game 3", () => {activePlayer.health--;});
         const avadaKedavra1 = new DarkArtsEvent("Avada Kedavra", "Game 4", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
         const crucio1 = new DarkArtsEvent("Crucio", "Game 4", () => {activePlayer.health--;});
         const heirOfSlytherin1 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true, false);});
-        const heirOfSlytherin2 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true, false);});
+        const heirOfSlytherin2 = heirOfSlytherin1.clone();
         const imperio1 = new DarkArtsEvent("Imperio", "Game 4", () => {const otherPlayers = players.filter(player => {return player !== activePlayer;}); if (otherPlayers.length) {if (otherPlayers.length > 1) {playerChoice("Choose to lose 2 health:", () => {return otherPlayers.length;}, 1, () => {for (let i = 0; i < otherPlayers.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${otherPlayers[i].img.src}"><p>Health: ${otherPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {otherPlayers[i].health -= 2;};}});} else otherPlayers[0].health -= 2;}});
         const morsmordre1 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
-        const morsmordre2 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
+        const morsmordre2 = morsmordre1.clone();
         const regeneration = new DarkArtsEvent("Regeneration", "Game 4", () => {activeVillains.forEach(villain => {villain.health += 2;})});
-        const avadaKedavra2 = new DarkArtsEvent("Avada Kedavra", "Game 5", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
-        const crucio2 = new DarkArtsEvent("Crucio", "Game 5", () => {activePlayer.health--;});
+        const avadaKedavra2 = avadaKedavra1.clone();
+        const crucio2 = crucio1.clone();
         const educationalDecree1 = new DarkArtsEvent("Educational Decree", "Game 5", () => {activePlayer.hand.forEach(card => {if (card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie) ? 1 : 0 >= 4) activePlayer.health--;});});
-        const educationalDecree2 = new DarkArtsEvent("Educational Decree", "Game 5", () => {activePlayer.hand.forEach(card => {if (card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie) ? 1 : 0 >= 4) activePlayer.health--;});});
-        const imperio2 = new DarkArtsEvent("Imperio", "Game 5", () => {const otherPlayers = players.filter(player => {return player !== activePlayer;}); if (otherPlayers.length) {if (otherPlayers.length > 1) {playerChoice("Choose to lose 2 health:", () => {return otherPlayers.length;}, 1, () => {for (let i = 0; i < otherPlayers.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${otherPlayers[i].img.src}"><p>Health: ${otherPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {otherPlayers[i].health -= 2;};}});} else otherPlayers[0].health -= 2;}});
+        const educationalDecree2 = educationalDecree1.clone();
+        const imperio2 = imperio1.clone();
         const legilimency = new DarkArtsEvent("Legilimency", "Game 5", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].type === "spell") {activePlayer.cardsDrawn--; player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
-        const morsmordre3 = new DarkArtsEvent("Morsmordre", "Game 5", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
-        const morsmordre4 = new DarkArtsEvent("Morsmordre", "Game 6", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
+        const morsmordre3 = morsmordre1.clone();
+        const morsmordre4 = morsmordre1.clone();
         const sectumsempra1 = new DarkArtsEvent("Sectumsempra", "Game 6", () => {players.forEach(player => {player.health -= 2;});});
-        const sectumsempra2 = new DarkArtsEvent("Sectumsempra", "Game 6", () => {players.forEach(player => {player.health -= 2;});});
-        const avadaKedavra3 = new DarkArtsEvent("Avada Kedavra", "Game 7", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
-        const crucio3 = new DarkArtsEvent("Crucio", "Game 7", () => {activePlayer.health--;});
+        const sectumsempra2 = sectumsempra1.clone();
+        const avadaKedavra3 = avadaKedavra1.clone();
+        const crucio3 = crucio1.clone();
         const fiendfyre = new DarkArtsEvent("Fiendfyre", "Game 7", () => {players.forEach(player => {player.health -= 3;});});
-        const imperio3 = new DarkArtsEvent("Imperio", "Game 7", () => {const otherPlayers = players.filter(player => {return player !== activePlayer;}); if (otherPlayers.length) {if (otherPlayers.length > 1) {playerChoice("Choose to lose 2 health:", () => {return otherPlayers.length;}, 1, () => {for (let i = 0; i < otherPlayers.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${otherPlayers[i].img.src}"><p>Health: ${otherPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {otherPlayers[i].health -= 2;};}});} else otherPlayers[0].health -= 2;}});
+        const imperio3 = imperio1.clone();
         let darkArtsEvents = [expulso1, expulso2, expulso3, flipendo1, flipendo2, heWhoMustNotBeNamed1, heWhoMustNotBeNamed2, heWhoMustNotBeNamed3, petrification1, petrification2];
         if (activeGame !== "Game 1") {
             darkArtsEvents.push(handOfGlory1, handOfGlory2, obliviate, poison, relashio);
@@ -1559,11 +1562,11 @@ document.getElementById("submitPlayers").onclick = () => {
         // Box expansion Dark Arts Events
         const blastEnded = new DarkArtsEvent("Blast Ended", "Box 1", () => {let hurtPlayer = players.indexOf(activePlayer) ? players[players.indexOf(activePlayer) - 1] : players[players.length - 1]; hurtPlayer.health--; if (hurtPlayer.hand.length) {if (hurtPlayer.hand.length > 1) {playerChoice(`Discard for ${hurtPlayer.hero}:`, () => {return hurtPlayer.hand.length;}, 1, () => {for (let i = 0; i < hurtPlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${hurtPlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayer.forcedDiscardAt(i, true);};}});} else hurtPlayer.forcedDiscardAt(0, true);}});
         const inquisitorialSquad1 = new DarkArtsEvent("Inquisitorial Squad", "Box 1", () => {activePlayer.addToHand(detention.clone()); players.forEach(player => {player.health -= player.hand.filter(card => {return card.name === "Detention"}).length});});
-        const inquisitorialSquad2 = new DarkArtsEvent("Inquisitorial Squad", "Box 1", () => {activePlayer.addToHand(detention.clone()); players.forEach(player => {player.health -= player.hand.filter(card => {return card.name === "Detention"}).length});});
+        const inquisitorialSquad2 = inquisitorialSquad1.clone();
         const menacingGrowl1 = new DarkArtsEvent("Menacing Growl", "Box 1", () => {players.forEach(player => {player.health -= player.hand.filter(card => {return card.cost === 3}).length;});});
-        const menacingGrowl2 = new DarkArtsEvent("Menacing Growl", "Box 1", () => {players.forEach(player => {player.health -= player.hand.filter(card => {return card.cost === 3}).length;});});
+        const menacingGrowl2 = menacingGrowl1.clone();
         const ragingTroll1 = new DarkArtsEvent("Raging Troll", "Box 1", () => {players[players.indexOf(activePlayer) === players.length - 1 ? 0 : players.indexOf(activePlayer) + 1].health -= 2; activeLocation.addToLocation();});
-        const ragingTroll2 = new DarkArtsEvent("Raging Troll", "Box 1", () => {players[players.indexOf(activePlayer) === players.length - 1 ? 0 : players.indexOf(activePlayer) + 1].health -= 2; activeLocation.addToLocation();});
+        const ragingTroll2 = ragingTroll1.clone();
         const slugulusEructo = new DarkArtsEvent("Slugulus Eructo", "Box 1", () => {players.forEach(player => {player.health -= activeVillains.filter(villain => {return villain.type === "creature"}).length});});
         if (activeGame.includes("Box")) {
             darkArtsEvents.push(blastEnded, inquisitorialSquad1, inquisitorialSquad2, menacingGrowl1, menacingGrowl2, ragingTroll1, ragingTroll2, slugulusEructo);
