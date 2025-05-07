@@ -1568,10 +1568,17 @@ document.getElementById("submitPlayers").onclick = () => {
         const ragingTroll1 = new DarkArtsEvent("Raging Troll", "Box 1", () => {players[players.indexOf(activePlayer) === players.length - 1 ? 0 : players.indexOf(activePlayer) + 1].health -= 2; activeLocation.addToLocation();});
         const ragingTroll2 = ragingTroll1.clone();
         const slugulusEructo = new DarkArtsEvent("Slugulus Eructo", "Box 1", () => {players.forEach(player => {player.health -= activeVillains.filter(villain => {return villain.type === "creature"}).length});});
+        const bombarda1 = new DarkArtsEvent("Bombarda", "Box 2", () => {players.forEach(player => {player.discard.push(detention.clone());});});
+        const bombarda2 = bombarda1.clone();
+        const theGrim = new DarkArtsEvent("The Grim", "Box 2", () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i), true};}});} else activePlayer.forcedDiscardAt(0, true);} activeLocation.addToLocation();});
+        const transformed1 = new DarkArtsEvent("Transformed", "Box 2", () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {playerChoice("Discard:", () => {activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true);};}});} else activePlayer.forcedDiscardAt(0, true); activePlayer.addToHand(detention.clone());}});
+        const transformed2 = transformed1.clone();
+        const viciousBite1 = new DarkArtsEvent("Vicious Bite", "Box 2", () => {players.filter(player => {return player.health === players.map(player => {return player.health;}).sort((a, b) => {return a - b;})[0];}).forEach(player => {player.health -= 2; if (player.stunned) setTimeout(() => {activeLocation.addToLocation()}, 1000);});});
+        const viciousBite2 = viciousBite1.clone();
         if (activeGame.includes("Box")) {
             darkArtsEvents.push(blastEnded, inquisitorialSquad1, inquisitorialSquad2, menacingGrowl1, menacingGrowl2, ragingTroll1, ragingTroll2, slugulusEructo);
             if (activeGame !== "Box 1") {
-                // TO-DO: add Box 2 DAEs
+                darkArtsEvents.push(bombarda1, bombarda2, theGrim, transformed1, transformed2, viciousBite1, viciousBite2);
                 if (activeGame !== "Box 2") {
                     // TO-DO: add Box 3 DAEs
                     if (activeGame !== "Box 3") {
