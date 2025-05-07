@@ -791,6 +791,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._gainedHealth = false;
                 this._attacks = 0;
                 this._healthGained = 0;
+                this._healthLost = 0;
                 this._horcruxesDestroyed = [];
                 this._cardsDrawn = 0;
             }
@@ -812,10 +813,23 @@ document.getElementById("submitPlayers").onclick = () => {
             set health(health) {
                 // can't heal if stunned
                 if (!this.stunned) {
-                    // Invisibility Cloak effect
-                    if (this.passives.includes(invisibilityCloak) && health < this.health) {
-                        health = this.health - 1;
+                    // taking damage
+                    if (health < this.health) {
+                        this._healthLost += this.health - health;
+
+                        // Invisibility Cloak effect
+                        if (this.passives.includes(invisibilityCloak)) {
+                            health = this.health - 1;
+                        }
+                        
+                        // Werewolf effect
+                        if (activeVillains.includes(werewolf) && this.healthLost >= 4) {
+                            darken(werewolf.img);
+                            activeLocation.addToLocation();
+                            this._healthLost = -99;
+                        }
                     }
+                    // healing
                     else if (this.health < health) {
                         if (!canHeal(this)) {
                             health = this.health;
@@ -1085,6 +1099,9 @@ document.getElementById("submitPlayers").onclick = () => {
             get healthGained() {
                 return this._healthGained;
             }
+            get healthLost() {
+                return this._healthLost;
+            }
             get horcruxesDestroyed() {
                 return this._horcruxesDestroyed;
             }
@@ -1232,6 +1249,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 owlsSpells1 = 0;
                 owlsSpells2 = 0;
                 this._healthGained = 0;
+                this._healthLost = 0;
                 this.cardsDrawn = -5;
                 if (encounters.length && encounters[0] === peskipiksiPesternomi && this.health < 5) this.drawCards(4); // Peskipiksi Pesternomi effect
                 else this.drawCards(5);
@@ -1903,11 +1921,24 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             });
         });
+        const boggart = new Villain("Boggart", "Box 2", "creature", 5, 3, () => {rollHouseDie("phoenix", true, true);}, () => {rollHouseDie("phoenix", false, true)});
+        const scabbers = new Villain("Scabbers", "Box 2", "creature", 7, 0, () => {if (!activePlayer.draw.length) activePlayer.shuffle(); if (activePlayer.draw[0].cost) {const tempPetrified = activePlayer.petrified; activePlayer.petrified = false; activePlayer.cardsDrawn--; activePlayer.drawCards(1); activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, true); activePlayer.petrified = tempPetrified; activePlayer.health -= 2;}}, () => {players.forEach(player => {const cheapCards = player.discard.filter(card => {return card.cost <= 3;}); if (cheapCards.length) {const discardToHand = index => {player.addToHand(cheapCards[index]); player.discard.splice(player.discard.indexOf(cheapCards[index]), 1);}; if (cheapCards.length > 1) {playerChoice(`${player.hero} move from discard to hand:`, () => {return cheapCards.length;}, 1, () => {for (let i = 0; i < cheapCards.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation();});
+        const werewolf = new Villain("Werewolf", "Box 2", "creature", 5, 4, () => {}, () => {
+            players.forEach(player => {
+                playerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
+                    document.getElementsByClassName("choice")[0].onclick = () => {player.influence++;};
+                    document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div>`;
+                    document.getElementsByClassName("choice")[1].onclick = () => {player.health += 2;};
+                });
+            });
+            activeLocation.removeFromLocation();
+        });
         if (activeGame.includes("Box")) {
             inactiveVillains = inactiveVillains.slice(0, 5);
             inactiveVillains.push(cornishPixies, fluffy, norbert, troll);
             if (activeGame !== "Box 1") {
-                // TO-DO: add Box 2 villains
+                inactiveVillains.push(boggart, scabbers, werewolf);
                 if (activeGame !== "Box 2") {
                     // TO-DO: add Box 3 villains
                     if (activeGame !== "Box 3") {
@@ -2106,17 +2137,28 @@ document.getElementById("submitPlayers").onclick = () => {
                 activeVillains[i].displayDamage();
                 const dealDamage = () => {
                     if ((!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].damageTaken) && (activeVillains[i] !== lordVoldemort3 || !encounters.length)) {
-                        if (activePlayer.attack > 0 && !activeVillains[i].influence) {
+                        const damageWithAttack = () => {
                             activePlayer.attack--;
                             activeVillains[i].health--;
                             activePlayer.attacks++;
-                        }
-                        else if (activePlayer.influence > 0 && !activeVillains[i].health) {
+                        };
+                        const damageWithInfluence = () => {
                             activePlayer.influence--;
                             activeVillains[i].influence--;
+                        };
+                        if (activePlayer.attack > 0 && !activeVillains[i].influence) {
+                            damageWithAttack();
                         }
-                        else {
-                            // TO-DO: determine health or influence damage
+                        else if (activePlayer.influence > 0 && !activeVillains[i].health) {
+                            damageWithInfluence();
+                        }
+                        else if (activePlayer.attack > 0 && activePlayer.influence > 0 && activeVillains[i].health && activeVillains[i].influence) {
+                            playerChoice("Damage with:", () => {return 2;}, 1, () => {
+                                document.getElementsByClassName("choice")[0].innerHTML = attackToken;
+                                document.getElementsByClassName("choice")[0].onclick = damageWithAttack;
+                                document.getElementsByClassName("choice")[1].innerHTML = influenceToken;
+                                document.getElementsByClassName("choice")[1].onclick = damageWithInfluence;
+                            });
                         }
                     }
                 }
