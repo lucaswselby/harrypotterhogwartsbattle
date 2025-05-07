@@ -1095,6 +1095,12 @@ document.getElementById("submitPlayers").onclick = () => {
                         players.forEach(player => {player.health++;});
                     }
                 }
+
+                // Unregistered Animagus completion
+                if (encounters.length && encounters[0] === unregisteredAnimagus && this.attacks === 5) {
+                    this.addDestroyedHorcrux(encounters.shift());
+                    displayNextEncounter();
+                }
             }
             get healthGained() {
                 return this._healthGained;
@@ -2056,9 +2062,11 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(thirdFloorCorridor), 1);
             thirdFloorCorridor.img.remove();
         });
+        const unregisteredAnimagus = new Encounter("Unregistered Animagus", "Box 2", [], () => {if (activeLocation.added >= 2) activePlayer.health--;}, () => {rollHouseDie("phoenix", false, true); rollHouseDie("phoenix", false, true); this.img.remove(); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);});
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
         else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
+        else if (activeGame === "Box 2") encounters = [unregisteredAnimagus];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
