@@ -1214,7 +1214,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             // Luna Lovegood special
                             this.cardsDrawn++;
                             if (this.hero === "Luna Lovegood" && this.cardsDrawn === 1) {
-                                const hurtPlayers = players.filter(player => {return player.health < 10;});
+                                const hurtPlayers = players.filter(player => {return !player.stunned && player.health < 10;});
                                 if (hurtPlayers.length) {
                                     if (hurtPlayers.length > 1) {
                                         playerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
