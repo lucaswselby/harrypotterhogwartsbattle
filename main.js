@@ -1902,7 +1902,7 @@ document.getElementById("submitPlayers").onclick = () => {
             playerChoice("Banish:", () => {return 2;}, 1, () => {
                 document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(player.hand.concat(player.discard));
                 document.getElementsByClassName("choice")[0].onclick = () => {
-                    playerChoice("Banish:", () => {return player.hand.concat(player.discard).length;}, 1, () => {
+                    playerChoice(`Banish for ${player.hero}:`, () => {return player.hand.concat(player.discard).length;}, 1, () => {
                         for (let i = 0; i < player.hand.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                             document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(i)};
