@@ -1208,7 +1208,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (!this.petrified) {
                     for (let i = 0; i < numberOfCards; i++) {
                         // moves a card from the draw pile to your hand
-                        if (this.draw.length > 0) {
+                        if (this.draw.length) {
                             this.addToHand(this._draw.shift());
                         }
                         // shuffles the discard pile into the draw pile
@@ -1594,8 +1594,8 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         shuffle(darkArtsEvents);
-        let activeDarkArtsEvents = [];
-        let inactiveDarkArtsEvents = [];
+        let activeDarkArtsEvents = []; // displayed events
+        let inactiveDarkArtsEvents = []; // events to be shuffled back in
 
         // villains
         class Villain {
