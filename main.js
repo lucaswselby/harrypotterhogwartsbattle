@@ -1049,8 +1049,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (this.proficiency === "Potions" && spellsCast > 0 && itemsCast > 0 && alliesCast > 0 && !this._potionsProficiencyUsed) {
                     playerChoice("Heal for 1 and gain 1 attack:", () => {return players.length;}, 1, () => {
                         for (let i = 0; i < players.length; i++) {
-                            document.getElementsByClassName("choice").innerHTML = `<img src="${players[i].heroImage.src}"><p>Health: ${players[i].health}</p><p>Attack: ${players[i].attack}</p>`;
-                            document.getElementsByClassName("choice").onclick = () => {players[i].health++; players[i].attack++;};
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].heroImage.src}"><p>Health: ${players[i].health}</p><p>Attack: ${players[i].attack}</p>`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {players[i].health++; players[i].attack++;};
                         }
                     });
                     this._potionsProficiencyUsed = true;
