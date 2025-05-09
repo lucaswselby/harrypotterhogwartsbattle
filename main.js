@@ -1256,9 +1256,16 @@ document.getElementById("submitPlayers").onclick = () => {
                 owlsSpells2 = 0;
                 this._healthGained = 0;
                 this._healthLost = 0;
-                this.cardsDrawn = -5;
-                if (encounters.length && encounters[0] === peskipiksiPesternomi && this.health < 5) this.drawCards(4); // Peskipiksi Pesternomi effect
-                else this.drawCards(5);
+                
+                // Peskipiksi Pesternomi effect
+                if (encounters.length && encounters[0] === peskipiksiPesternomi && this.health < 5) {
+                    this.cardsDrawn = -4;
+                    this.drawCards(4);
+                }
+                else {
+                    this.cardsDrawn = -5;
+                    this.drawCards(5);
+                }
             }
             stun() {
                 this.stunned = true;
