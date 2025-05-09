@@ -793,7 +793,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._healthGained = 0;
                 this._healthLost = 0;
                 this._horcruxesDestroyed = [];
-                this._cardsDrawn = 0;
+                this._cardsDrawn = -5;
             }
             get hero() {
                 return this._hero;
@@ -1210,29 +1210,30 @@ document.getElementById("submitPlayers").onclick = () => {
                         // moves a card from the draw pile to your hand
                         if (this.draw.length) {
                             this.addToHand(this._draw.shift());
+    
+                            // Luna Lovegood special
+                            this.cardsDrawn++;
+                            if (this.hero === "Luna Lovegood" && this.cardsDrawn === 1) {
+                                const hurtPlayers = players.filter(player => {return player.health < 10;});
+                                if (hurtPlayers.length) {
+                                    if (hurtPlayers.length > 1) {
+                                        playerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
+                                            for (let i = 0; i < hurtPlayers.length; i++) {
+                                                if (hurtPlayers[i].img) document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
+                                                else document.getElementsByClassName("choice")[i].innerHTML += `<img src="${hurtPlayers[i].heroImage.src}">`;
+                                                document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                            }
+                                        });
+                                    }
+                                    else hurtPlayers[0].health += 2;
+                                }
+                            }
                         }
                         // shuffles the discard pile into the draw pile
                         else {
                             this.shuffle();
                             i--;
-                        }
-    
-                        // Luna Lovegood special
-                        this.cardsDrawn++;
-                        if (this.hero === "Luna Lovegood" && this.cardsDrawn === 1) {
-                            const hurtPlayers = players.filter(player => {return player.health < 10;});
-                            if (hurtPlayers.length) {
-                                if (hurtPlayers.length > 1) {
-                                    playerChoice("Heal for 1:", () => {return hurtPlayers.length;}, 1, () => {
-                                        for (let i = 0; i < hurtPlayers.length; i++) {
-                                            document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].img.cloneNode());
-                                            document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
-                                            document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
-                                        }
-                                    });
-                                }
-                                else hurtPlayers[0].health += 2;
-                            }
                         }
                     }
                     this.hand.forEach(card => {card.generateOnClick();});
