@@ -2032,7 +2032,6 @@ document.getElementById("submitPlayers").onclick = () => {
         const horcrux6 = new Encounter("Horcrux 6", "Game 7", ["attack", "draw", "health"], () => {activePlayer.health--;}, () => {if (activePlayer.hand.length) {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, 1000); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(horcrux6), 1); horcrux6.img.remove();}});
         const peskipiksiPesternomi = new Encounter("Peskipiksi Pesternomi", "Box 1", [], () => {}, () => {});
         const studentsOutOfBed = new Encounter("Students Out Of Bed", "Box 1", ["health", "draw"], () => {}, () => {
-            let allNothing = true;
             players.forEach(player => {
                 const banishable = player.hand.concat(player.discard);
                 if (banishable.length) {
@@ -2044,6 +2043,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                                     document.getElementsByClassName("choice")[i].onclick = () => {
                                         player.banishAt(i);
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(studentsOutOfBed), 1);
+                                        studentsOutOfBed.img.remove();
                                     };
                                 }
                                 for (let i = 0; i < player.discard.length; i++) {
@@ -2051,19 +2052,16 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
                                         player.hand.unshift(player.discard.splice(i, 1)[0]);
                                         player.banishAt(0);
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(studentsOutOfBed), 1);
+                                        studentsOutOfBed.img.remove();
                                     };
                                 }
                             });
-                            allNothing = false;
                         };
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>";
                     });
                 }
             });
-            if (!allNothing) {
-                activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(studentsOutOfBed), 1);
-                studentsOutOfBed.img.remove();
-            }
         });
         const thirdFloorCorridor = new Encounter("Third Floor Corridor", "Box 1", [], () => {}, () => {
             if (defeatedVillains.length) defeatedVillains[defeatedVillains.length - 1].reward();
