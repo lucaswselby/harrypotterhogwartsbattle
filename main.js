@@ -397,6 +397,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 });
                             }
                             else hurtPlayers[0].health++;
+                            darken(peskipiksiPesternomi.img);
                         }
                     }
 
@@ -824,7 +825,6 @@ document.getElementById("submitPlayers").onclick = () => {
                         
                         // Werewolf effect
                         if (activeVillains.includes(werewolf) && this.healthLost >= 4) {
-                            darken(werewolf.img);
                             activeLocation.addToLocation();
                             this._healthLost = -99;
                         }
