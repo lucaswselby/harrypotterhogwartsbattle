@@ -629,12 +629,12 @@ document.getElementById("submitPlayers").onclick = () => {
         const depulso1 = new Card("Depulso", "Box 2", "spell", 3, () => {playerChoice("Choose 1:", () => {return 2;}, 1, () => {
             const handItems = activePlayer.hand.filter(card => {return card.type === "item"});
             const discardItems = activePlayer.discard.filter(card => {return card.type === "item"});
-            if (items.length) {
+            if (handItems.length || discardItems.length) {
                 document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${influenceToken + influenceToken}</div>`;
                 document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;};
                 document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(handItems.concat(discardItems));
                 document.getElementsByClassName("choice")[1].onclick = () => {
-                    playerChoice("Banish:", () => {return items.length;}, 1, () => {
+                    playerChoice("Banish:", () => {return handItems.length + discardItems.length;}, 1, () => {
                         for (let i = 0; i < handItems.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[activePlayer.hand.indexOf(handItems[i])].img.src}">`;
                             document.getElementsByClassName("choice")[i].onclick = () => {
