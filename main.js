@@ -1380,8 +1380,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 }, 1000);
             }
             removeFromLocation() {
-                // Barty Crouch Jr effect
-                if (!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy || bartyCrouchJr.health <= 0) {
+                // Barty Crouch Jr and Defense Training effect
+                let defensiveTrainingEffect = encounters.length && encounters[0] === defensiveTraining;
+                if ((!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy || bartyCrouchJr.health <= 0) && !defensiveTrainingEffect) {
                     // Harry Potter special
                     if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2" && activeGame.includes("Game")) {
                         playerChoice(`Gain 1 attack:`, () => {return players.length;}, activeGame === "Game 7" ? 2 : 1, () => {
@@ -2114,10 +2115,18 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             });
         });
+        const defensiveTraining = new Encounter("Defensive Training", "Box 2", ["attack", "attack", "attack"], () => {}, () => {
+            players.forEach(player => {
+                player.influence += 2;
+                player.health += 2;
+            });
+            activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
+            this.img.remove();
+        });
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
         else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
-        else if (activeGame === "Box 2") encounters = [unregisteredAnimagus, fullMoonRises];
+        else if (activeGame === "Box 2") encounters = [unregisteredAnimagus, fullMoonRises, defensiveTraining];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
