@@ -1373,6 +1373,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (activeVillains.includes(luciusMalfoy) && !luciusMalfoy.petrifiedBy) {
                         activeVillains.forEach(villain => {villain.health++;});
                     }
+                    // Full Moon Rises effect
+                    if (encounters.length && encounters[0] === fullMoonRises) {
+                        activePlayer.addToHand(detention.clone());
+                    }
                 }, 1000);
             }
             removeFromLocation() {
@@ -1753,6 +1757,14 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (activePlayer.proficiency === "Care Of Magical Creatures" && this.type === "creature") {
                                 activeLocation.removeFromLocation();
                             }
+                            // Full Moon Rises completion
+                            let fullMoonRisesComplete = true;
+                            for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
+                                if (document.getElementsByClassName("activeVillain")[i].innerHTML !== "") fullMoonRisesComplete = false;
+                            }
+                            if (fullMoonRisesComplete) {
+                                activePlayer.addDestroyedHorcrux(encounters.shift());
+                            }
 
                             // check for victory
                             if (!activeVillains.filter(villain => {return villain.health}).length && !inactiveVillains.length) {
@@ -2035,16 +2047,16 @@ document.getElementById("submitPlayers").onclick = () => {
             players.forEach(player => {
                 const banishable = player.hand.concat(player.discard);
                 if (banishable.length) {
-                    playerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                    playerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
                         document.getElementsByClassName("choice")[0].innerHTML = `<p>Banish:</p>${choiceScroll(banishable)}`;
                         document.getElementsByClassName("choice")[0].onclick = () => {
-                            playerChoice("Banish:", () => {return banishable.length;}, 1, () => {
+                            playerChoice(`Banish for ${player.hero}:`, () => {return banishable.length;}, 1, () => {
                                 for (let i = 0; i < player.hand.length; i++) {
                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                                     document.getElementsByClassName("choice")[i].onclick = () => {
                                         player.banishAt(i);
-                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(studentsOutOfBed), 1);
-                                        studentsOutOfBed.img.remove();
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
+                                        this.img.remove();
                                     };
                                 }
                                 for (let i = 0; i < player.discard.length; i++) {
@@ -2052,8 +2064,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
                                         player.hand.unshift(player.discard.splice(i, 1)[0]);
                                         player.banishAt(0);
-                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(studentsOutOfBed), 1);
-                                        studentsOutOfBed.img.remove();
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
+                                        this.img.remove();
                                     };
                                 }
                             });
@@ -2069,10 +2081,43 @@ document.getElementById("submitPlayers").onclick = () => {
             thirdFloorCorridor.img.remove();
         });
         const unregisteredAnimagus = new Encounter("Unregistered Animagus", "Box 2", [], () => {if (activeLocation.added >= 2) activePlayer.health--;}, () => {rollHouseDie("phoenix", false, true); rollHouseDie("phoenix", false, true); this.img.remove(); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);});
+        const fullMoonRises = new Encounter("Full Moon Rises", "Box 2", [], () => {}, () => {
+            players.forEach(player => {
+                player.health += 3;
+                const banishable = player.hand.concat(player.discard);
+                if (banishable.length) {
+                    playerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
+                        document.getElementsByClassName("choice")[0].innerHTML = `<p>Banish:</p>${choiceScroll(banishable)}`;
+                        document.getElementsByClassName("choice")[0].onclick = () => {
+                            playerChoice(`Banish for ${player.hero}:`, () => {return banishable.length;}, 1, () => {
+                                for (let i = 0; i < player.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                        player.banishAt(i);
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
+                                        this.img.remove();
+                                    };
+                                }
+                                for (let i = 0; i < player.discard.length; i++) {
+                                    document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
+                                        player.hand.unshift(player.discard.splice(i, 1)[0]);
+                                        player.banishAt(0);
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
+                                        this.img.remove();
+                                    };
+                                }
+                            });
+                        };
+                        document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>";
+                    });
+                }
+            });
+        });
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
         else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
-        else if (activeGame === "Box 2") encounters = [unregisteredAnimagus];
+        else if (activeGame === "Box 2") encounters = [unregisteredAnimagus, fullMoonRises];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
