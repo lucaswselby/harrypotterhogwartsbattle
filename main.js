@@ -2170,19 +2170,19 @@ document.getElementById("submitPlayers").onclick = () => {
                             activePlayer.influence--;
                             activeVillains[i].influence--;
                         };
-                        if (activePlayer.attack > 0 && !activeVillains[i].influence) {
-                            damageWithAttack();
-                        }
-                        else if (activePlayer.influence > 0 && !activeVillains[i].health) {
-                            damageWithInfluence();
-                        }
-                        else if (activePlayer.attack > 0 && activePlayer.influence > 0 && activeVillains[i].health && activeVillains[i].influence) {
+                        if (activePlayer.attack > 0 && activePlayer.influence > 0 && activeVillains[i].health && activeVillains[i].influence) {
                             playerChoice("Damage with:", () => {return 2;}, 1, () => {
                                 document.getElementsByClassName("choice")[0].innerHTML = attackToken;
                                 document.getElementsByClassName("choice")[0].onclick = damageWithAttack;
                                 document.getElementsByClassName("choice")[1].innerHTML = influenceToken;
                                 document.getElementsByClassName("choice")[1].onclick = damageWithInfluence;
                             });
+                        }
+                        else if (activePlayer.attack > 0 && activeVillains[i].health) {
+                            damageWithAttack();
+                        }
+                        else if (activePlayer.influence > 0 && activeVillains[i].influence) {
+                            damageWithInfluence();
                         }
                     }
                 }
