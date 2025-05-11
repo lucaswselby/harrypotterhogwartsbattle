@@ -174,7 +174,7 @@ document.getElementById("submitPlayers").onclick = () => {
             const arithmancyCheck = effect => {
                 // Destroy Horcrux
                 const destroyedHorcrux = () => {
-                    if (encounters.length && !evil) {
+                    if (encounters.length && encounters[0].remaining.length && !evil) {
                         encounters[0].addSymbol(result);
                         if (!encounters[0].remaining.length) {
                             document.getElementById("encounters").innerHTML = "";
