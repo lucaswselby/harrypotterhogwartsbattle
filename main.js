@@ -1759,12 +1759,14 @@ document.getElementById("submitPlayers").onclick = () => {
                                 activeLocation.removeFromLocation();
                             }
                             // Full Moon Rises completion
-                            let fullMoonRisesComplete = true;
-                            for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
-                                if (document.getElementsByClassName("activeVillain")[i].innerHTML !== "") fullMoonRisesComplete = false;
-                            }
+                            let fullMoonRisesComplete = encounters.length && encounters[0] === fullMoonRises;
                             if (fullMoonRisesComplete) {
-                                activePlayer.addDestroyedHorcrux(encounters.shift());
+                                for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
+                                    if (document.getElementsByClassName("activeVillain")[i].innerHTML !== "") fullMoonRisesComplete = false;
+                                }
+                                if (fullMoonRisesComplete) {
+                                    activePlayer.addDestroyedHorcrux(encounters.shift());
+                                }
                             }
 
                             // check for victory
