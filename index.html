@@ -15,113 +15,218 @@
 
     <body>
         <main>
-            <div id="player1">
-                <label for="player1Hero">Player 1 Hero:</label>
-                <select id="player1Hero" class="playerHero">
-                    <option value="Harry Potter">Harry Potter</option>
-                    <option value="Ron Weasley">Ron Weasley</option>
-                    <option value="Hermione Granger">Hermione Granger</option>
-                    <option value="Neville Longbottom">Neville Longbottom</option>
-                </select>
-                <label for="player1Proficiency">Player 1 Proficiency:</label>
-                <select id="player1Proficiency" class="playerProficiency">
-                    <option value="Arithmancy">Arithmancy</option>
-                    <option value="Care Of Magical Creatures">Care of Magical Creatures</option>
-                    <option value="Charms">Charms</option>
-                    <option value="Defense Against The Dark Arts">Defense Against the Dark Arts</option>
-                    <option value="Divination">Divination</option>
-                    <option value="Flying Lessons">Flying Lessons</option>
-                    <option value="Herbology">Herbology</option>
-                    <option value="History Of Magic">History of Magic</option>
-                    <option value="Potions">Potions</option>
-                    <option value="Transfiguration">Transfiguration</option>
-                </select>
+            <h1>Game</h1>
+            <div id="gameChoice">
+                <input type="radio" name="game" id="game1" value="Game 1" checked>
+                <label for="game1"><figure>
+                    <figcaption>Game 1</figcaption>
+                    <img src="./images/Game 1/quirinusQuirrell.png">
+                </figure></label>
+                <input type="radio" name="game" id="game2" value="Game 2">
+                <label for="game2"><figure>
+                    <figcaption>Game 2</figcaption>
+                    <img src="./images/Game 2/luciusMalfoy.png">
+                </figure></label>
+                <input type="radio" name="game" id="game3" value="Game 3">
+                <label for="game3"><figure>
+                    <figcaption>Game 3</figcaption>
+                    <img src="./images/Game 3/dementor.png">
+                </figure></label>
+                <input type="radio" name="game" id="game4" value="Game 4">
+                <label for="game4"><figure>
+                    <figcaption>Game 4</figcaption>
+                    <img src="./images/Game 4/bartyCrouchJr.png">
+                </figure></label>
+                <input type="radio" name="game" id="game5" value="Game 5">
+                <label for="game5"><figure>
+                    <figcaption>Game 5</figcaption>
+                    <img src="./images/Game 5/lordVoldemort.png">
+                </figure></label>
+                <input type="radio" name="game" id="game6" value="Game 6">
+                <label for="game6"><figure>
+                    <figcaption>Game 6</figcaption>
+                    <img src="./images/Game 6/lordVoldemort.png">
+                </figure></label>
+                <input type="radio" name="game" id="game7" value="Game 7">
+                <label for="game7"><figure>
+                    <figcaption>Game 7</figcaption>
+                    <img src="./images/Game 7/lordVoldemort.png">
+                </figure></label>
+                <input type="radio" name="game" id="box1" value="Box 1">
+                <label for="box1"><figure>
+                    <figcaption>Box 1</figcaption>
+                    <img src="./images/Box 1/troll.png">
+                </figure></label>
+                <input type="radio" name="game" id="box2" value="Box 2">
+                <label for="box2"><figure>
+                    <figcaption>Box 2</figcaption>
+                    <img src="./images/Box 2/werewolf.png">
+                </figure></label>
             </div>
-            <div id="player2">
-                <label for="player2Hero">Player 2 Hero:</label>
-                <select id="player2Hero" class="playerHero">
-                    <option value="Ron Weasley">Ron Weasley</option>
-                    <option value="Harry Potter">Harry Potter</option>
-                    <option value="Hermione Granger">Hermione Granger</option>
-                    <option value="Neville Longbottom">Neville Longbottom</option>
-                </select>
-                <label for="player2Proficiency">Player 2 Proficiency:</label>
-                <select id="player2Proficiency" class="playerProficiency">
-                    <option value="Arithmancy">Arithmancy</option>
-                    <option value="Care Of Magical Creatures">Care of Magical Creatures</option>
-                    <option value="Charms">Charms</option>
-                    <option value="Defense Against The Dark Arts">Defense Against the Dark Arts</option>
-                    <option value="Divination">Divination</option>
-                    <option value="Flying Lessons">Flying Lessons</option>
-                    <option value="Herbology">Herbology</option>
-                    <option value="History Of Magic">History of Magic</option>
-                    <option value="Potions">Potions</option>
-                    <option value="Transfiguration">Transfiguration</option>
-                </select>
+
+            <h1>Player 1</h1>
+            <div id="player1" class="playerChoice">
+                <input type="radio" name="player1" id="player1Harry" value="Harry Potter" checked>
+                <label for="player1Harry"><figure>
+                    <figcaption>Harry Potter</figcaption>
+                    <img src="./images/Game 1/harryPotter.png">
+                </figure></label>
+                <input type="radio" name="player1" id="player1Ron" value="Ron Weasley">
+                <label for="player1Ron"><figure>
+                    <figcaption>Ron Weasley</figcaption>
+                    <img src="./images/Game 1/ronWeasley.png">
+                </figure></label>
+                <input type="radio" name="player1" id="player1Hermione" value="Hermione Granger">
+                <label for="player1Hermione"><figure>
+                    <figcaption>Hermione Granger</figcaption>
+                    <img src="./images/Game 1/hermioneGranger.png">
+                </figure></label>
+                <input type="radio" name="player1" id="player1Neville" value="Neville Longbottom">
+                <label for="player1Neville"><figure>
+                    <figcaption>Neville Longbottom</figcaption>
+                    <img src="./images/Game 1/nevilleLongbottom.png">
+                </figure></label>
+                <input type="radio" name="player1" id="player1Luna" value="Luna Lovegood">
+                <label for="player1Luna" class="boxOnly"><figure>
+                    <figcaption>Luna Lovegood</figcaption>
+                    <img src="./images/Box 1/lunaLovegood.png">
+                </figure></label>
             </div>
-            <div id="player3">
-                <label for="player3Hero">Player 3 Hero:</label>
-                <select id="player3Hero" class="playerHero">
-                    <option value="">none</option>
-                    <option value="Hermione Granger">Hermione Granger</option>
-                    <option value="Harry Potter">Harry Potter</option>
-                    <option value="Ron Weasley">Ron Weasley</option>
-                    <option value="Neville Longbottom">Neville Longbottom</option>
-                </select>
-                <label for="player3Proficiency">Player 3 Proficiency:</label>
-                <select id="player3Proficiency" class="playerProficiency">
-                    <option value="Arithmancy">Arithmancy</option>
-                    <option value="Care Of Magical Creatures">Care of Magical Creatures</option>
-                    <option value="Charms">Charms</option>
-                    <option value="Defense Against The Dark Arts">Defense Against the Dark Arts</option>
-                    <option value="Divination">Divination</option>
-                    <option value="Flying Lessons">Flying Lessons</option>
-                    <option value="Herbology">Herbology</option>
-                    <option value="History Of Magic">History of Magic</option>
-                    <option value="Potions">Potions</option>
-                    <option value="Transfiguration">Transfiguration</option>
-                </select>
+            <div id="player1Proficiency" class="proficiencyChoice">
+                <input type="radio" name="player1Proficiency" id="player1Arithmancy" value="Arithmancy" checked>
+                <label for="player1Arithmancy"><figure>
+                    <figcaption>Arithmancy</figcaption>
+                    <img src="./images/Game 6/arithmancy.png">
+                </figure></label>
+                <input type="radio" name="player1Proficiency" id="player1Care" value="Care of Magical Creatures">
+                <label for="player1Care"><figure>
+                    <figcaption>Care of Magical Creatures</figcaption>
+                    <img src="./images/Game 6/careOfMagicalCreatures.png">
+                </figure></label>
+                <input type="radio" name="player1Proficiency" id="player1Charms" value="Charms">
+                <label for="player1Charms"><figure>
+                    <figcaption>Charms</figcaption>
+                    <img src="./images/Game 6/charms.png">
+                </figure></label>
+                <input type="radio" name="player1Proficiency" id="player1Defense" value="Defense Against the Dark Arts">
+                <label for="player1Defense"><figure>
+                    <figcaption>Defense Against the Dark Arts</figcaption>
+                    <img src="./images/Game 6/defenseAgainstTheDarkArts.png">
+                </figure></label>
+                <input type="radio" name="player1Proficiency" id="player1Divination" value="Divination">
+                <label for="player1Divination"><figure>
+                    <figcaption>Divination</figcaption>
+                    <img src="./images/Game 6/divination.png">
+                </figure></label>
+                <input type="radio" name="player1Proficiency" id="player1Flying" value="Flying Lessons">
+                <label for="player1Flying"><figure>
+                    <figcaption>Flying Lessons</figcaption>
+                    <img src="./images/Game 6/flyingLessons.png">
+                </figure></label>
+                <input type="radio" name="player1Proficiency" id="player1Herbology" value="Herbology">
+                <label for="player1Herbology"><figure>
+                    <figcaption>Herbology</figcaption>
+                    <img src="./images/Game 6/herbology.png">
+                </figure></label>
+                <input type="radio" name="player1Proficiency" id="player1History" value="History of Magic">
+                <label for="player1History"><figure>
+                    <figcaption>History of Magic</figcaption>
+                    <img src="./images/Game 6/historyOfMagic.png">
+                </figure></label>
+                <input type="radio" name="player1Proficiency" id="player1Potions" value="Potions">
+                <label for="player1Potions"><figure>
+                    <figcaption>Potions</figcaption>
+                    <img src="./images/Game 6/potions.png">
+                </figure></label>
+                <input type="radio" name="player1Proficiency" id="player1Transfiguration" value="Transfiguration">
+                <label for="player1Transfiguration"><figure>
+                    <figcaption>Transfiguration</figcaption>
+                    <img src="./images/Game 6/transfiguration.png">
+                </figure></label>
             </div>
-            <div id="player4">
-                <label for="player4Hero">Player 4 Hero:</label>
-                <select id="player4Hero" class="playerHero">
-                    <option value="">none</option>
-                    <option value="Neville Longbottom">Neville Longbottom</option>
-                    <option value="Harry Potter">Harry Potter</option>
-                    <option value="Ron Weasley">Ron Weasley</option>
-                    <option value="Hermione Granger">Hermione Granger</option>
-                </select>
-                <label for="player4Proficiency">Player 4 Proficiency:</label>
-                <select id="player4Proficiency" class="playerProficiency">
-                    <option value="Arithmancy">Arithmancy</option>
-                    <option value="Care Of Magical Creatures">Care of Magical Creatures</option>
-                    <option value="Charms">Charms</option>
-                    <option value="Defense Against The Dark Arts">Defense Against the Dark Arts</option>
-                    <option value="Divination">Divination</option>
-                    <option value="Flying Lessons">Flying Lessons</option>
-                    <option value="Herbology">Herbology</option>
-                    <option value="History Of Magic">History of Magic</option>
-                    <option value="Potions">Potions</option>
-                    <option value="Transfiguration">Transfiguration</option>
-                </select>
+
+            <h1>Player 2</h1>
+            <div id="player2" class="playerChoice">
+                <input type="radio" name="player2" id="player2Harry" value="Harry Potter">
+                <label for="player2Harry"><figure>
+                    <figcaption>Harry Potter</figcaption>
+                    <img src="./images/Game 1/harryPotter.png">
+                </figure></label>
+                <input type="radio" name="player2" id="player2Ron" value="Ron Weasley" checked>
+                <label for="player2Ron"><figure>
+                    <figcaption>Ron Weasley</figcaption>
+                    <img src="./images/Game 1/ronWeasley.png">
+                </figure></label>
+                <input type="radio" name="player2" id="player2Hermione" value="Hermione Granger">
+                <label for="player2Hermione"><figure>
+                    <figcaption>Hermione Granger</figcaption>
+                    <img src="./images/Game 1/hermioneGranger.png">
+                </figure></label>
+                <input type="radio" name="player2" id="player2Neville" value="Neville Longbottom">
+                <label for="player2Neville"><figure>
+                    <figcaption>Neville Longbottom</figcaption>
+                    <img src="./images/Game 1/nevilleLongbottom.png">
+                </figure></label>
+                <input type="radio" name="player2" id="player2Luna" value="Luna Lovegood">
+                <label for="player2Luna" class="boxOnly"><figure>
+                    <figcaption>Luna Lovegood</figcaption>
+                    <img src="./images/Box 1/lunaLovegood.png">
+                </figure></label>
             </div>
-            <div>
-                <label for="game">Game:</label>
-                <select id="game">
-                    <option value="Game 1">Game 1</option>
-                    <option value="Game 2">Game 2</option>
-                    <option value="Game 3">Game 3</option>
-                    <option value="Game 4">Game 4</option>
-                    <option value="Game 5">Game 5</option>
-                    <option value="Game 6">Game 6</option>
-                    <option value="Game 7">Game 7</option>
-                    <option value="Box 1">Box 1</option>
-                    <option value="Box 2">Box 2</option>
-                    <!--<option value="Box 3">Box 3</option>
-                    <option value="Box 4">Box 4</option>-->
-                </select>
+            <div id="player2Proficiency" class="proficiencyChoice">
+                <input type="radio" name="player2Proficiency" id="player2Arithmancy" value="Arithmancy">
+                <label for="player2Arithmancy"><figure>
+                    <figcaption>Arithmancy</figcaption>
+                    <img src="./images/Game 6/arithmancy.png">
+                </figure></label>
+                <input type="radio" name="player2Proficiency" id="player2Care" value="Care of Magical Creatures" checked>
+                <label for="player2Care"><figure>
+                    <figcaption>Care of Magical Creatures</figcaption>
+                    <img src="./images/Game 6/careOfMagicalCreatures.png">
+                </figure></label>
+                <input type="radio" name="player2Proficiency" id="player2Charms" value="Charms">
+                <label for="player2Charms"><figure>
+                    <figcaption>Charms</figcaption>
+                    <img src="./images/Game 6/charms.png">
+                </figure></label>
+                <input type="radio" name="player2Proficiency" id="player2Defense" value="Defense Against the Dark Arts">
+                <label for="player2Defense"><figure>
+                    <figcaption>Defense Against the Dark Arts</figcaption>
+                    <img src="./images/Game 6/defenseAgainstTheDarkArts.png">
+                </figure></label>
+                <input type="radio" name="player2Proficiency" id="player2Divination" value="Divination">
+                <label for="player2Divination"><figure>
+                    <figcaption>Divination</figcaption>
+                    <img src="./images/Game 6/divination.png">
+                </figure></label>
+                <input type="radio" name="player2Proficiency" id="player2Flying" value="Flying Lessons">
+                <label for="player2Flying"><figure>
+                    <figcaption>Flying Lessons</figcaption>
+                    <img src="./images/Game 6/flyingLessons.png">
+                </figure></label>
+                <input type="radio" name="player2Proficiency" id="player2Herbology" value="Herbology">
+                <label for="player2Herbology"><figure>
+                    <figcaption>Herbology</figcaption>
+                    <img src="./images/Game 6/herbology.png">
+                </figure></label>
+                <input type="radio" name="player2Proficiency" id="player2History" value="History of Magic">
+                <label for="player2History"><figure>
+                    <figcaption>History of Magic</figcaption>
+                    <img src="./images/Game 6/historyOfMagic.png">
+                </figure></label>
+                <input type="radio" name="player2Proficiency" id="player2Potions" value="Potions">
+                <label for="player2Potions"><figure>
+                    <figcaption>Potions</figcaption>
+                    <img src="./images/Game 6/potions.png">
+                </figure></label>
+                <input type="radio" name="player2Proficiency" id="player2Transfiguration" value="Transfiguration">
+                <label for="player2Transfiguration"><figure>
+                    <figcaption>Transfiguration</figcaption>
+                    <img src="./images/Game 6/transfiguration.png">
+                </figure></label>
             </div>
-            <input type="button" id="submitPlayers" value="Submit">
+
+            <input type="submit" id="submitPlayers" value="Submit">
         </main>
     </body>
 

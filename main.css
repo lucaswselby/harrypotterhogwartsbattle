@@ -5,7 +5,7 @@
     --playerChoiceDisplay: flex;
 }
 html, body {
-    height: 100vh;
+    height: 100%;
     margin: 0;
     padding: 0;
 }
@@ -14,10 +14,44 @@ main {
     flex-flow: row nowrap;
     align-items: center;
     background-color: var(--backgroundColor);
-    overflow: hidden;
 }
 
-.playerProficiency {
+h1 {
+    text-align: center;
+}
+#gameChoice, .playerChoice, .proficiencyChoice {
+    display: flex;
+    flex-flow: row nowrap;
+    max-width: 100%;
+    overflow-x: scroll;
+    scrollbar-width: none;
+    height: 60vh;
+}
+.proficiencyChoice {
+    display: none;
+}
+input[type="radio"] {
+    display: none;
+}
+figure {
+    display: inline;
+    text-align: center;
+}
+label img {
+    max-height: 40vh;
+    max-width: 60vw;
+    transition: max-height, 1s;
+}
+input[type="radio"]:checked + label img {
+    max-height: 50vh;
+    max-width: 75vw;
+    transition: max-height, 1s;
+}
+input[type="submit"] {
+    text-align: center;
+}
+
+.playerProficiency, .boxOnly {
     display: none;
 }
 

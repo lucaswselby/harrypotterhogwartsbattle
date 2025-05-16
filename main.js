@@ -1,31 +1,64 @@
 // display player proficiecy choice
 const displayGameChoices = playerNumber => {
-    // display proficiency choice
-    if (document.getElementById(`player${playerNumber}Hero`).value && (document.getElementById("game").value === "Game 6" || document.getElementById("game").value === "Game 7" || document.getElementById("game").value.includes("Box"))) {
-        document.getElementById(`player${playerNumber}Proficiency`).style.display = "initial";
-    }
-    else {
-        document.getElementById(`player${playerNumber}Proficiency`).style.display = "none";
-    }
+    const game = document.querySelector("input[name=\"game\"]:checked").value;
+    const player = document.querySelector(`input[name="player${playerNumber}"]:checked`).value;
+    const proficiecyElem = document.getElementById(`player${playerNumber}Proficiency`);
 
-    // display player choice for expansions
-    if (document.getElementById("game").value.includes("Box")) {
-        for (let i = 0; i < document.getElementsByClassName("playerHero").length; i++) {
-            const lunaLovegoodHTML = "<option value=\"Luna Lovegood\">Luna Lovegood</option>";
-            if (!document.getElementsByClassName("playerHero")[i].innerHTML.includes(lunaLovegoodHTML)) document.getElementsByClassName("playerHero")[i].innerHTML += lunaLovegoodHTML;
+    // change player images based on game
+    if (game.includes("Box")) {
+        document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/harryPotter.png";
+        document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/ronWeasley.png";
+        document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/hermioneGranger.png";
+        document.querySelector(`label[for="player${playerNumber}Neville"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/nevilleLongbottom.png";
+        for (let i = 0; i < document.getElementsByClassName("boxOnly").length; i++) {
+            document.getElementsByClassName("boxOnly")[i].style.display = "initial";
         }
     }
+    else {
+        for (let i = 0; i < document.getElementsByClassName("boxOnly").length; i++) {
+            document.getElementsByClassName("boxOnly")[i].style.display = "none";
+        }
+        if (game === "Game 1" || game === "Game 2") {
+            document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Game 1/harryPotter.png";
+            document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Game 1/ronWeasley.png";
+            document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Game 1/hermioneGranger.png";
+            document.querySelector(`label[for="player${playerNumber}Neville"]`).getElementsByTagName("IMG")[0].src = "./images/Game 1/nevilleLongbottom.png";
+        }
+        else if (game === "Game 3" || game === "Game 4" || game === "Game 5" || game === "Game 6") {
+            document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Game 3/harryPotter.png";
+            document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Game 3/ronWeasley.png";
+            document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Game 3/hermioneGranger.png";
+            document.querySelector(`label[for="player${playerNumber}Neville"]`).getElementsByTagName("IMG")[0].src = "./images/Game 3/nevilleLongbottom.png";
+        }
+        else if (game === "Game 7") {
+            document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/harryPotter.png";
+            document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/ronWeasley.png";
+            document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/hermioneGranger.png";
+            document.querySelector(`label[for="player${playerNumber}Neville"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/nevilleLongbottom.png";
+        }
+    }
+
+    // display proficiency choice
+    if (player && (game === "Game 6" || game === "Game 7" || game.includes("Box"))) {
+        proficiecyElem.style.display = "flex";
+    }
+    else {
+        proficiecyElem.style.display = "none";
+    }
 }
-document.getElementById("player3Hero").onchange = () => {
+/*document.getElementById("player3Hero").onchange = () => {
     displayGameChoices(3);
 }
 document.getElementById("player4Hero").onchange = () => {
     displayGameChoices(4);
-}
-document.getElementById("game").onchange = () => {
-    for (let i = 1; i <= document.getElementsByClassName("playerProficiency").length; i++) {
-        displayGameChoices(i);
-    }
+}*/
+const gameElems = document.getElementsByName("game");
+for (let i = 0; i < gameElems.length; i++) {
+    gameElems[i].onclick = () => {
+        for (let j = 1; j <= document.getElementsByClassName("playerChoice").length; j++) {
+            displayGameChoices(j);
+        }
+    };
 }
 
 // prep for mobile magnify
@@ -38,19 +71,20 @@ window.oncontextmenu = event => {
 document.getElementById("submitPlayers").onclick = () => {
     // can't have more than one of each hero or proficiency
     let continueGame = true;
-    for (let i = 0; i < document.getElementsByClassName("playerHero").length - 1; i++) {
-        if (document.getElementsByClassName("playerHero")[i].value) {
-            for (let j = i + 1; j < document.getElementsByClassName("playerHero").length; j++) {
-                if (document.getElementsByClassName("playerHero")[i].value === document.getElementsByClassName("playerHero")[j].value) {
+    for (let i = 0; i < document.getElementsByClassName("playerChoice").length - 1; i++) {
+        const firstPlayer = document.querySelector(`input[name="player${i + 1}"]:checked`).value;
+        if (firstPlayer) {
+            for (let j = i + 1; j < document.getElementsByClassName("playerChoice").length; j++) {
+                if (firstPlayer === document.querySelector(`input[name="player${j + 1}"]:checked`).value) {
                     continueGame = false;
                 }
             }
         }
     }
-    for (let i = 0; i < document.getElementsByClassName("playerProficiency").length - 1; i++) {
-        if (document.getElementsByClassName("playerProficiency")[i].style.display === "initial") {
-            for (let j = i + 1; j < document.getElementsByClassName("playerProficiency").length; j++) {
-                if (document.getElementsByClassName("playerProficiency")[j].style.display === "initial" && document.getElementsByClassName("playerProficiency")[i].value === document.getElementsByClassName("playerProficiency")[j].value) {
+    for (let i = 0; i < document.getElementsByClassName("proficiencyChoice").length - 1; i++) {
+        if (document.getElementsByClassName("proficiencyChoice")[i].style.display === "flex") {
+            for (let j = i + 1; j < document.getElementsByClassName("proficiencyChoice").length; j++) {
+                if (document.getElementsByClassName("proficiencyChoice")[j].style.display === "flex" && document.querySelector(`input[name="player${i + 1}Proficiency"]:checked`).value === document.querySelector(`input[name="player${j + 1}Proficiency"]:checked`).value) {
                     continueGame = false;
                 }
             }
@@ -60,7 +94,8 @@ document.getElementById("submitPlayers").onclick = () => {
     // display game
     if (continueGame) {
         document.getElementsByTagName("MAIN")[0].style.display = "flex";
-        let activeGame = document.getElementById("game").value;
+        document.getElementsByTagName("MAIN")[0].style.overflow = "hidden";
+        let activeGame = document.querySelector("input[name=\"game\"]:checked").value;
         const attackToken = "<img src=\"./images/attackToken.png\" alt=\"Choose Attack Token\" style=\"width: 33%;\">";
         const influenceToken = "<img src=\"./images/influenceToken.png\" alt=\"Choose Influece Token\" style=\"width: 33%;\">";
         const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Choose Health Token\" style=\"width: 33%;\">";
@@ -1283,11 +1318,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             }
         }
-        const player1 = new Player(document.getElementById("player1Hero").value, document.getElementById("player1Proficiency").value);
-        const player2 = new Player(document.getElementById("player2Hero").value, document.getElementById("player2Proficiency").value);
+        const player1 = new Player(document.querySelector("input[name=\"player1\"]:checked").value, document.querySelector("input[name=\"player1Proficiency\"]:checked").value);
+        const player2 = new Player(document.querySelector("input[name=\"player2\"]:checked").value, document.querySelector("input[name=\"player2Proficiency\"]:checked").value);
         const players = [player1, player2];
-        if (document.getElementById("player3Hero").value) players.push(new Player(document.getElementById("player3Hero").value, document.getElementById("player3Proficiency").value));
-        if (document.getElementById("player4Hero").value) players.push(new Player(document.getElementById("player4Hero").value, document.getElementById("player4Proficiency").value));
+        /*if (document.getElementById("player3Hero").value) players.push(new Player(document.getElementById("player3Hero").value, document.getElementById("player3Proficiency").value));
+        if (document.getElementById("player4Hero").value) players.push(new Player(document.getElementById("player4Hero").value, document.getElementById("player4Proficiency").value));*/
         let activePlayer = players[players.length - 1]; // sets to last hero because turn starts with next hero
 
         // remove Hogwarts cards for current players
