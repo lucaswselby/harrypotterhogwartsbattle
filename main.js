@@ -1978,16 +1978,20 @@ document.getElementById("submitPlayers").onclick = () => {
                     playerChoice("Banish:", () => {return 2;}, 1, () => {
                         document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(items);
                         document.getElementsByClassName("choice")[0].onclick = () => {
-                            playerChoice("Banish:", () => {return items.length;}, 1, () => {
-                                for (let i = 0; i < player.hand.filter(card => {return card.type === "item"}).length; i++) {
-                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand.filter(card => {return card.type === "item"})[i].img.src}">`;
-                                    document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(player.hand.filter(card => {return card.type === "item"})[i]))};
-                                }
-                                for (let i = 0; i < player.discard.length; i++) {
-                                    document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard.filter(card => {return card.type === "item"})[i].img.src}">`;
-                                    document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(player.discard.filter(card => {return card.type === "item"})[i]), 1)};
-                                }
-                            });
+                            if (items.length > 1) {
+                                playerChoice("Banish:", () => {return items.length;}, 1, () => {
+                                    for (let i = 0; i < player.hand.filter(card => {return card.type === "item"}).length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand.filter(card => {return card.type === "item"})[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(player.hand.filter(card => {return card.type === "item"})[i]));};
+                                    }
+                                    for (let i = 0; i < player.discard.length; i++) {
+                                        document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard.filter(card => {return card.type === "item"})[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(player.discard.filter(card => {return card.type === "item"})[i]), 1);};
+                                    }
+                                });
+                            }
+                            else if (player.hand.includes(items[0])) player.banishAt(player.hand.indexOf(player.hand.filter(card => {return card.type === "item"})[i]));
+                            else player.discard.splice(player.discard.indexOf(player.discard.filter(card => {return card.type === "item"})[i]), 1);
                         };
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
                     });
