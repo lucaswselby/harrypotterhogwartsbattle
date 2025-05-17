@@ -269,10 +269,10 @@ document.getElementById("submitPlayers").onclick = () => {
         // check if Voldemort is in the draw villain spot
         const invulnerableVoldemort = () => {
             if (!inactiveVillains.length) {
-                if ((activeGame === "Game 5" || activeGame === "Box 1") && activeVillains[0] !== lordVoldemort1) {
+                if ((activeGame === "Game 5" || activeGame === "Box 1") && (activeVillains[0] !== lordVoldemort1 || encounters.length)) {
                     return lordVoldemort1;
                 }
-                else if ((activeGame === "Game 6" || activeGame === "Box 2") && activeVillains[0] !== lordVoldemort2) {
+                else if ((activeGame === "Game 6" || activeGame === "Box 2") && (activeVillains[0] !== lordVoldemort2 || encounters.length)) {
                     return lordVoldemort2;
                 }
                 else if ((activeGame === "Game 7" || activeGame === "Box 3") && (activeVillains[0] !== lordVoldemort3 || encounters.length)) {
@@ -2258,7 +2258,8 @@ document.getElementById("submitPlayers").onclick = () => {
             for (let i = 0; i < activeVillains.length; i++) {
                 activeVillains[i].displayDamage();
                 const dealDamage = () => {
-                    if ((!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].damageTaken) && (activeVillains[i] !== lordVoldemort3 || !encounters.length)) {
+                    if ((!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].damageTaken) && // Tarantallegra effect
+                    (activeVillains[i].name !== "Lord Voldemort" || !encounters.length)) {
                         const damageWithAttack = () => {
                             activePlayer.attack--;
                             activeVillains[i].health--;
