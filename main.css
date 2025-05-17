@@ -25,7 +25,7 @@ h1 {
     max-width: 100%;
     overflow-x: scroll;
     scrollbar-width: none;
-    height: 60vh;
+    height: calc(50vh + 3em);
 }
 .proficiencyChoice {
     display: none;
@@ -48,7 +48,9 @@ input[type="radio"]:checked + label img {
     transition: max-height, 1s;
 }
 input[type="submit"] {
-    text-align: center;
+    width: 100%;
+    height: 20vh;
+    font-size: 10vh;
 }
 
 .playerProficiency, .boxOnly {
