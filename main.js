@@ -257,10 +257,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 else alert(`${color} is not a die color.`);
             }
             else {
-                if (result === "influence") arithmancyCheck(() => {activePlayer.influence++;});
-                else if (result.includes("draw")) arithmancyCheck(() => {activePlayer.drawCards(result === "draw" ? 1 : 2);});
-                else if (result === "attack") arithmancyCheck(() => {activePlayer.attack++;});
-                else if (result.includes("health")) arithmancyCheck(() => {activePlayer.health += result === "health" ? 1 : 2;});
+                if (result === "influence") arithmancyCheck(() => {players.forEach(player => {player.influence++;});});
+                else if (result.includes("draw")) arithmancyCheck(() => {players.forEach(player => {player.drawCards(result === "draw" ? 1 : 2);});});
+                else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.attack++;});});
+                else if (result.includes("health")) arithmancyCheck(() => {players.forEach(player => {player.health += result === "health" ? 1 : 2;});});
                 else if (result === "location") activeLocation.removeFromLocation();
                 else alert(`${color} is not a die color.`);
             }
