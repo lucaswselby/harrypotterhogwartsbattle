@@ -165,7 +165,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     // add playerChoice to main
                     document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceContainer);
-                    playerChoiceElement.style.gridTemplateColumns = `repeat(${choices()}, calc((100% - ${getComputedStyle(playerChoiceElement).getPropertyValue("gap")} * ${choices() - 1}) / ${choices()}))`;
+                    playerChoiceElement.style.gridTemplateColumns = `repeat(${choices()}, calc((100vw - ${getComputedStyle(playerChoiceElement).getPropertyValue("gap")} * ${choices() - 1}) / ${choices()}))`;
                     populateFunction();
                 }
             }
