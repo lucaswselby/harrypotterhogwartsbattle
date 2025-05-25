@@ -692,7 +692,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const immobulus1 = new Card("Immobulus", "Box 2", "spell", 3, () => {activePlayer.attack++;}, true, false);
         const immobulus2 = immobulus1.clone();
         const immobulus3 = immobulus1.clone();
-        const monsterBookOfMonsters1 = new Card("Monster Book of Monsters", "Box 2", "item", 5, () => {activePlayer.attack++; rollHouseDie("phoenix", false, false);}, false, true);
+        const monsterBookOfMonsters1 = new Card("Monster Book Of Monsters", "Box 2", "item", 5, () => {activePlayer.attack++; rollHouseDie("phoenix", false, false);}, false, true);
         const monsterBookOfMonsters2 = monsterBookOfMonsters1.clone();
         const monsterBookOfMonsters3 = monsterBookOfMonsters1.clone();
 
