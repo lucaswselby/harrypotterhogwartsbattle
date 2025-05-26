@@ -641,7 +641,28 @@ document.getElementById("submitPlayers").onclick = () => {
         const harp = new Card("Harp", "Box 1", "item", 6, () => {activePlayer.attack++; let unpetrifiedCreatures = activeVillains.filter(villain => {return !villain.petrifiedBy && (villain.health > 0 || villain.influence > 0) && villain.type === "creature";}); if (unpetrifiedCreatures.length) {if (unpetrifiedCreatures.length > 1) {playerChoice("Petrify:", () => {return unpetrifiedCreatures.length;}, 1, () => {for (let i = 0; i < unpetrifiedCreatures.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedCreatures[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedCreatures[i].petrifiedBy = activePlayer;};}});} else unpetrifiedCreatures[0].petrifiedBy = activePlayer;}}, false, false);
         const oldSock1 = new Card("Old Sock", "Box 1", "item", 1, () => {activePlayer.influence++; if (players.filter(player => {return player !== activePlayer && (player.hand.includes(dobbyTheHouseElf)/* || player.hand.includes(other house elves)*/)}).length) activePlayer.attack += 2;}, false, false);
         const oldSock2 = oldSock1.clone();
-        const tergeo1 = new Card("Tergeo", "Box 1", "spell", 2, () => {activePlayer.influence++; if (activePlayer.hand.length) {playerChoice("Do you want to banish a card?", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(activePlayer.hand); document.getElementsByClassName("choice")[0].onclick = () => {playerChoice("Banish:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {if (activePlayer.hand[i].type === "item") activePlayer.drawCards(1); activePlayer.banishAt(i);};}});}; document.getElementsByClassName("choice")[1].innerHTML = "<p>No</p>";});}}, false, false);
+        const tergeo1 = new Card("Tergeo", "Box 1", "spell", 2, () => {
+            activePlayer.influence++; 
+            if (activePlayer.hand.length) {
+                playerChoice("Do you want to banish a card?", () => {return 2;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(activePlayer.hand); 
+                    document.getElementsByClassName("choice")[0].onclick = () => {
+                        if (activePlayer.hand.length > 1) {
+                            playerChoice("Banish:", () => {return activePlayer.hand.length;}, 1, () => {
+                                for (let i = 0; i < activePlayer.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; 
+                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                        if (activePlayer.hand[i].type === "item") activePlayer.drawCards(1); activePlayer.banishAt(i);
+                                    };
+                                }
+                            });
+                        }
+                        else activePlayer.banishAt(0);
+                    }; 
+                    document.getElementsByClassName("choice")[1].innerHTML = "<p>No</p>";
+                });
+            }
+        }, false, false);
         const tergeo2 = tergeo1.clone();
         const tergeo3 = tergeo1.clone();
         const tergeo4 = tergeo1.clone();
