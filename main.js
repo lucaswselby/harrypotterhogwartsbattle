@@ -1998,12 +1998,13 @@ document.getElementById("submitPlayers").onclick = () => {
         });}, () => {
             players.forEach(player => {
                 player.health++;
-                const items = player.hand.concat(player.discard).filter(card => {return card.type === "item"});
-                if (items.length) {
+                const handItems = player.hand.filter(card => {return card.type === "item"});
+                const discardItems = player.discard.filter(card => {return card.type === "item"});
+                if (handItems.length || discardItems.length) {
                     playerChoice("Banish:", () => {return 2;}, 1, () => {
-                        document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(items);
+                        document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(handItems.concat(discardItems));
                         document.getElementsByClassName("choice")[0].onclick = () => {
-                            if (items.length > 1) {
+                            if (handItems.length + discardItems.length > 1) {
                                 playerChoice("Banish:", () => {return items.length;}, 1, () => {
                                     for (let i = 0; i < player.hand.filter(card => {return card.type === "item"}).length; i++) {
                                         document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand.filter(card => {return card.type === "item"})[i].img.src}">`;
@@ -2015,8 +2016,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                     }
                                 });
                             }
-                            else if (player.hand.includes(items[0])) player.banishAt(player.hand.indexOf(player.hand.filter(card => {return card.type === "item"})[i]));
-                            else player.discard.splice(player.discard.indexOf(player.discard.filter(card => {return card.type === "item"})[i]), 1);
+                            else if (handItems.length) player.banishAt(player.hand.indexOf(handItems[0]));
+                            else player.discard.splice(player.discard.indexOf(discardItems[i]), 1);
                         };
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
                     });
