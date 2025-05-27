@@ -112,63 +112,75 @@ document.getElementById("submitPlayers").onclick = () => {
         };
 
         // some cards give the players a choice of action
-        const playerChoice = (description, choices, iterations, populateFunction) => {
-            if (choices()) {
-                // queue playerChoices in case there are multiple
-                if (document.getElementById("playerChoice")) {
-                    document.getElementById("playerChoice").addEventListener("click", () => {playerChoice(description, choices, iterations, populateFunction);});
-                }
-                else {
-                    // create playerChoice label
-                    const playerChoiceLabel = document.createElement("h1");
-                    playerChoiceLabel.id = "playerChoiceLabel";
-                    playerChoiceLabel.innerHTML = description;
-
-                    // create playerChoice element
-                    const playerChoiceElement = document.createElement("div");
-                    playerChoiceElement.id = "playerChoice";
-                    playerChoiceElement.className = iterations;
-
-                    // create revealBoard button
-                    const revealBoard = document.createElement("button");
-                    revealBoard.id = "revealBoard";
-                    revealBoard.innerHTML = "Reveal Board";
-                    revealBoard.onclick = () => {
-                        playerChoiceElement.classList.toggle("revealBoard");
-                        playerChoiceLabel.classList.toggle("revealBoard");
-                        revealBoard.innerHTML = revealBoard.innerHTML === "Reveal Board" ? "Hide Board" : "Reveal Board";
-                    };
-
-                    // create playerChoiceContainer
-                    const playerChoiceContainer = document.createElement("div");
-                    playerChoiceContainer.id = "playerChoiceContainer";
-                    playerChoiceContainer.appendChild(playerChoiceLabel);
-                    playerChoiceContainer.appendChild(playerChoiceElement);
-                    playerChoiceContainer.appendChild(revealBoard);
-
-                    // add columns to playerChoice
-                    for (let i = 1; i <= choices(); i++) {
-                        const choice = document.createElement("div");
-                        choice.className = "choice";
-                        playerChoiceElement.appendChild(choice);
+        class PlayerChoice {
+            constructor(description, choices, iterations, populateFunction) {
+                this._description = description;
+                this._choices = choices;
+                this._iterations = iterations;
+                this._populateFunction = populateFunction;
+            }
+            display() {
+                if (this._choices()) {
+                    // queue playerChoices in case there are multiple
+                    if (document.getElementById("playerChoice")) {
+                        document.getElementById("playerChoice").addEventListener("click", () => {playerChoice(this._description, this._choices, this._iterations, this._populateFunction);});
                     }
+                    else {
+                        // create playerChoice label
+                        const playerChoiceLabel = document.createElement("h1");
+                        playerChoiceLabel.id = "playerChoiceLabel";
+                        playerChoiceLabel.innerHTML = this._description;
 
-                    playerChoiceElement.onclick = () => {
-                        // remove playerChoice when clicked
-                        playerChoiceContainer.remove();
+                        // create playerChoice element
+                        const playerChoiceElement = document.createElement("div");
+                        playerChoiceElement.id = "playerChoice";
+                        playerChoiceElement.className = this._iterations;
 
-                        // increment and display a new playerChoice for multiple iterations
-                        if (--iterations > 0) {
-                            playerChoice(description, choices, iterations, populateFunction);
+                        // create revealBoard button
+                        const revealBoard = document.createElement("button");
+                        revealBoard.id = "revealBoard";
+                        revealBoard.innerHTML = "Reveal Board";
+                        revealBoard.onclick = () => {
+                            playerChoiceElement.classList.toggle("revealBoard");
+                            playerChoiceLabel.classList.toggle("revealBoard");
+                            revealBoard.innerHTML = revealBoard.innerHTML === "Reveal Board" ? "Hide Board" : "Reveal Board";
+                        };
+
+                        // create playerChoiceContainer
+                        const playerChoiceContainer = document.createElement("div");
+                        playerChoiceContainer.id = "playerChoiceContainer";
+                        playerChoiceContainer.appendChild(playerChoiceLabel);
+                        playerChoiceContainer.appendChild(playerChoiceElement);
+                        playerChoiceContainer.appendChild(revealBoard);
+
+                        // add columns to playerChoice
+                        for (let i = 1; i <= this._choices(); i++) {
+                            const choice = document.createElement("div");
+                            choice.className = "choice";
+                            playerChoiceElement.appendChild(choice);
                         }
-                    }
 
-                    // add playerChoice to main
-                    document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceContainer);
-                    playerChoiceElement.style.gridTemplateColumns = `repeat(${choices()}, calc((100vw - ${getComputedStyle(playerChoiceElement).getPropertyValue("gap")} * ${choices() - 1}) / ${choices()}))`;
-                    populateFunction();
+                        playerChoiceElement.onclick = () => {
+                            // remove playerChoice when clicked
+                            playerChoiceContainer.remove();
+
+                            // increment and display a new playerChoice for multiple iterations
+                            if (--this._iterations > 0) {
+                                playerChoice(this._description, this._choices, this._iterations, this._populateFunction);
+                            }
+                        }
+
+                        // add playerChoice to main
+                        document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceContainer);
+                        playerChoiceElement.style.gridTemplateColumns = `repeat(${this._choices()}, calc((100vw - ${getComputedStyle(playerChoiceElement).getPropertyValue("gap")} * ${this._choices() - 1}) / ${this._choices()}))`;
+                        this._populateFunction();
+                    }
                 }
             }
+        }
+        const playerChoice = (description, choices, iterations, populateFunction) => {
+            const choice = new PlayerChoice(description, choices, iterations, populateFunction);
+            choice.display();
         };
 
         // shuffles cards in a random order
