@@ -868,6 +868,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._potionsProficiencyUsed = false;
                 this._gainedHealth = false;
                 this._attacks = 0;
+                this._influences = 0;
                 this._healthGained = 0;
                 this._healthLost = 0;
                 this._horcruxesDestroyed = [];
@@ -1146,7 +1147,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._attacks = attacks;
 
                 // Ron Weasley special
-                if (this.attacks === 3 && this.hero === "Ron Weasley" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                if (this.attacks + this.influences === 3 && this.hero === "Ron Weasley" && activeGame !== "Game 1" && activeGame !== "Game 2") {
                     if (activeGame.includes("Game")) {
                         if (activeGame === "Game 7") {
                             players.forEach(player => {player.health += 2;});
@@ -1177,6 +1178,17 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (encounters.length && encounters[0] === unregisteredAnimagus && this.attacks === 5) {
                     this.addDestroyedHorcrux(encounters.shift());
                     displayNextEncounter();
+                }
+            }
+            get influences() {
+                return this._influences;
+            }
+            set influences(influences) {
+                this._influences = influences;
+
+                // Ron Weasley Box expansion special
+                if (this.attacks + this.influences === 3 && this.hero === "Ron Weasley" && activeGame.includes("Box")) {
+                    players.forEach(player => {player.health++;});
                 }
             }
             get healthGained() {
@@ -1330,6 +1342,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._potionsProficiencyUsed = false;
                 this.gainedHealth = false;
                 this.attacks = 0;
+                this.influences = 0;
                 owlsSpells1 = 0;
                 owlsSpells2 = 0;
                 this._healthGained = 0;
@@ -2315,6 +2328,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         const damageWithInfluence = () => {
                             activePlayer.influence--;
                             activeVillains[i].influence--;
+                            activePlayer.influences++;
                         };
                         if (activePlayer.attack > 0 && activePlayer.influence > 0 && activeVillains[i].health && activeVillains[i].influence) {
                             addPlayerChoice("Damage with:", () => {return 2;}, 1, () => {
