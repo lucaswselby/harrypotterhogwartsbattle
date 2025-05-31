@@ -2040,12 +2040,16 @@ document.getElementById("submitPlayers").onclick = () => {
                 document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
             });
         });});
-        const troll = new Villain("Troll", "Box 1", "creature", 7, 0, () => {addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
-            document.getElementsByClassName("choice")[0].innerHTML = `<p>Lose:</p><div class="choiceContainer">${healthToken + healthToken}</div>`;
-            document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2;};
-            document.getElementsByClassName("choice")[1].innerHTML = `<img src="./images/Box 1/detention.png"><p>Add to Discard</p>`;
-            document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.discard.push(detention.clone());};
-        });}, () => {
+        const troll = new Villain("Troll", "Box 1", "creature", 7, 0, () => {
+            if (activePlayer.health) {
+                addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = `<p>Lose:</p><div class="choiceContainer">${healthToken + healthToken}</div>`;
+                    document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2;};
+                    document.getElementsByClassName("choice")[1].innerHTML = `<img src="./images/Box 1/detention.png"><p>Add to Discard</p>`;
+                    document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.discard.push(detention.clone());};
+                });
+            }
+        }, () => {
             players.forEach(player => {
                 player.health++;
                 const handItems = player.hand.filter(card => {return card.type === "item"});
