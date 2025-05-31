@@ -1998,7 +1998,7 @@ document.getElementById("submitPlayers").onclick = () => {
             fluffyEffect();
         }, () => {players.forEach(player => {player.health++; player.drawCards(1);});});
         const norbert = new Villain("Norbert", "Box 1", "creature", 0, 6, () => {activePlayer.health -= 1 + activePlayer.hand.filter(card => {return card.name === "Detention";}).length;}, () => {players.forEach(player => {
-            addPlayerChoice("Banish:", () => {return 2;}, 1, () => {
+            addPlayerChoice(`Banish for ${player.hero}:`, () => {return 2;}, 1, () => {
                 document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(player.hand.concat(player.discard));
                 document.getElementsByClassName("choice")[0].onclick = () => {
                     addPlayerChoice(`Banish for ${player.hero}:`, () => {return player.hand.concat(player.discard).length;}, 1, () => {
