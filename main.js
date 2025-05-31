@@ -2003,7 +2003,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health--; items.pop(); fluffyEffect();}; 
                             document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); 
                             document.getElementsByClassName("choice")[1].onclick = () => {
-                                playerChoices.unshift(new PlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, fluffyDiscard));
+                                addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, fluffyDiscard);
                             };
                         });
                     }
