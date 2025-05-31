@@ -1985,15 +1985,27 @@ document.getElementById("submitPlayers").onclick = () => {
         const cornishPixies = new Villain("Cornish Pixies", "Box 1", "creature", 6, 0, () => {activePlayer.health -= activePlayer.hand.filter(card => {return card.cost && card.cost % 2 === 0;}).length * 2}, () => {players.forEach(player => {player.health += 2; player.influence++;});});
         const fluffy = new Villain("Fluffy", "Box 1", "creature", 8, 0, () => {
             let items = activePlayer.hand.filter(card => {return card.type === "item";}); 
-            const fluffyEffect = () => {
-                const fluffyDiscard = () => {
-                    for (let j = 0; j < activePlayer.hand.length; j++) {
-                        document.getElementsByClassName("choice")[j].innerHTML = `<img src="${activePlayer.hand[j].img.src}">`; document.getElementsByClassName("choice")[j].onclick = () => {
-                            if (items.includes(activePlayer.hand[j])) items.splice(items.indexOf(activePlayer.hand[j]), 1); 
-                            activePlayer.forcedDiscardAt(j, true); 
-                            items.pop();
-                            fluffyEffect();
-                        };
+            if (items.length) {
+                const fluffyEffect = () => {
+                    const fluffyDiscard = () => {
+                        for (let i = 0; i < activePlayer.hand.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {
+                                if (items.includes(activePlayer.hand[i])) items.splice(items.indexOf(activePlayer.hand[i]), 1); 
+                                activePlayer.forcedDiscardAt(i, true); 
+                                items.pop();
+                                fluffyEffect();
+                            };
+                        }
+                    };
+                    if (activePlayer.health) {
+                        addPlayerChoice("Lose:", () => {items = items.filter(card => {return activePlayer.hand.includes(card);}); if (items.length) return 2; return 0;}, 1, () => {
+                            document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken}</div>`; 
+                            document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health--; items.pop(); fluffyEffect();}; 
+                            document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); 
+                            document.getElementsByClassName("choice")[1].onclick = () => {
+                                playerChoices.unshift(new PlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, fluffyDiscard));
+                            };
+                        });
                     }
                 };
                 if (activePlayer.health) {
