@@ -2030,7 +2030,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(handItems.concat(discardItems));
                         document.getElementsByClassName("choice")[0].onclick = () => {
                             if (handItems.length + discardItems.length > 1) {
-                                addPlayerChoice("Banish:", () => {return items.length;}, 1, () => {
+                                addPlayerChoice("Banish:", () => {return handItems.length + discardItems.length;}, 1, () => {
                                     for (let i = 0; i < player.hand.filter(card => {return card.type === "item"}).length; i++) {
                                         document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand.filter(card => {return card.type === "item"})[i].img.src}">`;
                                         document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(player.hand.filter(card => {return card.type === "item"})[i]));};
