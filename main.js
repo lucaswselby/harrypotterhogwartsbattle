@@ -1833,7 +1833,10 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                             // Care of Magical Creatures proficiency
                             if (activePlayer.proficiency === "Care Of Magical Creatures" && this.type === "creature") {
-                                activeLocation.removeFromLocation();
+                                setTimeout(() => {
+                                    activeLocation.removeFromLocation();
+                                    darken(activePlayer.proficiencyImage);
+                                }, 1000);
                             }
                             // Full Moon Rises completion
                             let fullMoonRisesComplete = encounters.length && encounters[0] === fullMoonRises;
