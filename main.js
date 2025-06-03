@@ -2051,12 +2051,12 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (handItems.length + discardItems.length > 1) {
                                 addPlayerChoice("Banish:", () => {return handItems.length + discardItems.length;}, 1, () => {
                                     for (let i = 0; i < handItems.length; i++) {
-                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand.filter(card => {return card.type === "item"})[i].img.src}">`;
-                                        document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(player.hand.filter(card => {return card.type === "item"})[i]));};
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${handItems[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(handItems[i]));};
                                     }
                                     for (let i = 0; i < discardItems.length; i++) {
-                                        document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard.filter(card => {return card.type === "item"})[i].img.src}">`;
-                                        document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(player.discard.filter(card => {return card.type === "item"})[i]), 1);};
+                                        document.getElementsByClassName("choice")[handItems.length + i].innerHTML = `<img src="${discardItems[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[handItems.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(discardItems[i]), 1);};
                                     }
                                 });
                             }
