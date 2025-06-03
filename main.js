@@ -164,7 +164,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                         // increment and display a new playerChoice for multiple iterations
                         if (--this._iterations > 0) {
-                            addPlayerChoice(this._description, this._choices, this._iterations, this._populateFunction);
+                            playerChoices.unshift(new PlayerChoice(this._description, this._choices, this._iterations, this._populateFunction));
                         }
                     }
 
@@ -190,6 +190,7 @@ document.getElementById("submitPlayers").onclick = () => {
             if (choices()) {
                 playerChoices.push(choice);
                 if (playerChoices.length === 1) playerChoices[0].display();
+                console.log(playerChoices.map(choice => {return choice._description;}));
             }
         };
 
@@ -264,12 +265,12 @@ document.getElementById("submitPlayers").onclick = () => {
             if (evil) {
                 if (result === "influence" || result === "location") arithmancyCheck(() => {activeLocation.addToLocation();});
                 else if (result.includes("draw")) arithmancyCheck(() => {players.forEach(player => {
-                    addPlayerChoice("Discard:", () => {return player.hand.length;}, result === "draw" ? 1 : 2, () => {
+                    playerChoices.unshift(new PlayerChoice("Discard:", () => {return player.hand.length;}, result === "draw" ? 1 : 2, () => {
                         for (let i = 0; i < player.hand.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                             document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, true);};
                         }
-                    });
+                    }));
                 });});
                 else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.health--;});});
                 else if (result.includes("health")) {
@@ -1621,9 +1622,9 @@ document.getElementById("submitPlayers").onclick = () => {
         const petrification2 = petrification1.clone();
         const handOfGlory1 = new DarkArtsEvent("Hand Of Glory", "Game 2", () => {activePlayer.health--; activeLocation.addToLocation();});
         const handOfGlory2 = handOfGlory1.clone();
-        const obliviate = new DarkArtsEvent("Obliviate", "Game 2", () => {players.forEach(player => {const spells = player.hand.filter(card => {return card.type === "spell";}); if (spells.length) {addPlayerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(spells); document.getElementsByClassName("choice")[0].onclick = () => {if (spells.length > 1) {addPlayerChoice(`${player.hero} discards:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(spells[i]), true);};}});} else player.forcedDiscardAt(player.hand.indexOf(spells[0]), true);}; document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.health -= 2;});});
-        const poison = new DarkArtsEvent("Poison", "Game 2", () => {players.forEach(player => {const allies = player.hand.filter(card => {return card.type === "ally";}); if (allies.length) {addPlayerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(allies); document.getElementsByClassName("choice")[0].onclick = () => {if (allies.length > 1) {addPlayerChoice(`${player.hero} discards:`, () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(allies[i]), true);};}});} else player.forcedDiscardAt(player.hand.indexOf(allies[0]), true);}; document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.health -= 2;});});
-        const relashio = new DarkArtsEvent("Relashio", "Game 2", () => {players.forEach(player => {const items = player.hand.filter(card => {return card.type === "item";}); if (items.length) {addPlayerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(items); document.getElementsByClassName("choice")[0].onclick = () => {if (items.length > 1) {addPlayerChoice(`${player.hero} discards:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(items[i]), true);};}});} else player.forcedDiscardAt(player.hand.indexOf(items[0]), true);}; document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.health -= 2;});});
+        const obliviate = new DarkArtsEvent("Obliviate", "Game 2", () => {players.forEach(player => {const spells = player.hand.filter(card => {return card.type === "spell";}); if (spells.length) {addPlayerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(spells); document.getElementsByClassName("choice")[0].onclick = () => {if (spells.length > 1) {playerChoices.unshift(new PlayerChoice(`${player.hero} discards:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(spells[i]), true);};}}));} else player.forcedDiscardAt(player.hand.indexOf(spells[0]), true);}; document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.health -= 2;});});
+        const poison = new DarkArtsEvent("Poison", "Game 2", () => {players.forEach(player => {const allies = player.hand.filter(card => {return card.type === "ally";}); if (allies.length) {addPlayerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(allies); document.getElementsByClassName("choice")[0].onclick = () => {if (allies.length > 1) {playerChoices.unshift(new PlayerChoice(`${player.hero} discards:`, () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(allies[i]), true);};}}));} else player.forcedDiscardAt(player.hand.indexOf(allies[0]), true);}; document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.health -= 2;});});
+        const relashio = new DarkArtsEvent("Relashio", "Game 2", () => {players.forEach(player => {const items = player.hand.filter(card => {return card.type === "item";}); if (items.length) {addPlayerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(items); document.getElementsByClassName("choice")[0].onclick = () => {if (items.length > 1) {playerChoices.unshift(new PlayerChoice(`${player.hero} discards:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(player.hand.indexOf(items[i]), true);};}}));} else player.forcedDiscardAt(player.hand.indexOf(items[0]), true);}; document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};});} else player.health -= 2;});});
         const dementorsKiss1 = new DarkArtsEvent("Dementor's Kiss", "Game 3", () => {players.forEach(player => {player.health--;}); activePlayer.health--;});
         const dementorsKiss2 = dementorsKiss1.clone();
         const oppugno = new DarkArtsEvent("Oppugno", "Game 3", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].cost) {activePlayer.cardsDrawn--; player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
@@ -1938,7 +1939,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2; allies.pop(); tomRiddleEffect();}; 
                     document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); 
                     document.getElementsByClassName("choice")[1].onclick = () => {
-                        addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
+                        playerChoices.unshift(new PlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
                             for (let j = 0; j < activePlayer.hand.length; j++) {
                                 document.getElementsByClassName("choice")[j].innerHTML = `<img src="${activePlayer.hand[j].img.src}">`; document.getElementsByClassName("choice")[j].onclick = () => {
                                     if (allies.includes(activePlayer.hand[j])) allies.splice(allies.indexOf(activePlayer.hand[j]), 1); 
@@ -1947,12 +1948,41 @@ document.getElementById("submitPlayers").onclick = () => {
                                     tomRiddleEffect();
                                 };
                             }
-                        });
+                        }));
                     };
                 });
             }; 
             tomRiddleEffect();
-        }, () => {players.forEach(player => {const allies = player.discard.filter(card => {return card.type === "ally"}); const drawAllyFromDiscard = () => {const putAllyInHand = index => {player.addToHand(allies[index]); player.discard.splice(player.discard.indexOf(allies[index]), 1);}; if (allies.length === 1) putAllyInHand(0); else {addPlayerChoice("Add to hand:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {putAllyInHand(i)};}});}}; if (allies.length && canHeal(player)) {addPlayerChoice(`Choose for ${player.hero}:`, () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; document.getElementsByClassName("choice")[0].onclick = () => {player.health += 2;}; document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(allies); document.getElementsByClassName("choice")[1].onclick = drawAllyFromDiscard;});} else if (allies.length) drawAllyFromDiscard(); else player.health += 2;});});
+        }, () => {
+            players.forEach(player => {
+                const allies = player.discard.filter(card => {return card.type === "ally"}); 
+                const drawAllyFromDiscard = () => {
+                    const putAllyInHand = index => {
+                        player.addToHand(allies[index]); 
+                        player.discard.splice(player.discard.indexOf(allies[index]), 1);
+                    }; 
+                    if (allies.length === 1) putAllyInHand(0); 
+                    else {
+                        playerChoices.unshift(new PlayerChoice("Add to hand:", () => {return allies.length;}, 1, () => {
+                            for (let i = 0; i < allies.length; i++) {
+                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; 
+                                document.getElementsByClassName("choice")[i].onclick = () => {putAllyInHand(i)};
+                            }
+                        }));
+                    }
+                }; 
+                if (allies.length && canHeal(player)) {
+                    addPlayerChoice(`Choose for ${player.hero}:`, () => {return 2;}, 1, () => {
+                        document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; 
+                        document.getElementsByClassName("choice")[0].onclick = () => {player.health += 2;}; 
+                        document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(allies); 
+                        document.getElementsByClassName("choice")[1].onclick = drawAllyFromDiscard;
+                    });
+                } 
+                else if (allies.length) drawAllyFromDiscard(); 
+                else player.health += 2;
+            });
+        });
         const dementor = new Villain("Dementor", "Game 3", "villain", 8, 0, () => {activePlayer.health -= 2;}, () => {players.forEach(player => {player.health += 2;}); activeLocation.removeFromLocation();});
         const peterPettigrew = new Villain("Peter Pettigrew", "Game 3", "villain", 7, 0, () => {if (!activePlayer.draw.length) activePlayer.shuffle(); if (activePlayer.draw[0].cost) {const tempPetrified = activePlayer.petrified; activePlayer.petrified = false; activePlayer.cardsDrawn--; activePlayer.drawCards(1); activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, true); activePlayer.petrified = tempPetrified; activeLocation.addToLocation();}}, () => {players.forEach(player => {const spells = player.discard.filter(card => {return card.type === "spell";}); if (spells.length) {const discardToHand = index => {player.discard.splice(player.discard.indexOf(spells[index]), 1); player.addToHand(spells[index]);}; if (spells.length === 1) discardToHand(0); else {addPlayerChoice(`${player.hero} move from Discard to Hand:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});}}}); activeLocation.removeFromLocation();});
         const bartyCrouchJr = new Villain("Barty Crouch Jr", "Game 4", "villain", 7, 0, () => {}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
@@ -2003,7 +2033,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health--; items.pop(); fluffyEffect();}; 
                             document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); 
                             document.getElementsByClassName("choice")[1].onclick = () => {
-                                addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, fluffyDiscard);
+                                playerChoices.unshift(new PlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, fluffyDiscard));
                             };
                         });
                     }
@@ -2016,7 +2046,7 @@ document.getElementById("submitPlayers").onclick = () => {
             addPlayerChoice(`Banish for ${player.hero}:`, () => {return 2;}, 1, () => {
                 document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(player.hand.concat(player.discard));
                 document.getElementsByClassName("choice")[0].onclick = () => {
-                    addPlayerChoice(`Banish for ${player.hero}:`, () => {return player.hand.concat(player.discard).length;}, 1, () => {
+                    playerChoices.unshift(new PlayerChoice(`Banish for ${player.hero}:`, () => {return player.hand.concat(player.discard).length;}, 1, () => {
                         for (let i = 0; i < player.hand.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                             document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(i)};
@@ -2025,7 +2055,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard[i].img.src}">`;
                             document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(player.discard[i]), 1)};
                         }
-                    });
+                    }));
                 };
                 document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
             });
@@ -2049,7 +2079,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(handItems.concat(discardItems));
                         document.getElementsByClassName("choice")[0].onclick = () => {
                             if (handItems.length + discardItems.length > 1) {
-                                addPlayerChoice("Banish:", () => {return handItems.length + discardItems.length;}, 1, () => {
+                                playerChoices.unshift(new PlayerChoice("Banish:", () => {return handItems.length + discardItems.length;}, 1, () => {
                                     for (let i = 0; i < handItems.length; i++) {
                                         document.getElementsByClassName("choice")[i].innerHTML = `<img src="${handItems[i].img.src}">`;
                                         document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(handItems[i]));};
@@ -2058,7 +2088,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                         document.getElementsByClassName("choice")[handItems.length + i].innerHTML = `<img src="${discardItems[i].img.src}">`;
                                         document.getElementsByClassName("choice")[handItems.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(discardItems[i]), 1);};
                                     }
-                                });
+                                }));
                             }
                             else if (handItems.length) player.banishAt(player.hand.indexOf(handItems[0]));
                             else player.discard.splice(player.discard.indexOf(discardItems[i]), 1);
@@ -2161,7 +2191,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     addPlayerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
                         document.getElementsByClassName("choice")[0].innerHTML = `<p>Banish:</p>${choiceScroll(banishable)}`;
                         document.getElementsByClassName("choice")[0].onclick = () => {
-                            addPlayerChoice(`Banish for ${player.hero}:`, () => {return banishable.length;}, 1, () => {
+                            playerChoices.unshift(new PlayerChoice(`Banish for ${player.hero}:`, () => {return banishable.length;}, 1, () => {
                                 for (let i = 0; i < player.hand.length; i++) {
                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                                     document.getElementsByClassName("choice")[i].onclick = () => {
@@ -2179,7 +2209,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                         this.img.remove();
                                     };
                                 }
-                            });
+                            }));
                         };
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>";
                     });
@@ -2200,7 +2230,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     addPlayerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
                         document.getElementsByClassName("choice")[0].innerHTML = `<p>Banish:</p>${choiceScroll(banishable)}`;
                         document.getElementsByClassName("choice")[0].onclick = () => {
-                            addPlayerChoice(`Banish for ${player.hero}:`, () => {return banishable.length;}, 1, () => {
+                            playerChoices.unshift(new PlayerChoice(`Banish for ${player.hero}:`, () => {return banishable.length;}, 1, () => {
                                 for (let i = 0; i < player.hand.length; i++) {
                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                                     document.getElementsByClassName("choice")[i].onclick = () => {
@@ -2218,7 +2248,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                         this.img.remove();
                                     };
                                 }
-                            });
+                            }));
                         };
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>";
                     });
