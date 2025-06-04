@@ -100,6 +100,10 @@ document.getElementById("submitPlayers").onclick = () => {
         const influenceToken = "<img src=\"./images/influenceToken.png\" alt=\"Choose Influece Token\" style=\"width: 33%;\">";
         const healthToken = "<img src=\"images/healthTracker.png\" alt=\"Choose Health Token\" style=\"width: 33%;\">";
         const hogwartsCardBack = "<img src=\"./images/hogwartsCardBack.png\" alt=\"Draw card\" style=\"width: 33%;\">";
+        const redDie = "<img src=\"./images/Game 4/redDie.png\" alt=\"Gryffindor die\">";
+        const yellowDie = "<img src=\"./images/Game 4/yellowDie.png\" alt=\"Hufflepuff die\">";
+        const blueDie = "<img src=\"./images/Game 4/blueDie.png\" alt=\"Ravenclaw die\">";
+        const greenDie = "<img src=\"./images/Game 4/greenDie.png\" alt=\"Slytherin die\">";
 
         // convert card name to src
         const src = name => {
@@ -613,7 +617,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const cedricDiggory = new Card("Cedric Diggory", "Game 4", "ally", 4, () => {activePlayer.attack++; rollHouseDie("yellow", false, false);}, false, true);
         const filiusFlitwick = new Card("Filius Flitwick", "Game 4", "ally", 6, () => {activePlayer.influence++; activePlayer.drawCards(1); rollHouseDie("blue", false, false);}, false, true);
         const fleurDelacour = new Card("Fleur Delacour", "Game 4", "ally", 4, () => {activePlayer.influence += 2;}, true, false);
-        const hogwartsAHistory1 = new Card("Hogwarts A History", "Game 4", "item", 4, () => {addPlayerChoice("Roll a House Die:", () => {return 4;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = "<p>Blue</p>"; document.getElementsByClassName("choice")[0].onclick = () => {rollHouseDie("blue", false, false);}; document.getElementsByClassName("choice")[1].innerHTML = "<p>Green</p>"; document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie("green", false, false);}; document.getElementsByClassName("choice")[2].innerHTML = "<p>Red</p>"; document.getElementsByClassName("choice")[2].onclick = () => {rollHouseDie("red", false, false);}; document.getElementsByClassName("choice")[3].innerHTML = "<p>Yellow</p>"; document.getElementsByClassName("choice")[3].onclick = () => {rollHouseDie("yellow", false, false);};});}, false, true);
+        const hogwartsAHistory1 = new Card("Hogwarts A History", "Game 4", "item", 4, () => {addPlayerChoice("Roll a House Die:", () => {return 4;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = blueDie; document.getElementsByClassName("choice")[0].onclick = () => {rollHouseDie("blue", false, false);}; document.getElementsByClassName("choice")[1].innerHTML = greenDie; document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie("green", false, false);}; document.getElementsByClassName("choice")[2].innerHTML = redDie; document.getElementsByClassName("choice")[2].onclick = () => {rollHouseDie("red", false, false);}; document.getElementsByClassName("choice")[3].innerHTML = yellowDie; document.getElementsByClassName("choice")[3].onclick = () => {rollHouseDie("yellow", false, false);};});}, false, true);
         const hogwartsAHistory2 = hogwartsAHistory1.clone();
         const hogwartsAHistory3 = hogwartsAHistory1.clone();
         const hogwartsAHistory4 = hogwartsAHistory1.clone();
