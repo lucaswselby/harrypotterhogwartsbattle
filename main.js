@@ -278,7 +278,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 });});
                 else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.health--;});});
                 else if (result.includes("health")) {
-                    if (color === "phoenix" && result === "health") activeVillains.filter(villain => {return villain.type === "creature";}).forEach(villain => {villain.health++;});
+                    if (color === "phoenix" && result === "health") activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(villain => {villain.health++;});
                     else arithmancyCheck(() => {activeVillains.forEach(villain => {villain.health++;});});
                 }
                 else alert(`${color} is not a die color.`);
@@ -665,7 +665,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const fang = new Card("Fang", "Box 1", "ally", 3, () => {addPlayerChoice(`Give 1 influence and 2 health to:`, () => {return players.length;}, 1, () => {for (let i = 0; i < players.length; i++) {document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p><p>Health: ${players[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++; players[i].health += 2;};}});}, false, false);
         const finiteIncantatem1 = new Card("Finite Incantatem", "Box 1", "spell", 6, () => {activeLocation.removeFromLocation();}, true, false);
         const finiteIncantatem2 = finiteIncantatem1.clone();
-        const harp = new Card("Harp", "Box 1", "item", 6, () => {activePlayer.attack++; let unpetrifiedCreatures = activeVillains.filter(villain => {return !villain.petrifiedBy && (villain.health > 0 || villain.influence > 0) && villain.type === "creature";}); if (unpetrifiedCreatures.length) {if (unpetrifiedCreatures.length > 1) {addPlayerChoice("Petrify:", () => {return unpetrifiedCreatures.length;}, 1, () => {for (let i = 0; i < unpetrifiedCreatures.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedCreatures[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedCreatures[i].petrifiedBy = activePlayer;};}});} else unpetrifiedCreatures[0].petrifiedBy = activePlayer;}}, false, false);
+        const harp = new Card("Harp", "Box 1", "item", 6, () => {activePlayer.attack++; let unpetrifiedCreatures = activeVillains.filter(villain => {return !villain.petrifiedBy && (villain.health > 0 || villain.influence > 0) && villain.type.includes("creature");}); if (unpetrifiedCreatures.length) {if (unpetrifiedCreatures.length > 1) {addPlayerChoice("Petrify:", () => {return unpetrifiedCreatures.length;}, 1, () => {for (let i = 0; i < unpetrifiedCreatures.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedCreatures[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedCreatures[i].petrifiedBy = activePlayer;};}});} else unpetrifiedCreatures[0].petrifiedBy = activePlayer;}}, false, false);
         const oldSock1 = new Card("Old Sock", "Box 1", "item", 1, () => {activePlayer.influence++; if (players.filter(player => {return player !== activePlayer && (player.hand.includes(dobbyTheHouseElf)/* || player.hand.includes(other house elves)*/)}).length) activePlayer.attack += 2;}, false, false);
         const oldSock2 = oldSock1.clone();
         const tergeo1 = new Card("Tergeo", "Box 1", "spell", 2, () => {
@@ -1681,7 +1681,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const menacingGrowl2 = menacingGrowl1.clone();
         const ragingTroll1 = new DarkArtsEvent("Raging Troll", "Box 1", () => {players[players.indexOf(activePlayer) === players.length - 1 ? 0 : players.indexOf(activePlayer) + 1].health -= 2; activeLocation.addToLocation();});
         const ragingTroll2 = ragingTroll1.clone();
-        const slugulusEructo = new DarkArtsEvent("Slugulus Eructo", "Box 1", () => {players.forEach(player => {player.health -= activeVillains.filter(villain => {return villain.type === "creature"}).length});});
+        const slugulusEructo = new DarkArtsEvent("Slugulus Eructo", "Box 1", () => {players.forEach(player => {player.health -= activeVillains.filter(villain => {return villain.type.includes("creature");}).length});});
         const bombarda1 = new DarkArtsEvent("Bombarda", "Box 2", () => {players.forEach(player => {player.discard.push(detention.clone());});});
         const bombarda2 = bombarda1.clone();
         const theGrim = new DarkArtsEvent("The Grim", "Box 2", () => {if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {addPlayerChoice("Discard:", () => {activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i), true};}});} else activePlayer.forcedDiscardAt(0, true);} activeLocation.addToLocation();});
@@ -1713,7 +1713,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._img.className = "villain";
                 this._img.src = `./images/${activeGame.includes("Box") && (name === "Basilisk" || name === "Dementor") ? "Box 1" : game}/${src(name)}`;
                 this._img.alt = name;
-                this._type = activeGame.includes("Box") && (name === "Basilisk" || name === "Dementor") ? "creature" : type;
+                this._type = type;
                 this._maxHealth = health;
                 this._health = health;
                 this._maxInfluence = influence;
@@ -1768,7 +1768,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // Care of Magical Creatures proficiency
-                    if (thisHealth === thisMaxHealth && activePlayer.proficiency === "Care Of Magical Creatures" && this.type === "creature") {
+                    if (thisHealth === thisMaxHealth && activePlayer.proficiency === "Care Of Magical Creatures" && this.type.includes("creature")) {
                         const hurtPlayers = players.filter(player => {return canHeal(player);});
                         if (hurtPlayers.length) {
                             if (hurtPlayers.length > 1) {
