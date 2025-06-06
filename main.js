@@ -679,7 +679,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                 for (let i = 0; i < activePlayer.hand.length; i++) {
                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; 
                                     document.getElementsByClassName("choice")[i].onclick = () => {
-                                        if (activePlayer.hand[i].type === "item") activePlayer.drawCards(1); activePlayer.banishAt(i);
+                                        if (activePlayer.hand[i].type === "item") activePlayer.drawCards(1); 
+                                        activePlayer.banishAt(i);
                                     };
                                 }
                             });
@@ -1814,47 +1815,49 @@ document.getElementById("submitPlayers").onclick = () => {
                         setTimeout(() => {
                             this.reward();
 
-                            // Firebolt and Cleansweep 11 effects
-                            if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11)) {
-                                activePlayer.influence++;
-                            }
-                            // Nimbus Two Thousand and One effect
-                            if (activePlayer.passives.includes(nimbusTwoThousandAndOne1) || activePlayer.passives.includes(nimbusTwoThousandAndOne2)) {
-                                activePlayer.influence += 2;
-                            }
-                            // Oliver Wood effect
-                            if (activePlayer.passives.includes(oliverWood)) {
-                                const hurtPlayers = players.filter(player => {return canHeal(player);});
-                                if (hurtPlayers.length) {
-                                    if (hurtPlayers.length > 1) {
-                                        addPlayerChoice("Pick a hero to heal:", () => {return hurtPlayers.length;}, 1, () => {
-                                            for (let i = 0; i < hurtPlayers.length; i++) {
-                                                document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
-                                                document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
-                                                document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
-                                            }                            
-                                        });
+                            if (this.type.includes("villain")) { // some rewards are specific to villains
+                                // Firebolt and Cleansweep 11 effects
+                                if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11)) {
+                                    activePlayer.influence++;
+                                }
+                                // Nimbus Two Thousand and One effect
+                                if (activePlayer.passives.includes(nimbusTwoThousandAndOne1) || activePlayer.passives.includes(nimbusTwoThousandAndOne2)) {
+                                    activePlayer.influence += 2;
+                                }
+                                // Oliver Wood effect
+                                if (activePlayer.passives.includes(oliverWood)) {
+                                    const hurtPlayers = players.filter(player => {return canHeal(player);});
+                                    if (hurtPlayers.length) {
+                                        if (hurtPlayers.length > 1) {
+                                            addPlayerChoice("Pick a hero to heal:", () => {return hurtPlayers.length;}, 1, () => {
+                                                for (let i = 0; i < hurtPlayers.length; i++) {
+                                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
+                                                    document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
+                                                    document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                                }                            
+                                            });
+                                        }
+                                        else hurtPlayers[0].health += 2;
                                     }
-                                    else hurtPlayers[0].health += 2;
+                                }
+                                // Viktor Krum effect
+                                if (activePlayer.passives.includes(viktorKrum)) {
+                                    activePlayer.influence++;
+                                    activePlayer.health++;
                                 }
                             }
-                            // Viktor Krum effect
-                            if (activePlayer.passives.includes(viktorKrum)) {
-                                activePlayer.influence++;
-                                activePlayer.health++;
-                            }
-                            // Immobulus effect
-                            if (this.type === "creature") {
+                            if (this.type.includes("creature")) { // some rewards are specific to creatures
+                                // Immobulus effect
                                 if (activePlayer.passives.includes(immobulus1)) activeLocation.removeFromLocation();
                                 if (activePlayer.passives.includes(immobulus2)) activeLocation.removeFromLocation();
                                 if (activePlayer.passives.includes(immobulus3)) activeLocation.removeFromLocation();
-                            }
-                            // Care of Magical Creatures proficiency
-                            if (activePlayer.proficiency === "Care Of Magical Creatures" && this.type === "creature") {
-                                setTimeout(() => {
-                                    activeLocation.removeFromLocation();
-                                    darken(activePlayer.proficiencyImage);
-                                }, 1000);
+                                // Care of Magical Creatures proficiency
+                                if (activePlayer.proficiency === "Care Of Magical Creatures") {
+                                    setTimeout(() => {
+                                        activeLocation.removeFromLocation();
+                                        darken(activePlayer.proficiencyImage);
+                                    }, 1000);
+                                }
                             }
                             // Full Moon Rises completion
                             let fullMoonRisesComplete = encounters.length && encounters[0] === fullMoonRises;
