@@ -1259,7 +1259,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (evil) {
                     // Crabbe and Goyle effect
                     setTimeout(() => {
-                        if (activeVillains.includes(crabbeAndGoyle) && !crabbeAndGoyle.petrifiedBy) {
+                        if (activeVillains.includes(crabbeAndGoyle) && !crabbeAndGoyle.petrifiedBy && crabbeAndGoyle.health > 0) {
                             this.health--;
                         }
                     }, 1000);
