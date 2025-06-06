@@ -1265,7 +1265,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }, 1000);
 
                     // Defense Against the Dark Arts proficiency
-                    if (this.proficiency === "Defense Against the Dark Arts") {
+                    if (this.proficiency === "Defense Against The Dark Arts") {
                         this.attack++;
                         this.health++;
                     }
