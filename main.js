@@ -194,7 +194,6 @@ document.getElementById("submitPlayers").onclick = () => {
             if (choices()) {
                 playerChoices.push(choice);
                 if (playerChoices.length === 1) playerChoices[0].display();
-                console.log(playerChoices.map(choice => {return choice._description;}));
             }
         };
 
@@ -2311,7 +2310,7 @@ document.getElementById("submitPlayers").onclick = () => {
             <div class="shop" id="shop5"></div>
             <div class="shop" id="shop6"></div>
         </div>
-        <div id=playerContainer>
+        <div id="playerContainer">
             <div id="heroImage" style="display: flex"></div>
             <div id="horcruxesDestroyed"></div>
             <div id="playerBoardContainer">
@@ -2321,6 +2320,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 <div id="influenceTokens"></div>
             </div>
             <div id="playerHand"></div>
+            <div id="otherPlayerHands"></div>
             <input type="button" id="endTurn" value="End Turn">
         </div>`;
         const disableScreen = document.createElement("DIV");
@@ -2447,6 +2447,22 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.horcruxesDestroyed.forEach(horcrux => {document.getElementById("horcruxesDestroyed").appendChild(horcrux.img);});
             activePlayer.attack = activePlayer.attack;
             activePlayer.influence = activePlayer.influence;
+
+            // populate buttons to show other players' hands
+            document.getElementById("otherPlayerHands").innerHTML = "";
+            players.filter(player => {return player !== activePlayer;}).forEach(player => {
+                const playerHandButton = document.createElement("input");
+                playerHandButton.type = "button";
+                playerHandButton.value = `View ${player.hero}'s Hand`;
+                playerHandButton.onclick = () => {
+                    addPlayerChoice("Click any card to return.", () => {return player.hand.length;}, 1, () => {
+                        for (let i = 0; i < player.hand.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                        }
+                    });
+                };
+                document.getElementById("otherPlayerHands").appendChild(playerHandButton);
+            });
 
             // unstun everyone
             players.forEach(player => {
