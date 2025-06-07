@@ -1229,7 +1229,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (document.getElementById("playerHand").contains(this.hand[index].img)) document.getElementById("playerHand").removeChild(this.hand[index].img);
                 this._hand.splice(index, 1);
             }
-            forcedDiscardAt(index, evil) {
+            forcedDiscardAt(index, villainOrDAE) {
                 // Remembrall and Old Sock effects
                 if (this.hand[index] === remembrall || this.hand[index] === oldSock1 || this.hand[index] === oldSock2) {
                     this.influence += 2;
@@ -1257,7 +1257,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.health -= 2;
                 }
 
-                if (evil) {
+                if (villainOrDAE) {
                     // Crabbe and Goyle effect
                     setTimeout(() => {
                         if (activeVillains.includes(crabbeAndGoyle) && !crabbeAndGoyle.petrifiedBy && crabbeAndGoyle.health > 0) {
@@ -1374,7 +1374,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     for (let i = 0; i < this.hand.length; i++) {
                         document.getElementsByClassName("choice")[i].innerHTML += `<img src="${this.hand[i].img.src}">`;
                         document.getElementsByClassName("choice")[i].onclick = () => {
-                            this.forcedDiscardAt(i, true);
+                            this.forcedDiscardAt(i, false);
                         }
                     }
                 });
@@ -2028,7 +2028,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         for (let i = 0; i < activePlayer.hand.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {
                                 if (items.includes(activePlayer.hand[i])) items.splice(items.indexOf(activePlayer.hand[i]), 1); 
-                                activePlayer.forcedDiscardAt(i, true); 
+                                activePlayer.forcedDiscardAt(i, false); 
                                 items.pop();
                                 fluffyEffect();
                             };
