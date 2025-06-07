@@ -1719,7 +1719,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._health = health;
                 this._maxInfluence = influence;
                 this._influence = influence;
-                this._damageTaken = 0;
+                this._attackDamageTaken = 0;
+                this._influenceDamageTaken = 0;
                 this._effect = effect;
                 this._reward = reward;
                 this._petrifiedBy = null;
@@ -1759,10 +1760,11 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 if (health > thisMaxHealth) health = thisMaxHealth;
                 else if (health < thisHealth) {
-                    this.damageTaken++;
+                    if (healthType === "attack") this.attackDamageTaken++;
+                    else this.influenceDamageTaken++;
 
                     // Confundus effect
-                    if (activeVillains.every(villain => {return villain.damageTaken}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) {
+                    if (activeVillains.every(villain => {return villain.attackDamageTaken}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) {
                         if (activePlayer.passives.includes(confundus1)) activePlayer.passives.splice(activePlayer.passives.indexOf(confundus1), 1);
                         else if (activePlayer.passives.includes(confundus2)) activePlayer.passives.splice(activePlayer.passives.indexOf(confundus2), 1);
                         activeLocation.removeFromLocation();
@@ -1785,7 +1787,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // Horcrux 2 effect
-                    if (encounters[0] === horcrux2 && this.damageTaken === 2) {
+                    if (encounters[0] === horcrux2 && this.attackDamageTaken === 2) {
                         activePlayer.health -= 2;
                         darken(horcrux2.img);
                     }
@@ -1897,11 +1899,17 @@ document.getElementById("submitPlayers").onclick = () => {
             set influence(influence) {
                 this.setHealth(influence, "influence");
             }
-            get damageTaken() {
-                return this._damageTaken;
+            get attackDamageTaken() {
+                return this._attackDamageTaken;
             }
-            set damageTaken(damageTaken) {
-                this._damageTaken = damageTaken;
+            set attackDamageTaken(attackDamageTaken) {
+                this._attackDamageTaken = attackDamageTaken;
+            }
+            get influenceDamageTaken() {
+                return this._influenceDamageTaken;
+            }
+            set influenceDamageTaken(influenceDamageTaken) {
+                this._influenceDamageTaken = influenceDamageTaken;
             }
             effect() {
                 darken(this.img);
@@ -2361,7 +2369,7 @@ document.getElementById("submitPlayers").onclick = () => {
             for (let i = 0; i < activeVillains.length; i++) {
                 activeVillains[i].displayDamage();
                 const dealDamage = () => {
-                    if ((!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].damageTaken) && // Tarantallegra effect
+                    if ((!activeDarkArtsEvents.includes(tarantallegra) || !activeVillains[i].attackDamageTaken) && // Tarantallegra effect
                     (activeVillains[i].name !== "Lord Voldemort" || !encounters.length)) {
                         const damageWithAttack = () => {
                             activePlayer.attack--;
@@ -2373,7 +2381,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             activeVillains[i].influence--;
                             activePlayer.influences++;
                         };
-                        if (activePlayer.attack > 0 && activePlayer.influence > 0 && activeVillains[i].health && activeVillains[i].influence) {
+                        if (activePlayer.attack > 0 && activePlayer.influence > 0 && activeVillains[i].health && activeVillains[i].influence && !activeVillains[i].influenceDamageTaken) {
                             addPlayerChoice("Damage with:", () => {return 2;}, 1, () => {
                                 document.getElementsByClassName("choice")[0].innerHTML = attackToken;
                                 document.getElementsByClassName("choice")[0].onclick = damageWithAttack;
@@ -2384,7 +2392,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         else if (activePlayer.attack > 0 && activeVillains[i].health) {
                             damageWithAttack();
                         }
-                        else if (activePlayer.influence > 0 && activeVillains[i].influence) {
+                        else if (activePlayer.influence > 0 && activeVillains[i].influence && !activeVillains[i].influenceDamageTaken) {
                             damageWithInfluence();
                         }
                     }
@@ -2601,7 +2609,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                         if (activeVillains[i].petrifiedBy === activePlayer) {
                                             activeVillains[i].petrifiedBy = null;
                                         }
-                                        activeVillains[i].damageTaken = 0;
+                                        activeVillains[i].attackDamageTaken = 0;
+                                        activeVillains[i].influenceDamageTaken = 0;
                                     }, i * 1000);
                                 }
                             }, 1000);
