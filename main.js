@@ -279,7 +279,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.health--;});});
                 else if (result.includes("health")) {
                     if (color === "phoenix" && result === "health") activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(villain => {villain.health++;});
-                    else arithmancyCheck(() => {activeVillains.forEach(villain => {villain.health++;});});
+                    else arithmancyCheck(() => {activeVillains.filter(villain => {return villain.type.includes("villain");}).forEach(villain => {villain.health++;});});
                 }
                 else alert(`${color} is not a die color.`);
             }
