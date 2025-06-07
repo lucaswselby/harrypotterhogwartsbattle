@@ -272,7 +272,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     playerChoices.unshift(new PlayerChoice("Discard:", () => {return player.hand.length;}, result === "draw" ? 1 : 2, () => {
                         for (let i = 0; i < player.hand.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
-                            document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, true);};
+                            document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, color !== "phoenix");};
                         }
                     }));
                 });});
