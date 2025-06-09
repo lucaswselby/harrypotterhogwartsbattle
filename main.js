@@ -1759,8 +1759,8 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 if (health > thisMaxHealth) health = thisMaxHealth;
                 else if (health < thisHealth) {
-                    if (healthType === "attack") this.attackDamageTaken++;
-                    else this.influenceDamageTaken++;
+                    if (healthType === "influence") this.influenceDamageTaken++;
+                    else this.attackDamageTaken++;
 
                     // Confundus effect
                     if (activeVillains.every(villain => {return villain.attackDamageTaken}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) {
