@@ -2668,7 +2668,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     // add new villain
                     if (inactiveVillains.length) {
                         // Death Eater effect
-                        if (this.type.includes("villain")) {
+                        if (inactiveVillains[inactiveVillains.length - 1].type.includes("villain")) {
                             if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy && deathEater1.health > 0) players.forEach(player => {player.health--;});
                             if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy && deathEater2.health > 0) players.forEach(player => {player.health--;});
                         }
