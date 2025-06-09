@@ -1281,6 +1281,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             }
             shuffle() {
+                // Students Out of Bed effect
+                if (encounters.length && encounters[0] === studentsOutOfBed) this._discard.push(detention.clone());
+
                 // shuffle discard pile
                 shuffle(this._discard);
 
