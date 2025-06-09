@@ -2449,20 +2449,20 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.attack = activePlayer.attack;
             activePlayer.influence = activePlayer.influence;
 
-            // populate buttons to show other players' hands
+            // populate details to show other players' hands
             document.getElementById("otherPlayerHands").innerHTML = "";
             players.filter(player => {return player !== activePlayer;}).forEach(player => {
-                const playerHandButton = document.createElement("input");
-                playerHandButton.type = "button";
-                playerHandButton.value = `View ${player.hero}'s Hand`;
-                playerHandButton.onclick = () => {
-                    addPlayerChoice("Click any card to return.", () => {return player.hand.length;}, 1, () => {
-                        for (let i = 0; i < player.hand.length; i++) {
-                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
-                        }
-                    });
-                };
-                document.getElementById("otherPlayerHands").appendChild(playerHandButton);
+                const otherPlayerHandDetails = document.createElement("details");
+                otherPlayerHandDetails.open = true;
+                otherPlayerHandDetails.innerHTML = `<summary>${player.hero}'s Hand</summary>`;
+                const otherPlayerHand = document.createElement("div");
+                player.hand.forEach(card => {
+                    const cardImg = card.img.cloneNode(false);
+                    cardImg.onclick = () => {};
+                    otherPlayerHand.appendChild(cardImg);
+                });
+                otherPlayerHandDetails.appendChild(otherPlayerHand);
+                document.getElementById("otherPlayerHands").appendChild(otherPlayerHandDetails);
             });
 
             // unstun everyone
