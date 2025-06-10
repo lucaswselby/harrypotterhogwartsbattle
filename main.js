@@ -350,6 +350,24 @@ document.getElementById("submitPlayers").onclick = () => {
             document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
         };
 
+        // populate details to show other players' hands
+        const populateOtherHands = () => {
+            document.getElementById("otherPlayerHands").innerHTML = "";
+            players.filter(player => {return player !== activePlayer;}).forEach(player => {
+                const otherPlayerHandDetails = document.createElement("details");
+                otherPlayerHandDetails.open = true;
+                otherPlayerHandDetails.innerHTML = `<summary>${player.hero}'s Hand</summary>`;
+                const otherPlayerHand = document.createElement("div");
+                player.hand.forEach(card => {
+                    const cardImg = card.img.cloneNode(false);
+                    cardImg.onclick = () => {};
+                    otherPlayerHand.appendChild(cardImg);
+                });
+                otherPlayerHandDetails.appendChild(otherPlayerHand);
+                document.getElementById("otherPlayerHands").appendChild(otherPlayerHandDetails);
+            });
+        };
+
         // cards
         class Card {
             constructor(name, game, type, cost, effect, passive, houseDie) {
@@ -1227,6 +1245,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._discard.push(this.hand[index]);
                 if (document.getElementById("playerHand").contains(this.hand[index].img)) document.getElementById("playerHand").removeChild(this.hand[index].img);
                 this._hand.splice(index, 1);
+                if (this !== activePlayer) populateOtherHands();
             }
             forcedDiscardAt(index, villainOrDAE) {
                 // Remembrall and Old Sock effects
@@ -1335,6 +1354,8 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     this.hand.forEach(card => {card.generateOnClick();});
                 }
+
+                if (this !== activePlayer) populateOtherHands();
             }
             endTurn() {
                 this.petrified = false;
@@ -2448,22 +2469,7 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.horcruxesDestroyed.forEach(horcrux => {document.getElementById("horcruxesDestroyed").appendChild(horcrux.img);});
             activePlayer.attack = activePlayer.attack;
             activePlayer.influence = activePlayer.influence;
-
-            // populate details to show other players' hands
-            document.getElementById("otherPlayerHands").innerHTML = "";
-            players.filter(player => {return player !== activePlayer;}).forEach(player => {
-                const otherPlayerHandDetails = document.createElement("details");
-                otherPlayerHandDetails.open = true;
-                otherPlayerHandDetails.innerHTML = `<summary>${player.hero}'s Hand</summary>`;
-                const otherPlayerHand = document.createElement("div");
-                player.hand.forEach(card => {
-                    const cardImg = card.img.cloneNode(false);
-                    cardImg.onclick = () => {};
-                    otherPlayerHand.appendChild(cardImg);
-                });
-                otherPlayerHandDetails.appendChild(otherPlayerHand);
-                document.getElementById("otherPlayerHands").appendChild(otherPlayerHandDetails);
-            });
+            populateOtherHands();
 
             // unstun everyone
             players.forEach(player => {
