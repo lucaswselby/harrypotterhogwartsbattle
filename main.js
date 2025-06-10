@@ -2233,7 +2233,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[i].onclick = () => {
                                         player.banishAt(i);
                                         activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
-                                        this.img.remove();
+                                        studentsOutOfBed.img.remove();
                                     };
                                 }
                                 for (let i = 0; i < player.discard.length; i++) {
@@ -2242,7 +2242,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                         player.hand.unshift(player.discard.splice(i, 1)[0]);
                                         player.banishAt(0);
                                         activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
-                                        this.img.remove();
+                                        studentsOutOfBed.img.remove();
                                     };
                                 }
                             }));
@@ -2272,7 +2272,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[i].onclick = () => {
                                         player.banishAt(i);
                                         activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
-                                        this.img.remove();
+                                        fullMoonRises.img.remove();
                                     };
                                 }
                                 for (let i = 0; i < player.discard.length; i++) {
@@ -2281,7 +2281,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                         player.hand.unshift(player.discard.splice(i, 1)[0]);
                                         player.banishAt(0);
                                         activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
-                                        this.img.remove();
+                                        fullMoonRises.img.remove();
                                     };
                                 }
                             }));
@@ -2297,7 +2297,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 player.health += 2;
             });
             activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
-            this.img.remove();
+            defensiveTraining.img.remove();
         });
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
