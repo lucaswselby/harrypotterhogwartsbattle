@@ -1896,9 +1896,10 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
 
                             // check for victory
-                            if (!activeVillains.filter(villain => {return villain.health}).length && !inactiveVillains.length) {
-                                // Voldemort
+                            if (!activeVillains.filter(villain => {return villain.health || villain.influence}).length && !inactiveVillains.length) {
                                 activeVillains = [];
+                                // Voldemort
+                                // TO-DO: Remove invulnerable Voldemort. (Voldemort already can't be damaged while there are encounters; don't worry.)
                                 if ((activeGame === "Game 5" || activeGame === "Box 1") && this !== lordVoldemort1) {
                                     activeVillains.push(lordVoldemort1);
                                 }
