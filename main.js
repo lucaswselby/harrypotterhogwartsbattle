@@ -2064,17 +2064,14 @@ document.getElementById("submitPlayers").onclick = () => {
                         };
                     }
                 };
-                if (activePlayer.health) {
-                    addPlayerChoice("Lose:", () => {items = items.filter(card => {return activePlayer.hand.includes(card);}); if (items.length) return 2; return 0;}, 1, () => {
-                        document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken}</div>`; 
-                        document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health--; items.pop(); fluffyEffect();}; 
-                        document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); 
-                        document.getElementsByClassName("choice")[1].onclick = () => {
-                            playerChoices.unshift(new PlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, fluffyDiscard));
-                        };
-                    });
-                }
-                else if (items.length) fluffyDiscard();
+                addPlayerChoice("Lose:", () => {items = items.filter(card => {return activePlayer.hand.includes(card);}); if (items.length) return 2; return 0;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken}</div>`; 
+                    document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health--; items.pop(); fluffyEffect();}; 
+                    document.getElementsByClassName("choice")[1].innerHTML = choiceScroll(activePlayer.hand); 
+                    document.getElementsByClassName("choice")[1].onclick = () => {
+                        playerChoices.unshift(new PlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, fluffyDiscard));
+                    };
+                });
             };
             fluffyEffect();
         }, () => {players.forEach(player => {player.health++; player.drawCards(1);});});
