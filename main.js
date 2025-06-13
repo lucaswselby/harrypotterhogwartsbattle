@@ -1319,6 +1319,8 @@ document.getElementById("submitPlayers").onclick = () => {
                     document.getElementById("playerHand").appendChild(card.img);
                 }
                 card.generateOnClick();
+
+                if (this !== activePlayer) populateOtherHands();
             }
             drawCards(numberOfCards) {
                 if (!this.petrified) {
@@ -1354,8 +1356,6 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     this.hand.forEach(card => {card.generateOnClick();});
                 }
-
-                if (this !== activePlayer) populateOtherHands();
             }
             endTurn() {
                 this.petrified = false;
