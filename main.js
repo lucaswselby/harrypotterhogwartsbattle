@@ -295,13 +295,13 @@ document.getElementById("submitPlayers").onclick = () => {
         // check if Voldemort is in the draw villain spot
         const invulnerableVoldemort = () => {
             if (!inactiveVillains.length) {
-                if ((activeGame === "Game 5" || activeGame === "Box 1") && (activeVillains[0] !== lordVoldemort1 || encounters.length)) {
+                if ((activeGame === "Game 5" || activeGame === "Box 1") && activeVillains[0] !== lordVoldemort1) {
                     return lordVoldemort1;
                 }
-                else if ((activeGame === "Game 6" || activeGame === "Box 2") && (activeVillains[0] !== lordVoldemort2 || encounters.length)) {
+                else if ((activeGame === "Game 6" || activeGame === "Box 2") && activeVillains[0] !== lordVoldemort2) {
                     return lordVoldemort2;
                 }
-                else if ((activeGame === "Game 7" || activeGame === "Box 3") && (activeVillains[0] !== lordVoldemort3 || encounters.length)) {
+                else if ((activeGame === "Game 7" || activeGame === "Box 3") && activeVillains[0] !== lordVoldemort3) {
                     return lordVoldemort3;
                 }
             }
@@ -1899,7 +1899,6 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (!activeVillains.filter(villain => {return villain.health || villain.influence}).length && !inactiveVillains.length) {
                                 activeVillains = [];
                                 // Voldemort
-                                // TO-DO: Remove invulnerable Voldemort. (Voldemort already can't be damaged while there are encounters; don't worry.)
                                 if ((activeGame === "Game 5" || activeGame === "Box 1") && this !== lordVoldemort1) {
                                     activeVillains.push(lordVoldemort1);
                                 }
