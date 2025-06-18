@@ -1240,6 +1240,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (document.getElementById("playerHand").contains(this.hand[index].img)) document.getElementById("playerHand").removeChild(this.hand[index].img);
                 if (this.passives.includes(this.hand[index])) this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
                 this._hand.splice(index, 1);
+                populateOtherHands();
             }
             discardAt(index) {
                 this._discard.push(this.hand[index]);
