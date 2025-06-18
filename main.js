@@ -2219,32 +2219,26 @@ document.getElementById("submitPlayers").onclick = () => {
         const peskipiksiPesternomi = new Encounter("Peskipiksi Pesternomi", "Box 1", [], () => {}, () => {});
         const studentsOutOfBed = new Encounter("Students Out Of Bed", "Box 1", ["health", "draw"], () => {}, () => {
             players.forEach(player => {
-                const banishable = player.hand.concat(player.discard);
-                if (banishable.length) {
-                    addPlayerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
-                        document.getElementsByClassName("choice")[0].innerHTML = `<p>Banish:</p>${choiceScroll(banishable)}`;
+                if (player.hand.length || player.discard.length) {
+                    addPlayerChoice("Banish:", () => {return 2;}, 1, () => {
+                        document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(player.hand.concat(player.discard));
                         document.getElementsByClassName("choice")[0].onclick = () => {
-                            playerChoices.unshift(new PlayerChoice(`Banish for ${player.hero}:`, () => {return banishable.length;}, 1, () => {
-                                for (let i = 0; i < player.hand.length; i++) {
-                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
-                                    document.getElementsByClassName("choice")[i].onclick = () => {
-                                        player.banishAt(i);
-                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
-                                        studentsOutOfBed.img.remove();
-                                    };
-                                }
-                                for (let i = 0; i < player.discard.length; i++) {
-                                    document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard[i].img.src}">`;
-                                    document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
-                                        player.hand.unshift(player.discard.splice(i, 1)[0]);
-                                        player.banishAt(0);
-                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
-                                        studentsOutOfBed.img.remove();
-                                    };
-                                }
-                            }));
+                            if (player.hand.length + player.discard.length > 1) {
+                                playerChoices.unshift(new PlayerChoice("Banish:", () => {return player.hand.length + player.discard.length;}, 1, () => {
+                                    for (let i = 0; i < player.hand.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(player.hand.indexOf(player.hand[i]));};
+                                    }
+                                    for (let i = 0; i < player.discard.length; i++) {
+                                        document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {player.discard.splice(player.discard.indexOf(player.discard[i]), 1);};
+                                    }
+                                }));
+                            }
+                            else if (player.hand.length) player.banishAt(player.hand.indexOf(player.hand[0]));
+                            else player.discard.splice(player.discard.indexOf(player.discard[i]), 1);
                         };
-                        document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>";
+                        document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
                     });
                 }
             });
