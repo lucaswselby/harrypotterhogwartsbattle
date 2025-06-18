@@ -2242,6 +2242,8 @@ document.getElementById("submitPlayers").onclick = () => {
                     });
                 }
             });
+            activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(studentsOutOfBed), 1);
+            studentsOutOfBed.img.remove();
         });
         const thirdFloorCorridor = new Encounter("Third Floor Corridor", "Box 1", [], () => {}, () => {
             if (defeatedVillains.length) defeatedVillains[defeatedVillains.length - 1].reward();
