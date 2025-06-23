@@ -1837,6 +1837,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         this.img.classList.toggle("defeating");
                         this.img.classList.toggle("defeated");
 
+                        defeatedVillains.push(this);
+
                         // reward players for villain defeat
                         setTimeout(() => {
                             this.reward();
@@ -2697,7 +2699,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     // shift remaining villains to the left
                     else {
-                        defeatedVillains.push(activeVillains.splice(i, 1)[0]);
+                        activeVillains.splice(i, 1)[0];
                         i--;
                     }
                     populateVillains();
