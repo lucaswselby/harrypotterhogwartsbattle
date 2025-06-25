@@ -226,7 +226,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 sides = ["health", "health 2", "location", "attack", "draw", "draw 2"];
                 arithmancyUsed = true;
             }
-            if (color === "red") sides.push("influence", "influence", "influence");
+            else if (color === "red") sides.push("influence", "influence", "influence");
             else if (color === "green") sides.push("attack", "attack", "attack");
             else if (color === "yellow") sides.push("health", "health", "health");
             else if (color === "blue") sides.push("draw", "draw", "draw");
