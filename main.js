@@ -267,18 +267,47 @@ document.getElementById("submitPlayers").onclick = () => {
             };
             if (evil) {
                 if (result === "influence" || result === "location") arithmancyCheck(() => {activeLocation.addToLocation();});
-                else if (result.includes("draw")) arithmancyCheck(() => {players.forEach(player => {
-                    playerChoices.unshift(new PlayerChoice("Discard:", () => {return player.hand.length;}, result === "draw" ? 1 : 2, () => {
-                        for (let i = 0; i < player.hand.length; i++) {
-                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
-                            document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, color !== "phoenix");};
-                        }
-                    }));
-                });});
+                else if (result === "draw") {
+                    arithmancyCheck(() => {
+                        players.forEach(player => {
+                            addPlayerChoice("Discard:", () => {return player.hand.length;}, 1, () => {
+                                for (let i = 0; i < player.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, color !== "phoenix");};
+                                }
+                            });
+                        });
+                    });
+                }
+                else if (result === "draw 2") {
+                    arithmancyCheck(() => {
+                        addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 2, () => {
+                            for (let i = 0; i < activePlayer.hand.length; i++) {
+                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
+                                document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, false);};
+                            }
+                        });
+                    });
+                }
                 else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.health--;});});
-                else if (result.includes("health")) {
-                    if (color === "phoenix" && result === "health") arithmancyCheck(() => {activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(villain => {villain.health++;})});
-                    else arithmancyCheck(() => {activeVillains.filter(villain => {return villain.type.includes("villain");}).forEach(villain => {villain.health++;});});
+                else if (result === "health") {
+                    if (color === "phoenix") {
+                        activeVillains.filter(villain => {return villain.type === "creature"}).forEach(creature => {
+                            creature.health++;
+                            creature.influence++;
+                        });
+                    }
+                    else {
+                        activeVillains.filter(villain => {return villain.type === "villain"}).forEach(villain => {
+                            villain.health++;
+                        });
+                    }
+                }
+                else if (result === "health 2") {
+                    activeVillains.forEach(villain => {
+                        villain.health++;
+                        villain.influence++;
+                    });                    
                 }
                 else alert(`${color} is not a die color.`);
             }
