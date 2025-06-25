@@ -1558,9 +1558,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                 }
-                else {
-                    darken(bartyCrouchJr.img);
-                }
+                else if (bartyCrouchJr.img) darken(bartyCrouchJr.img);
+                else if (defensiveTraining.img) darken(defensiveTraining.img);
             }
         }
         const diagonAlley = new Location("Diagon Alley", "Game 1", 1, 4, 1, () => {});
