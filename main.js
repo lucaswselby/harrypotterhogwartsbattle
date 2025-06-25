@@ -1895,6 +1895,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 }
                                 if (fullMoonRisesComplete) {
                                     activePlayer.addDestroyedHorcrux(encounters.shift());
+                                    displayNextEncounter();
                                 }
                             }
 
