@@ -2295,7 +2295,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 player.influence += 2;
                 player.health += 2;
             });
-            activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
+            activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(defensiveTraining), 1);
             defensiveTraining.img.remove();
         });
         let encounters = [];
