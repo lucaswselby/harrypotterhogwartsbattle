@@ -2300,7 +2300,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                                     document.getElementsByClassName("choice")[i].onclick = () => {
                                         player.banishAt(i);
-                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(fullMoonRises), 1);
                                         fullMoonRises.img.remove();
                                     };
                                 }
@@ -2309,7 +2309,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
                                         player.hand.unshift(player.discard.splice(i, 1)[0]);
                                         player.banishAt(0);
-                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(fullMoonRises), 1);
                                         fullMoonRises.img.remove();
                                     };
                                 }
