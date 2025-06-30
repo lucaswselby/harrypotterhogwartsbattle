@@ -2286,7 +2286,7 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(thirdFloorCorridor), 1);
             thirdFloorCorridor.img.remove();
         });
-        const unregisteredAnimagus = new Encounter("Unregistered Animagus", "Box 2", [], () => {if (activeLocation.added >= 2) activePlayer.health--;}, () => {rollHouseDie("phoenix", false, true); rollHouseDie("phoenix", false, true); this.img.remove(); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(this), 1);});
+        const unregisteredAnimagus = new Encounter("Unregistered Animagus", "Box 2", [], () => {if (activeLocation.added >= 2) activePlayer.health--;}, () => {rollHouseDie("phoenix", false, true); rollHouseDie("phoenix", false, true); unregisteredAnimagus.img.remove(); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(unregisteredAnimagus), 1);});
         const fullMoonRises = new Encounter("Full Moon Rises", "Box 2", [], () => {}, () => {
             players.forEach(player => {
                 player.health += 3;
