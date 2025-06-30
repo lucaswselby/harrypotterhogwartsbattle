@@ -1530,7 +1530,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }, 1000);
             }
             removeFromLocation() {
-                // Barty Crouch Jr and Defense Training effect
+                // Barty Crouch Jr and Defensive Training effect
                 let defensiveTrainingEffect = encounters.length && encounters[0] === defensiveTraining;
                 if ((!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy || bartyCrouchJr.health <= 0) && !defensiveTrainingEffect) {
                     // Harry Potter special
@@ -2233,7 +2233,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             const symbolImg = document.createElement("IMG");
                             symbolImg.className = "symbol";
                             symbolImg.src = `./images/${symbol}Symbol.png`;
-                            symbolImg.style.left = `${this === horcrux6 ? (5 + 13 * this._destroys.indexOf(symbol)) : (6 + 20 * this._destroys.indexOf(symbol))}%`;
+                            symbolImg.style.left = `${this === horcrux6 || this === defensiveTraining ? (5 + 13 * this._destroys.indexOf(symbol)) : (6 + 20 * this._destroys.indexOf(symbol))}%`;
                             document.getElementById("encounters").appendChild(symbolImg);
                         }
                     }
@@ -2591,7 +2591,10 @@ document.getElementById("submitPlayers").onclick = () => {
             // encounter rewards
             if (activeGame === "Box 1") {
                 if (activePlayer.horcruxesDestroyed.includes(studentsOutOfBed)) studentsOutOfBed.img.onclick = studentsOutOfBed.reward;
-                if (activePlayer.horcruxesDestroyed.includes(thirdFloorCorridor)) thirdFloorCorridor.img.onclick = thirdFloorCorridor.reward;   
+                if (activePlayer.horcruxesDestroyed.includes(thirdFloorCorridor)) thirdFloorCorridor.img.onclick = thirdFloorCorridor.reward;
+            }
+            if (activeGame === "Box 2") {
+                if (activePlayer.horcruxesDestroyed.includes(defensiveTraining)) defensiveTraining.img.onclick = defensiveTraining.reward;
             }
 
             // update activeDarkArtsEvents
