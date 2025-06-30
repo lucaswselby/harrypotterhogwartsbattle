@@ -2595,6 +2595,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             if (activeGame === "Box 2") {
                 if (activePlayer.horcruxesDestroyed.includes(unregisteredAnimagus)) unregisteredAnimagus.img.onclick = unregisteredAnimagus.reward;
+                if (activePlayer.horcruxesDestroyed.includes(fullMoonRises)) fullMoonRises.img.onclick = fullMoonRises.reward;
                 if (activePlayer.horcruxesDestroyed.includes(defensiveTraining)) defensiveTraining.img.onclick = defensiveTraining.reward;
             }
 
