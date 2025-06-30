@@ -352,6 +352,7 @@ input[type="submit"] {
 
 #horcruxesDestroyed {
     display: flex;
+    width: 100%;
 }
 #horcruxesDestroyed img {
     width: calc(100% / 6);
