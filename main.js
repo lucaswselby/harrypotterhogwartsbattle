@@ -1163,6 +1163,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             darken(horcrux1.img);
                         }
                     }
+                    alliesCast = 99;
                 }
 
                 // Peskipiksi Pesternomi completion
