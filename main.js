@@ -927,7 +927,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (hero === "Hermione Granger") this._discard = hermioneStartingCards;
                 else if (hero === "Neville Longbottom") this._discard = nevilleStartingCards;
                 else if (hero === "Luna Lovegood") this._discard = lunaStartingCards;
-                // TO-DO: add other heroes
+                // TO-DO: add Ginny Weasley
                 this._petrified = false;
                 this._stunned = false;
                 this._played = [];
@@ -2248,7 +2248,16 @@ document.getElementById("submitPlayers").onclick = () => {
                             const symbolImg = document.createElement("IMG");
                             symbolImg.className = "symbol";
                             symbolImg.src = `./images/${symbol}Symbol.png`;
-                            symbolImg.style.left = `${this === horcrux6 || this === defensiveTraining ? (5 + 13 * this._destroys.indexOf(symbol)) : (6 + 20 * this._destroys.indexOf(symbol))}%`;
+                            let symbolIndex = this._destroys.indexOf(symbol);
+                            let thatSymbolsInDestroys = this._destroys.filter(destroyer => {return destroyer === symbol;}).length;
+                            if (thatSymbolsInDestroys > 1) {
+                                let thatSymbolRemaining = this._remaining.filter(remainder => {return remainder === symbol;}).length;
+                                while (thatSymbolsInDestroys - thatSymbolRemaining > 1) {
+                                    symbolIndex += this._destroys.slice(symbolIndex + 1).indexOf(symbol) + 1;
+                                    thatSymbolRemaining++;
+                                }
+                            }
+                            symbolImg.style.left = `${this === horcrux6 || this === defensiveTraining ? (5 + 13 * symbolIndex) : (6 + 20 * symbolIndex)}%`;
                             document.getElementById("encounters").appendChild(symbolImg);
                         }
                     }
