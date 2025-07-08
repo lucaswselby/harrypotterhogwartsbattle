@@ -2187,9 +2187,9 @@ document.getElementById("submitPlayers").onclick = () => {
         const werewolf = new Villain("Werewolf", "Box 2", "creature", 5, 4, () => {}, () => {
             players.forEach(player => {
                 addPlayerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
-                    document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
+                    document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}<p>Influence: ${player.influence}</p>`;
                     document.getElementsByClassName("choice")[0].onclick = () => {player.influence++;};
-                    document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div>`;
+                    document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`;
                     document.getElementsByClassName("choice")[1].onclick = () => {player.health += 2;};
                 });
             });
