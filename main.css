@@ -346,6 +346,9 @@ input[type="submit"] {
     align-items: center;
     overflow-y: auto;
 }
+#heroImage {
+    width: 100%;
+}
 #playerHero, #playerProficiency {
     width: 50%;
 }
