@@ -3,6 +3,8 @@
     --boardWidth: 74%;
     --playerChoiceLabelSize: 10vh;
     --playerChoiceDisplay: flex;
+    --revealBoardDisplay: block;
+    --revealBoardButtonHeight: 10%;
 }
 html, body {
     height: 100%;
@@ -410,7 +412,7 @@ input[type="submit"] {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100%;
+    height: calc(100% - var(--revealBoardButtonHeight));
     width: 100vw;
     z-index: 2;
 }
@@ -446,12 +448,17 @@ input[type="submit"] {
     align-items: center;
     justify-content: center;
 }
-#playerChoice.revealBoard, #playerChoiceLabel.revealBoard {
-    visibility: hidden;
+#playerChoiceContainer.revealBoard {
+    display: none;
 }
 #revealBoard {
-    height: fit-content;
-    width: fit-content;
+    box-sizing: border-box;
+    height: var(--revealBoardButtonHeight);
+    width: 100%;
+    font-size: 200%;
+    position: absolute;
+    bottom: 0;
+    display: var(--revealBoardDisplay);
 }
 
 #disableScreen {

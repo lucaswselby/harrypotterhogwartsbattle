@@ -138,22 +138,21 @@ document.getElementById("submitPlayers").onclick = () => {
                     playerChoiceElement.id = "playerChoice";
                     playerChoiceElement.className = this._iterations;
 
-                    // create revealBoard button
-                    const revealBoard = document.createElement("button");
-                    revealBoard.id = "revealBoard";
-                    revealBoard.innerHTML = "Reveal Board";
-                    revealBoard.onclick = () => {
-                        playerChoiceElement.classList.toggle("revealBoard");
-                        playerChoiceLabel.classList.toggle("revealBoard");
-                        revealBoard.innerHTML = revealBoard.innerHTML === "Reveal Board" ? "Hide Board" : "Reveal Board";
-                    };
-
                     // create playerChoiceContainer
                     const playerChoiceContainer = document.createElement("div");
                     playerChoiceContainer.id = "playerChoiceContainer";
                     playerChoiceContainer.appendChild(playerChoiceLabel);
                     playerChoiceContainer.appendChild(playerChoiceElement);
-                    playerChoiceContainer.appendChild(revealBoard);
+
+                    // create revealBoard button
+                    const revealBoard = document.createElement("button");
+                    revealBoard.id = "revealBoard";
+                    revealBoard.innerHTML = "Reveal Board";
+                    revealBoard.onclick = () => {
+                        playerChoiceContainer.classList.toggle("revealBoard");
+                        revealBoard.innerHTML = revealBoard.innerHTML === "Reveal Board" ? "Hide Board" : "Reveal Board";
+                    };
+                    document.getElementsByTagName("MAIN")[0].appendChild(revealBoard);
 
                     // add columns to playerChoice
                     for (let i = 1; i <= this._choices(); i++) {
@@ -165,6 +164,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     playerChoiceElement.onclick = () => {
                         // remove playerChoice when clicked
                         playerChoiceContainer.remove();
+                        revealBoard.remove();
 
                         // increment and display a new playerChoice for multiple iterations
                         if (--this._iterations > 0) {
@@ -431,84 +431,86 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             generateOnClick() {
                 this._img.onclick = () => {
-                    activePlayer.discardAt(activePlayer.hand.indexOf(this));
-                    this._effect();
+                    if (!document.getElementById("playerChoice")) {
+                        activePlayer.discardAt(activePlayer.hand.indexOf(this));
+                        this._effect();
 
-                    // Every-Flavour Beans effect
-                    if (activePlayer.passives.includes(everyFlavourBeans) && this.type === "ally") {
-                        activePlayer.attack++;
-                    }
-                    // Fleur Delacour effect
-                    if (activePlayer.passives.includes(fleurDelacour) && this.type === "ally" && this !== fleurDelacour) {
-                        activePlayer.health += 2;
-                        activePlayer.passives.splice(activePlayer.passives.indexOf(fleurDelacour), 1);
-                    }
-                    // Luna Lovegood effect
-                    if (activePlayer.passives.includes(lunaLovegood) && this.type === "item") {
-                        activePlayer.attack++;
-                        activePlayer.passives.splice(activePlayer.passives.indexOf(lunaLovegood), 1);
-                    }
-                    // OWLS effect
-                    if (activePlayer.passives.includes(owls1) && this.type === "spell") {
-                        owlsSpells1++;
-                        if (owlsSpells1 === 2) {
+                        // Every-Flavour Beans effect
+                        if (activePlayer.passives.includes(everyFlavourBeans) && this.type === "ally") {
                             activePlayer.attack++;
-                            activePlayer.health++;
                         }
-                    }
-                    if (activePlayer.passives.includes(owls2) && this.type === "spell") {
-                        owlsSpells2++;
-                        if (owlsSpells2 === 2) {
+                        // Fleur Delacour effect
+                        if (activePlayer.passives.includes(fleurDelacour) && this.type === "ally" && this !== fleurDelacour) {
+                            activePlayer.health += 2;
+                            activePlayer.passives.splice(activePlayer.passives.indexOf(fleurDelacour), 1);
+                        }
+                        // Luna Lovegood effect
+                        if (activePlayer.passives.includes(lunaLovegood) && this.type === "item") {
                             activePlayer.attack++;
-                            activePlayer.health++;
+                            activePlayer.passives.splice(activePlayer.passives.indexOf(lunaLovegood), 1);
                         }
-                    }
-                    // Elder Wand effect
-                    if (activePlayer.passives.includes(elderWand) && this.type === "spell") {
-                        activePlayer.attack++;
-                        activePlayer.health++;
-                    }
-                    // Divination proficiency
-                    if (activePlayer.proficiency === "Divination" && this.type === "item") {
-                        addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
-                            document.getElementsByClassName("choice")[0].innerHTML = `<p>Top of deck</p><img src="${activePlayer.draw[0].img.src}">`;
-                            document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p><img src="${activePlayer.draw[0].img.src}">`;
-                            document.getElementsByClassName("choice")[1].onclick = () => {
-                                let tempPetrified = activePlayer.petrified;
-                                activePlayer.petrified = false;
-                                activePlayer.cardsDrawn--;
-                                activePlayer.drawCards(1);
-                                activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, false);
-                                activePlayer.petrified = tempPetrified;
-                            };
-                        });
-                    }
-                    // Horcrux 1 effect
-                    if (encounters.length && encounters[0] === horcrux1 && this.type === "ally") {
-                        activePlayer.health--;
-                        darken(horcrux1.img);
-                    }
-                    // Peskipiksi Pesternomi reward
-                    if (activePlayer.horcruxesDestroyed.includes(peskipiksiPesternomi) && this.cost && this.cost % 2 === 0) {
-                        const hurtPlayers = players.filter(player => {return player.health < 10 && canHeal(player);});
-                        if (hurtPlayers.length) {
-                            if (hurtPlayers.length > 1) {
-                                addPlayerChoice("Heal for 1:", () => {return hurtPlayers.length;}, 1, () => {
-                                    for (let i = 0; i < hurtPlayers.length; i++) {
-                                        document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode()); 
-                                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`; 
-                                        document.getElementsByClassName("choice")[i].onclick = () => {
-                                            hurtPlayers[i].health++;
-                                        };
-                                    }
-                                });
+                        // OWLS effect
+                        if (activePlayer.passives.includes(owls1) && this.type === "spell") {
+                            owlsSpells1++;
+                            if (owlsSpells1 === 2) {
+                                activePlayer.attack++;
+                                activePlayer.health++;
                             }
-                            else hurtPlayers[0].health++;
-                            darken(peskipiksiPesternomi.img);
                         }
-                    }
+                        if (activePlayer.passives.includes(owls2) && this.type === "spell") {
+                            owlsSpells2++;
+                            if (owlsSpells2 === 2) {
+                                activePlayer.attack++;
+                                activePlayer.health++;
+                            }
+                        }
+                        // Elder Wand effect
+                        if (activePlayer.passives.includes(elderWand) && this.type === "spell") {
+                            activePlayer.attack++;
+                            activePlayer.health++;
+                        }
+                        // Divination proficiency
+                        if (activePlayer.proficiency === "Divination" && this.type === "item") {
+                            addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
+                                document.getElementsByClassName("choice")[0].innerHTML = `<p>Top of deck</p><img src="${activePlayer.draw[0].img.src}">`;
+                                document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p><img src="${activePlayer.draw[0].img.src}">`;
+                                document.getElementsByClassName("choice")[1].onclick = () => {
+                                    let tempPetrified = activePlayer.petrified;
+                                    activePlayer.petrified = false;
+                                    activePlayer.cardsDrawn--;
+                                    activePlayer.drawCards(1);
+                                    activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, false);
+                                    activePlayer.petrified = tempPetrified;
+                                };
+                            });
+                        }
+                        // Horcrux 1 effect
+                        if (encounters.length && encounters[0] === horcrux1 && this.type === "ally") {
+                            activePlayer.health--;
+                            darken(horcrux1.img);
+                        }
+                        // Peskipiksi Pesternomi reward
+                        if (activePlayer.horcruxesDestroyed.includes(peskipiksiPesternomi) && this.cost && this.cost % 2 === 0) {
+                            const hurtPlayers = players.filter(player => {return player.health < 10 && canHeal(player);});
+                            if (hurtPlayers.length) {
+                                if (hurtPlayers.length > 1) {
+                                    addPlayerChoice("Heal for 1:", () => {return hurtPlayers.length;}, 1, () => {
+                                        for (let i = 0; i < hurtPlayers.length; i++) {
+                                            document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode()); 
+                                            document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`; 
+                                            document.getElementsByClassName("choice")[i].onclick = () => {
+                                                hurtPlayers[i].health++;
+                                            };
+                                        }
+                                    });
+                                }
+                                else hurtPlayers[0].health++;
+                                darken(peskipiksiPesternomi.img);
+                            }
+                        }
 
-                    activePlayer.playedPush(this);
+                        activePlayer.playedPush(this);
+                    }
                 }
             }
             get passive() {
@@ -843,51 +845,53 @@ document.getElementById("submitPlayers").onclick = () => {
         // purchase a Hogwarts card
         hogwartsCards.forEach(card => {
             card.img.onclick = () => {
-                const cost = card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie ? 1 : 0);
-                if (activePlayer.influence >= cost) {
-                    activePlayer.influence -= cost;
+                if (!document.getElementById("playerChoice")) {
+                    const cost = card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie ? 1 : 0);
+                    if (activePlayer.influence >= cost) {
+                        activePlayer.influence -= cost;
 
-                    // History of Magic proficiency
-                    if (activePlayer === "History Of Magic" && card.type === "spell") {
-                        addPlayerChoice("Give 1 influence to:", () => {return players.length;}, 1, () => {
-                            for (let i = 0; i < players.length; i++) {
-                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].heroImage.src}">`;
-                                document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++;};
-                            }
-                        });
-                    }
+                        // History of Magic proficiency
+                        if (activePlayer === "History Of Magic" && card.type === "spell") {
+                            addPlayerChoice("Give 1 influence to:", () => {return players.length;}, 1, () => {
+                                for (let i = 0; i < players.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].heroImage.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++;};
+                                }
+                            });
+                        }
 
-                    // Time Turner, Sorting Hat, and Wingardium Leviosa effects
-                    if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(sortingHat) && card.type === "ally") || ((activePlayer.passives.includes(wingardiumLeviosa1) || activePlayer.passives.includes(wingardiumLeviosa2) || activePlayer.passives.includes(wingardiumLeviosa3)) && card.type === "item")) {
-                        addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
-                            document.getElementsByClassName("choice")[0].innerHTML = `<p>Top of deck</p><img src="${card.img.src}">`;
-                            document.getElementsByClassName("choice")[0].onclick = () => {
-                                activePlayer.draw.unshift(card);
-                            };
-                            document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p><img src="${card.img.src}">`;
-                            document.getElementsByClassName("choice")[1].onclick = () => {
-                                activePlayer.discard.push(card);
-                            };
-                        });
-                    }
-                    // add card to discard
-                    else {
-                        activePlayer.discard.push(card);
-                    }
-                    card.generateOnClick();
+                        // Time Turner, Sorting Hat, and Wingardium Leviosa effects
+                        if ((activePlayer.passives.includes(timeTurner) && card.type === "spell") || (activePlayer.passives.includes(sortingHat) && card.type === "ally") || ((activePlayer.passives.includes(wingardiumLeviosa1) || activePlayer.passives.includes(wingardiumLeviosa2) || activePlayer.passives.includes(wingardiumLeviosa3)) && card.type === "item")) {
+                            addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                                document.getElementsByClassName("choice")[0].innerHTML = `<p>Top of deck</p><img src="${card.img.src}">`;
+                                document.getElementsByClassName("choice")[0].onclick = () => {
+                                    activePlayer.draw.unshift(card);
+                                };
+                                document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p><img src="${card.img.src}">`;
+                                document.getElementsByClassName("choice")[1].onclick = () => {
+                                    activePlayer.discard.push(card);
+                                };
+                            });
+                        }
+                        // add card to discard
+                        else {
+                            activePlayer.discard.push(card);
+                        }
+                        card.generateOnClick();
 
-                    // Dolores Umbridge effect
-                    if (activeVillains.includes(doloresUmbridge) && cost >= 4 && !doloresUmbridge.petrifiedBy && doloresUmbridge.health > 0) {
-                        activePlayer.health--;
-                        darken(doloresUmbridge.img);
-                    }
+                        // Dolores Umbridge effect
+                        if (activeVillains.includes(doloresUmbridge) && cost >= 4 && !doloresUmbridge.petrifiedBy && doloresUmbridge.health > 0) {
+                            activePlayer.health--;
+                            darken(doloresUmbridge.img);
+                        }
 
-                    // replaces previous card with next card in store
-                    document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
-                    hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
-                    activeShops[activeShops.indexOf(card)] = hogwartsCards[5];
-                    activeShops.sort((a, b) => {return a.cost - b.cost}); // sorts store by cost
-                    populateShop();
+                        // replaces previous card with next card in store
+                        document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
+                        hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
+                        activeShops[activeShops.indexOf(card)] = hogwartsCards[5];
+                        activeShops.sort((a, b) => {return a.cost - b.cost}); // sorts store by cost
+                        populateShop();
+                    }
                 }
             }
         });
@@ -2409,7 +2413,7 @@ document.getElementById("submitPlayers").onclick = () => {
         // Hogwarts Castle special
         if (hogwartsCastle.img) {
             hogwartsCastle.img.onclick = () => {
-                if (activePlayer.attack >= 5) {
+                if (activePlayer.attack >= 5 && !document.getElementById("playerChoice")) {
                     hogwartsCastle.removeFromLocation();
                     activePlayer.attack -= 5;
                 }
@@ -2472,8 +2476,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                 }
-                document.getElementsByClassName("activeVillain")[i].onclick = dealDamage;
-                document.getElementsByClassName("villainDamage")[i].onclick = dealDamage;
+                document.getElementsByClassName("activeVillain")[i].onclick = () => {if (!document.getElementById("playerChoice")) dealDamage();};
+                document.getElementsByClassName("villainDamage")[i].onclick = () => {if (!document.getElementById("playerChoice")) dealDamage();};
             }
         };
         populateVillains();
@@ -2508,6 +2512,7 @@ document.getElementById("submitPlayers").onclick = () => {
             disableScreen.style.display = "block";
             let root = document.querySelector(":root");
             root.style.setProperty("--playerChoiceDisplay", "none");
+            root.style.setProperty("--revealBoardDisplay", "none");
 
             // new active player
             activePlayer = players.indexOf(activePlayer) < players.length - 1 ? players[players.indexOf(activePlayer) + 1] : players[0];
@@ -2535,26 +2540,28 @@ document.getElementById("submitPlayers").onclick = () => {
             // Charms proficiency
             if (activePlayer.proficiency === "Charms" && !activePlayer.petrified) {
                 document.getElementById("playerProficiency").onclick = () => {
-                    let spells = activePlayer.hand.filter(card => {return card.type === "spell";});
-                    if (spells.length >= 2) {
-                        if (spells.length > 2) {
-                            addPlayerChoice("Discard:", () => {spells = spells.filter(spell => {return activePlayer.hand.includes(spell);}); return spells.length;}, 2, () => {
-                                for (let i = 0; i < spells.length; i++) {
-                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`;
-                                    document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[i]), false)};
-                                }
-                            });
+                    if (!document.getElementById("playerChoice")) {
+                        let spells = activePlayer.hand.filter(card => {return card.type === "spell";});
+                        if (spells.length >= 2) {
+                            if (spells.length > 2) {
+                                addPlayerChoice("Discard:", () => {spells = spells.filter(spell => {return activePlayer.hand.includes(spell);}); return spells.length;}, 2, () => {
+                                    for (let i = 0; i < spells.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[i]), false)};
+                                    }
+                                });
+                            }
+                            else spells.forEach(spell => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spell), false);});
+                            players.forEach(player => {player.influence++; player.drawCards(1);});
                         }
-                        else spells.forEach(spell => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spell), false);});
-                        players.forEach(player => {player.influence++; player.drawCards(1);});
+                        document.getElementById("playerProficiency").onclick = () => {};
                     }
-                    document.getElementById("playerProficiency").onclick = () => {};
                 };
             }
             // Flying Lessons proficiency
             else if (activePlayer.proficiency === "Flying Lessons") {
                 document.getElementById("playerProficiency").onclick = () => {
-                    if (activePlayer.influence >= 5) {
+                    if (activePlayer.influence >= 5 && !document.getElementById("playerChoice")) {
                         activePlayer.influence -= 5;
                         activeLocation.removeFromLocation();
                         document.getElementById("playerProficiency").onclick = () => {};
@@ -2564,63 +2571,65 @@ document.getElementById("submitPlayers").onclick = () => {
             // Transfiguration proficiency
             else if (activePlayer.proficiency === "Transfiguration") {
                 document.getElementById("playerProficiency").onclick = () => {
-                    const items = activePlayer.hand.filter(card => {return card.type === "item";});
-                    if (items.length) {
-                        const transfigure = itemIndex => {
-                            activePlayer.shuffle();
-                            const cheapos = activePlayer.draw.filter(card => {return card.cost <= 5;});
-                            if (cheapos.length) {
-                                const drawCheapo = cheapoIndex => {
-                                    const drawIndex = activePlayer.draw.indexOf(cheapos[cheapoIndex]);
-                                    const tempCard = activePlayer.draw[drawIndex];
-                                    activePlayer.draw[drawIndex] = activePlayer.draw[0];
-                                    activePlayer.draw[0] = tempCard;
-                                    activePlayer.addToHand(activePlayer.draw.shift());
-                                    activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(items[itemIndex]), false);
-                                    activePlayer.shuffle();
-                                };
-                                if (cheapos.length > 1) {
-                                    addPlayerChoice("Add to hand:", () => {return cheapos.length;}, 1, () => {
-                                        for (let i = 0; i < cheapos.length; i++) {
-                                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapos[i].img.src}">`;
-                                            document.getElementsByClassName("choice")[i].onclick = () => {drawCheapo(i);};
-                                        }
-                                    });
+                    if (!document.getElementById("playerChoice")) {
+                        const items = activePlayer.hand.filter(card => {return card.type === "item";});
+                        if (items.length) {
+                            const transfigure = itemIndex => {
+                                activePlayer.shuffle();
+                                const cheapos = activePlayer.draw.filter(card => {return card.cost <= 5;});
+                                if (cheapos.length) {
+                                    const drawCheapo = cheapoIndex => {
+                                        const drawIndex = activePlayer.draw.indexOf(cheapos[cheapoIndex]);
+                                        const tempCard = activePlayer.draw[drawIndex];
+                                        activePlayer.draw[drawIndex] = activePlayer.draw[0];
+                                        activePlayer.draw[0] = tempCard;
+                                        activePlayer.addToHand(activePlayer.draw.shift());
+                                        activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(items[itemIndex]), false);
+                                        activePlayer.shuffle();
+                                    };
+                                    if (cheapos.length > 1) {
+                                        addPlayerChoice("Add to hand:", () => {return cheapos.length;}, 1, () => {
+                                            for (let i = 0; i < cheapos.length; i++) {
+                                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapos[i].img.src}">`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {drawCheapo(i);};
+                                            }
+                                        });
+                                    }
+                                    else drawCheapo(0);
                                 }
-                                else drawCheapo(0);
+                            };
+                            if (items.length > 1) {
+                                addPlayerChoice("Discard:", () => {return items.length;}, 1, () => {
+                                    for (let i = 0; i < items.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {transfigure(i)};
+                                    }
+                                });
                             }
-                        };
-                        if (items.length > 1) {
-                            addPlayerChoice("Discard:", () => {return items.length;}, 1, () => {
-                                for (let i = 0; i < items.length; i++) {
-                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`;
-                                    document.getElementsByClassName("choice")[i].onclick = () => {transfigure(i)};
-                                }
-                            });
+                            else transfigure(0);
+                            document.getElementById("playerProficiency").onclick = () => {};
                         }
-                        else transfigure(0);
-                        document.getElementById("playerProficiency").onclick = () => {};
                     }
                 };
             }
 
             // horcrux rewards
             if (activeGame === "Game 7") {
-                if (activePlayer.horcruxesDestroyed.includes(horcrux2)) horcrux2.img.onclick = horcrux2.reward;
-                if (activePlayer.horcruxesDestroyed.includes(horcrux3)) horcrux3.img.onclick = horcrux3.reward;
-                if (activePlayer.horcruxesDestroyed.includes(horcrux4)) horcrux4.img.onclick = horcrux4.reward;
-                if (activePlayer.horcruxesDestroyed.includes(horcrux5)) horcrux5.img.onclick = horcrux5.reward;
-                if (activePlayer.horcruxesDestroyed.includes(horcrux6)) horcrux6.img.onclick = horcrux6.reward;
+                if (activePlayer.horcruxesDestroyed.includes(horcrux2)) horcrux2.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux2.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(horcrux3)) horcrux3.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux3.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(horcrux4)) horcrux4.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux4.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(horcrux5)) horcrux5.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux5.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(horcrux6)) horcrux6.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux6.reward();};
             }
             // encounter rewards
             if (activeGame === "Box 1") {
-                if (activePlayer.horcruxesDestroyed.includes(studentsOutOfBed)) studentsOutOfBed.img.onclick = studentsOutOfBed.reward;
-                if (activePlayer.horcruxesDestroyed.includes(thirdFloorCorridor)) thirdFloorCorridor.img.onclick = thirdFloorCorridor.reward;
+                if (activePlayer.horcruxesDestroyed.includes(studentsOutOfBed)) studentsOutOfBed.img.onclick = () => {if (!document.getElementById("playerChoice")) studentsOutOfBed.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(thirdFloorCorridor)) thirdFloorCorridor.img.onclick = () => {if (!document.getElementById("playerChoice")) thirdFloorCorridor.reward();};
             }
             if (activeGame === "Box 2") {
-                if (activePlayer.horcruxesDestroyed.includes(unregisteredAnimagus)) unregisteredAnimagus.img.onclick = unregisteredAnimagus.reward;
-                if (activePlayer.horcruxesDestroyed.includes(fullMoonRises)) fullMoonRises.img.onclick = fullMoonRises.reward;
-                if (activePlayer.horcruxesDestroyed.includes(defensiveTraining)) defensiveTraining.img.onclick = defensiveTraining.reward;
+                if (activePlayer.horcruxesDestroyed.includes(unregisteredAnimagus)) unregisteredAnimagus.img.onclick = () => {if (!document.getElementById("playerChoice")) unregisteredAnimagus.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(fullMoonRises)) fullMoonRises.img.onclick = () => {if (!document.getElementById("playerChoice")) fullMoonRises.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(defensiveTraining)) defensiveTraining.img.onclick = () => {if (!document.getElementById("playerChoice")) defensiveTraining.reward();};
             }
 
             // update activeDarkArtsEvents
@@ -2677,6 +2686,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                             setTimeout(() => {
                                                 disableScreen.style.display = "none";
                                                 root.style.setProperty("--playerChoiceDisplay", "flex");
+                                                root.style.setProperty("--revealBoardDisplay", "block");
                                             }, 1000 + (invulnerableVoldemort() ? 1000 : 0) + (encounters.length ? 1000 : 0));
 
                                             // magnify images
