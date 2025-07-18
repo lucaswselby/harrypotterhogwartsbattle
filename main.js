@@ -1780,7 +1780,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // villains
         class Villain {
-            constructor(name, game, type, health, influence, effect, reward) {
+            constructor(name, game, type, health, influence, effect, reward, passive) {
                 this._name = name;
                 this._img = document.createElement("img");
                 this._img.className = "villain";
@@ -1795,6 +1795,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._influenceDamageTaken = 0;
                 this._effect = effect;
                 this._reward = reward;
+                this._passive = passive;
                 this._petrifiedBy = null;
             }
             get name() {
@@ -1999,6 +2000,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     this._reward();
                 }
             }
+            get passive() {
+                return this._passive;
+            }
             get petrifiedBy() {
                 return this._petrifiedBy;
             }
@@ -2019,11 +2023,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
         }
-        const crabbeAndGoyle = new Villain("Crabbe And Goyle", "Game 1", "villain", 5, 0, () => {}, () => {players.forEach(player => {player.drawCards(1);});});
-        const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, 0, () => {}, () => {activeLocation.removeFromLocation();});
-        const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, 0, () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});});
-        const basilisk = new Villain("Basilisk", "Game 2", "villain-creature", 8, 0, () => {players.forEach(player => {player.petrified = true;});}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();});
-        const luciusMalfoy = new Villain("Lucius Malfoy", "Game 2", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.influence++;}); activeLocation.removeFromLocation();});
+        const crabbeAndGoyle = new Villain("Crabbe And Goyle", "Game 1", "villain", 5, 0, () => {}, () => {players.forEach(player => {player.drawCards(1);});}, true);
+        const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, 0, () => {}, () => {activeLocation.removeFromLocation();}, true);
+        const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, 0, () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});}, false);
+        const basilisk = new Villain("Basilisk", "Game 2", "villain-creature", 8, 0, () => {players.forEach(player => {player.petrified = true;});}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();}, false);
+        const luciusMalfoy = new Villain("Lucius Malfoy", "Game 2", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.influence++;}); activeLocation.removeFromLocation();}, true);
         const tomRiddle = new Villain("Tom Riddle", "Game 2", "villain", 6, 0, () => {
             let allies = activePlayer.hand.filter(card => {return card.type === "ally";}); 
             const tomRiddleEffect = () => {
@@ -2075,18 +2079,18 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (allies.length) drawAllyFromDiscard(); 
                 else player.health += 2;
             });
-        });
-        const dementor = new Villain("Dementor", "Game 3", "villain-creature", 8, 0, () => {activePlayer.health -= 2;}, () => {players.forEach(player => {player.health += 2;}); activeLocation.removeFromLocation();});
-        const peterPettigrew = new Villain("Peter Pettigrew", "Game 3", "villain", 7, 0, () => {if (!activePlayer.draw.length) activePlayer.shuffle(); if (activePlayer.draw[0].cost) {const tempPetrified = activePlayer.petrified; activePlayer.petrified = false; activePlayer.cardsDrawn--; activePlayer.drawCards(1); activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, true); activePlayer.petrified = tempPetrified; activeLocation.addToLocation();}}, () => {players.forEach(player => {const spells = player.discard.filter(card => {return card.type === "spell";}); if (spells.length) {const discardToHand = index => {player.discard.splice(player.discard.indexOf(spells[index]), 1); player.addToHand(spells[index]);}; if (spells.length === 1) discardToHand(0); else {addPlayerChoice(`${player.hero} move from Discard to Hand:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});}}}); activeLocation.removeFromLocation();});
-        const bartyCrouchJr = new Villain("Barty Crouch Jr", "Game 4", "villain", 7, 0, () => {}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
-        const deathEater1 = new Villain("Death Eater", "Game 4", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();});
-        const deathEater2 = new Villain("Death Eater", "Game 5", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();});
-        const doloresUmbridge = new Villain("Dolores Umbridge", "Game 5", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.influence++; player.health += 2;});});
-        const lordVoldemort1 = new Villain("Lord Voldemort", "Game 5", "villain", 10, 0, () => {activePlayer.health--; if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true);};}});} else activePlayer.forcedDiscardAt(0, true);}}, () => {});
-        const bellatrixLestrange = new Villain("Bellatrix Lestrange", "Game 6", "villain", 9, 0, () => {}, () => {players.forEach(player => {const items = player.discard.filter(card => {return card.type === "item"}); if (items.length) {const discardToHand = index => {player.addToHand(items[index]); player.discard.splice(player.discard.indexOf(items[index]), 1);}; if (items.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
-        const fenrirGreyback = new Villain("Fenrir Greyback", "Game 6", "villain", 8, 0, () => {}, () => {players.forEach(player => {player.health += 3;}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);});
-        const lordVoldemort2 = new Villain("Lord Voldemort", "Game 6", "villain", 15, 0, () => {rollHouseDie("green", true, false);}, () => {});
-        const lordVoldemort3 = new Villain("Lord Voldemort", "Game 7", "villain", 20, 0, () => {activeLocation.addToLocation();}, () => {});
+        }, false);
+        const dementor = new Villain("Dementor", "Game 3", "villain-creature", 8, 0, () => {activePlayer.health -= 2;}, () => {players.forEach(player => {player.health += 2;}); activeLocation.removeFromLocation();}, false);
+        const peterPettigrew = new Villain("Peter Pettigrew", "Game 3", "villain", 7, 0, () => {if (!activePlayer.draw.length) activePlayer.shuffle(); if (activePlayer.draw[0].cost) {const tempPetrified = activePlayer.petrified; activePlayer.petrified = false; activePlayer.cardsDrawn--; activePlayer.drawCards(1); activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, true); activePlayer.petrified = tempPetrified; activeLocation.addToLocation();}}, () => {players.forEach(player => {const spells = player.discard.filter(card => {return card.type === "spell";}); if (spells.length) {const discardToHand = index => {player.discard.splice(player.discard.indexOf(spells[index]), 1); player.addToHand(spells[index]);}; if (spells.length === 1) discardToHand(0); else {addPlayerChoice(`${player.hero} move from Discard to Hand:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});}}}); activeLocation.removeFromLocation();}, false);
+        const bartyCrouchJr = new Villain("Barty Crouch Jr", "Game 4", "villain", 7, 0, () => {}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, true);
+        const deathEater1 = new Villain("Death Eater", "Game 4", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();}, true);
+        const deathEater2 = new Villain("Death Eater", "Game 5", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.health++;}); activeLocation.removeFromLocation();}, true);
+        const doloresUmbridge = new Villain("Dolores Umbridge", "Game 5", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.influence++; player.health += 2;});}, true);
+        const lordVoldemort1 = new Villain("Lord Voldemort", "Game 5", "villain", 10, 0, () => {activePlayer.health--; if (activePlayer.hand.length) {if (activePlayer.hand.length > 1) {addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {for (let i = 0; i < activePlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true);};}});} else activePlayer.forcedDiscardAt(0, true);}}, () => {}, false);
+        const bellatrixLestrange = new Villain("Bellatrix Lestrange", "Game 6", "villain", 9, 0, () => {}, () => {players.forEach(player => {const items = player.discard.filter(card => {return card.type === "item"}); if (items.length) {const discardToHand = index => {player.addToHand(items[index]); player.discard.splice(player.discard.indexOf(items[index]), 1);}; if (items.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, true);
+        const fenrirGreyback = new Villain("Fenrir Greyback", "Game 6", "villain", 8, 0, () => {}, () => {players.forEach(player => {player.health += 3;}); activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, true);
+        const lordVoldemort2 = new Villain("Lord Voldemort", "Game 6", "villain", 15, 0, () => {rollHouseDie("green", true, false);}, () => {}, false);
+        const lordVoldemort3 = new Villain("Lord Voldemort", "Game 7", "villain", 20, 0, () => {activeLocation.addToLocation();}, () => {}, false);
         let inactiveVillains = [crabbeAndGoyle, dracoMalfoy, quirinusQuirrell];
         if (activeGame !== "Game 1") {
             inactiveVillains.push(basilisk, luciusMalfoy, tomRiddle);
@@ -2105,7 +2109,7 @@ document.getElementById("submitPlayers").onclick = () => {
         }
         shuffle(inactiveVillains);
         // Box expansion villains
-        const cornishPixies = new Villain("Cornish Pixies", "Box 1", "creature", 6, 0, () => {activePlayer.health -= activePlayer.hand.filter(card => {return card.cost && card.cost % 2 === 0;}).length * 2}, () => {players.forEach(player => {player.health += 2; player.influence++;});});
+        const cornishPixies = new Villain("Cornish Pixies", "Box 1", "creature", 6, 0, () => {activePlayer.health -= activePlayer.hand.filter(card => {return card.cost && card.cost % 2 === 0;}).length * 2}, () => {players.forEach(player => {player.health += 2; player.influence++;});}, false);
         const fluffy = new Villain("Fluffy", "Box 1", "creature", 8, 0, () => {
             let items = activePlayer.hand.filter(card => {return card.type === "item";});
             const fluffyEffect = () => { 
@@ -2129,7 +2133,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             };
             fluffyEffect();
-        }, () => {players.forEach(player => {player.health++; player.drawCards(1);});});
+        }, () => {players.forEach(player => {player.health++; player.drawCards(1);});}, false);
         const norbert = new Villain("Norbert", "Box 1", "creature", 0, 6, () => {activePlayer.health -= 1 + activePlayer.hand.filter(card => {return card.name === "Detention";}).length;}, () => {players.forEach(player => {
             addPlayerChoice(`Banish for ${player.hero}:`, () => {return 2;}, 1, () => {
                 document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(player.hand.concat(player.discard));
@@ -2147,7 +2151,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 };
                 document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
             });
-        });});
+        });}, false);
         const troll = new Villain("Troll", "Box 1", "creature", 7, 0, () => {
             if (activePlayer.health) {
                 addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
@@ -2185,9 +2189,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     });
                 }
             });
-        });
-        const boggart = new Villain("Boggart", "Box 2", "creature", 5, 3, () => {rollHouseDie("phoenix", true, true);}, () => {rollHouseDie("phoenix", false, true)});
-        const scabbers = new Villain("Scabbers", "Box 2", "villain-creature", 7, 0, () => {if (!activePlayer.draw.length) activePlayer.shuffle(); if (activePlayer.draw[0].cost) {const tempPetrified = activePlayer.petrified; activePlayer.petrified = false; activePlayer.cardsDrawn--; activePlayer.drawCards(1); activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, true); activePlayer.petrified = tempPetrified; activePlayer.health -= 2;}}, () => {players.forEach(player => {const cheapCards = player.discard.filter(card => {return card.cost <= 3;}); if (cheapCards.length) {const discardToHand = index => {player.addToHand(cheapCards[index]); player.discard.splice(player.discard.indexOf(cheapCards[index]), 1);}; if (cheapCards.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return cheapCards.length;}, 1, () => {for (let i = 0; i < cheapCards.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation();});
+        }, false);
+        const boggart = new Villain("Boggart", "Box 2", "creature", 5, 3, () => {rollHouseDie("phoenix", true, true);}, () => {rollHouseDie("phoenix", false, true)}, false);
+        const scabbers = new Villain("Scabbers", "Box 2", "villain-creature", 7, 0, () => {if (!activePlayer.draw.length) activePlayer.shuffle(); if (activePlayer.draw[0].cost) {const tempPetrified = activePlayer.petrified; activePlayer.petrified = false; activePlayer.cardsDrawn--; activePlayer.drawCards(1); activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, true); activePlayer.petrified = tempPetrified; activePlayer.health -= 2;}}, () => {players.forEach(player => {const cheapCards = player.discard.filter(card => {return card.cost <= 3;}); if (cheapCards.length) {const discardToHand = index => {player.addToHand(cheapCards[index]); player.discard.splice(player.discard.indexOf(cheapCards[index]), 1);}; if (cheapCards.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return cheapCards.length;}, 1, () => {for (let i = 0; i < cheapCards.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation();}, false);
         const werewolf = new Villain("Werewolf", "Box 2", "creature", 5, 4, () => {}, () => {
             players.forEach(player => {
                 addPlayerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
@@ -2198,7 +2202,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             });
             activeLocation.removeFromLocation();
-        });
+        }, true);
         if (activeGame.includes("Box")) {
             inactiveVillains = inactiveVillains.slice(0, 5);
             inactiveVillains.push(cornishPixies, fluffy, norbert, troll);
