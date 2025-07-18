@@ -2010,7 +2010,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._petrifiedBy = petrifiedBy;
                 const activeVillainElement = this === invulnerableVoldemort() ? document.getElementById("villainDraw") : document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)];
                 if (this.petrifiedBy) {
-                    activeVillainElement.innerHTML += `<img src="./images/${this.type === "villain" ? "petrified" : "harp"}Token.png" class="petrifiedToken">`;
+                    activeVillainElement.innerHTML += `<img src="./images/${this.type.includes("villain") ? "petrified" : "harp"}Token.png" class="petrifiedToken">`;
 
                     // petrify the Basilisk
                     if (this === basilisk && !activeDarkArtsEvents.includes(petrification1) && !activeDarkArtsEvents.includes(petrification2)) {
