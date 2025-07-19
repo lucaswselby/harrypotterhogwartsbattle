@@ -1095,10 +1095,13 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._passives;
             }
             get petrified() {
+                if (activeVillains.includes(basilisk) && !basilisk.petrifiedBy && basilisk.health > 0) {
+                    this.petrified = true;
+                    darken(basilisk.img);
+                }
                 if (this._petrified) {
                     if (petrification1.img) darken(petrification1.img);
                     if (petrification2.img) darken(petrification2.img);
-                    if (activeVillains.includes(basilisk) && !basilisk.petrifiedBy && basilisk.health > 0) darken(basilisk.img);
                 }
                 return this._petrified;
             }
