@@ -292,13 +292,13 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.health--;});});
                 else if (result === "health") {
                     if (color === "phoenix") {
-                        activeVillains.filter(villain => {return villain.type === "creature"}).forEach(creature => {
+                        activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {
                             creature.health++;
                             creature.influence++;
                         });
                     }
                     else {
-                        activeVillains.filter(villain => {return villain.type === "villain"}).forEach(villain => {
+                        activeVillains.filter(villain => {return villain.type.includes("villain");}).forEach(villain => {
                             villain.health++;
                         });
                     }
