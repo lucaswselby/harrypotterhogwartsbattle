@@ -880,7 +880,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         card.generateOnClick();
 
                         // Dolores Umbridge effect
-                        if (activeVillains.includes(doloresUmbridge) && cost >= 4 && !doloresUmbridge.petrifiedBy && doloresUmbridge.health > 0) {
+                        if (activeVillains.includes(doloresUmbridge) && card.cost >= 4 && !doloresUmbridge.petrifiedBy && doloresUmbridge.health > 0) {
                             activePlayer.health--;
                             darken(doloresUmbridge.img);
                         }
