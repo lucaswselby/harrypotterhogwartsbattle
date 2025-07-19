@@ -2668,11 +2668,12 @@ document.getElementById("submitPlayers").onclick = () => {
                         // villain effects
                         if (activeDarkArtsEvents.indexOf(activeDarkArtsEvents[i]) === activeDarkArtsEvents.length - 1) {
                             setTimeout(() => {
-                                for (let i = 0; i < activeVillains.length; i++) {
+                                const nonPassiveVillains = activeVillains.filter(villain => {return !villain.passive && !villain.petrifiedBy;});
+                                for (let i = 0; i < (nonPassiveVillains.length > 1 ? nonPassiveVillains.length : 1); i++) {
                                     setTimeout(() => {
-                                        if (!activeVillains[i].petrifiedBy) activeVillains[i].effect();
+                                        if (nonPassiveVillains.length && !nonPassiveVillains[i].petrifiedBy) nonPassiveVillains[i].effect();
 
-                                        if (i === activeVillains.length - 1) {
+                                        if (!nonPassiveVillains.length || i === nonPassiveVillains.length - 1) {
                                             // Voldemort
                                             if (invulnerableVoldemort()) {
                                                 setTimeout(() => {
@@ -2691,27 +2692,29 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 }, 1000 + (invulnerableVoldemort() ? 1000 : 0));
                                             }
 
-                                            // reenable all events
                                             setTimeout(() => {
+                                                // magnify images
+                                                for (let j = 0; j < document.getElementsByTagName("IMG").length; j++) {
+                                                    const img = document.getElementsByTagName("IMG")[j];
+                                                    img.oncontextmenu = event => {magnify(event);};
+                                                }
+
+                                                // reset villains
+                                                activeVillains.forEach(villain => {
+                                                    if (villain.petrifiedBy === activePlayer) {
+                                                        villain.petrifiedBy = null;
+                                                    }
+                                                    villain.attackDamageTaken = 0;
+                                                    villain.influenceDamageTaken = 0;
+                                                });
+
+                                                // reenable all events
                                                 disableScreen.style.display = "none";
                                                 root.style.setProperty("--playerChoiceDisplay", "flex");
                                                 root.style.setProperty("--revealBoardDisplay", "block");
                                             }, 1000 + (invulnerableVoldemort() ? 1000 : 0) + (encounters.length ? 1000 : 0));
-
-                                            // magnify images
-                                            for (let i = 0; i < document.getElementsByTagName("IMG").length; i++) {
-                                                const img = document.getElementsByTagName("IMG")[i];
-                                                img.oncontextmenu = event => {magnify(event);};
-                                            }
                                         }
-
-                                        // unpetrify villain
-                                        if (activeVillains[i].petrifiedBy === activePlayer) {
-                                            activeVillains[i].petrifiedBy = null;
-                                        }
-                                        activeVillains[i].attackDamageTaken = 0;
-                                        activeVillains[i].influenceDamageTaken = 0;
-                                    }, i * 1000);
+                                    }, nonPassiveVillains.length ? i * 1000 : 0);
                                 }
                             }, 1000);
                         }

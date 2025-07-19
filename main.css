@@ -424,6 +424,7 @@ input[type="submit"] {
     font-size: var(--playerChoiceLabelSize);
 }
 #playerChoice {
+    height: 0;
     flex-grow: 1;
     display: grid;
     background-color: black;
@@ -440,10 +441,12 @@ input[type="submit"] {
     overflow: auto;
 }
 .choice img {
-    max-height: calc(100vh - var(--playerChoiceLabelSize) - 5rem);
+    max-height: calc(100% - 4em);
     max-width: 100%;
 }
 .choiceContainer {
+    height: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
