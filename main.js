@@ -1095,13 +1095,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._passives;
             }
             get petrified() {
-                if (activeVillains.includes(basilisk) && !basilisk.petrifiedBy && basilisk.health > 0) {
-                    this.petrified = true;
-                    darken(basilisk.img);
-                }
                 if (this._petrified) {
                     if (petrification1.img) darken(petrification1.img);
                     if (petrification2.img) darken(petrification2.img);
+                    if (activeVillains.includes(basilisk) && !basilisk.petrifiedBy && basilisk.health > 0) darken(basilisk.img);
                 }
                 return this._petrified;
             }
@@ -2010,6 +2007,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._petrifiedBy;
             }
             set petrifiedBy(petrifiedBy) {
+                // unpetrify basilisk
+                if (this.petrifiedBy && !petrifiedBy && this === basilisk) {
+                    this.effect();
+                }
+
                 this._petrifiedBy = petrifiedBy;
                 const activeVillainElement = this === invulnerableVoldemort() ? document.getElementById("villainDraw") : document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)];
                 if (this.petrifiedBy) {
@@ -2029,7 +2031,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const crabbeAndGoyle = new Villain("Crabbe And Goyle", "Game 1", "villain", 5, 0, () => {}, () => {players.forEach(player => {player.drawCards(1);});}, true);
         const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, 0, () => {}, () => {activeLocation.removeFromLocation();}, true);
         const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, 0, () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});}, false);
-        const basilisk = new Villain("Basilisk", "Game 2", "villain-creature", 8, 0, () => {}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();}, true);
+        const basilisk = new Villain("Basilisk", "Game 2", "villain-creature", 8, 0, () => {players.forEach(player => {player.petrified = true});}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();}, false);
         const luciusMalfoy = new Villain("Lucius Malfoy", "Game 2", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.influence++;}); activeLocation.removeFromLocation();}, true);
         const tomRiddle = new Villain("Tom Riddle", "Game 2", "villain", 6, 0, () => {
             let allies = activePlayer.hand.filter(card => {return card.type === "ally";}); 
