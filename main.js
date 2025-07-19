@@ -2029,7 +2029,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const crabbeAndGoyle = new Villain("Crabbe And Goyle", "Game 1", "villain", 5, 0, () => {}, () => {players.forEach(player => {player.drawCards(1);});}, true);
         const dracoMalfoy = new Villain("Draco Malfoy", "Game 1", "villain", 6, 0, () => {}, () => {activeLocation.removeFromLocation();}, true);
         const quirinusQuirrell = new Villain("Quirinus Quirrell", "Game 1", "villain", 6, 0, () => {activePlayer.health--;}, () => {players.forEach(player => {player.influence++; player.health++;});}, false);
-        const basilisk = new Villain("Basilisk", "Game 2", "villain-creature", 8, 0, () => {players.forEach(player => {player.petrified = true;});}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();}, false);
+        const basilisk = new Villain("Basilisk", "Game 2", "villain-creature", 8, 0, () => {}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();}, true);
         const luciusMalfoy = new Villain("Lucius Malfoy", "Game 2", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.influence++;}); activeLocation.removeFromLocation();}, true);
         const tomRiddle = new Villain("Tom Riddle", "Game 2", "villain", 6, 0, () => {
             let allies = activePlayer.hand.filter(card => {return card.type === "ally";}); 
