@@ -766,40 +766,42 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             });
         }, false, false);
-        const depulso1 = new Card("Depulso", "Box 2", "spell", 3, () => {addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
+        const depulso1 = new Card("Depulso", "Box 2", "spell", 3, () => {
             const handItems = activePlayer.hand.filter(card => {return card.type === "item"});
             const discardItems = activePlayer.discard.filter(card => {return card.type === "item"});
             if (handItems.length || discardItems.length) {
-                document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${influenceToken + influenceToken}</div>`;
-                document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;};
-                document.getElementsByClassName("choice")[1].innerHTML = `<p>Banish:</p>${choiceScroll(handItems.concat(discardItems))}`;
-                document.getElementsByClassName("choice")[1].onclick = () => {
-                    if (handItems.length + discardItems.length > 1) {
-                        addPlayerChoice("Banish:", () => {return handItems.length + discardItems.length;}, 1, () => {
-                            for (let i = 0; i < handItems.length; i++) {
-                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[activePlayer.hand.indexOf(handItems[i])].img.src}">`;
-                                document.getElementsByClassName("choice")[i].onclick = () => {
-                                    activePlayer.banishAt(activePlayer.hand.indexOf(handItems[i]));
-                                };
-                            }
-                            for (let i = 0; i < discardItems.length; i++) {
-                                document.getElementsByClassName("choice")[handItems.length + i].innerHTML = `<img src="${activePlayer.discard[activePlayer.discard.indexOf(discardItems[i])].img.src}">`;
-                                document.getElementsByClassName("choice")[handItems.length + i].onclick = () => {
-                                    activePlayer.hand.unshift(activePlayer.discard.splice(activePlayer.discard.indexOf(discardItems[i]), 1)[0]);
-                                    activePlayer.banishAt(0);
-                                };
-                            }
-                        });
-                    }
-                    else if (handItems.length) activePlayer.banishAt(activePlayer.hand.indexOf(handItems[0]));
-                    else {
-                        activePlayer.hand.unshift(activePlayer.discard.splice(activePlayer.discard.indexOf(discardItems[0]), 1)[0]);
-                        activePlayer.banishAt(0);
-                    }
-                };
+                addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${influenceToken + influenceToken}</div>`;
+                    document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 2;};
+                    document.getElementsByClassName("choice")[1].innerHTML = `<p>Banish:</p>${choiceScroll(handItems.concat(discardItems))}`;
+                    document.getElementsByClassName("choice")[1].onclick = () => {
+                        if (handItems.length + discardItems.length > 1) {
+                            addPlayerChoice("Banish:", () => {return handItems.length + discardItems.length;}, 1, () => {
+                                for (let i = 0; i < handItems.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[activePlayer.hand.indexOf(handItems[i])].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                        activePlayer.banishAt(activePlayer.hand.indexOf(handItems[i]));
+                                    };
+                                }
+                                for (let i = 0; i < discardItems.length; i++) {
+                                    document.getElementsByClassName("choice")[handItems.length + i].innerHTML = `<img src="${activePlayer.discard[activePlayer.discard.indexOf(discardItems[i])].img.src}">`;
+                                    document.getElementsByClassName("choice")[handItems.length + i].onclick = () => {
+                                        activePlayer.hand.unshift(activePlayer.discard.splice(activePlayer.discard.indexOf(discardItems[i]), 1)[0]);
+                                        activePlayer.banishAt(0);
+                                    };
+                                }
+                            });
+                        }
+                        else if (handItems.length) activePlayer.banishAt(activePlayer.hand.indexOf(handItems[0]));
+                        else {
+                            activePlayer.hand.unshift(activePlayer.discard.splice(activePlayer.discard.indexOf(discardItems[0]), 1)[0]);
+                            activePlayer.banishAt(0);
+                        }
+                    };
+                });
             }
             else activePlayer.influence += 2;
-        });}, false, false);
+        }, false, false);
         const depulso2 = depulso1.clone();
         const immobulus1 = new Card("Immobulus", "Box 2", "spell", 3, () => {activePlayer.attack++;}, true, false);
         const immobulus2 = immobulus1.clone();
