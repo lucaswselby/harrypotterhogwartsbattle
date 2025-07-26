@@ -2216,7 +2216,6 @@ document.getElementById("submitPlayers").onclick = () => {
             activeLocation.removeFromLocation();
         }, true);
         if (activeGame.includes("Box")) {
-            inactiveVillains = inactiveVillains.slice(0, 5);
             inactiveVillains.push(cornishPixies, fluffy, norbert, troll);
             if (activeGame !== "Box 1") {
                 inactiveVillains.push(boggart, scabbers, werewolf);
