@@ -1936,15 +1936,22 @@ document.getElementById("submitPlayers").onclick = () => {
                                     }, 1000);
                                 }
                             }
-                            // Full Moon Rises completion
-                            let fullMoonRisesComplete = encounters.length && encounters[0] === fullMoonRises;
-                            if (fullMoonRisesComplete) {
+                            if (encounters.length) {
+                                let allVillainsDefeated = true;
                                 for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
-                                    if (document.getElementsByClassName("activeVillain")[i].innerHTML !== "") fullMoonRisesComplete = false;
+                                    if (document.getElementsByClassName("activeVillain")[i].innerHTML !== "") allVillainsDefeated = false;
                                 }
-                                if (fullMoonRisesComplete) {
-                                    activePlayer.addDestroyedHorcrux(encounters.shift());
-                                    displayNextEncounter();
+                                if (allVillainsDefeated) {
+                                    // Unregistered Animgaus backup completion
+                                    if (encounters[0] === unregisteredAnimagus && !inactiveVillains.length) {
+                                        activePlayer.addDestroyedHorcrux(encounters.shift());
+                                        displayNextEncounter();
+                                    }
+                                    // Full Moon Rises completion
+                                    if (encounters[0] === fullMoonRises) {
+                                        activePlayer.addDestroyedHorcrux(encounters.shift());
+                                        displayNextEncounter();
+                                    }
                                 }
                             }
 
