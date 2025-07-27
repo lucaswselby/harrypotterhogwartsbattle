@@ -722,7 +722,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const finiteIncantatem1 = new Card("Finite Incantatem", "Box 1", "spell", 6, () => {activeLocation.removeFromLocation();}, true, false);
         const finiteIncantatem2 = finiteIncantatem1.clone();
         const harp = new Card("Harp", "Box 1", "item", 6, () => {activePlayer.attack++; let unpetrifiedCreatures = activeVillains.filter(villain => {return !villain.petrifiedBy && (villain.health > 0 || villain.influence > 0) && villain.type.includes("creature");}); if (unpetrifiedCreatures.length) {if (unpetrifiedCreatures.length > 1) {addPlayerChoice("Petrify:", () => {return unpetrifiedCreatures.length;}, 1, () => {for (let i = 0; i < unpetrifiedCreatures.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedCreatures[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedCreatures[i].petrifiedBy = activePlayer;};}});} else unpetrifiedCreatures[0].petrifiedBy = activePlayer;}}, false, false);
-        const oldSock1 = new Card("Old Sock", "Box 1", "item", 1, () => {activePlayer.influence++; if (players.filter(player => {return player !== activePlayer && (player.hand.includes(dobbyTheHouseElf)/* || player.hand.includes(other house elves)*/)}).length) activePlayer.attack += 2;}, false, false);
+        const oldSock1 = new Card("Old Sock", "Box 1", "item", 1, () => {activePlayer.influence++; if (players.filter(player => {return player !== activePlayer && (player.hand.includes(dobbyTheHouseElf) || player.hand.includes(kreacherTheHouseElf))}).length) activePlayer.attack += 2;}, false, false);
         const oldSock2 = oldSock1.clone();
         const tergeo1 = new Card("Tergeo", "Box 1", "spell", 2, () => {
             activePlayer.influence++; 
@@ -810,6 +810,103 @@ document.getElementById("submitPlayers").onclick = () => {
         const monsterBookOfMonsters2 = monsterBookOfMonsters1.clone();
         const monsterBookOfMonsters3 = monsterBookOfMonsters1.clone();
 
+        // Box 3
+        const erumpentHorn = new Card("Erumpent Horn", "Box 3", "item", 5, () => {activePlayer.health -= 2; activePlayer.attack += 3;}, false, false);
+        const griphook = new Card("Griphook", "Box 3", "ally", 6, () => {
+            if (!activePlayer.petrified) {
+                activePlayer.drawCards(3);
+                addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 2, () => {
+                    for (let i = 0; i < activePlayer.hand.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            if (activePlayer.hand[i].type === "item") activePlayer.influence += 2;
+                            activePlayer.forcedDiscardAt(i, false);
+                        };
+                    }
+                });
+            }
+        }, false, false);
+        const kreacherTheHouseElf = new Card("Kreacher The House Elf", "Box 3", "ally", 5, () => {
+            rollHouseDie("phoenix");
+            const playersWithCards = players.filter(player => {return player.hand.length || player.discard.length;});
+            if (playersWithCards.length) {
+                addPlayerChoice("Choose a player to banish 1:", () => {return playersWithCards.length + 1;}, 1, () => {
+                    for (let i = 0; i < playersWithCards.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<p>${playersWithCards[i].hero}:</p>${choiceScroll(playersWithCards[i].hand.concat(playersWithCards.discard))}`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            playerChoices.push(new PlayerChoice("Banish:", () => {return playersWithCards[i].hand.length + playersWithCards[i].discard.length + 1;}, 1, () => {
+                                for (let j = 0; j < playersWithCards[i].hand.length; j++) {
+                                    document.getElementsByClassName("choice")[j].innerHTML = `<img src="${playersWithCards[i].hand[j].img.src}">`;
+                                    document.getElementsByClassName("choice")[j].onclick = () => {playersWithCards[i].banishAt(j);};
+                                }
+                                for (let j = 0; j < playersWithCards[i].discard.length; j++) {
+                                    document.getElementsByClassName("choice")[j + playersWithCards[i].hand.length].innerHTML = `<img src="${playersWithCards.discard[j].img.src}">`;
+                                    document.getElementsByClassName("choice")[j + playersWithCards[i].hand.length].onclick = () => {
+                                        playersWithCards[i].hand.unshift(playersWithCards[i].discard.splice(j, 1)[0]);
+                                        playersWithCards[i].banishAt(0);
+                                    };
+                                }
+                                document.getElementsByClassName("choice")[playersWithCards[i].hand.length + playersWithCards[i].discard.length].innerHTML = "<p>Nothing</p>";
+                            }));
+                        };
+                    }
+                    document.getElementsByClassName("choice")[playersWithCards.length].innerHTML = "<p>None</p>";
+                });
+            }
+        }, false, false);
+        const lacewingFlies1 = new Card("Lacewing Flies", "Box 3", "item", 2, () => {
+            const unpetrifiedPlayers = players.filter(player => {return !player.petrified;});
+            if (unpetrifiedPlayers.length) {
+                if (unpetrifiedPlayers.length > 1) {
+                    addPlayerChoice("Draw 1 for:", () => {unpetrifiedPlayers.length;}, 1, () => {
+                        for (let i = 0; i < unpetrifiedPlayers.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedPlayers[i].heroImage.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedPlayers[i].drawCards(1);};
+                        }
+                    });
+                }
+                unpetrifiedPlayers[0].drawCards(1);
+            }
+        }, false, false);
+        const lacewingFlies2 = lacewingFlies1.clone();
+        const nox1 = new Card("Nox", "Box 3", "spell", 6, () => {
+            activePlayer.attack++;
+            players.forEach(player => {
+                if (player.hand.length || player.discard.length) {
+                    addPlayerChoice(`Banish for ${player.hero}:`, () => {return player.hand.length + player.discard.length + 1;}, 1, () => {
+                        for (let i = 0; i < player.hand.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[activePlayer.hand.indexOf(player.hand[i])].img.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {
+                                activePlayer.banishAt(i);
+                            };
+                        }
+                        for (let i = 0; i < player.discard.length; i++) {
+                            document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${activePlayer.discard[activePlayer.discard.indexOf(player.discard[i])].img.src}">`;
+                            document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
+                                activePlayer.hand.unshift(activePlayer.discard.splice(i, 1)[0]);
+                                activePlayer.banishAt(0);
+                            };
+                        }
+                        document.getElementsByClassName("choice")[player.hand.length + player.discard.length].innerHTML = "<p>Nothing</p>";
+                    });
+                }
+            });
+        }, false, false);
+        const nox2 = nox1.clone();
+        const thestral = new Card("Thestral", "Box 3", "ally", 4, () => {
+            players.forEach(player => {
+                if (canHeal(player)) {
+                    addPlayerChoice(`Choose for ${player.hero}:`, () => {return 2;}, 1, () => {
+                        document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
+                        document.getElementsByClassName("choice")[0].onclick = () => {player.influence++;};
+                        document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div>`;
+                        document.getElementsByClassName("choice")[1].onclick = () => {player.health += 2;};
+                    });
+                }
+                else player.influence++;
+            });
+        }, false, false);
+
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         if (activeGame !== "Game 1") {
@@ -836,7 +933,7 @@ document.getElementById("submitPlayers").onclick = () => {
             if (activeGame !== "Box 1") {
                 hogwartsCards.push(buckbeak, depulso1, depulso2, immobulus1, immobulus2, immobulus3, monsterBookOfMonsters1, monsterBookOfMonsters2, monsterBookOfMonsters3);
                 if (activeGame !== "Box 2") {
-                    // TO-DO: add Box 3 hogwarts cards                    
+                    hogwartsCards.push(erumpentHorn, griphook, kreacherTheHouseElf, lacewingFlies1, lacewingFlies2, nox1, nox2, thestral);
                     if (activeGame !== "Box 3") {
                         // TO-DO: add Box 4 hogwarts cards
                     }
@@ -1325,6 +1422,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 // Detention effect
                 else if (this.hand[index].name === "Detention") {
                     this.health -= 2;
+                }
+                // Lacewing Flies effect
+                else if (this.hand[index] === lacewingFlies1) {
+                    this.attack++;
                 }
 
                 if (villainOrDAE) {
