@@ -1041,14 +1041,14 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activeGame === "Game 6" || activeGame === "Game 7" || activeGame.includes("Box")) {
                     if (proficiency === "Patronus") {
                         proficiencyGame = "Box 3";
-                        if (hero === "Harry Potter") proficiency = "stagPatronus";
-                        else if (hero === "Ron Weasley") proficiency = "terrierPatronus";
-                        else if (hero === "Hermione Granger") proficiency = "otterPatronus";
-                        else if (hero === "Neville Longbottom") proficiency = "nonCorporealPatronus";
-                        else if (hero === "Luna Lovegood") proficiency = "rabbitPatronus";
+                        if (hero === "Harry Potter") proficiency = "Stag Patronus";
+                        else if (hero === "Ron Weasley") proficiency = "Terrier Patronus";
+                        else if (hero === "Hermione Granger") proficiency = "Otter Patronus";
+                        else if (hero === "Neville Longbottom") proficiency = "Non-Corporeal Patronus";
+                        else if (hero === "Luna Lovegood") proficiency = "Rabbit Patronus";
                         else if (hero === "Ginny Weasley") {
                             proficiencyGame = "Pack 1";
-                            proficiency = "horsePatronus";
+                            proficiency = "Horse Patronus";
                         }
                         else alert(`${hero} is not a valid Hero.`);
                     }
@@ -1084,6 +1084,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._healthLost = 0;
                 this._horcruxesDestroyed = [];
                 this._cardsDrawn = -5;
+                this._invulnerable = false;
             }
             get hero() {
                 return this._hero;
@@ -1104,7 +1105,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 // can't heal if stunned
                 if (!this.stunned) {
                     // taking damage
-                    if (health < this.health) {
+                    if (health < this.health && !this._invulnerable) {
                         this._healthLost += this.health - health;
 
                         // Invisibility Cloak effect
@@ -1146,11 +1147,18 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                             this.gainedHealth = true;
 
-                            // Herbology proficiency
                             this._healthGained += health - this.health;
-                            if (activePlayer.proficiency === "Herbology" && this.healthGained >= 3) {
-                                this.drawCards(1);
-                                this._healthGained = -99;
+                            if (this.healthGained >= 3) {
+                                // Herbology proficiency
+                                if (activePlayer.proficiency === "Herbology") {
+                                    this.drawCards(1);
+                                    this._healthGained = -99;
+                                }
+                                // Non-Corporeal Patronus
+                                else if (activePlayer.proficiency === "Non-CorporealPatronus") {
+                                    this.attack++;
+                                    this._healthGained = -99;
+                                }
                             }
                         }
                     }
@@ -1158,8 +1166,37 @@ document.getElementById("submitPlayers").onclick = () => {
                     // sets health
                     this._health = health;
                     if (this.health <= 0) {
-                        this._health = 0;
-                        this.stun();
+                        // Stag Patronus
+                        const stagPlayer = players.filter(player => {return player !== this && player.proficiency === "Stag Patronus";}).length ? players.filter(player => {return player !== this && player.proficiency === "Stag Patronus";})[0] : null;
+                        const stagSpells = stagPlayer ? stagPlayer.hand.filter(card => {return card.type === "spell"}) : [];
+                        if (stagPlayer && stagSpells.length) {
+                            addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                                document.getElementsByClassName("choice")[0].innerHTML = `<p>Harry Potter loses:</p>${choiceScroll(stagSpells)}<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${stagPlayer.health}</p>`;
+                                document.getElementsByClassName("choice")[0].onclick = () => {
+                                    if (stagSpells.length > 1) {
+                                        playerChoices.unshift(new PlayerChoice("Discard:", () => {return stagSpells.length;}, 1, () => {
+                                            for (let i = 0; i < stagSpells.length; i++) {
+                                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${stagSpells.img.src}">`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(stagSpells[i]), false);};
+                                            }
+                                        }));
+                                    }
+                                    else stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(stagSpells[0]), false);
+                                    stagPlayer.health -= 2;
+                                    this._health = 2;
+                                    this._invulnerable = true;
+                                };
+                                document.getElementsByClassName("choice")[1].innerHTML = `<p>${this.hero} is stunned.</p>`;
+                                document.getElementsByClassName("choice")[1].onclick = () => {
+                                    this._health = 0;
+                                    this.stun();
+                                };
+                            });
+                        }
+                        else {
+                            this._health = 0;
+                            this.stun();
+                        }
                     }
                     else if (this.health > 10) {
                         this._health = 10;
@@ -1570,6 +1607,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 owlsSpells2 = 0;
                 this._healthGained = 0;
                 this._healthLost = 0;
+                this._invulnerable = false;
                 
                 // Peskipiksi Pesternomi effect
                 if (encounters.length && encounters[0] === peskipiksiPesternomi && this.health < 5) {
@@ -2827,6 +2865,50 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                 };
+            }
+            // Otter Patronus
+            else if (activePlayer.proficiency === "Otter Patronus") {
+                document.getElementById("playerProficiency").onclick = () => {
+                    if (activePlayer.influence >= 1 && !document.getElementById("playerChoice")) {
+                        activePlayer.influence--;
+                        if (!activePlayer.draw.length) activePlayer.shuffle();
+                        if (activePlayer.draw[0].type === "spell") {
+                            activePlayer.drawCards(1);
+                            activePlayer.attack++;
+                        }
+                        else addPlayerChoice("Top card:", () => {return 1;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<img src="${activePlayer.draw[0].img.src}">`;});
+                        document.getElementById("playerProficiency").onclick = () => {};
+                    }
+                }
+            }
+            // Rabbit Patronus
+            else if (activePlayer.proficiency === "Rabbit Patronus") {
+                document.getElementById("playerProficiency").onclick = () => {
+                    const spells = activePlayer.hand.filter(card => {return card.type === "spell";});
+                    if (spells.length && !document.getElementById("playerChoice")) {
+                        if (spells.length > 1) {
+                            addPlayerChoice("Discard:", () => {return spells.length;}, 1, () => {
+                                for (let i = 0; i < spells.length; i++) {
+                                    document.getElementsByClassName("choice").innerHTML = `<img src="${spells[i].img.src}">`;
+                                    document.getElementsByClassName("choice").onclick = () => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[i]), false);};
+                                }
+                            });
+                        }
+                        else activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[0]), false);
+                        rollHouseDie("blue", false, false);
+                        document.getElementById("playerProficiency").onclick = () => {};
+                    }
+                }
+            }
+            // Terrier Patronus
+            else if (activePlayer.proficiency === "Terrier Patronus") {
+                document.getElementById("playerProficiency").onclick = () => {
+                    if (activePlayer.attack >= 1 && !document.getElementById("playerChoice")) {
+                        activePlayer.attack--;
+                        rollHouseDie("red", false, false);
+                        document.getElementById("playerProficiency").onclick = () => {};
+                    }
+                }
             }
 
             // horcrux rewards
