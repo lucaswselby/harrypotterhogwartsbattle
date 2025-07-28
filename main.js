@@ -1636,20 +1636,21 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
 
-                setTimeout(() => {
-                    // Draco Malfoy effect
-                    if (activeVillains.includes(dracoMalfoy) && !dracoMalfoy.petrifiedBy) {
-                        activePlayer.health -= 2;
-                    }
-                    // Lucius Malfoy effect
-                    if (activeVillains.includes(luciusMalfoy) && !luciusMalfoy.petrifiedBy) {
-                        activeVillains.filter(villain => {return villain.type.includes("villain")}).forEach(villain => {villain.health++;});
-                    }
-                    // Full Moon Rises effect
-                    if (encounters.length && encounters[0] === fullMoonRises) {
-                        activePlayer.addToHand(detention.clone());
-                    }
-                }, 1000);
+                // Draco Malfoy effect
+                if (activeVillains.includes(dracoMalfoy) && !dracoMalfoy.petrifiedBy && dracoMalfoy.health > 0) {
+                    activePlayer.health -= 2;
+                    darken(dracoMalfoy);
+                }
+                // Lucius Malfoy effect
+                if (activeVillains.includes(luciusMalfoy) && !luciusMalfoy.petrifiedBy && luciusMalfoy.health > 0) {
+                    activeVillains.filter(villain => {return villain.type.includes("villain")}).forEach(villain => {villain.health++;});
+                    darken(luciusMalfoy);
+                }
+                // Full Moon Rises effect
+                if (encounters.length && encounters[0] === fullMoonRises) {
+                    activePlayer.addToHand(detention.clone());
+                    darken(fullMoonRises.img);
+                }
             }
             removeFromLocation() {
                 // Barty Crouch Jr and Defensive Training effect
