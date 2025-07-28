@@ -4,8 +4,8 @@ const displayGameChoices = playerNumber => {
     const player = document.querySelector(`input[name="player${playerNumber}"]:checked`).value;
     const proficiecyElem = document.getElementById(`player${playerNumber}Proficiency`);
 
-    // change player images based on game
     if (game.includes("Box")) {
+        // change player images based on game
         document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/harryPotter.png";
         document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/ronWeasley.png";
         document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/hermioneGranger.png";
@@ -13,8 +13,17 @@ const displayGameChoices = playerNumber => {
         for (let i = 0; i < document.getElementsByClassName("boxOnly").length; i++) {
             document.getElementsByClassName("boxOnly")[i].style.display = "initial";
         }
+
+        // Patronus options
+        let patronusDisplay = "none";
+        if (game === "Box 3" || game === "Box 4") patronusDisplay = "inline";
+        else patronusDisplay = "none";
+        for (let i = 0; i < document.getElementsByClassName("patronus").length; i++) {
+            document.getElementsByClassName("patronus")[i].style.display = patronusDisplay;
+        }
     }
     else {
+        // change player images based on game
         for (let i = 0; i < document.getElementsByClassName("boxOnly").length; i++) {
             document.getElementsByClassName("boxOnly")[i].style.display = "none";
         }
@@ -61,6 +70,23 @@ for (let i = 0; i < gameElems.length; i++) {
     };
 }
 
+// Patronus changes for each player
+for (let i = 0; i < document.getElementsByClassName("playerChoice").length; i++) {
+    for (let j = 0; j < document.getElementsByClassName("playerChoice")[i].getElementsByClassName(`player${i + 1}`).length; j++) {
+        document.getElementsByClassName("playerChoice")[i].getElementsByClassName(`player${i + 1}`)[j].onclick = () => {
+            const player = document.querySelector(`input[name="player${i + 1}"]:checked`).value;
+            const patronusImage = document.querySelector(`label[for="player${i + 1}Patronus"]`).getElementsByTagName("IMG")[0];
+            if (player === "Harry Potter") patronusImage.src = "./images/Box 3/stagPatronus.png";
+            else if (player === "Ron Weasley") patronusImage.src = "./images/Box 3/terrierPatronus.png";
+            else if (player === "Hermione Granger") patronusImage.src = "./images/Box 3/otterPatronus.png";
+            else if (player === "Neville Longbottom") patronusImage.src = "./images/Box 3/nonCorporealPatronus.png";
+            else if (player === "Luna Lovegood") patronusImage.src = "./images/Box 3/rabbitPatronus.png";
+            else if (player === "Ginny Weasley") patronusImage.src = "./images/Pack 1/horsePatronus.png";
+            else alert(`${player} is not a valid Hero.`);
+        };
+    }
+}
+
 // prep for mobile magnify
 window.oncontextmenu = event => {
     event.preventDefault();
@@ -82,9 +108,9 @@ document.getElementById("submitPlayers").onclick = () => {
         }
     }
     for (let i = 0; i < document.getElementsByClassName("proficiencyChoice").length - 1; i++) {
-        if (document.getElementsByClassName("proficiencyChoice")[i].style.display === "flex") {
+        if (document.getElementsByClassName("proficiencyChoice")[i].style.display === "flex" && document.querySelector(`input[name="player${i + 1}Proficiency"]:checked`).value !== "Patronus") {
             for (let j = i + 1; j < document.getElementsByClassName("proficiencyChoice").length; j++) {
-                if (document.getElementsByClassName("proficiencyChoice")[j].style.display === "flex" && document.querySelector(`input[name="player${i + 1}Proficiency"]:checked`).value === document.querySelector(`input[name="player${j + 1}Proficiency"]:checked`).value) {
+                if (document.getElementsByClassName("proficiencyChoice")[j].style.display === "flex" && document.querySelector(`input[name="player${i + 1}Proficiency"]:checked`).value === document.querySelector(`input[name="player${j + 1}Proficiency"]:checked`).value && document.querySelector(`input[name="player${j + 1}Proficiency"]:checked`).value !== "Patronus") {
                     continueGame = false;
                 }
             }
@@ -1011,11 +1037,25 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._heroImage.alt = hero;
                 this._proficiency = "";
                 this._proficiencyImage = document.createElement("div");
+                let proficiencyGame = "Game 6";
                 if (activeGame === "Game 6" || activeGame === "Game 7" || activeGame.includes("Box")) {
+                    if (proficiency === "Patronus") {
+                        proficiencyGame = "Box 3";
+                        if (hero === "Harry Potter") proficiency = "stagPatronus";
+                        else if (hero === "Ron Weasley") proficiency = "terrierPatronus";
+                        else if (hero === "Hermione Granger") proficiency = "otterPatronus";
+                        else if (hero === "Neville Longbottom") proficiency = "nonCorporealPatronus";
+                        else if (hero === "Luna Lovegood") proficiency = "rabbitPatronus";
+                        else if (hero === "Ginny Weasley") {
+                            proficiencyGame = "Pack 1";
+                            proficiency = "horsePatronus";
+                        }
+                        else alert(`${hero} is not a valid Hero.`);
+                    }
                     this._proficiency = proficiency;
                     this._proficiencyImage = document.createElement("img");
                     this._proficiencyImage.id = "playerProficiency";
-                    this._proficiencyImage.src = `./images/Game 6/${src(proficiency)}`;
+                    this._proficiencyImage.src = `./images/${proficiencyGame}/${src(proficiency)}`;
                     this._proficiencyImage.alt = proficiency;
                 }
                 this._health = 10;
@@ -1031,6 +1071,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (hero === "Neville Longbottom") this._discard = nevilleStartingCards;
                 else if (hero === "Luna Lovegood") this._discard = lunaStartingCards;
                 // TO-DO: add Ginny Weasley
+                else alert(`${hero} is not a valid Hero.`);
                 this._petrified = false;
                 this._stunned = false;
                 this._played = [];
