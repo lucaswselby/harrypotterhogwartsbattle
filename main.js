@@ -827,7 +827,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }, false, false);
         const kreacherTheHouseElf = new Card("Kreacher The House Elf", "Box 3", "ally", 5, () => {
-            rollHouseDie("phoenix");
+            rollHouseDie("phoenix", false, true);
             const playersWithCards = players.filter(player => {return player.hand.length || player.discard.length;});
             if (playersWithCards.length) {
                 addPlayerChoice("Choose a player to banish 1:", () => {return playersWithCards.length + 1;}, 1, () => {
