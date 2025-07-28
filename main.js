@@ -2340,12 +2340,47 @@ document.getElementById("submitPlayers").onclick = () => {
             });
             activeLocation.removeFromLocation();
         }, true);
+        const aragog = new Villain("Aragog", "Box 3", "creature", 8, 0, () => {activePlayer.health -= activeVillains.filter(villain => {return villain.type.includes("creature");}).length;}, () => {players.forEach(player => {player.health += 2; player.influence++;}); activeLocation.removeFromLocation();}, false);
+        const centaur = new Villain("Centaur", "Box 3", "creature", 0, 7, () => {
+            const spells = activePlayer.hand.filter(card => {return card.type === "spell";});
+            if (spells.length) {
+                addPlayerChoice("Lose:", () => {return 2;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div>`;
+                    document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2;};
+                    document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard:</p>${choiceScroll(spells)}`;
+                    document.getElementsByClassName("choice")[1].onclick = () => {
+                        if (spells.length > 1) {
+                            playerChoices.unshift(new PlayerChoice("Discard:", () => {return spells.length;}, 1, () => {
+                                for (let i = 0; i < spells.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[i]), true);};
+                                }
+                            }));
+                        }
+                        else activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[0]), true);
+                    };
+                });
+            }
+            else activePlayer.health -= 2;
+        }, () => {players.forEach(player => {const spells = player.discard.filter(card => {return card.type === "spell"}); if (spells.length) {const discardToHand = index => {player.addToHand(spells[index]); player.discard.splice(player.discard.indexOf(spells[index]), 1);}; if (spells.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation();}, false);
+        const grawp = new Villain("Grawp", "Box 3", "creature", 0, 8, () => {if (activePlayer.hand.length >= 6) activePlayer.health -= 2;}, () => {players.forEach(player => {
+            if (!player.petrified) {
+                player.drawCards(2);
+                addPlayerChoice(`Discard for ${player.hero}:`, () => {return player.hand.length;}, 1, () => {
+                    for (let i = 0; i < player.hand.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, false);};
+                    }
+                });
+            }
+        });}, false);
+        const ukranianIronbelly = new Villain("Ukranian Ironbelly", "Box 3", "creature", 8, 0, () => {if (activePlayer.hand.filter(card => {return card.type === "ally";}).length && activePlayer.hand.filter(card => {return card.type === "item";}).length) activePlayer.health -= 3;}, () => {players.forEach(player => {player.health += 2;}); activeLocation.removeFromLocation();}, false);
         if (activeGame.includes("Box")) {
             inactiveVillains.push(cornishPixies, fluffy, norbert, troll);
             if (activeGame !== "Box 1") {
                 inactiveVillains.push(boggart, scabbers, werewolf);
                 if (activeGame !== "Box 2") {
-                    // TO-DO: add Box 3 villains
+                    inactiveVillains.push(aragog, centaur, grawp, ukranianIronbelly);
                     if (activeGame !== "Box 3") {
                         // TO-DO: add Box 4 villains
                     }
