@@ -834,7 +834,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     for (let i = 0; i < playersWithCards.length; i++) {
                         document.getElementsByClassName("choice")[i].innerHTML = `<p>${playersWithCards[i].hero}:</p>${choiceScroll(playersWithCards[i].hand.concat(playersWithCards.discard))}`;
                         document.getElementsByClassName("choice")[i].onclick = () => {
-                            playerChoices.push(new PlayerChoice("Banish:", () => {return playersWithCards[i].hand.length + playersWithCards[i].discard.length + 1;}, 1, () => {
+                            playerChoices.unshift(new PlayerChoice("Banish:", () => {return playersWithCards[i].hand.length + playersWithCards[i].discard.length + 1;}, 1, () => {
                                 for (let j = 0; j < playersWithCards[i].hand.length; j++) {
                                     document.getElementsByClassName("choice")[j].innerHTML = `<img src="${playersWithCards[i].hand[j].img.src}">`;
                                     document.getElementsByClassName("choice")[j].onclick = () => {playersWithCards[i].banishAt(j);};
