@@ -1865,12 +1865,33 @@ document.getElementById("submitPlayers").onclick = () => {
         const transformed2 = transformed1.clone();
         const viciousBite1 = new DarkArtsEvent("Vicious Bite", "Box 2", () => {players.filter(player => {return player.health === players.map(player => {return player.health;}).sort((a, b) => {return a - b;})[0];}).forEach(player => {player.health -= 2; if (player.stunned) setTimeout(() => {activeLocation.addToLocation()}, 1000);});});
         const viciousBite2 = viciousBite1.clone();
+        const acromantulaAttack1 = new DarkArtsEvent("Acromantula Attack", "Box 3", () => {
+            players.forEach(player => {
+                if (!player.draw.length) player.shuffle();
+                if (!player.draw[0].cost) {
+                    const tempPatrified = player.petrified;
+                    player.petrified = false;
+                    player.cardsDrawn--;
+                    player.drawCards(1);
+                    player.forcedDiscardAt(player.hand.length - 1, true);
+                    player.petrified = tempPatrified;
+                    player.health--;
+                }
+            });
+        });
+        const acromantulaAttack2 = acromantulaAttack1.clone();
+        const bombarda3 = bombarda1.clone();
+        const centaurAttack1 = new DarkArtsEvent("Centaur Attack", "Box 3", () => {players.forEach(player => {if (player.hand.filter(card => {return card.type === "spell"}).length >= 3) player.health--;});});
+        const centaurAttack2 = centaurAttack1.clone();
+        const fightAndFlight = new DarkArtsEvent("Fight And Flight", "Box 3", () => {activeLocation.addToLocation(); setTimeout(() => {activeLocation.addToLocation();}, 1000);});
+        const seriouslyMisunderstoodCreatures1 = new DarkArtsEvent("Seriously Misunderstood Creatures", "Box 3", () => {rollHouseDie("phoenix", true, true);}); // TO-DO: not same as Boggart
+        const seriouslyMisunderstoodCreatures2 = seriouslyMisunderstoodCreatures1.clone();
         if (activeGame.includes("Box")) {
             darkArtsEvents.push(blastEnded, inquisitorialSquad1, inquisitorialSquad2, menacingGrowl1, menacingGrowl2, ragingTroll1, ragingTroll2, slugulusEructo);
             if (activeGame !== "Box 1") {
                 darkArtsEvents.push(bombarda1, bombarda2, theGrim, transformed1, transformed2, viciousBite1, viciousBite2);
                 if (activeGame !== "Box 2") {
-                    // TO-DO: add Box 3 DAEs
+                    darkArtsEvents.push(acromantulaAttack1, acromantulaAttack2, bombarda3, centaurAttack1, centaurAttack2, fightAndFlight, seriouslyMisunderstoodCreatures1, seriouslyMisunderstoodCreatures2);
                     if (activeGame !== "Box 3") {
                         // TO-DO: add Box 4 DAEs
                     }
