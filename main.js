@@ -271,12 +271,13 @@ document.getElementById("submitPlayers").onclick = () => {
                 };
 
                 // check for Arithmancy
-                if (activePlayer.proficiency === "Arithmancy" && !arithmancyUsed) {
+                if ((activePlayer.proficiency === "Arithmancy" || activePlayer.horcruxesDestroyed.includes(forbiddenForestEncounter)) && !arithmancyUsed) {
                     addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
                         if (result === "influence") document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
                         else if (result === "draw") document.getElementsByClassName("choice")[0].innerHTML = hogwartsCardBack;
                         else if (result === "attack") document.getElementsByClassName("choice")[0].innerHTML = attackToken;
                         else if (result === "health") document.getElementsByClassName("choice")[0].innerHTML = healthToken;
+                        // TO-DO: add Phoenix die options, then make arithmancyUsed false for phoenix die users like Kreacher and Boggart
                         else alert(`${color} is not a die color.`);
                         document.getElementsByClassName("choice")[0].onclick = () => {
                             effect();
@@ -284,6 +285,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         };
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Re-roll</p>";
                         document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie(color, evil, true);};
+                        if (activePlayer.proficiency === "Arithmancy") darken(activePlayer.proficiencyImage);
+                        if (activePlayer.horcruxesDestroyed.includes(forbiddenForestEncounter)) darken(forbiddenForestEncounter.img);
                     });
                 }
                 else {
@@ -533,6 +536,11 @@ document.getElementById("submitPlayers").onclick = () => {
                                 else hurtPlayers[0].health++;
                                 darken(peskipiksiPesternomi.img);
                             }
+                        }
+                        // Escape effect
+                        if (encounters.length && encounters[0] === escape && (this.type === "item" || this.type === "ally")) {
+                            activePlayer.health--;
+                            darken(escape.img);
                         }
 
                         activePlayer.playedPush(this);
@@ -1334,6 +1342,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                 }
+                // Escape completion
+                if (encounters.length && encounters[0] === escape && spellsCast >= 6) this.addDestroyedHorcrux(encounters.shift());
 
                 // check for items cast
                 let itemsCast = this.played.filter(card => {return card.type === "item";}).length;
@@ -1371,6 +1381,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (encounters.length && encounters[0] === thirdFloorCorridor && spellsCast >= 2 && itemsCast >= 2 && alliesCast >= 2) {
                     this.addDestroyedHorcrux(encounters.shift());
                 }
+                // Filthy Half-Breed completion
+                else if (encounters.length && encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return arr.indexOf(cost) === ind;}).length >= 3) this.addDestroyedHorcrux(encounters.shift());
 
                 // Potions Proficiency effect
                 if (this.proficiency === "Potions" && spellsCast > 0 && itemsCast > 0 && alliesCast > 0 && !this._potionsProficiencyUsed) {
@@ -2515,7 +2527,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     thatSymbolRemaining++;
                                 }
                             }
-                            symbolImg.style.left = `${this === horcrux6 || this === defensiveTraining ? (5 + 13 * symbolIndex) : (6 + 20 * symbolIndex)}%`;
+                            symbolImg.style.left = `${this === horcrux6 || this === defensiveTraining || this === forbiddenForestEncounter ? (5 + 13 * symbolIndex) : (6 + 20 * symbolIndex)}%`;
                             document.getElementById("encounters").appendChild(symbolImg);
                         }
                     }
@@ -2610,10 +2622,29 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(defensiveTraining), 1);
             defensiveTraining.img.remove();
         });
+        const forbiddenForestEncounter = new Encounter("Forbidden Forest", "Box 3", ["draw", "health", "influence"], () => {if (activeVillains.filter(villain => {return villain.type.includes("creature");}).length >= 2) activePlayer.health--;}, () => {});
+        const filthyHalfBreed = new Encounter("Filthy Half-Breed", "Box 3", [], () => {if (activeShops.filter(card => {return card.type === "spell";}).length >= 2) activePlayer.health--;}, () => {
+            if (activePlayer.hand.length) {
+                players.forEach(player => {
+                    player.drawCards(1);
+                    addPlayerChoice("Banish:", () => {return player.hand.length + 1;}, 1, () => {
+                        for (let i = 0; i < player.hand.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(i);};
+                        }
+                        document.getElementsByClassName("choice")[player.hand.length].innerHTML = "<p>Nothing</p>";
+                    });
+                });
+                activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(filthyHalfBreed), 1); 
+                filthyHalfBreed.img.remove();
+            }
+        });
+        const escape = new Encounter("Escape", "Box 3", [], () => {}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(escape), 1); escape.img.remove();});
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
         else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
         else if (activeGame === "Box 2") encounters = [unregisteredAnimagus, fullMoonRises, defensiveTraining];
+        else if (activeGame === "Box 3") encounters = [forbiddenForestEncounter, filthyHalfBreed, escape];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
