@@ -137,8 +137,9 @@ document.getElementById("submitPlayers").onclick = () => {
         };
 
         // creates a list of cards you can choose within a playerChoice so you know what you're discarding if you choose to discard
+        const choiceScrollHeight = "40vh"; // TO-DO: play with height
         const choiceScroll = array => {
-            return `<div style="display: flex; align-items: center;">${array.reduce((prev, curr) => {return prev + `OR<img src="${curr.img.src}" style="height: 40vh;">`;}, "").substring(2)}</div>`;
+            return `<div style="display: flex; align-items: center; height: ${choiceScrollHeight}; overflow-x: auto;">${array.reduce((prev, curr) => {return prev + `OR<img src="${curr.img.src}">`;}, "").substring(2)}</div>`;
         };
 
         // some cards give the players a choice of action
