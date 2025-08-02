@@ -1730,7 +1730,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 // Draco Malfoy effect
                 if (activeVillains.includes(dracoMalfoy) && !dracoMalfoy.petrifiedBy && dracoMalfoy.health > 0) {
                     activePlayer.health -= 2;
-                    darken(dracoMalfoy);
+                    darken(dracoMalfoy.img);
                 }
                 // Lucius Malfoy effect
                 if (activeVillains.includes(luciusMalfoy) && !luciusMalfoy.petrifiedBy && luciusMalfoy.health > 0) {
