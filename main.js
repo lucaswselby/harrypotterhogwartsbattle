@@ -1174,37 +1174,8 @@ document.getElementById("submitPlayers").onclick = () => {
                     // sets health
                     this._health = health;
                     if (this.health <= 0) {
-                        // Stag Patronus
-                        const stagPlayer = players.filter(player => {return player !== this && player.proficiency === "Stag Patronus";}).length ? players.filter(player => {return player !== this && player.proficiency === "Stag Patronus";})[0] : null;
-                        const getStagSpells = () => {return stagPlayer ? stagPlayer.hand.filter(card => {return card.type === "spell"}) : [];};
-                        if (getStagSpells().length) {
-                            addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
-                                document.getElementsByClassName("choice")[0].innerHTML = `<p>Harry Potter loses:</p>${choiceScroll(stagSpells)}<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${stagPlayer.health}</p>`;
-                                document.getElementsByClassName("choice")[0].onclick = () => {
-                                    if (getStagSpells().length > 1) {
-                                        playerChoices.unshift(new PlayerChoice("Discard:", () => {return getStagSpells().length;}, 1, () => {
-                                            for (let i = 0; i < getStagSpells().length; i++) {
-                                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${getStagSpells()[i].img.src}">`;
-                                                document.getElementsByClassName("choice")[i].onclick = () => {stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(getStagSpells()[i]), false);};
-                                            }
-                                        }));
-                                    }
-                                    else stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(getStagSpells()[0]), false);
-                                    stagPlayer.health -= 2;
-                                    this._health = 2;
-                                    this._invulnerable = true;
-                                };
-                                document.getElementsByClassName("choice")[1].innerHTML = `<p>${this.hero} is stunned.</p>`;
-                                document.getElementsByClassName("choice")[1].onclick = () => {
-                                    this._health = 0;
-                                    this.stun();
-                                };
-                            });
-                        }
-                        else {
-                            this._health = 0;
-                            this.stun();
-                        }
+                        this._health = 0;
+                        this.stun();
                     }
                     else if (this.health > 10) {
                         this._health = 10;
