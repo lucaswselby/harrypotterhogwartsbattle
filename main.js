@@ -1603,19 +1603,52 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
             stun() {
-                this.stunned = true;
-                this.attack = 0;
-                this.influence = 0;
-                activeLocation.addToLocation();
-                let iterations = Math.floor(this.hand.length / 2);
-                addPlayerChoice(`${this.hero} discard:`, () => {return this.hand.length;}, iterations, () => {
-                    for (let i = 0; i < this.hand.length; i++) {
-                        document.getElementsByClassName("choice")[i].innerHTML += `<img src="${this.hand[i].img.src}">`;
-                        document.getElementsByClassName("choice")[i].onclick = () => {
-                            this.forcedDiscardAt(i, false);
-                        }
+                if (!this.stunned) {
+                    this.stunned = true;
+                    const stunForReal = () => {
+                        this.attack = 0;
+                        this.influence = 0;
+                        activeLocation.addToLocation();
+                        let iterations = Math.floor(this.hand.length / 2);
+                        addPlayerChoice(`${this.hero} discard:`, () => {return this.hand.length;}, iterations, () => {
+                            for (let i = 0; i < this.hand.length; i++) {
+                                document.getElementsByClassName("choice")[i].innerHTML += `<img src="${this.hand[i].img.src}">`;
+                                document.getElementsByClassName("choice")[i].onclick = () => {
+                                    this.forcedDiscardAt(i, false);
+                                }
+                            }
+                        });
+                    };
+
+                    // Stag Patronus
+                    const stagPlayer = players.filter(player => {return player !== this && player.proficiency === "Stag Patronus";}).concat([null])[0];
+                    const getStagSpells = () => {return stagPlayer ? stagPlayer.hand.filter(card => {return card.type === "spell"}) : [];};
+                    if (getStagSpells().length) {
+                        addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                            document.getElementsByClassName("choice")[0].innerHTML = `<p>Harry Potter loses:</p>${choiceScroll(getStagSpells())}<div class="choiceContainer" style="height: calc(100% - 6em - ${choiceScrollHeight})">${healthToken + healthToken}</div><p>Health: ${stagPlayer.health}</p>`;
+                            document.getElementsByClassName("choice")[0].onclick = () => {
+                                if (getStagSpells().length > 1) {
+                                    playerChoices.unshift(new PlayerChoice("Discard:", () => {return getStagSpells().length;}, 1, () => {
+                                        for (let i = 0; i < getStagSpells().length; i++) {
+                                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${getStagSpells()[i].img.src}">`;
+                                            document.getElementsByClassName("choice")[i].onclick = () => {stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(getStagSpells()[i]), false);};
+                                        }
+                                    }));
+                                }
+                                else stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(getStagSpells()[0]), false);
+                                stagPlayer.health -= 2;
+                                this._invulnerable = true;
+                                this.stunned = false;
+                                this.health = 2;
+                            };
+                            document.getElementsByClassName("choice")[1].innerHTML = `<p>${this.hero} is stunned.</p>`;
+                            document.getElementsByClassName("choice")[1].onclick = () => {
+                                stunForReal();
+                            };
+                        });
                     }
-                });
+                    else stunForReal();
+                }
             }
         }
         const player1 = new Player(document.querySelector("input[name=\"player1\"]:checked").value, document.querySelector("input[name=\"player1Proficiency\"]:checked").value);
