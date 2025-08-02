@@ -2465,13 +2465,13 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             }
         });}, false);
-        const ukranianIronbelly = new Villain("Ukranian Ironbelly", "Box 3", "creature", 8, 0, () => {if (activePlayer.hand.filter(card => {return card.type === "ally";}).length && activePlayer.hand.filter(card => {return card.type === "item";}).length) activePlayer.health -= 3;}, () => {players.forEach(player => {player.health += 2;}); activeLocation.removeFromLocation();}, false);
+        const ukrainianIronbelly = new Villain("Ukrainian Ironbelly", "Box 3", "creature", 8, 0, () => {if (activePlayer.hand.filter(card => {return card.type === "ally";}).length && activePlayer.hand.filter(card => {return card.type === "item";}).length) activePlayer.health -= 3;}, () => {players.forEach(player => {player.health += 2;}); activeLocation.removeFromLocation();}, false);
         if (activeGame.includes("Box")) {
             inactiveVillains.push(cornishPixies, fluffy, norbert, troll);
             if (activeGame !== "Box 1") {
                 inactiveVillains.push(boggart, scabbers, werewolf);
                 if (activeGame !== "Box 2") {
-                    inactiveVillains.push(aragog, centaur, grawp, ukranianIronbelly);
+                    inactiveVillains.push(aragog, centaur, grawp, ukrainianIronbelly);
                     if (activeGame !== "Box 3") {
                         // TO-DO: add Box 4 villains
                     }
