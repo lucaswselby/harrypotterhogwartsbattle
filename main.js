@@ -1735,7 +1735,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 // Lucius Malfoy effect
                 if (activeVillains.includes(luciusMalfoy) && !luciusMalfoy.petrifiedBy && luciusMalfoy.health > 0) {
                     activeVillains.filter(villain => {return villain.type.includes("villain")}).forEach(villain => {villain.health++;});
-                    darken(luciusMalfoy);
+                    darken(luciusMalfoy.img);
                 }
                 // Full Moon Rises effect
                 if (encounters.length && encounters[0] === fullMoonRises) {
