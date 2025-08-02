@@ -1163,7 +1163,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     this._healthGained = -99;
                                 }
                                 // Non-Corporeal Patronus
-                                else if (activePlayer.proficiency === "Non-CorporealPatronus") {
+                                else if (activePlayer.proficiency === "Non-Corporeal Patronus") {
                                     this.attack++;
                                     this._healthGained = -99;
                                 }
