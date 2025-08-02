@@ -2920,8 +2920,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (spells.length > 1) {
                             addPlayerChoice("Discard:", () => {return spells.length;}, 1, () => {
                                 for (let i = 0; i < spells.length; i++) {
-                                    document.getElementsByClassName("choice").innerHTML = `<img src="${spells[i].img.src}">`;
-                                    document.getElementsByClassName("choice").onclick = () => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[i]), false);};
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[i]), false);};
                                 }
                             });
                         }
