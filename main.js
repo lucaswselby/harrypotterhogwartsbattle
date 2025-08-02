@@ -1177,14 +1177,14 @@ document.getElementById("submitPlayers").onclick = () => {
                         // Stag Patronus
                         const stagPlayer = players.filter(player => {return player !== this && player.proficiency === "Stag Patronus";}).length ? players.filter(player => {return player !== this && player.proficiency === "Stag Patronus";})[0] : null;
                         const stagSpells = stagPlayer ? stagPlayer.hand.filter(card => {return card.type === "spell"}) : [];
-                        if (stagPlayer && stagSpells.length) {
+                        if (stagSpells.length) {
                             addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
                                 document.getElementsByClassName("choice")[0].innerHTML = `<p>Harry Potter loses:</p>${choiceScroll(stagSpells)}<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${stagPlayer.health}</p>`;
                                 document.getElementsByClassName("choice")[0].onclick = () => {
                                     if (stagSpells.length > 1) {
                                         playerChoices.unshift(new PlayerChoice("Discard:", () => {return stagSpells.length;}, 1, () => {
                                             for (let i = 0; i < stagSpells.length; i++) {
-                                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${stagSpells.img.src}">`;
+                                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${stagSpells[i].img.src}">`;
                                                 document.getElementsByClassName("choice")[i].onclick = () => {stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(stagSpells[i]), false);};
                                             }
                                         }));
