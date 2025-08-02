@@ -2411,7 +2411,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 }));
                             }
                             else if (handItems.length) player.banishAt(player.hand.indexOf(handItems[0]));
-                            else player.discard.splice(player.discard.indexOf(discardItems[i]), 1);
+                            else player.discard.splice(player.discard.indexOf(discardItems[0]), 1);
                         };
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>"
                     });
