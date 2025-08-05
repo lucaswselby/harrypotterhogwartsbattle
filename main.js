@@ -910,16 +910,16 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (player.hand.length || player.discard.length) {
                     addPlayerChoice(`Banish for ${player.hero}:`, () => {return player.hand.length + player.discard.length + 1;}, 1, () => {
                         for (let i = 0; i < player.hand.length; i++) {
-                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[activePlayer.hand.indexOf(player.hand[i])].img.src}">`;
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                             document.getElementsByClassName("choice")[i].onclick = () => {
-                                activePlayer.banishAt(i);
+                                player.banishAt(i);
                             };
                         }
                         for (let i = 0; i < player.discard.length; i++) {
-                            document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${activePlayer.discard[activePlayer.discard.indexOf(player.discard[i])].img.src}">`;
+                            document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard[i].img.src}">`;
                             document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
-                                activePlayer.hand.unshift(activePlayer.discard.splice(i, 1)[0]);
-                                activePlayer.banishAt(0);
+                                player.hand.unshift(player.discard.splice(i, 1)[0]);
+                                player.banishAt(0);
                             };
                         }
                         document.getElementsByClassName("choice")[player.hand.length + player.discard.length].innerHTML = "<p>Nothing</p>";
