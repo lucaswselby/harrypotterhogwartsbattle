@@ -2443,7 +2443,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const aragog = new Villain("Aragog", "Box 3", "creature", 8, 0, () => {activePlayer.health -= activeVillains.filter(villain => {return villain.type.includes("creature");}).length;}, () => {players.forEach(player => {player.health += 2; player.influence++;}); activeLocation.removeFromLocation();}, false);
         const centaur = new Villain("Centaur", "Box 3", "creature", 0, 7, () => {
             const spells = () => {return activePlayer.hand.filter(card => {return card.type === "spell";});};
-            if (spells().length) {
+            if (spells().length && activePlayer.health > 0) {
                 addPlayerChoice("Lose:", () => {return 2;}, 1, () => {
                     document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div>`;
                     document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.health -= 2;};
@@ -2461,7 +2461,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     };
                 });
             }
-            else activePlayer.health -= 2;
+            else if (activePlayer.health > 0) activePlayer.health -= 2;
         }, () => {players.forEach(player => {const spells = player.discard.filter(card => {return card.type === "spell"}); if (spells.length) {const discardToHand = index => {player.addToHand(spells[index]); player.discard.splice(player.discard.indexOf(spells[index]), 1);}; if (spells.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation();}, false);
         const grawp = new Villain("Grawp", "Box 3", "creature", 0, 8, () => {if (activePlayer.hand.length >= 6) activePlayer.health -= 2;}, () => {players.forEach(player => {
             if (!player.petrified) {
