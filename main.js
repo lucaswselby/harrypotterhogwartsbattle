@@ -1113,8 +1113,12 @@ document.getElementById("submitPlayers").onclick = () => {
             set health(health) {
                 // can't heal if stunned
                 if (!this.stunned) {
+                    // invulnerability
+                    if (health < this.health && this._invulnerable) {
+                        health = this.health;
+                    }
                     // taking damage
-                    if (health < this.health && !this._invulnerable) {
+                    else if (health < this.health) {
                         this._healthLost += this.health - health;
 
                         // Invisibility Cloak effect
