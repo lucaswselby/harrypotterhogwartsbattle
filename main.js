@@ -1110,6 +1110,16 @@ document.getElementById("submitPlayers").onclick = () => {
             get health() {
                 return this._health;
             }
+            displayHealth() {
+                const healthTracker = document.getElementById("healthTracker");
+                healthTracker.style.left = `${10.3 + 8.3 * (9 - activePlayer.health)}%`;
+                if (activePlayer.health % 2 === 1) {
+                    healthTracker.style.top = "33%";
+                }
+                else {
+                    healthTracker.style.top = "12%";
+                }
+            }
             set health(health) {
                 // can't heal if stunned
                 if (!this.stunned) {
@@ -1187,14 +1197,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // adjusts health trackers
-                    const healthTracker = document.getElementById("healthTracker");
-                    healthTracker.style.left = `${10.3 + 8.3 * (9 - activePlayer.health)}%`;
-                    if (activePlayer.health % 2 === 1) {
-                        healthTracker.style.top = "33%";
-                    }
-                    else {
-                        healthTracker.style.top = "12%";
-                    }
+                    this.displayHealth();
                 }
             }
             get attack() {
@@ -1644,7 +1647,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                 stagPlayer.health -= 2;
                                 this._invulnerable = true;
                                 this.stunned = false;
-                                this.health = 2;
+                                this._health = 2; // update the base variable to avoid fenrir and sectumsempra
+                                this.displayHealth();
                             };
                             document.getElementsByClassName("choice")[1].innerHTML = `<p>${this.hero} is stunned.</p>`;
                             document.getElementsByClassName("choice")[1].onclick = () => {
