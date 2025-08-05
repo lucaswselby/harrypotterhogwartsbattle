@@ -1361,7 +1361,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.addDestroyedHorcrux(encounters.shift());
                 }
                 // Filthy Half-Breed completion
-                else if (encounters.length && encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return arr.indexOf(cost) === ind;}).length >= 3) this.addDestroyedHorcrux(encounters.shift());
+                else if (encounters.length && encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return arr.indexOf(cost) === ind;}).length >= 3) {
+                    this.addDestroyedHorcrux(encounters.shift());
+                    displayNextEncounter();
+                }
 
                 // Potions Proficiency effect
                 if (this.proficiency === "Potions" && spellsCast > 0 && itemsCast > 0 && alliesCast > 0 && !this._potionsProficiencyUsed) {
