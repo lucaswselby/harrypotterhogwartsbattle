@@ -932,7 +932,7 @@ document.getElementById("submitPlayers").onclick = () => {
             players.forEach(player => {
                 if (canHeal(player)) {
                     addPlayerChoice(`Choose for ${player.hero}:`, () => {return 2;}, 1, () => {
-                        document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
+                        document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}<p>Influence: ${player.influence}</p>`;
                         document.getElementsByClassName("choice")[0].onclick = () => {player.influence++;};
                         document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`;
                         document.getElementsByClassName("choice")[1].onclick = () => {player.health += 2;};
