@@ -893,7 +893,7 @@ document.getElementById("submitPlayers").onclick = () => {
             const unpetrifiedPlayers = players.filter(player => {return !player.petrified;});
             if (unpetrifiedPlayers.length) {
                 if (unpetrifiedPlayers.length > 1) {
-                    addPlayerChoice("Draw 1 for:", () => {unpetrifiedPlayers.length;}, 1, () => {
+                    addPlayerChoice("Draw 1 for:", () => {return unpetrifiedPlayers.length;}, 1, () => {
                         for (let i = 0; i < unpetrifiedPlayers.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedPlayers[i].heroImage.src}">`;
                             document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedPlayers[i].drawCards(1);};
