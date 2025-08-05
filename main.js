@@ -216,11 +216,12 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         let playerChoices = [];
+        let playerTurn = false;
         const addPlayerChoice = (description, choices, iterations, populateFunction) => {
             const choice = new PlayerChoice(description, choices, iterations, populateFunction);
             if (choices()) {
                 playerChoices.push(choice);
-                if (playerChoices.length === 1) playerChoices[0].display();
+                if (playerChoices.length === 1 && playerTurn) playerChoices[0].display(); // display player choice during the player's turn (not evil turn)
             }
         };
 
@@ -1602,6 +1603,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._healthGained = 0;
                 this._healthLost = 0;
                 players.forEach(player => {player._invulnerable = false;});
+                playerTurn = false;
                 
                 // Peskipiksi Pesternomi effect
                 if (encounters.length && encounters[0] === peskipiksiPesternomi && this.health < 5) {
@@ -3048,6 +3050,10 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 disableScreen.style.display = "none";
                                                 root.style.setProperty("--playerChoiceDisplay", "flex");
                                                 root.style.setProperty("--revealBoardDisplay", "block");
+
+                                                // start player choices
+                                                playerTurn = true;
+                                                if (playerChoices.length) playerChoices[0].display(); // display the first player choice from the evil turn
                                             }, 1000 + (invulnerableVoldemort() ? 1000 : 0) + (encounters.length ? 1000 : 0));
                                         }
                                     }, nonPassiveVillains.length ? i * 1000 : 0);
