@@ -1595,7 +1595,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 owlsSpells2 = 0;
                 this._healthGained = 0;
                 this._healthLost = 0;
-                this._invulnerable = false;
+                players.forEach(player => {player._invulnerable = false;});
                 
                 // Peskipiksi Pesternomi effect
                 if (encounters.length && encounters[0] === peskipiksiPesternomi && this.health < 5) {
