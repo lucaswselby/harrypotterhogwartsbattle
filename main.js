@@ -1638,27 +1638,30 @@ document.getElementById("submitPlayers").onclick = () => {
                     const getStagSpells = () => {return stagPlayer ? stagPlayer.hand.filter(card => {return card.type === "spell"}) : [];};
                     if (getStagSpells().length) {
                         addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
-                            document.getElementsByClassName("choice")[0].innerHTML = `<p>Harry Potter loses:</p>${choiceScroll(getStagSpells())}<div class="choiceContainer" style="height: calc(100% - 6em - ${choiceScrollHeight})">${healthToken + healthToken}</div><p>Health: ${stagPlayer.health}</p>`;
-                            document.getElementsByClassName("choice")[0].onclick = () => {
-                                if (getStagSpells().length > 1) {
-                                    playerChoices.unshift(new PlayerChoice("Discard:", () => {return getStagSpells().length;}, 1, () => {
-                                        for (let i = 0; i < getStagSpells().length; i++) {
-                                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${getStagSpells()[i].img.src}">`;
-                                            document.getElementsByClassName("choice")[i].onclick = () => {stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(getStagSpells()[i]), false);};
-                                        }
-                                    }));
-                                }
-                                else stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(getStagSpells()[0]), false);
-                                stagPlayer.health -= 2;
-                                this._invulnerable = true;
-                                this.stunned = false;
-                                this._health = 2; // update the base variable to avoid fenrir and sectumsempra
-                                this.displayHealth();
-                            };
-                            document.getElementsByClassName("choice")[1].innerHTML = `<p>${this.hero} is stunned.</p>`;
-                            document.getElementsByClassName("choice")[1].onclick = () => {
-                                stunForReal();
-                            };
+                            if (getStagSpells().length) {
+                                document.getElementsByClassName("choice")[0].innerHTML = `<p>Harry Potter loses:</p>${choiceScroll(getStagSpells())}<div class="choiceContainer" style="height: calc(100% - 6em - ${choiceScrollHeight})">${healthToken + healthToken}</div><p>Health: ${stagPlayer.health}</p>`;
+                                document.getElementsByClassName("choice")[0].onclick = () => {
+                                    if (getStagSpells().length > 1) {
+                                        playerChoices.unshift(new PlayerChoice("Discard:", () => {return getStagSpells().length;}, 1, () => {
+                                            for (let i = 0; i < getStagSpells().length; i++) {
+                                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${getStagSpells()[i].img.src}">`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(getStagSpells()[i]), false);};
+                                            }
+                                        }));
+                                    }
+                                    else stagPlayer.forcedDiscardAt(stagPlayer.hand.indexOf(getStagSpells()[0]), false);
+                                    stagPlayer.health -= 2;
+                                    this._invulnerable = true;
+                                    this.stunned = false;
+                                    this._health = 2; // update the base variable to avoid fenrir and sectumsempra
+                                    this.displayHealth();
+                                };
+                                document.getElementsByClassName("choice")[1].innerHTML = `<p>${this.hero} is stunned.</p>`;
+                                document.getElementsByClassName("choice")[1].onclick = () => {
+                                    stunForReal();
+                                };
+                            }
+                            else stunForReal();
                         });
                     }
                     else stunForReal();
