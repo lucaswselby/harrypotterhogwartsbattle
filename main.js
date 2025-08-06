@@ -2442,6 +2442,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const boggart = new Villain("Boggart", "Box 2", "creature", 5, 3, () => {rollHouseDie("phoenix", true, true);}, () => {rollHouseDie("phoenix", false, true)}, false);
         const scabbers = new Villain("Scabbers", "Box 2", "villain-creature", 7, 0, () => {if (!activePlayer.draw.length) activePlayer.shuffle(); if (activePlayer.draw[0].cost) {const tempPetrified = activePlayer.petrified; activePlayer.petrified = false; activePlayer.cardsDrawn--; activePlayer.drawCards(1); activePlayer.forcedDiscardAt(activePlayer.hand.length - 1, true); activePlayer.petrified = tempPetrified; activePlayer.health -= 2;}}, () => {players.forEach(player => {const cheapCards = player.discard.filter(card => {return card.cost <= 3;}); if (cheapCards.length) {const discardToHand = index => {player.addToHand(cheapCards[index]); player.discard.splice(player.discard.indexOf(cheapCards[index]), 1);}; if (cheapCards.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return cheapCards.length;}, 1, () => {for (let i = 0; i < cheapCards.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation();}, false);
         const werewolf = new Villain("Werewolf", "Box 2", "creature", 5, 4, () => {}, () => {
+            activeLocation.removeFromLocation();
             players.forEach(player => {
                 addPlayerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
                     document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}<p>Influence: ${player.influence}</p>`;
@@ -2450,7 +2451,6 @@ document.getElementById("submitPlayers").onclick = () => {
                     document.getElementsByClassName("choice")[1].onclick = () => {player.health += 2;};
                 });
             });
-            activeLocation.removeFromLocation();
         }, true);
         const aragog = new Villain("Aragog", "Box 3", "creature", 8, 0, () => {activePlayer.health -= activeVillains.filter(villain => {return villain.type.includes("creature");}).length;}, () => {players.forEach(player => {player.health += 2; player.influence++;}); activeLocation.removeFromLocation();}, false);
         const centaur = new Villain("Centaur", "Box 3", "creature", 0, 7, () => {
