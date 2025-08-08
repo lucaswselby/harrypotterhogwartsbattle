@@ -1162,7 +1162,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                         if (health < 10) {
                                             addPlayerChoice(`Pick one for ${this.hero}:`, () => {return 2;}, 1, () => {
                                                 document.getElementsByClassName("choice")[0].innerHTML = `${healthToken}<p>Health: ${health}</p>`;
-                                                document.getElementsByClassName("choice")[0].onclick = () => {this.health++;};
+                                                document.getElementsByClassName("choice")[0].onclick = () => {health++;};
                                                 document.getElementsByClassName("choice")[1].innerHTML = `${influenceToken}<p>Influence: ${this.influence}</p>`;
                                                 document.getElementsByClassName("choice")[1].onclick = () => {this.influence++;};
                                             });
