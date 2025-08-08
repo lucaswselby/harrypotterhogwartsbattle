@@ -463,6 +463,13 @@ document.getElementById("submitPlayers").onclick = () => {
             generateOnClick() {
                 this._img.onclick = () => {
                     if (!document.getElementById("playerChoice")) {
+                        // Escape effect
+                        if (encounters.length && encounters[0] === escape && (this.type === "item" || this.type === "ally")) {
+                            activePlayer.health--;
+                            darken(escape.img);
+                        }
+
+                        // card effect
                         activePlayer.discardAt(activePlayer.hand.indexOf(this));
                         this._effect();
 
@@ -538,11 +545,6 @@ document.getElementById("submitPlayers").onclick = () => {
                                 else hurtPlayers[0].health++;
                                 darken(peskipiksiPesternomi.img);
                             }
-                        }
-                        // Escape effect
-                        if (encounters.length && encounters[0] === escape && (this.type === "item" || this.type === "ally")) {
-                            activePlayer.health--;
-                            darken(escape.img);
                         }
 
                         activePlayer.playedPush(this);
