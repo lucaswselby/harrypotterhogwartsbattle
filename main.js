@@ -139,7 +139,7 @@ document.getElementById("submitPlayers").onclick = () => {
         // creates a list of cards you can choose within a playerChoice so you know what you're discarding if you choose to discard
         const choiceScrollHeight = "40vh"; // TO-DO: play with height
         const choiceScroll = array => {
-            return `<div style="display: flex; align-items: center; height: ${choiceScrollHeight}; overflow-x: auto;">${array.reduce((prev, curr) => {return prev + `OR<img src="${curr.img.src}">`;}, "").substring(2)}</div>`;
+            return `<div style="display: flex; align-items: center; height: ${choiceScrollHeight}; width: 100%; overflow-x: auto;">${array.reduce((prev, curr) => {return prev + `OR<img src="${curr.img.src}">`;}, "").substring(2)}</div>`;
         };
 
         // some cards give the players a choice of action
@@ -201,8 +201,15 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     // add playerChoice to main
                     document.getElementsByTagName("MAIN")[0].appendChild(playerChoiceContainer);
+
+                    // sets width and fills choices
                     playerChoiceElement.style.gridTemplateColumns = `repeat(${this._choices()}, calc((100vw - ${getComputedStyle(playerChoiceElement).getPropertyValue("gap")} * ${this._choices() - 1}) / ${this._choices()}))`;
                     this._populateFunction();
+                    const minChoiceWidth = 75; // needs to be a multiple plus .5 of the gap size to give the illusion of there being more options off screen
+                    if (document.getElementsByClassName("choice")[0].offsetWidth < minChoiceWidth) {
+                        playerChoiceElement.style.overflowX = "scroll";
+                        playerChoiceElement.style.gridTemplateColumns = `repeat(${this._choices()}, ${minChoiceWidth}px)`;
+                    }
 
                     // queues next player choice
                     document.getElementById("playerChoice").addEventListener("click", () => {

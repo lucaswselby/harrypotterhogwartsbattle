@@ -428,10 +428,11 @@ input[type="submit"] {
 }
 #playerChoice {
     height: 0;
+    width: 100%;
     flex-grow: 1;
     display: grid;
     background-color: black;
-    gap: 10px;
+    gap: 10px; /* needs to be even */
 }
 .choice {
     background-color: var(--backgroundColor);
@@ -441,7 +442,6 @@ input[type="submit"] {
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    overflow: auto;
 }
 .choice img {
     max-height: calc(100% - 4em);
