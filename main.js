@@ -514,6 +514,30 @@ document.getElementById("submitPlayers").onclick = () => {
                             activePlayer.attack++;
                             activePlayer.health++;
                         }
+                        // Gillyweed effect
+                        if (this.type === "ally") {
+                            const gillyweedEffect = () => {
+                                const hurtPlayers = players.filter(player => {return canHeal(player);});
+                                if (hurtPlayers.length) {
+                                    if (hurtPlayers.length > 1) {
+                                        addPlayerChoice("Heal for 1:", () => {return hurtPlayers.length;}, 1, () => {
+                                            for (let i = 0; i < hurtPlayers.length; i++) {
+                                                document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
+                                                document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health++;};
+                                            }
+                                        });
+                                    }
+                                    else hurtPlayers[0].health++;
+                                }
+                            };
+                            if (activePlayer.passives.includes(gillyweed1)) {
+                                gillyweedEffect();
+                            }
+                            if (activePlayer.passives.includes(gillyweed2)) {
+                                gillyweedEffect();
+                            }
+                        }
                         // Divination proficiency
                         if (activePlayer.proficiency === "Divination" && this.type === "item") {
                             addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
@@ -952,6 +976,29 @@ document.getElementById("submitPlayers").onclick = () => {
             });
         }, false, false);
 
+        // Box 4
+        const dragonsBlood = new Card("Dragon's Blood", "Box 4", "item", 6, () => {players.forEach(player => {player.health += 3;});}, true, false);
+        const gillyweed1 = new Card("Gillyweed", "Box 4", "item", 1, () => {activePlayer.health++;}, true, false);
+        const gillyweed2 = gillyweed1.clone();
+        const goldenEgg = new Card("Golden Egg", "Box 4", "item", 7, () => {activePlayer.attack += 2; activePlayer.influence++; activePlayer.drawCards(1);}, false, false);
+        const igorKarkaroff = new Card("Igor Karkaroff", "Box 4", "ally", 5, () => {activePlayer.attack += 2;}, true, false);
+        const madameMaxime = new Card("Madame Maxime", "Box 4", "ally", 7, () => {activePlayer.attack += 2; players.forEach(player => {player.health += 2;});}, false, false);
+        const prioriIncantatem1 = new Card("Priori Incantatem", "Box 4", "spell", 3, () => {
+            const spells = activePlayer.played.filter(card => {return card.type === "spell";});
+            if (spells.length) {
+                if (spells.length > 1) {
+                    addPlayerChoice("Copy effects of:", () => {return spells.length;}, 1, () => {
+                        for (let i = 0; i < spells.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {spells[i].effect();}; // no spells have passive effects
+                        }
+                    });
+                }
+                else spells[0].effect();
+            }
+        }, false, false);
+        const prioriIncantatem2 = prioriIncantatem1.clone();
+
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         if (activeGame !== "Game 1") {
@@ -980,7 +1027,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activeGame !== "Box 2") {
                     hogwartsCards.push(erumpentHorn, griphook, kreacherTheHouseElf, lacewingFlies1, lacewingFlies2, nox1, nox2, thestral);
                     if (activeGame !== "Box 3") {
-                        // TO-DO: add Box 4 hogwarts cards
+                        hogwartsCards.push(dragonsBlood, gillyweed1, gillyweed2, goldenEgg, igorKarkaroff, madameMaxime, prioriIncantatem1, prioriIncantatem2);
                     }
                 }
             }
@@ -2191,6 +2238,11 @@ document.getElementById("submitPlayers").onclick = () => {
                                     activePlayer.influence++;
                                     activePlayer.health++;
                                 }
+                                // Igor Karkaroff effect
+                                if (activePlayer.passives.includes(igorKarkaroff)) {
+                                    activePlayer.attack++;
+                                    activePlayer.influence++;
+                                }
                             }
                             if (this.type.includes("creature")) { // some rewards are specific to creatures
                                 // Immobulus effect
@@ -2798,7 +2850,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             activeVillains[i].influence--;
                             activePlayer.influences++;
                         };
-                        if (activePlayer.attack > 0 && activePlayer.influence > 0 && activeVillains[i].health && activeVillains[i].influence && !activeVillains[i].influenceDamageTaken) {
+                        if (activePlayer.attack > 0 && activePlayer.influence > 0 && activeVillains[i].health && activeVillains[i].influence && (!activeVillains[i].influenceDamageTaken || (activeVillains[i].influenceDamageTaken < 2 && activePlayer.passives.includes(dragonsBlood)))) {
                             addPlayerChoice("Damage with:", () => {return 2;}, 1, () => {
                                 document.getElementsByClassName("choice")[0].innerHTML = attackToken;
                                 document.getElementsByClassName("choice")[0].onclick = damageWithAttack;
@@ -2809,7 +2861,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         else if (activePlayer.attack > 0 && activeVillains[i].health) {
                             damageWithAttack();
                         }
-                        else if (activePlayer.influence > 0 && activeVillains[i].influence && !activeVillains[i].influenceDamageTaken) {
+                        else if (activePlayer.influence > 0 && activeVillains[i].influence && (!activeVillains[i].influenceDamageTaken || (activeVillains[i].influenceDamageTaken < 2 && activePlayer.passives.includes(dragonsBlood)))) {
                             damageWithInfluence();
                         }
                     }
