@@ -2140,6 +2140,17 @@ document.getElementById("submitPlayers").onclick = () => {
         const fightAndFlight = new DarkArtsEvent("Fight And Flight", "Box 3", () => {activeLocation.addToLocation(); setTimeout(() => {activeLocation.addToLocation();}, 1000);});
         const seriouslyMisunderstoodCreatures1 = new DarkArtsEvent("Seriously Misunderstood Creatures", "Box 3", () => {rollHouseDie("phoenix", true, true);}); // TO-DO: not same as Boggart
         const seriouslyMisunderstoodCreatures2 = seriouslyMisunderstoodCreatures1.clone();
+        const dragonsBreath = new DarkArtsEvent("Dragon's Breath", "Box 4", () => {
+            activePlayer.health--;
+            const items = () => {return activePlayer.hand.filter(card => {return card.type === "item";});};
+            while (items().length) activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(items()[0]), true);
+        });
+        const inquisitorialSquad3 = inquisitorialSquad1.clone();
+        const lephrechaunGold1 = new DarkArtsEvent("Leprechaun Gold", "Box 4", () => {activePlayer.attack = 0; activePlayer.influence = 0;});
+        const lephrechaunGold2 = lephrechaunGold1.clone();
+        const lephrechaunGold3 = lephrechaunGold1.clone();
+
+        // add DAEs to game
         if (activeGame.includes("Box")) {
             darkArtsEvents.push(blastEnded, inquisitorialSquad1, inquisitorialSquad2, menacingGrowl1, menacingGrowl2, ragingTroll1, ragingTroll2, slugulusEructo);
             if (activeGame !== "Box 1") {
@@ -2147,7 +2158,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activeGame !== "Box 2") {
                     darkArtsEvents.push(acromantulaAttack1, acromantulaAttack2, bombarda3, centaurAttack1, centaurAttack2, fightAndFlight, seriouslyMisunderstoodCreatures1, seriouslyMisunderstoodCreatures2);
                     if (activeGame !== "Box 3") {
-                        // TO-DO: add Box 4 DAEs
+                        darkArtsEvents.push(dragonsBreath, inquisitorialSquad3, lephrechaunGold1, lephrechaunGold2, lephrechaunGold3);
                     }
                 }
             }
