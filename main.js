@@ -536,7 +536,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         // Peskipiksi Pesternomi reward
                         if (activePlayer.horcruxesDestroyed.includes(peskipiksiPesternomi) && this.cost && this.cost % 2 === 0) {
-                            const hurtPlayers = players.filter(player => {return player.health < 10 && canHeal(player);});
+                            const hurtPlayers = players.filter(player => {return canHeal(player);});
                             if (hurtPlayers.length) {
                                 if (hurtPlayers.length > 1) {
                                     addPlayerChoice("Heal for 1:", () => {return hurtPlayers.length;}, 1, () => {
