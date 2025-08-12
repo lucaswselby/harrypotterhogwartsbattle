@@ -2915,14 +2915,22 @@ document.getElementById("submitPlayers").onclick = () => {
         const theFirstTask = new Encounter("The First Task", "Box 4", [], () => {}, () => {
             let dieOptions = ["blue", "green", "red", "yellow"];
             addPlayerChoice("Roll 2 House Die:", () => {return dieOptions.length;}, 2, () => {
-                document.getElementsByClassName("choice")[0].innerHTML = blueDie; 
-                document.getElementsByClassName("choice")[0].onclick = () => {rollHouseDie("blue", false, false); dieOptions.splice(dieOptions.indexOf("blue"), 1);}; 
-                document.getElementsByClassName("choice")[1].innerHTML = greenDie; 
-                document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie("green", false, false); dieOptions.splice(dieOptions.indexOf("green"), 1);}; 
-                document.getElementsByClassName("choice")[2].innerHTML = redDie; 
-                document.getElementsByClassName("choice")[2].onclick = () => {rollHouseDie("red", false, false); dieOptions.splice(dieOptions.indexOf("red"), 1);}; 
-                document.getElementsByClassName("choice")[3].innerHTML = yellowDie; 
-                document.getElementsByClassName("choice")[3].onclick = () => {rollHouseDie("yellow", false, false); dieOptions.splice(dieOptions.indexOf("yellow"), 1);};
+                if (dieOptions.includes("blue")) {
+                    document.getElementsByClassName("choice")[0].innerHTML = blueDie; 
+                    document.getElementsByClassName("choice")[0].onclick = () => {rollHouseDie("blue", false, false); dieOptions.splice(dieOptions.indexOf("blue"), 1);}; 
+                }
+                if (dieOptions.includes("green")) {
+                    document.getElementsByClassName("choice")[1].innerHTML = greenDie; 
+                    document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie("green", false, false); dieOptions.splice(dieOptions.indexOf("green"), 1);}; 
+                }
+                if (dieOptions.includes("red")) {
+                    document.getElementsByClassName("choice")[2].innerHTML = redDie; 
+                    document.getElementsByClassName("choice")[2].onclick = () => {rollHouseDie("red", false, false); dieOptions.splice(dieOptions.indexOf("red"), 1);}; 
+                }
+                if (dieOptions.includes("yellow")) {
+                    document.getElementsByClassName("choice")[3].innerHTML = yellowDie; 
+                    document.getElementsByClassName("choice")[3].onclick = () => {rollHouseDie("yellow", false, false); dieOptions.splice(dieOptions.indexOf("yellow"), 1);};
+                }
             });
             activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theFirstTask), 1); 
             theFirstTask.img.remove();
