@@ -2726,7 +2726,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
                 else effect();
             };
-            if (result === "influence") arithmancyCheck(() => {activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {creature.influence--;})});
+            if (result === "influence") arithmancyCheck(() => {activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {creature.influence++;})});
             else if (result === "draw") {arithmancyCheck(() => {players.forEach(player => {player.addToHand(detention.clone());});});}
             else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.health--;});});
             else if (result === "health") {
