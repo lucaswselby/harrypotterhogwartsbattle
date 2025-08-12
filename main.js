@@ -1775,12 +1775,23 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                         });
 
+                        // Avada Kedavra effect
+                        let avadas = 0;
+                        if (activeDarkArtsEvents.includes(avadaKedavra1)) avadas++;
+                        if (activeDarkArtsEvents.includes(avadaKedavra2)) avadas++;
+                        if (activeDarkArtsEvents.includes(avadaKedavra3)) avadas++;
+                        for (let i = 0; i < avadas; i++) {
+                            setTimeout(() => {
+                                activeLocation.addToLocation();
+                            }, (i + 1) * 1000);
+                        }
+
                         // Box 4 Lord Voldemort effect                        
                         if ((invulnerableVoldemort() === lordVoldemort4 || activeVillains.includes(lordVoldemort4)) && !lordVoldemort4.petrifiedBy) {
                             setTimeout(() => {
                                 activeLocation.addToLocation();
                                 darken(lordVoldemort4.img);
-                            }, 1000);
+                            }, (avadas + 1) * 1000);
                         }
                     };
 
@@ -2096,7 +2107,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const dementorsKiss2 = dementorsKiss1.clone();
         const oppugno = new DarkArtsEvent("Oppugno", "Game 3", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].cost) {const tempPetrified = player.petrified; player.petrified = false; activePlayer.cardsDrawn--; player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.petrified = tempPetrified; player.health -= 2;}});});
         const tarantallegra = new DarkArtsEvent("Tarantallegra", "Game 3", () => {activePlayer.health--;});
-        const avadaKedavra1 = new DarkArtsEvent("Avada Kedavra", "Game 4", () => {activePlayer.health -= 3; if (activePlayer.stunned) activeLocation.addToLocation();});
+        const avadaKedavra1 = new DarkArtsEvent("Avada Kedavra", "Game 4", () => {activePlayer.health -= 3;});
         const crucio1 = new DarkArtsEvent("Crucio", "Game 4", () => {activePlayer.health--;});
         const heirOfSlytherin1 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie("green", true, false);});
         const heirOfSlytherin2 = heirOfSlytherin1.clone();
