@@ -1972,8 +1972,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                 }
-                else if (bartyCrouchJr.img) darken(bartyCrouchJr.img);
-                else if (defensiveTraining.img) darken(defensiveTraining.img);
+                if (bartyCrouchJr.img) darken(bartyCrouchJr.img);
+                if (defensiveTraining.img) darken(defensiveTraining.img);
             }
         }
         const diagonAlley = new Location("Diagon Alley", "Game 1", 1, 4, 1, () => {});
