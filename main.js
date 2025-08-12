@@ -1637,7 +1637,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.health -= 2;
                 }
                 // Lacewing Flies effect
-                else if (this.hand[index] === lacewingFlies1) {
+                else if (this.hand[index] === lacewingFlies1 || this.hand[index] === lacewingFlies2) {
                     this.attack++;
                 }
 
