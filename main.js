@@ -1130,6 +1130,12 @@ document.getElementById("submitPlayers").onclick = () => {
                             darken(doloresUmbridge.img);
                         }
 
+                        // The First Task completion
+                        if (encounters.length) {
+                            if (encounters[0] === theFirstTask && card.type === "item") activePlayer.firstTaskCompletion += card.cost;
+                            if (encounters[0] === theSecondTask && card.type === "ally") activePlayer.secondTaskCompletion++;
+                        }
+
                         // replaces previous card with next card in store
                         document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
                         hogwartsCards.splice(hogwartsCards.indexOf(activeShops[activeShops.indexOf(card)]), 1);
@@ -1205,6 +1211,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._horcruxesDestroyed = [];
                 this._cardsDrawn = -5;
                 this._invulnerable = false;
+                this._firstTaskCompletion = 0;
+                this._secondTaskCompletion = 0;
             }
             get hero() {
                 return this._hero;
@@ -1566,6 +1574,28 @@ document.getElementById("submitPlayers").onclick = () => {
             set cardsDrawn(cardsDrawn) {
                 this._cardsDrawn = cardsDrawn;
             }
+            get firstTaskCompletion() {
+                return this._firstTaskCompletion;
+            }
+            set firstTaskCompletion(firstTaskCompletion) {
+                this._firstTaskCompletion = firstTaskCompletion;
+                if (encounters.length && encounters[0] === theFirstTask && (this.firstTaskCompletion >= 7 || 
+                    hogwartsCards.filter(card => {return card.type === "item"}).length === 1)) { // catch for no more items in the shop
+                    this.addDestroyedHorcrux(encounters.shift());
+                    displayNextEncounter();
+                }
+            }
+            get secondTaskCompletion() {
+                return this._secondTaskCompletion;
+            }
+            set secondTaskCompletion(secondTaskCompletion) {
+                this._secondTaskCompletion = secondTaskCompletion;
+                if (encounters.length && encounters[0] === theSecondTask && (this.secondTaskCompletion === 2 ||
+                    hogwartsCards.filter(card => {return card.type === "ally"}).length === 1)) { // catch for no more allies in the shop
+                    this.addDestroyedHorcrux(encounters.shift());
+                    displayNextEncounter();
+                }
+            }
 
             banishAt(index) {
                 if (document.getElementById("playerHand").contains(this.hand[index].img)) document.getElementById("playerHand").removeChild(this.hand[index].img);
@@ -1713,6 +1743,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._healthGained = 0;
                 this._healthLost = 0;
                 players.forEach(player => {player._invulnerable = false;});
+                this.firstTaskCompletion = 0;
                 playerTurn = false;
                 
                 // Peskipiksi Pesternomi effect
@@ -2248,10 +2279,11 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
 
-                    // Horcrux 2 effect
-                    if (encounters[0] === horcrux2 && this.attackDamageTaken === 2) {
+                    // Horcrux 2 and The First Task effects
+                    if (encounters.length && (encounters[0] === horcrux2 || encounters[0] === theFirstTask) && this.attackDamageTaken === 2) {
                         activePlayer.health -= 2;
-                        darken(horcrux2.img);
+                        if (horcrux2.img) darken(horcrux2.img);
+                        if (theFirstTask.img) darken(theFirstTask.img);
                     }
                 }
                 if (healthType === "health") this._health = health;
@@ -2767,7 +2799,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     thatSymbolRemaining++;
                                 }
                             }
-                            symbolImg.style.left = `${this === horcrux6 || this === defensiveTraining || this === forbiddenForestEncounter ? (5 + 13 * symbolIndex) : (6 + 20 * symbolIndex)}%`;
+                            symbolImg.style.left = `${this === horcrux6 || this === defensiveTraining || this === forbiddenForestEncounter || this === theThirdTask ? (5 + 13 * symbolIndex) : (6 + 20 * symbolIndex)}%`;
                             document.getElementById("encounters").appendChild(symbolImg);
                         }
                     }
@@ -2880,11 +2912,29 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         });
         const escape = new Encounter("Escape", "Box 3", [], () => {}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(escape), 1); escape.img.remove();});
+        const theFirstTask = new Encounter("The First Task", "Box 4", [], () => {}, () => {
+            let dieOptions = ["blue", "green", "red", "yellow"];
+            addPlayerChoice("Roll 2 House Die:", () => {return dieOptions.length;}, 2, () => {
+                document.getElementsByClassName("choice")[0].innerHTML = blueDie; 
+                document.getElementsByClassName("choice")[0].onclick = () => {rollHouseDie("blue", false, false); dieOptions.splice(dieOptions.indexOf("blue"), 1);}; 
+                document.getElementsByClassName("choice")[1].innerHTML = greenDie; 
+                document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie("green", false, false); dieOptions.splice(dieOptions.indexOf("green"), 1);}; 
+                document.getElementsByClassName("choice")[2].innerHTML = redDie; 
+                document.getElementsByClassName("choice")[2].onclick = () => {rollHouseDie("red", false, false); dieOptions.splice(dieOptions.indexOf("red"), 1);}; 
+                document.getElementsByClassName("choice")[3].innerHTML = yellowDie; 
+                document.getElementsByClassName("choice")[3].onclick = () => {rollHouseDie("yellow", false, false); dieOptions.splice(dieOptions.indexOf("yellow"), 1);};
+            });
+            activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theFirstTask), 1); 
+            theFirstTask.img.remove();
+        });
+        const theSecondTask = new Encounter("The Second Task", "Box 4", [], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length) activeLocation.addToLocation();}, () => {activeLocation.removeFromLocation(); players.forEach(player => {player.drawCards(1);}); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theSecondTask), 1); theSecondTask.img.remove();});
+        const theThirdTask = new Encounter("The Third Task", "Box 4", ["health", "health", "health"], () => {activePlayer.health -= 2;}, () => {players.forEach(player => {player.health = 10;}); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theThirdTask), 1); theThirdTask.img.remove();});
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
         else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
         else if (activeGame === "Box 2") encounters = [unregisteredAnimagus, fullMoonRises, defensiveTraining];
         else if (activeGame === "Box 3") encounters = [forbiddenForestEncounter, filthyHalfBreed, escape];
+        else if (activeGame === "Box 4") encounters = [theFirstTask, theSecondTask, theThirdTask];
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
@@ -3201,6 +3251,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activePlayer.horcruxesDestroyed.includes(unregisteredAnimagus)) unregisteredAnimagus.img.onclick = () => {if (!document.getElementById("playerChoice")) unregisteredAnimagus.reward();};
                 if (activePlayer.horcruxesDestroyed.includes(fullMoonRises)) fullMoonRises.img.onclick = () => {if (!document.getElementById("playerChoice")) fullMoonRises.reward();};
                 if (activePlayer.horcruxesDestroyed.includes(defensiveTraining)) defensiveTraining.img.onclick = () => {if (!document.getElementById("playerChoice")) defensiveTraining.reward();};
+            }
+            else if (activeGame === "Box 4") {
+                if (activePlayer.horcruxesDestroyed.includes(theFirstTask)) theFirstTask.img.onclick = () => {if (!document.getElementById("playerChoice")) theFirstTask.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(theSecondTask)) theSecondTask.img.onclick = () => {if (!document.getElementById("playerChoice")) theSecondTask.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(theThirdTask)) theThirdTask.img.onclick = () => {if (!document.getElementById("playerChoice")) theThirdTask.reward();};
             }
 
             // update activeDarkArtsEvents
