@@ -2645,12 +2645,15 @@ document.getElementById("submitPlayers").onclick = () => {
         const werewolf = new Villain("Werewolf", "Box 2", "creature", 5, 4, () => {}, () => {
             activeLocation.removeFromLocation();
             players.forEach(player => {
-                addPlayerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
-                    document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}<p>Influence: ${player.influence}</p>`;
-                    document.getElementsByClassName("choice")[0].onclick = () => {player.influence++;};
-                    document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`;
-                    document.getElementsByClassName("choice")[1].onclick = () => {player.health += 2;};
-                });
+                if (canHeal(player)) {
+                    addPlayerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
+                        document.getElementsByClassName("choice")[0].innerHTML = `${influenceToken}<p>Influence: ${player.influence}</p>`;
+                        document.getElementsByClassName("choice")[0].onclick = () => {player.influence++;};
+                        document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`;
+                        document.getElementsByClassName("choice")[1].onclick = () => {player.health += 2;};
+                    });
+                }
+                else player.influence++;
             });
         }, true);
         const aragog = new Villain("Aragog", "Box 3", "creature", 8, 0, () => {activePlayer.health -= activeVillains.filter(villain => {return villain.type.includes("creature");}).length;}, () => {players.forEach(player => {player.health += 2; player.influence++;}); activeLocation.removeFromLocation();}, false);
