@@ -3045,7 +3045,8 @@ document.getElementById("submitPlayers").onclick = () => {
                                 document.getElementsByClassName("choice")[1].onclick = damageWithInfluence;
                             });
                         }
-                        else if (activePlayer.attack > 0 && activeVillains[i].health) {
+                        else if (activePlayer.attack > 0 && activeVillains[i].health &&
+                        (!activeVillains.includes(hungarianHorntail) || activeVillains[i] === hungarianHorntail || hungarianHorntail.petrifiedBy || hungarianHorntail.health <= 0)) { // Hungarian Horntail effect
                             damageWithAttack();
                         }
                         else if (activePlayer.influence > 0 && activeVillains[i].influence && (!activeVillains[i].influenceDamageTaken || (activeVillains[i].influenceDamageTaken < 2 && activePlayer.passives.includes(dragonsBlood)))) {
