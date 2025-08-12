@@ -3267,7 +3267,7 @@ document.getElementById("submitPlayers").onclick = () => {
             // update activeDarkArtsEvents
             let daeDraws = activeLocation.darkArtsEventDraws;
             if (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) daeDraws++; // Bellatrix adds 1 draw
-            if (activeVillains.includes(chineseFireball) && !chineseFireball.petrifiedBy && chineseFireball.health > 0) daeDraws++; // Chinese Fireball adds 1 draw
+            if (activeVillains.includes(chineseFireball) && !chineseFireball.petrifiedBy && chineseFireball.influence > 0) daeDraws++; // Chinese Fireball adds 1 draw
             if (activePlayer.passives.includes(finiteIncantatem1) || activePlayer.passives.includes(finiteIncantatem2)) daeDraws = 1; // Finite Incantatem limits draws to 1
             for (let i = 0; i < daeDraws; i++) {
                 if (!darkArtsEvents.length) {
