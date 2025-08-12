@@ -1972,8 +1972,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                 }
-                if (defensiveTraining.img) darken(defensiveTraining.img);
                 if (bartyCrouchJr.img && !bartyCrouchJr.petrifiedBy && bartyCrouchJr.health > 0) darken(bartyCrouchJr.img);
+                if (encounters.length && encounters[0] === defensiveTraining) darken(defensiveTraining.img);
             }
         }
         const diagonAlley = new Location("Diagon Alley", "Game 1", 1, 4, 1, () => {});
