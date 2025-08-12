@@ -1248,12 +1248,12 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     // taking damage
                     else if (health < this.health) {
-                        this._healthLost += this.health - health;
-
                         // Invisibility Cloak effect
                         if (this.passives.includes(invisibilityCloak)) {
                             health = this.health - 1;
                         }
+
+                        this._healthLost += this.health - health;
                         
                         // Werewolf effect
                         if (activeVillains.includes(werewolf) && this.healthLost >= 4) {
