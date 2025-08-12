@@ -3247,10 +3247,15 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activePlayer.horcruxesDestroyed.includes(studentsOutOfBed)) studentsOutOfBed.img.onclick = () => {if (!document.getElementById("playerChoice")) studentsOutOfBed.reward();};
                 if (activePlayer.horcruxesDestroyed.includes(thirdFloorCorridor)) thirdFloorCorridor.img.onclick = () => {if (!document.getElementById("playerChoice")) thirdFloorCorridor.reward();};
             }
-            if (activeGame === "Box 2") {
+            else if (activeGame === "Box 2") {
                 if (activePlayer.horcruxesDestroyed.includes(unregisteredAnimagus)) unregisteredAnimagus.img.onclick = () => {if (!document.getElementById("playerChoice")) unregisteredAnimagus.reward();};
                 if (activePlayer.horcruxesDestroyed.includes(fullMoonRises)) fullMoonRises.img.onclick = () => {if (!document.getElementById("playerChoice")) fullMoonRises.reward();};
                 if (activePlayer.horcruxesDestroyed.includes(defensiveTraining)) defensiveTraining.img.onclick = () => {if (!document.getElementById("playerChoice")) defensiveTraining.reward();};
+            }
+            else if (activeGame === "Box 3") {
+                if (activePlayer.horcruxesDestroyed.includes(forbiddenForestEncounter)) forbiddenForestEncounter.img.onclick = () => {if (!document.getElementById("playerChoice")) forbiddenForestEncounter.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(filthyHalfBreed)) filthyHalfBreed.img.onclick = () => {if (!document.getElementById("playerChoice")) filthyHalfBreed.reward();};
+                if (activePlayer.horcruxesDestroyed.includes(escape)) escape.img.onclick = () => {if (!document.getElementById("playerChoice")) escape.reward();};
             }
             else if (activeGame === "Box 4") {
                 if (activePlayer.horcruxesDestroyed.includes(theFirstTask)) theFirstTask.img.onclick = () => {if (!document.getElementById("playerChoice")) theFirstTask.reward();};
