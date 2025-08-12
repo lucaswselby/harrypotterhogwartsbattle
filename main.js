@@ -2009,7 +2009,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const selectionOfChampions = new Location("Selection Of Champions", "Box 4", 1, 5, 1, () => {});
         const dragonArena = new Location("Dragon Arena", "Box 4", 2, 6, 2, () => {});
         const mermaidVillage = new Location("Mermaid Village", "Box 4", 3, 6, 2, () => {});
-        const triwizardMaze = new Location("Triwizard Maze", "Box 4", 4, 7, 3, () => {});
+        const triwizardMaze = new Location("Triwizard Maze", "Box 4", 4, 7, 3, () => {activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {creature.health++; creature.influence++;});});
         const theBlackLake = new Location("The Black Lake", "Pack 1", 1, 5, 1, () => {});
         const theHospitalWing = new Location("The Hospital Wing", "Pack 1", 2, 7, 2, () => {});
         const theHogwartsLibrary = new Location("The Hogwarts Library", "Pack 1", 3, 7, 3, () => {});
