@@ -2720,6 +2720,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const swedishShortSnout = new Villain("Swedish Short-Snout", "Box 4", "creature", 0, 6, () => {
             let sides = ["influence", "draw", "attack", "health", "health", "health"];
             const result = sides[Math.floor(Math.random() * sides.length)];
+            let arithmancyUsed = false;
             const arithmancyCheck = effect => {
                 // check for Arithmancy
                 if ((activePlayer.proficiency === "Arithmancy" || activePlayer.horcruxesDestroyed.includes(forbiddenForestEncounter)) && !arithmancyUsed) {
