@@ -987,7 +987,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     });
                 }
-                unpetrifiedPlayers[0].drawCards(1);
+                else unpetrifiedPlayers[0].drawCards(1);
             }
         }, false, false);
         const lacewingFlies2 = lacewingFlies1.clone();
