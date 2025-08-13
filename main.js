@@ -2510,12 +2510,12 @@ document.getElementById("submitPlayers").onclick = () => {
                     }; 
                     if (allies.length === 1) putAllyInHand(0); 
                     else {
-                        playerChoices.unshift(new PlayerChoice("Add to hand:", () => {return allies.length;}, 1, () => {
+                        addPlayerChoice("Add to hand:", () => {return allies.length;}, 1, () => {
                             for (let i = 0; i < allies.length; i++) {
                                 document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; 
                                 document.getElementsByClassName("choice")[i].onclick = () => {putAllyInHand(i)};
                             }
-                        }));
+                        });
                     }
                 }; 
                 if (allies.length && canHeal(player)) {
