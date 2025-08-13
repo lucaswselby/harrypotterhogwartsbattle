@@ -2116,7 +2116,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const educationalDecree1 = new DarkArtsEvent("Educational Decree", "Game 5", () => {activePlayer.hand.forEach(card => {if (card.cost - (activePlayer.proficiency === "Arithmancy" && card.houseDie) ? 1 : 0 >= 4) activePlayer.health--;});});
         const educationalDecree2 = educationalDecree1.clone();
         const imperio2 = imperio1.clone();
-        const legilimency = new DarkArtsEvent("Legilimency", "Game 5", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].type === "spell") {player.cardsDrawn--; player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
+        const legilimency = new DarkArtsEvent("Legilimency", "Game 5", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].type === "spell") {let tempPetrified = player.petrified; player.petrified = false; player.cardsDrawn--; player.drawCards(1); player.petrified = tempPetrified; player.forcedDiscardAt(player.hand.length - 1, true); player.health -= 2;}});});
         const morsmordre3 = morsmordre1.clone();
         const morsmordre4 = morsmordre1.clone();
         const sectumsempra1 = new DarkArtsEvent("Sectumsempra", "Game 6", () => {players.forEach(player => {player.health -= 2;});});
