@@ -2949,7 +2949,7 @@ document.getElementById("submitPlayers").onclick = () => {
             theFirstTask.img.remove();
         });
         const theSecondTask = new Encounter("The Second Task", "Box 4", [], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length) activeLocation.addToLocation();}, () => {activeLocation.removeFromLocation(); players.forEach(player => {player.drawCards(1);}); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theSecondTask), 1); theSecondTask.img.remove();});
-        const theThirdTask = new Encounter("The Third Task", "Box 4", ["health", "health", "health"], () => {activePlayer.health -= 2;}, () => {players.forEach(player => {player.health = 10;}); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theThirdTask), 1); theThirdTask.img.remove();});
+        const theThirdTask = new Encounter("The Third Task", "Box 4", ["health", "health", "health"], () => {activePlayer.health -= 2;}, () => {if (canHeal(activePlayer)) {players.forEach(player => {player.health = 10;}); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theThirdTask), 1); theThirdTask.img.remove();}});
         let encounters = [];
         if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
         else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
