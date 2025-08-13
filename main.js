@@ -2729,10 +2729,9 @@ document.getElementById("submitPlayers").onclick = () => {
                         else if (result === "draw") document.getElementsByClassName("choice")[0].innerHTML = hogwartsCardBack;
                         else if (result === "attack") document.getElementsByClassName("choice")[0].innerHTML = attackToken;
                         else if (result === "health") document.getElementsByClassName("choice")[0].innerHTML = healthToken;
-                        else alert(`${color} is not a die color.`);
                         document.getElementsByClassName("choice")[0].onclick = effect;
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Re-roll</p>";
-                        document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie(color, evil, true);};
+                        document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie("yellow", true, true);};
                     });
                 }
                 else effect();
@@ -2745,7 +2744,6 @@ document.getElementById("submitPlayers").onclick = () => {
                     creature.health++;
                 });
             }
-            else alert(`${color} is not a die color.`);
         }, () => {rollHouseDie("yellow", false, false); rollHouseDie("phoenix", false, true);}, false);
 
         // add villains to game
