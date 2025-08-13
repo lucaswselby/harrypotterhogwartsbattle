@@ -2305,11 +2305,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     const petrifiedToken = this.petrifiedBy ? document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].getElementsByClassName("petrifiedToken")[0] : null;
                     if (this.petrifiedBy) petrifiedToken.classList.toggle("defeating");
                     document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].onclick = () => {};
+                    document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].onclick = () => {};
                     setTimeout(() => {
                         if (activeVillains.includes(this)) {
                             document.getElementsByClassName("activeVillain")[activeVillains.indexOf(this)].innerHTML = "";
                             document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
-                            document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].onclick = () => {};
                         }
                         if (document.getElementById("villainDiscard").getElementsByTagName("IMG")[0]) setTimeout(() => {document.getElementById("villainDiscard").getElementsByTagName("IMG")[0].remove();}, 1000);
                         document.getElementById("villainDiscard").appendChild(this.img);
