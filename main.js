@@ -3428,7 +3428,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 document.getElementById("villainDraw").appendChild(lordVoldemort3.img);
                             }
                             else if (activeGame === "Box 4" && activeVillains[0] !== lordVoldemort4) {
-                                document.getElementById("villainDraw").appendChild(lordVoldemort4s.img);
+                                document.getElementById("villainDraw").appendChild(lordVoldemort4.img);
                             }
                         }
                     }
