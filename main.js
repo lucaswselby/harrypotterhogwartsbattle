@@ -1791,7 +1791,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     };
 
                     // Stag Patronus
-                    const stagPlayer = players.filter(player => {return player !== this && player.proficiency === "Stag Patronus";}).concat([null])[0];
+                    const stagPlayer = players.filter(player => {return player !== this && player.proficiency === "Stag Patronus" && player.health >= 2;}).concat([null])[0];
                     const getStagSpells = () => {return stagPlayer ? stagPlayer.hand.filter(card => {return card.type === "spell"}) : [];};
                     if (getStagSpells().length) {
                         addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
