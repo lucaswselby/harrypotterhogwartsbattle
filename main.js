@@ -1480,7 +1480,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.addDestroyedHorcrux(encounters.shift());
                 }
                 // Filthy Half-Breed completion
-                else if (encounters.length && encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return arr.indexOf(cost) === ind;}).length >= 3) {
+                else if (encounters.length && encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return cost > 0 && arr.indexOf(cost) === ind;}).length >= 3) {
                     this.addDestroyedHorcrux(encounters.shift());
                     displayNextEncounter();
                 }
