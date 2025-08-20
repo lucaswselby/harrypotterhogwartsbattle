@@ -1210,6 +1210,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._healthLost = 0;
                 this._horcruxesDestroyed = [];
                 this._cardsDrawn = -5;
+                this._horcrux1Used = false;
                 this._invulnerable = false;
                 this._firstTaskCompletion = 0;
                 this._secondTaskCompletion = 0;
@@ -1450,7 +1451,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 let alliesCast = this.played.filter(card => {return card.type === "ally";}).length;
 
                 // Horcrux 1 reward
-                if (this.horcruxesDestroyed.includes(horcrux1) && alliesCast === 2) {
+                if (this.horcruxesDestroyed.includes(horcrux1) && alliesCast === 2 && ! this._horcrux1Used) {
                     const hurtPlayers = players.filter(player => {return canHeal(player);});
                     if (hurtPlayers.length) {
                         if (hurtPlayers.length > 1) {
@@ -1467,7 +1468,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             darken(horcrux1.img);
                         }
                     }
-                    alliesCast = 99;
+                    this._horcrux1Used = true;
                 }
 
                 // Peskipiksi Pesternomi completion
@@ -1745,6 +1746,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._healthGained = 0;
                 this._healthLost = 0;
                 players.forEach(player => {player._invulnerable = false;});
+                this._horcrux1Used = false;
                 this.firstTaskCompletion = 0;
                 playerTurn = false;
                 
