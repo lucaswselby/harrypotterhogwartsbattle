@@ -2266,7 +2266,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     else this.attackDamageTaken++;
 
                     // Confundus effect
-                    if (activeVillains.every(villain => {return villain.attackDamageTaken}) && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) {
+                    if (activeVillains.filter(villain => {return villain.type.includes("villain") && villain.attackDamageTaken;}).length && (activePlayer.passives.includes(confundus1) || activePlayer.passives.includes(confundus2))) {
                         if (activePlayer.passives.includes(confundus1)) activePlayer.passives.splice(activePlayer.passives.indexOf(confundus1), 1);
                         else if (activePlayer.passives.includes(confundus2)) activePlayer.passives.splice(activePlayer.passives.indexOf(confundus2), 1);
                         activeLocation.removeFromLocation();
