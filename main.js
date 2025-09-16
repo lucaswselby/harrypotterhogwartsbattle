@@ -4,12 +4,12 @@ const displayGameChoices = playerNumber => {
     const player = document.querySelector(`input[name="player${playerNumber}"]:checked`).value;
     const proficiecyElem = document.getElementById(`player${playerNumber}Proficiency`);
 
-    if (game.includes("Box")) {
+    if (game === "Game 7" || game.includes("Box")) {
         // change player images based on game
-        document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/harryPotter.png";
-        document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/ronWeasley.png";
-        document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/hermioneGranger.png";
-        document.querySelector(`label[for="player${playerNumber}Neville"]`).getElementsByTagName("IMG")[0].src = "./images/Box 1/nevilleLongbottom.png";
+        document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/harryPotter.png";
+        document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/ronWeasley.png";
+        document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/hermioneGranger.png";
+        document.querySelector(`label[for="player${playerNumber}Neville"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/nevilleLongbottom.png";
         for (let i = 0; i < document.getElementsByClassName("boxOnly").length; i++) {
             document.getElementsByClassName("boxOnly")[i].style.display = "initial";
         }
@@ -38,12 +38,6 @@ const displayGameChoices = playerNumber => {
             document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Game 3/ronWeasley.png";
             document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Game 3/hermioneGranger.png";
             document.querySelector(`label[for="player${playerNumber}Neville"]`).getElementsByTagName("IMG")[0].src = "./images/Game 3/nevilleLongbottom.png";
-        }
-        else if (game === "Game 7") {
-            document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/harryPotter.png";
-            document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/ronWeasley.png";
-            document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/hermioneGranger.png";
-            document.querySelector(`label[for="player${playerNumber}Neville"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/nevilleLongbottom.png";
         }
     }
 
@@ -76,10 +70,10 @@ for (let i = 0; i < document.getElementsByClassName("playerChoice").length; i++)
         document.getElementsByClassName("playerChoice")[i].getElementsByClassName(`player${i + 1}`)[j].onclick = () => {
             const player = document.querySelector(`input[name="player${i + 1}"]:checked`).value;
             const patronusImage = document.querySelector(`label[for="player${i + 1}Patronus"]`).getElementsByTagName("IMG")[0];
-            if (player === "Harry Potter") patronusImage.src = "./images/Box 3/stagPatronus.png";
-            else if (player === "Ron Weasley") patronusImage.src = "./images/Box 3/terrierPatronus.png";
-            else if (player === "Hermione Granger") patronusImage.src = "./images/Box 3/otterPatronus.png";
-            else if (player === "Neville Longbottom") patronusImage.src = "./images/Box 3/nonCorporealPatronus.png";
+            if (player.includes("Harry Potter")) patronusImage.src = "./images/Box 3/stagPatronus.png";
+            else if (player.includes("Ron Weasley")) patronusImage.src = "./images/Box 3/terrierPatronus.png";
+            else if (player.includes("Hermione Granger")) patronusImage.src = "./images/Box 3/otterPatronus.png";
+            else if (player.includes("Neville Longbottom")) patronusImage.src = "./images/Box 3/nonCorporealPatronus.png";
             else if (player === "Luna Lovegood") patronusImage.src = "./images/Box 3/rabbitPatronus.png";
             else if (player === "Ginny Weasley") patronusImage.src = "./images/Pack 1/horsePatronus.png";
             else alert(`${player} is not a valid Hero.`);
@@ -101,7 +95,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const firstPlayer = document.querySelector(`input[name="player${i + 1}"]:checked`).value;
         if (firstPlayer) {
             for (let j = i + 1; j < document.getElementsByClassName("playerChoice").length; j++) {
-                if (firstPlayer === document.querySelector(`input[name="player${j + 1}"]:checked`).value) {
+                const secondPlayer = document.querySelector(`input[name="player${j + 1}"]:checked`).value;
+                if (firstPlayer.includes(secondPlayer) || secondPlayer.includes(firstPlayer)) {
                     continueGame = false;
                 }
             }
@@ -1157,9 +1152,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._heroImage = document.createElement("img");
                 this._heroImage.id = "playerHero";
                 this._heroImage.src = "./images/";
-                if (activeGame.includes("Game")) this._heroImage.src += parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : (parseInt(activeGame[activeGame.length - 1]) < 7 ? "Game 3" : "Game 7");
+                if (!hero.includes("Box")) this._heroImage.src += parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : (parseInt(activeGame[activeGame.length - 1]) < 7 ? "Game 3" : "Game 7");
                 else this._heroImage.src += "Box 1";
-                this._heroImage.src += `/${src(hero)}`;
+                this._heroImage.src += `/${src(hero.includes("Box") ? hero.substring(0, hero.indexOf(" Box")) : hero)}`;
                 this._heroImage.alt = hero;
                 this._proficiency = "";
                 this._proficiencyImage = document.createElement("div");
@@ -1167,10 +1162,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activeGame === "Game 6" || activeGame === "Game 7" || activeGame.includes("Box")) {
                     if (proficiency === "Patronus") {
                         proficiencyGame = "Box 3";
-                        if (hero === "Harry Potter") proficiency = "Stag Patronus";
-                        else if (hero === "Ron Weasley") proficiency = "Terrier Patronus";
-                        else if (hero === "Hermione Granger") proficiency = "Otter Patronus";
-                        else if (hero === "Neville Longbottom") proficiency = "Non-Corporeal Patronus";
+                        if (hero.includes("Harry Potter")) proficiency = "Stag Patronus";
+                        else if (hero.includes("Ron Weasley")) proficiency = "Terrier Patronus";
+                        else if (hero.includes("Hermione Granger")) proficiency = "Otter Patronus";
+                        else if (hero.includes("Neville Longbottom")) proficiency = "Non-Corporeal Patronus";
                         else if (hero === "Luna Lovegood") proficiency = "Rabbit Patronus";
                         else if (hero === "Ginny Weasley") {
                             proficiencyGame = "Pack 1";
@@ -1191,10 +1186,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._hand = [];
                 this._discard = []; 
                 this._passives = [];
-                if (hero === "Harry Potter") this._discard = harryStartingCards;
-                else if (hero === "Ron Weasley") this._discard = ronStartingCards;
-                else if (hero === "Hermione Granger") this._discard = hermioneStartingCards;
-                else if (hero === "Neville Longbottom") this._discard = nevilleStartingCards;
+                if (hero.includes("Harry Potter")) this._discard = harryStartingCards;
+                else if (hero.includes("Ron Weasley")) this._discard = ronStartingCards;
+                else if (hero.includes("Hermione Granger")) this._discard = hermioneStartingCards;
+                else if (hero.includes("Neville Longbottom")) this._discard = nevilleStartingCards;
                 else if (hero === "Luna Lovegood") this._discard = lunaStartingCards;
                 // TO-DO: add Ginny Weasley
                 else alert(`${hero} is not a valid Hero.`);
@@ -1269,23 +1264,21 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         else {
                             // Neville Longbottom special
-                            if (activePlayer.hero === "Neville Longbottom") {
-                                if ((!this.gainedHealth && (activeGame === "Game 3" || activeGame === "Game 4" || activeGame === "Game 5" || activeGame === "Game 6")) || activeGame === "Game 7") {
-                                    health++;
-                                }
-                                // Neville Longbottom Box expansion special
-                                else if (activeGame.includes("Box")) {
-                                    if (!this.gainedHealth) {
-                                        if (health < 10) {
-                                            addPlayerChoice(`Pick one for ${this.hero}:`, () => {return 2;}, 1, () => {
-                                                document.getElementsByClassName("choice")[0].innerHTML = `${healthToken}<p>Health: ${health}</p>`;
-                                                document.getElementsByClassName("choice")[0].onclick = () => {this.health++;};
-                                                document.getElementsByClassName("choice")[1].innerHTML = `${influenceToken}<p>Influence: ${this.influence}</p>`;
-                                                document.getElementsByClassName("choice")[1].onclick = () => {this.influence++;};
-                                            });
-                                        }
-                                        else this.influence++;
+                            if (activePlayer.hero === "Neville Longbottom" && ((!this.gainedHealth && (activeGame === "Game 3" || activeGame === "Game 4" || activeGame === "Game 5" || activeGame === "Game 6")) || (activeGame === "Game 7" || activeGame.includes("Box")))) {
+                                health++;
+                            }
+                            // Neville Longbottom Box expansion special
+                            else if (activePlayer.hero === "Neville Longbottom Box") {
+                                if (!this.gainedHealth) {
+                                    if (health < 10) {
+                                        addPlayerChoice(`Pick one for ${this.hero}:`, () => {return 2;}, 1, () => {
+                                            document.getElementsByClassName("choice")[0].innerHTML = `${healthToken}<p>Health: ${health}</p>`;
+                                            document.getElementsByClassName("choice")[0].onclick = () => {this.health++;};
+                                            document.getElementsByClassName("choice")[1].innerHTML = `${influenceToken}<p>Influence: ${this.influence}</p>`;
+                                            document.getElementsByClassName("choice")[1].onclick = () => {this.influence++;};
+                                        });
                                     }
+                                    else this.influence++;
                                 }
                             }
                             this.gainedHealth = true;
@@ -1405,9 +1398,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 let spellsCast = this.played.filter(card => {return card.type === "spell"}).length;
 
                 // Hermione Granger special
-                if (!this._hermioneSpecialUsed && spellsCast === 4 && this.hero === "Hermione Granger" && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                if (!this._hermioneSpecialUsed && spellsCast === 4 && this.hero.includes("Hermione Granger") && activeGame !== "Game 1" && activeGame !== "Game 2") {
                     this._hermioneSpecialUsed = true;
-                    if (activeGame.includes("Game")) {
+                    if (this.hero === "Hermione Granger") {
                         if (activeGame === "Game 7") {
                             players.forEach(player => {player.influence++;});
                         }
@@ -1422,7 +1415,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                     // Hermione Granger Box expansion special
-                    else if (activeGame.includes("Box")) {
+                    else {
                         let remainingPlayers = players.filter(player => {return !player.stunned;});
                         if (remainingPlayers.length) {
                             if (remainingPlayers.length > 2) {
@@ -1510,8 +1503,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._attacks = attacks;
 
                 // Ron Weasley special
-                if (this.attacks + this.influences === 3 && this.hero === "Ron Weasley" && activeGame !== "Game 1" && activeGame !== "Game 2") {
-                    if (activeGame.includes("Game")) {
+                if (this.attacks + this.influences === 3 && activeGame !== "Game 1" && activeGame !== "Game 2") {
+                    if (this.hero === "Ron Weasley") {
                         if (activeGame === "Game 7") {
                             players.forEach(player => {player.health += 2;});
                         }
@@ -1532,7 +1525,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                     // Ron Weasley Box expansion special
-                    else {
+                    else if (this.hero === "Ron Weasley Box") {
                         players.forEach(player => {player.health++;});
                     }
                 }
@@ -1550,7 +1543,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._influences = influences;
 
                 // Ron Weasley Box expansion special
-                if (this.attacks + this.influences === 3 && this.hero === "Ron Weasley" && activeGame.includes("Box")) {
+                if (this.attacks + this.influences === 3 && this.hero === "Ron Weasley Box") {
                     players.forEach(player => {player.health++;});
                 }
             }
@@ -1928,7 +1921,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 let defensiveTrainingEffect = encounters.length && encounters[0] === defensiveTraining;
                 if ((!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy || bartyCrouchJr.health <= 0) && !defensiveTrainingEffect) {
                     // Harry Potter special
-                    if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2" && activeGame.includes("Game")) {
+                    if (!this.removed && players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame !== "Game 1" && activeGame !== "Game 2") {
                         addPlayerChoice(`Gain 1 attack:`, () => {return players.length;}, activeGame === "Game 7" ? 2 : 1, () => {
                             for (let i = 0; i < players.length; i++) {
                                 document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
@@ -1937,7 +1930,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         });
                     }
                     // Harry Potter Box expansion special
-                    else if (players.filter(player => {return player.hero === "Harry Potter";}).length && activeGame.includes("Box")) {
+                    else if (players.filter(player => {return player.hero === "Harry Potter Box";}).length) {
                         players.forEach(player => {player.health++;});
                     }
 
