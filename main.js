@@ -873,13 +873,14 @@ document.getElementById("submitPlayers").onclick = () => {
         // Box 2
         const buckbeak = new Card("Buckbeak", "Box 2", "ally", 4, () => {
             activePlayer.drawCards(2);
-            addPlayerChoice("Discard 1:", () => {return activePlayer.hand.length;}, 1, () => {
+            addPlayerChoice("Discard 1:", () => {return activePlayer.hand.length + (activePlayer.petrified ? 1 : 0);}, 1, () => {
                 for (let i = 0; i < activePlayer.hand.length; i++) {
                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
                     document.getElementsByClassName("choice")[i].onclick = () => {
                         if (activePlayer.hand[i].type === "ally" && !activeMermaid()) activePlayer.attack += 2;
                         activePlayer.forcedDiscardAt(i, false);
                     };
+                    if (activePlayer.petrified) document.getElementsByClassName("choice")[activePlayer.hand.length].innerHTML = "<p>None</p>";
                 }
             });
         }, false, false);
