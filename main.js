@@ -711,7 +711,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const wingardiumLeviosa3 = wingardiumLeviosa1.clone();
 
         // Game 2
-        const arthurWeasley = new Card("Arthur Weasley", "Game 2", "ally", 6, () => {players.forEach(player => {if (!activeMermaid() || player === activePlayer) player.influence += 2;});}, false, false);
+        const arthurWeasley = new Card("Arthur Weasley", "Game 2", "ally", 6, () => {players.forEach(player => {if (!activeMermaid()) player.influence += 2;});}, false, false);
         const dobbyTheHouseElf = new Card("Dobby The House-Elf", "Game 2", "ally", 4, () => {activeLocation.removeFromLocation(); activePlayer.drawCards(1);}, false, false);
         const expelliarmus1 = new Card("Expelliarmus", "Game 2", "spell", 6, () => {activePlayer.attack += 2; activePlayer.drawCards(1);}, false, false);
         const expelliarmus2 = expelliarmus1.clone();
