@@ -1152,8 +1152,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._heroImage = document.createElement("img");
                 this._heroImage.id = "playerHero";
                 this._heroImage.src = "./images/";
-                if (!hero.includes("Box")) this._heroImage.src += parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : (parseInt(activeGame[activeGame.length - 1]) < 7 ? "Game 3" : "Game 7");
-                else this._heroImage.src += "Box 1";
+                if (hero.includes("Box")) this._heroImage.src += "Box 1";
+                else if (activeGame.includes("Box") || activeGame === "Game 7") this._heroImage.src += "Game 7";
+                else this._heroImage.src += parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : "Game 3";
                 this._heroImage.src += `/${src(hero.includes("Box") ? hero.substring(0, hero.indexOf(" Box")) : hero)}`;
                 this._heroImage.alt = hero;
                 this._proficiency = "";
