@@ -781,14 +781,14 @@ document.getElementById("submitPlayers").onclick = () => {
         const kingsleyShacklebolt = new Card("Kingsley Shacklebolt", "Game 5", "ally", 7, () => {if (!activeMermaid()) activePlayer.attack += 2; activePlayer.health++; activeLocation.removeFromLocation();}, false, false);
         const lunaLovegood = new Card("Luna Lovegood", "Game 5", "ally", 5, () => {if (!activeMermaid()) activePlayer.influence++; rollHouseDie("blue");}, true, true);
         const nymphadoraTonks = new Card("Nymphadora Tonks", "Game 5", "ally", 5, () => {
-            const barty = activeVillains.includes(bartyCrouchJr) && bartyCrouchJr.health > 0 && !bartyCrouchJr.petrifiedBy && (activeLocation.number > 1 || activeLocation.added > 0); 
+            const unremovable = (activeVillains.includes(bartyCrouchJr) && bartyCrouchJr.health > 0 && !bartyCrouchJr.petrifiedBy) || (activeLocation.number === 1 && activeLocation.added === 0)
             if (!activeMermaid()) {
-                addPlayerChoice("Choose:", () => {return barty ? 2 : 3;}, 1, () => {
+                addPlayerChoice("Choose:", () => {return unremovable ? 2 : 3;}, 1, () => {
                     document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${influenceToken + influenceToken + influenceToken}</div>`; 
                     document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.influence += 3;}; 
                     document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${attackToken + attackToken}</div>`; 
                     document.getElementsByClassName("choice")[1].onclick = () => {activePlayer.attack += 2;}; 
-                    if (!barty) {
+                    if (!unremovable) {
                         document.getElementsByClassName("choice")[2].innerHTML = "<img src=\"./images/locationToken.png\">"; 
                         document.getElementsByClassName("choice")[2].onclick = () => {activeLocation.removeFromLocation();};
                     }
