@@ -664,7 +664,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const trevor = new Card("Trevor", "Game 1", "ally", 0, startingAllyEffect, false, false);
         const nevilleStartingCards = [alohomoraNeville1, alohomoraNeville2, alohomoraNeville3, alohomoraNeville4, alohomoraNeville5, alohomoraNeville6, alohomoraNeville7, mandrake, remembrall, trevor];
 
-        // Luna starting card
+        // Luna starting cards
         const alohomoraLuna1 = new Card("Alohomora Luna", "Box 1", "spell", 0, alohomoraEffect, false, false);
         const alohomoraLuna2 = alohomoraLuna1.clone();
         const alohomoraLuna3 = alohomoraLuna1.clone();
