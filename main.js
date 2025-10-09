@@ -3294,6 +3294,16 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
             }
+            // Horse Patronus
+            else if (activePlayer.proficiency === "Horse Patronus") {
+                document.getElementById("playerProficiency").onclick = () => {
+                    if (activePlayer.attack >= 1 && players.filter(player => {return !player.petrified;}).length && !document.getElementById("playerChoice")) {
+                        activePlayer.attack--;
+                        players.forEach(player => {player.drawCards(1);});
+                        document.getElementById("playerProficiency").onclick = () => {};
+                    }
+                }
+            }
 
             // horcrux rewards
             if (activeGame === "Game 7") {
