@@ -2247,6 +2247,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._reward = reward;
                 this._passive = passive;
                 this._petrifiedBy = null;
+                this._ginnyUsed = false;
             }
             get name() {
                 return this._name;
@@ -2291,6 +2292,12 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (activePlayer.passives.includes(confundus1)) activePlayer.passives.splice(activePlayer.passives.indexOf(confundus1), 1);
                         else if (activePlayer.passives.includes(confundus2)) activePlayer.passives.splice(activePlayer.passives.indexOf(confundus2), 1);
                         activeLocation.removeFromLocation();
+                    }
+
+                    // Ginny Weasley special
+                    if (!this.ginnyUsed && activePlayer === "Ginny Weasley" && activeVillains.filter(villain => {return villain.attackDamageTaken || villain.influenceDamageTaken;}).length === 2) {
+                        players.forEach(player => {player.influence++;});
+                        this.ginnyUsed = true;
                     }
 
                     // Care of Magical Creatures proficiency
@@ -2492,6 +2499,12 @@ document.getElementById("submitPlayers").onclick = () => {
                     activeVillainElement.getElementsByClassName("petrifiedToken")[0].remove();
                     setTimeout(() => {populateVillains();}, 1000); // fixes bug where darken doesn't work after petrification
                 }
+            }
+            get ginnyUsed() {
+                return this._ginnyUsed;
+            }
+            set ginnyUsed(ginnyUsed) {
+                this._ginnyUsed = ginnyUsed;
             }
         }
         const crabbeAndGoyle = new Villain("Crabbe And Goyle", "Game 1", "villain", 5, 0, () => {}, () => {players.forEach(player => {player.drawCards(1);});}, true);
@@ -3372,6 +3385,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     }
                                                     villain.attackDamageTaken = 0;
                                                     villain.influenceDamageTaken = 0;
+                                                    villain.ginnyUsed = false;
                                                 });
 
                                                 // reenable all events
