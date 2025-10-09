@@ -673,9 +673,32 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraLuna6 = alohomoraLuna1.clone();
         const alohomoraLuna7 = alohomoraLuna1.clone();
         const crumpleHornedSnorkack = new Card("Crumple Horned Snorkack", "Box 1", "ally", 0, startingAllyEffect, false, false);
-        const lionHat = new Card("Lion Hat", "Box 1", "item", 0, () => {activePlayer.influence++; if (players.filter(player => {return player !== activePlayer && (player.hand.includes(quidditchGear1) || player.hand.includes(quidditchGear2) || player.hand.includes(quidditchGear3) || player.hand.includes(quidditchGear4) || player.hand.includes(firebolt) ||  player.hand.includes(cleansweep11) ||  player.hand.includes(nimbusTwoThousandAndOne1) ||  player.hand.includes(nimbusTwoThousandAndOne2)/* ||  player.hand.includes(ginny's broom)*/);}).length) activePlayer.attack++;}, false, false);
+        const lionHat = new Card("Lion Hat", "Box 1", "item", 0, () => {activePlayer.influence++; if (players.filter(player => {return player !== activePlayer && (player.hand.includes(quidditchGear1) || player.hand.includes(quidditchGear2) || player.hand.includes(quidditchGear3) || player.hand.includes(quidditchGear4) || player.hand.includes(firebolt) ||  player.hand.includes(cleansweep11) ||  player.hand.includes(nimbusTwoThousandAndOne1) ||  player.hand.includes(nimbusTwoThousandAndOne2) ||  player.hand.includes(nimbus2000));}).length) activePlayer.attack++;}, false, false);
         const spectrespecs = new Card("Spectrespecs", "Box 1", "item", 0, () => {activePlayer.influence++; if (!darkArtsEvents.length) {shuffle(inactiveDarkArtsEvents); while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());} addPlayerChoice("Choose:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<img src="${darkArtsEvents[0].img.src}"><p>Keep</p>`; document.getElementsByClassName("choice")[1].innerHTML = `<img src="${darkArtsEvents[0].img.src}"><p>Discard</p>`; document.getElementsByClassName("choice")[1].onclick = () => {inactiveDarkArtsEvents.push(darkArtsEvents.shift());};});}, false, false);
         const lunaStartingCards = [alohomoraLuna1, alohomoraLuna2, alohomoraLuna3, alohomoraLuna4, alohomoraLuna5, alohomoraLuna6, alohomoraLuna7, crumpleHornedSnorkack, lionHat, spectrespecs];
+
+        // Ginny starting cards
+        const alohomoraGinny1 = new Card("Alohomora Ginny", "Pack 1", "spell", 0, alohomoraEffect, false, false);
+        const alohomoraGinny2 = alohomoraGinny1.clone();
+        const alohomoraGinny3 = alohomoraGinny1.clone();
+        const alohomoraGinny4 = alohomoraGinny1.clone();
+        const alohomoraGinny5 = alohomoraGinny1.clone();
+        const alohomoraGinny6 = alohomoraGinny1.clone();
+        const alohomoraGinny7 = alohomoraGinny1.clone();
+        const arnold = new Card("Arnold", "Pack 1", "ally", 0, startingAllyEffect, false, false);
+        const batBogeyHex = new Card("Bat Bogey Hex", "Pack 1", "spell", 0, () => {
+            if (players.filter(player => {return canHeal(player);}).length) {
+                addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = attackToken;
+                    document.getElementsByClassName("choice")[0].onclick = () => {activePlayer.attack++;};
+                    document.getElementsByClassName("choice")[1].innerHTML = `<p>ALL Heroes:</p>${healthToken}`;
+                    document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.health++;});};
+                });
+            }
+            else activePlayer.attack++;
+        }, false, false);
+        const nimbus2000 = new Card("Nimbus 2000", "Pack 1", "item", 0, () => {activePlayer.attack++;}, true, false);
+        const ginnyStartingCards = [alohomoraGinny1, alohomoraGinny2, alohomoraGinny3, alohomoraGinny4, alohomoraGinny5, alohomoraGinny6, alohomoraGinny7, arnold, batBogeyHex, nimbus2000];
 
         // Hogwarts cards
         // Game 1
@@ -1193,7 +1216,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (hero.includes("Hermione Granger")) this._discard = hermioneStartingCards;
                 else if (hero.includes("Neville Longbottom")) this._discard = nevilleStartingCards;
                 else if (hero === "Luna Lovegood") this._discard = lunaStartingCards;
-                // TO-DO: add Ginny Weasley
+                else if (hero === "Ginny Weasley") this._discard = ginnyStartingCards;
                 else alert(`${hero} is not a valid Hero.`);
                 this._petrified = false;
                 this._stunned = false;
@@ -2320,8 +2343,8 @@ document.getElementById("submitPlayers").onclick = () => {
                             this.reward();
 
                             if (this.type.includes("villain")) { // some rewards are specific to villains
-                                // Firebolt and Cleansweep 11 effects
-                                if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11)) {
+                                // Firebolt, Cleansweep 11, and Nimbus 2000 effects
+                                if (activePlayer.passives.includes(firebolt) || activePlayer.passives.includes(cleansweep11) || activePlayer.passives.includes(nimbus2000)) {
                                     activePlayer.influence++;
                                 }
                                 // Nimbus Two Thousand and One effect
