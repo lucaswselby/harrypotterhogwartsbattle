@@ -1854,6 +1854,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // remove Hogwarts cards for current players
         if (players.map(player => {return player.hero;}).includes("Luna Lovegood") && hogwartsCards.includes(lunaLovegood)) hogwartsCards.splice(hogwartsCards.indexOf(lunaLovegood), 1);
+        if (players.map(player => {return player.hero;}).includes("Ginny Weasley") && hogwartsCards.includes(ginnyWeasley)) hogwartsCards.splice(hogwartsCards.indexOf(ginnyWeasley), 1);
 
         // locations
         class Location {
