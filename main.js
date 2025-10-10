@@ -2787,7 +2787,10 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // add villains to game
         if (activeGame.includes("Box")) {
-            inactiveVillains.push(cornishPixies, fluffy, norbert, troll);
+            inactiveVillains.splice(inactiveVillains.indexOf(basilisk));
+            inactiveVillains.splice(inactiveVillains.indexOf(dementor));
+            inactiveVillains = inactiveVillains.splice(0, 5);
+            inactiveVillains.push(basilisk, cornishPixies, dementor, fluffy, norbert, troll);
             if (activeGame !== "Box 1") {
                 inactiveVillains.push(boggart, scabbers, werewolf);
                 if (activeGame !== "Box 2") {
