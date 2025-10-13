@@ -1873,6 +1873,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._added = 0;
                 this._removed = false;
             }
+            get name() {
+                return this._name;
+            }
             get img() {
                 return this._img;
             }
@@ -2039,9 +2042,12 @@ document.getElementById("submitPlayers").onclick = () => {
         const dragonArena = new Location("Dragon Arena", "Box 4", 2, 6, 2, () => {});
         const mermaidVillage = new Location("Mermaid Village", "Box 4", 3, 6, 2, () => {});
         const triwizardMaze = new Location("Triwizard Maze", "Box 4", 4, 7, 3, () => {activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {creature.health++; creature.influence++;});});
-        const theBlackLake = new Location("The Black Lake", "Pack 1", 1, 5, 1, () => {});
-        const theHospitalWing = new Location("The Hospital Wing", "Pack 1", 2, 7, 2, () => {});
-        const theHogwartsLibrary = new Location("The Hogwarts Library", "Pack 1", 3, 7, 3, () => {});
+        const theBlackLake23 = new Location("The Black Lake 23", "Pack 1", 1, 5, 1, () => {});
+        const theBlackLake45 = new Location("The Black Lake 45", "Pack 1", 1, 5, 1, () => {});
+        const theHospitalWing23 = new Location("The Hospital Wing 23", "Pack 1", 2, 6, 2, () => {});
+        const theHospitalWing45 = new Location("The Hospital Wing 45", "Pack 1", 2, 7, 2, () => {});
+        const theHogwartsLibrary23 = new Location("The Hogwarts Library 23", "Pack 1", 3, 7, 3, () => {});
+        const theHogwartsLibrary45 = new Location("The Hogwarts Library 45", "Pack 1", 3, 7, 3, () => {});
         const ministryOfMagicAtrium = new Location("Ministry Of Magic Atrium", "Pack 2", 1, 6, 1, () => {});
         const ministryCourtroom = new Location("Ministry Courtroom", "Pack 2", 2, 6, 2, () => {});
         const ministryLift = new Location("Ministry Lift", "Pack 2", 3, 7, 3, () => {});
@@ -2051,7 +2057,11 @@ document.getElementById("submitPlayers").onclick = () => {
         const greatHallPack = new Location("Great Hall", "Pack 4", 1, 6, 1, () => {});
         const forestClearing = new Location("Forest Clearing", "Pack 4", 2, 6, 2, () => {});
         const castleCourtyard = new Location("Castle Courtyard", "Pack 4", 3, 7, 3, () => {});
-        let locations = [diagonAlley, mirrorOfErised, forbiddenForest, quidditchPitch, chamberOfSecrets, hogwartsExpress, hogsmeadeVillage, shriekingShack, quidditchWorldCup, triwizardTournament, graveyard, azkaban, hallOfProphecy, ministryOfMagic, knockturnAlley, theBurrow, astronomyTower, godricsHollow, gringotts, roomOfRequirement, hogwartsCastle, castleGates, hagridsHut, greatHallBox, dADAClassroom, castleHallways, whompingWillow, unicornHallow, aragogsLair, giantClearing, selectionOfChampions, dragonArena, mermaidVillage, triwizardMaze, theBlackLake, theHospitalWing, theHogwartsLibrary, ministryOfMagicAtrium, ministryCourtroom, ministryLift, malfoyManor, cave, atopTheTower, greatHallPack, forestClearing, castleCourtyard].filter(loc => {return loc.game === activeGame});
+        let locations = [diagonAlley, mirrorOfErised, forbiddenForest, quidditchPitch, chamberOfSecrets, hogwartsExpress, hogsmeadeVillage, shriekingShack, quidditchWorldCup, triwizardTournament, graveyard, azkaban, hallOfProphecy, ministryOfMagic, knockturnAlley, theBurrow, astronomyTower, godricsHollow, gringotts, roomOfRequirement, hogwartsCastle, castleGates, hagridsHut, greatHallBox, dADAClassroom, castleHallways, whompingWillow, unicornHallow, aragogsLair, giantClearing, selectionOfChampions, dragonArena, mermaidVillage, triwizardMaze, theBlackLake23, theBlackLake45, theHospitalWing23, theHospitalWing45, theHogwartsLibrary23, theHogwartsLibrary45, ministryOfMagicAtrium, ministryCourtroom, ministryLift, malfoyManor, cave, atopTheTower, greatHallPack, forestClearing, castleCourtyard].filter(loc => {return loc.game === activeGame});
+        if (activeGame.includes("Pack")) locations.filter(location => {
+            if (players.length < 4) return location.name.includes("23");
+            else return location.name.includes("45");
+        });
         let activeLocation = locations[0];
 
         // dark arts events
