@@ -251,6 +251,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // Hogwarts die
         const rollHouseDie = (color, evil, arithmancyUsed) => {
+            const rerollViable = () => {return (activePlayer.proficiency === "Arithmancy" || activePlayer.horcruxesDestroyed.includes(forbiddenForestEncounter)) && !arithmancyUsed;};
             let sides = ["influence", "draw", "attack", "health"];
             if (color === "phoenix") {
                 sides = ["health", "health 2", "location", "attack", "draw", "draw 2"];
@@ -275,7 +276,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 };
 
                 // check for Arithmancy
-                if ((activePlayer.proficiency === "Arithmancy" || activePlayer.horcruxesDestroyed.includes(forbiddenForestEncounter)) && !arithmancyUsed) {
+                else if (rerollViable()) {
                     addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
                         if (result === "influence") document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
                         else if (result === "draw") document.getElementsByClassName("choice")[0].innerHTML = hogwartsCardBack;
