@@ -447,6 +447,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 darken(mermaid.img);
                 return true;
             }
+            return false;
         };
 
         // cards
