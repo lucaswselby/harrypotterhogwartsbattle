@@ -275,15 +275,22 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 };
 
+                // returns the imge corresponding the to result of the dice roll
+                const rewardImg = reward => {;
+                    switch (reward) {
+                        case "influence": return influenceToken;
+                        case "draw": return hogwartsCardBack;
+                        case "health": return healthToken;
+                        case "attack": return attackToken;
+                        default: alert(`${color} is not a die color.`);
+                        // TO-DO: add Phoenix die options, then make arithmancyUsed false for phoenix die users like Kreacher and Boggart
+                    }
+                }
+
                 // check for Arithmancy
                 else if (rerollViable()) {
                     addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
-                        if (result === "influence") document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
-                        else if (result === "draw") document.getElementsByClassName("choice")[0].innerHTML = hogwartsCardBack;
-                        else if (result === "attack") document.getElementsByClassName("choice")[0].innerHTML = attackToken;
-                        else if (result === "health") document.getElementsByClassName("choice")[0].innerHTML = healthToken;
-                        // TO-DO: add Phoenix die options, then make arithmancyUsed false for phoenix die users like Kreacher and Boggart
-                        else alert(`${color} is not a die color.`);
+                        document.getElementsByClassName("choice")[0].innerHTML = rewardImg(result);
                         document.getElementsByClassName("choice")[0].onclick = () => {
                             effect();
                             destroyedHorcrux();
