@@ -2115,10 +2115,13 @@ document.getElementById("submitPlayers").onclick = () => {
         const cave45 = new Location("Cave 45", "Pack 3", 2, 6, 2, () => {});
         const atopTheTower23 = new Location("Atop The Tower 23", "Pack 3", 3, 6, 3, () => {});
         const atopTheTower45 = new Location("Atop The Tower 45", "Pack 3", 3, 7, 3, () => {});
-        const greatHallPack = new Location("Great Hall", "Pack 4", 1, 6, 1, () => {});
-        const forestClearing = new Location("Forest Clearing", "Pack 4", 2, 6, 2, () => {});
-        const castleCourtyard = new Location("Castle Courtyard", "Pack 4", 3, 7, 3, () => {});
-        let locations = [diagonAlley, mirrorOfErised, forbiddenForest, quidditchPitch, chamberOfSecrets, hogwartsExpress, hogsmeadeVillage, shriekingShack, quidditchWorldCup, triwizardTournament, graveyard, azkaban, hallOfProphecy, ministryOfMagic, knockturnAlley, theBurrow, astronomyTower, godricsHollow, gringotts, roomOfRequirement, hogwartsCastle, castleGates, hagridsHut, greatHallBox, dADAClassroom, castleHallways, whompingWillow, unicornHallow, aragogsLair, giantClearing, selectionOfChampions, dragonArena, mermaidVillage, triwizardMaze, theBlackLake23, theBlackLake45, theHospitalWing23, theHospitalWing45, theHogwartsLibrary23, theHogwartsLibrary45, ministryOfMagicAtrium23, ministryOfMagicAtrium45, ministryCourtroom23, ministryCourtroom45, ministryLift23, ministryLift45, malfoyManor45, cave23, cave45, atopTheTower23, atopTheTower45, greatHallPack, forestClearing, castleCourtyard].filter(loc => {return loc.game === activeGame});
+        const greatHall23 = new Location("Great Hall 23", "Pack 4", 1, 6, 1, () => {});
+        const greatHall45 = new Location("Great Hall 45", "Pack 4", 1, 7, 1, () => {});
+        const forestClearing23 = new Location("Forest Clearing 23", "Pack 4", 2, 6, 2, () => {});
+        const forestClearing45 = new Location("Forest Clearing 45", "Pack 4", 2, 7, 2, () => {});
+        const castleCourtyard23 = new Location("Castle Courtyard 23", "Pack 4", 3, 7, 3, () => {});
+        const castleCourtyard45 = new Location("Castle Courtyard 45", "Pack 4", 3, 8, 3, () => {});
+        let locations = [diagonAlley, mirrorOfErised, forbiddenForest, quidditchPitch, chamberOfSecrets, hogwartsExpress, hogsmeadeVillage, shriekingShack, quidditchWorldCup, triwizardTournament, graveyard, azkaban, hallOfProphecy, ministryOfMagic, knockturnAlley, theBurrow, astronomyTower, godricsHollow, gringotts, roomOfRequirement, hogwartsCastle, castleGates, hagridsHut, greatHallBox, dADAClassroom, castleHallways, whompingWillow, unicornHallow, aragogsLair, giantClearing, selectionOfChampions, dragonArena, mermaidVillage, triwizardMaze, theBlackLake23, theBlackLake45, theHospitalWing23, theHospitalWing45, theHogwartsLibrary23, theHogwartsLibrary45, ministryOfMagicAtrium23, ministryOfMagicAtrium45, ministryCourtroom23, ministryCourtroom45, ministryLift23, ministryLift45, malfoyManor23, malfoyManor45, cave23, cave45, atopTheTower23, atopTheTower45, greatHall23, greatHall45, forestClearing23, forestClearing45, castleCourtyard23, castleCourtyard45].filter(loc => {return loc.game === activeGame});
         if (activeGame.includes("Pack")) locations.filter(location => {
             if (players.length < 4) return location.name.includes("23");
             else return location.name.includes("45");
