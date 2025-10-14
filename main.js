@@ -1918,7 +1918,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._img = document.createElement("IMG");
                 this._img.id = `location${number}`;
                 this._img.className = "location";
-                this._img.src = `./images/${game}/${name[0].toLowerCase() + name.substring(1).replaceAll(" ", "").replaceAll("'", "")}.png`;
+                this._img.src = `./images/${game}/${src(name)}`;
                 this._img.alt = name;
                 this._number = number;
                 this._spaces = spaces;
