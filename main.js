@@ -483,6 +483,19 @@ document.getElementById("submitPlayers").onclick = () => {
             return false;
         };
 
+        const rollAnyHouseDie = selfCorrectingInkRoll => {
+            addPlayerChoice("Roll a House Die:", () => {return 4;}, 1, () => {
+                document.getElementsByClassName("choice")[0].innerHTML = blueDie; 
+                document.getElementsByClassName("choice")[0].onclick = () => {rollHouseDie("blue", false, false, selfCorrectingInkRoll);}; 
+                document.getElementsByClassName("choice")[1].innerHTML = greenDie; 
+                document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie("green", false, false, selfCorrectingInkRoll);}; 
+                document.getElementsByClassName("choice")[2].innerHTML = redDie; 
+                document.getElementsByClassName("choice")[2].onclick = () => {rollHouseDie("red", false, false, selfCorrectingInkRoll);}; 
+                document.getElementsByClassName("choice")[3].innerHTML = yellowDie; 
+                document.getElementsByClassName("choice")[3].onclick = () => {rollHouseDie("yellow", false, false, selfCorrectingInkRoll);};
+            });
+        };
+
         // cards
         class Card {
             constructor(name, game, type, cost, effect, passive, houseDie) {
@@ -823,7 +836,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const cedricDiggory = new Card("Cedric Diggory", "Game 4", "ally", 4, () => {if (!activeMermaid()) activePlayer.attack++; rollHouseDie("yellow", false, false, false);}, false, true);
         const filiusFlitwick = new Card("Filius Flitwick", "Game 4", "ally", 6, () => {if (!activeMermaid()) activePlayer.influence++; activePlayer.drawCards(1); rollHouseDie("blue", false, false, false);}, false, true);
         const fleurDelacour = new Card("Fleur Delacour", "Game 4", "ally", 4, () => {if (!activeMermaid()) activePlayer.influence += 2;}, true, false);
-        const hogwartsAHistory1 = new Card("Hogwarts A History", "Game 4", "item", 4, () => {addPlayerChoice("Roll a House Die:", () => {return 4;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = blueDie; document.getElementsByClassName("choice")[0].onclick = () => {rollHouseDie("blue", false, false);}; document.getElementsByClassName("choice")[1].innerHTML = greenDie; document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie("green", false, false);}; document.getElementsByClassName("choice")[2].innerHTML = redDie; document.getElementsByClassName("choice")[2].onclick = () => {rollHouseDie("red", false, false);}; document.getElementsByClassName("choice")[3].innerHTML = yellowDie; document.getElementsByClassName("choice")[3].onclick = () => {rollHouseDie("yellow", false, false);};});}, false, true);
+        const hogwartsAHistory1 = new Card("Hogwarts A History", "Game 4", "item", 4, () => {rollAnyHouseDie(false);}, false, true);
         const hogwartsAHistory2 = hogwartsAHistory1.clone();
         const hogwartsAHistory3 = hogwartsAHistory1.clone();
         const hogwartsAHistory4 = hogwartsAHistory1.clone();
