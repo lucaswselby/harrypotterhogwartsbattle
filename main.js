@@ -1397,7 +1397,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         activePlayer.influence -= cost;
 
                         // History of Magic proficiency
-                        if (activePlayer === "History Of Magic" && card.type === "spell") {
+                        if (activePlayer.proficiency === "History Of Magic" && card.type === "spell") {
                             addPlayerChoice("Give 1 influence to:", () => {return players.length;}, 1, () => {
                                 for (let i = 0; i < players.length; i++) {
                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[i].heroImage.src}">`;
