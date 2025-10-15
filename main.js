@@ -2529,9 +2529,53 @@ document.getElementById("submitPlayers").onclick = () => {
         const lephrechaunGold1 = new DarkArtsEvent("Leprechaun Gold", "Box 4", () => {activePlayer.attack = 0; activePlayer.influence = 0;});
         const lephrechaunGold2 = lephrechaunGold1.clone();
         const lephrechaunGold3 = lephrechaunGold1.clone();
+        // Pack expansion Dark Arts Events
+        const caughtAtADAMeeting1 = new DarkArtsEvent("Caught At A D A Meeting", "Pack 1", () => {
+            getNeighbors().concat([activePlayer]).forEach(player => {
+                if (!player.draw.length) player.shuffle(); 
+                if (player.draw[0].type === "ally") {
+                    const tempPetrified = player.petrified; 
+                    player.petrified = false; 
+                    activePlayer.cardsDrawn--; 
+                    player.drawCards(1); 
+                    player.forcedDiscardAt(player.hand.length - 1, true); 
+                    player.petrified = tempPetrified; 
+                    player.health -= 2;
+                }
+            });            
+        });
+        const caughtAtADAMeeting2 = caughtAtADAMeeting1.clone();
+        const howlers = new DarkArtsEvent("Howlers", "Pack 1", () => {
+            getNeighbors().concat([activePlayer]).filter(player => {return player.health > 0 && player.hand.filter(card => {return card.type === "ally";}).length;}).forEach(player => {
+                const allies = () => {return player.hand.filter(card => {return card.type === "ally";});};
+                addPlayerChoice("Lose:", () => {return 2;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken + healthToken}</div>`;
+                    document.getElementsByClassName("choice")[0].onclick = () => {player.health -= 3;};
+                    document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer>${allies().reduce((prev, curr) => {return prev + `<img src="${curr.img.src}">`}, "")}</div>`;
+                    document.getElementsByClassName("choice")[1].onclick = () => {
+                        while (allies().length) player.forcedDiscardAt(player.hand.indexOf(allies()[0]), true);
+                    };
+                });
+            });
+        });
+        const weasleyIsOurKing1 = new DarkArtsEvent("Weasley Is Our King", "Pack 1", () => {
+            getNeighbors().concat(activePlayer).filter(player => {return player.hand.length;}).forEach(player => {
+                if (player.hand.length > 1) {
+                    addPlayerChoice("Discard:", () => {return player.hand.length;}, 1, () => {
+                        for (let i = 0; i < player.hand.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, true);};
+                        }
+                    });
+                }
+                else player.forcedDiscardAt(0, true);
+            });
+            activeLocation.addToLocation();
+        });
+        const weasleyIsOurKing2 = weasleyIsOurKing1.clone();
 
-        // add DAEs to game
-        if (activeGame.includes("Box")) {
+        // add Box DAEs to game
+        if (activeGame.includes("Box") || activeGame.includes("Pack")) {
             darkArtsEvents.push(blastEnded, inquisitorialSquad1, inquisitorialSquad2, menacingGrowl1, menacingGrowl2, ragingTroll1, ragingTroll2, slugulusEructo);
             if (activeGame !== "Box 1") {
                 darkArtsEvents.push(bombarda1, bombarda2, theGrim, transformed1, transformed2, viciousBite1, viciousBite2);
@@ -2541,6 +2585,11 @@ document.getElementById("submitPlayers").onclick = () => {
                         darkArtsEvents.push(dragonsBreath, inquisitorialSquad3, lephrechaunGold1, lephrechaunGold2, lephrechaunGold3);
                     }
                 }
+            }
+
+            // add Pack DAEs to game
+            if (activeGame.includes("Pack")) {
+                darkArtsEvents.push(caughtAtADAMeeting1, caughtAtADAMeeting2, howlers, weasleyIsOurKing1, weasleyIsOurKing2);
             }
         }
         shuffle(darkArtsEvents);
