@@ -484,6 +484,23 @@ document.getElementById("submitPlayers").onclick = () => {
             return false;
         };
 
+        // return the players before and after the active player
+        const getNeighbors = () => {
+            let neighbors = [];
+            if (players.indexOf(activePlayer) === 0) {
+                neighbors.push(players[players.length - 1]);
+                if (players.length > 2) neighbors.push(players[players.indexOf(activePlayer) + 1]);
+            }
+            else if (players.indexOf(activePlayer) === players.length - 1) {
+                neighbors.push(players[players.indexOf(activePlayer - 1)]);
+                if (players.length > 2) neighbors.push(players[0]);
+            }
+            else {
+                neighbors.push(players[players.indexOf(activePlayer) - 1], players[players.indexOf(activePlayer) + 1])
+            }
+            return neighbors;
+        };
+
         const rollAnyHouseDie = selfCorrectingInkRoll => {
             addPlayerChoice("Roll a House Die:", () => {return 4;}, 1, () => {
                 document.getElementsByClassName("choice")[0].innerHTML = blueDie; 
@@ -1128,6 +1145,210 @@ document.getElementById("submitPlayers").onclick = () => {
         }, false, false);
         const prioriIncantatem2 = prioriIncantatem1.clone();
 
+        // Pack 1
+        const arrestoMomentum1 = new Card("Arresto Momentum", "Pack 1", "spell", 4, () => {
+            activeLocation.removeFromLocation();
+            if (activePlayer.discard.length) {
+                addPlayerChoice("Banish:", () => {return activePlayer.discard.length + 1;}, 1, () => {
+                    for (let i = 0; i < activePlayer.discard.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.discard[i].img.src}">`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            activePlayer.hand.unshift(activePlayer.discard.splice(i, 1)[0]);
+                            activePlayer.banishAt(0);
+                        };
+                    }
+                    document.getElementsByClassName("choice")[activePlayer.discard.length].innerHTML = "<p>Nothing</p>";
+                });
+            }
+        }, false, false);
+        const arrestoMomentum2 = arrestoMomentum1.clone();
+        const ascendio1 = new Card("Ascendio", "Pack 1", "spell", 5, () => {
+            activePlayer.influence += 2;
+            activePlayer.drawCards(1);
+            getNeighbors().forEach(neighbor => {neighbor.drawCards(1);});
+        }, false, false);
+        const ascendio2 = ascendio1.clone();
+        const autoAnswerQuill = new Card("Auto Answer Quill", "Pack 1", "item", 6, () => {activePlayer.attack += 2;}, true, false);
+        const barnOwl1 = new Card("Barn Owl", "Pack 1", "ally", 4, () => {activePlayer.health += 2;}, false, false);
+        const barnOwl2 = barnOwl1.clone();
+        const barnOwl3 = barnOwl1.clone();
+        const deanThomas = new Card("Dean Thomas", "Pack 1", "ally", 3, () => {
+            const deanInfluence = () => {
+                activePlayer.influence++;
+                getNeighbors().forEach(neighbor => {neighbor.influence++;});
+            };
+            const deanHealth = () => {
+                let healable = players.filter(player => {return canHeal(player);});
+                if (healable.length > 2) {
+                    addPlayerChoice("Heal for 2:", () => {return healable.length;}, 2, () => {
+                        for (let i = 0; i < healable.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(healable.heroImage.cloneNode());
+                            document.getElementsByClassName("choice")[i].innerHTML += `Health: ${healable[i].health}`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {
+                                healable[i].health += 2;
+                                healable.splice(i, 1);
+                            };
+                        }
+                    });
+                }
+                else healable.forEach(player => {player.health += 2;});
+            };
+            if (!activeMermaid() && players.filter(player => {return canHeal(player);}).length) {
+                addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                    document.getElementsByClassName("choice")[0].innerHTML = `<p>You${getNeighbors().length > 1 ? "," : " and"} ${getNeighbors()[0]}${getNeighbors().length > 1 ? `, and ${getNeighbors()[1]}` : ""} gain</p>${influenceToken}`;
+                    document.getElementsByClassName("choice")[0].onclick = deanInfluence;
+                    document.getElementsByClassName("choice")[1].innerHTML = `<p>Any two Heroes gain</p><div class="choiceContainer">${healthToken + healthToken}</div>`;
+                    document.getElementsByClassName("choic")[1].onclick = deanHealth;
+                });
+            }
+            else if (!activeMermaid()) deanHealth();
+            else if (players.filter(player => {return canHeal(player);}).length) deanInfluence();
+        }, false, false);
+        const errol = new Card("Errol", "Pack 1", "ally", 3, () => {activePlayer.drawCards(1);}, false, false);
+        const harryPotter = new Card("Harry Potter", "Pack 1", "ally", 6, () => {
+            if (!activeMermaid()) {
+                if (players.length > 2) {
+                    let remainingPlayers = players.filter(player => {return !player.stunned;});
+                    addPlayerChoice("Give 1 attack to:", () => {return remainingPlayers.length;}, 2, () => {
+                        for (let i = 0; i < remainingPlayers.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                            document.getElementsByClassName("choice")[i].innerHTML += `Attack: ${remainingPlayers[i].attack}`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {remainingPlayers.attack++;};
+                        }
+                    });
+                }
+                else players.forEach(player => {player.attack++;});
+            }
+            activeLocation.removeFromLocation();
+        }, false, false);
+        const hermioneGranger = new Card("Hermione Granger", "Pack 1", "ally", 5, () => {
+            if (!activeMermaid()) players.forEach(player => {player.influence++;});
+            rollHouseDie("red", false, false, false);
+        }, false, true);
+        const lavenderBrown = new Card("Lavender Brown", "Pack 1", "ally", 5, () => {
+            if (!activeMermaid()) activePlayer.influence++;
+            activePlayer.drawCards(1);
+            players.forEach(player => {player.health += 2;});
+        }, false, false);
+        const locomotor1 = new Card("Locomotor", "Pack 1", "spell", 3, () => {
+            activePlayer.influence++;
+            getNeighbors().forEach(neighbor => {neighbor.influence++;});
+            if (activePlayer.discard.length) {
+                addPlayerChoice("Give to another Hero:", () => {return activePlayer.discard.length + 1;}, 1, () => {
+                    for (let i = 0; i < activePlayer.discard.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.discard[i].img.src}">`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            const transfer = (index, player) => {player.addToHand(activePlayer.discard.splice(index, 1)[0]);};
+                            const otherPlayers = players.filter(player => {return player !== activePlayer;});
+                            if (otherPlayers.length > 1) {
+                                playerChoices.push(new PlayerChoice(`Give ${activePlayer.discard[i].name} to:`, () => {return otherPlayers.length;}, 1, () => {
+                                    for (let j = 0; j < otherPlayers.length; j++) {
+                                        document.getElementsByClassName("choice")[j].appendChild(otherPlayers[j].heroImage.cloneNode());
+                                        document.getElementsByClassName("choice")[j].onclick = () => {transfer(i, otherPlayers[j]);};
+                                    }
+                                }));
+                            }
+                            else transfer(i, otherPlayers[0]);
+                        };
+                    }
+                    document.getElementsByClassName("choice")[activePlayer.discard.length].innerHTML = "<p>Nothing</p>";
+                });
+            }
+        }, false, false);
+        const locomotor2 = locomotor1.clone();
+        const nevilleLongbottom = new Card("Neville Longbottom", "Pack 1", "ally", 5, () => {
+            activePlayer.health += 2;
+            let healable = players.filter(player => {return canHeal(player);});
+            if (healable.length > 2) {
+                addPlayerChoice("Heal for 3:", () => {return healable.length;}, 2, () => {
+                    for (let i = 0; i < healable.length; i++) {
+                        document.getElementsByClassName("choice")[i].appendChild(healable[i].heroImage.cloneNode());
+                        document.getElementsByClassName("choice")[i].innerHTML += `Health: ${healable[i].health}`;
+                        document.getElementsByClassName("choice").onclick = () => {
+                            healable.health += 3;
+                            healable.splice(i, 1);
+                        };
+                    }
+                });
+            }
+            else healable.forEach(player => {player.health += 3;});
+        }, false, false);
+        const padmaAndParvatiPatil = new Card("Padma And Parvati Patil", "Pack 1", "ally", 6, () => {
+            if (!activeMermaid()) {
+                let remainingPlayers = players.filter(player => {return !player.stunned;});
+                if (remainingPlayers.length > 2) {
+                    addPlayerChoice("Give two attack to:", () => {return remainingPlayers.length;}, 2, () => {
+                        for (let i = 0; i < remainingPlayers.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                            document.getElementsByClassName("choice")[i].innerHTML += `Attack: ${remainingPlayers[i].attack}`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {
+                                remainingPlayers[i].attack += 2;
+                                remainingPlayers.splice(i, 1);
+                            };
+                        }
+                    });
+                }
+                else remainingPlayers.forEach(player => {player.attack += 2;});
+            }
+        }, false, false);
+        const ronWeasley = new Card("Ron Weasley", "Pack 1", "ally", 5, () => {activePlayer.attack += 2;}, true, false);
+        const scourgify1 = new Card("Scourgify", "Pack 1", "spell", 2, () => {
+            activePlayer.health++;
+            const handItems = activePlayer.hand.filter(card => {return card.type === "item"});
+            const discardItems = activePlayer.discard.filter(card => {return card.type === "item"});
+            if (handItems.length + discardItems.length > 1) {
+                addPlayerChoice("Banish:", () => {return handItems.length + discardItems.length + 1;}, 1, () => {
+                    for (let i = 0; i < handItems.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[activePlayer.hand.indexOf(handItems[i])].img.src}">`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            activePlayer.banishAt(activePlayer.hand.indexOf(handItems[i]));
+                        };
+                    }
+                    for (let i = 0; i < discardItems.length; i++) {
+                        document.getElementsByClassName("choice")[handItems.length + i].innerHTML = `<img src="${activePlayer.discard[activePlayer.discard.indexOf(discardItems[i])].img.src}">`;
+                        document.getElementsByClassName("choice")[handItems.length + i].onclick = () => {
+                            activePlayer.hand.unshift(activePlayer.discard.splice(activePlayer.discard.indexOf(discardItems[i]), 1)[0]);
+                            activePlayer.banishAt(0);
+                        };
+                    }
+                    document.getElementsByClassName("choice")[handItems.length + discardItems.length].innerHTML = "<p>Nothing</p>";
+                });
+            }
+        }, false, false);
+        const scourgify2 = scourgify1.clone();
+        const scourgify3 = scourgify1.clone();
+        const scourgify4 = scourgify1.clone();
+        const scourgify5 = scourgify1.clone();
+        const scourgify6 = scourgify1.clone();
+        const screechOwl1 = new Card("Screech Owl", "Pack 1", "ally", 4, () => {
+            let remainingPlayers = players.filter(player => {return !activeMermaid() || canHeal(player);});
+            if (remainingPlayers.length) {
+                if (remainingPlayers.length > 2) {
+                    addPlayerChoice(`Give ${activeMermaid() ? "" : "1 influence and "}1 health to:`, () => {return remainingPlayers.length;}, 2, () => {
+                        for (let i = 0; i < remainingPlayers.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                            document.getElementsByClassName("choice")[i].innerHTML += `${activeMermaid() ? "" : `<p>Influence: ${remainingPlayers[i].influence}</p>`}<p>Health: ${remainingPlayers[i].health}</p>`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {
+                                if (!activeMermaid()) remainingPlayers[i].influence++;
+                                remainingPlayers[i].health++;
+                                remainingPlayers.splice(i, 1);
+                            };
+                        }
+                    });
+                }
+                else {
+                    remainingPlayers.forEach(player => {
+                        if (!activeMermaid()) player.influence++;
+                        player.health++;
+                    });
+                }
+            }
+        }, false, false);
+        const screechOwl2 = screechOwl1.clone();
+        const selfCorrectingInk1 = new Card("Self Correcting Ink", "Pack 1", "item", 5, () => {rollAnyHouseDie(true);}, false, true);
+        const selfCorrectingInk2 = selfCorrectingInk1.clone();
+        const selfCorrectingInk3 = selfCorrectingInk1.clone();
+
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         if (activeGame !== "Game 1") {
@@ -1138,9 +1359,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     hogwartsCards.push(accio1, accio2, alastorMadEyeMoody, cedricDiggory, filiusFlitwick, fleurDelacour, hogwartsAHistory1, hogwartsAHistory2, hogwartsAHistory3, hogwartsAHistory4, hogwartsAHistory5, hogwartsAHistory6, minervaMcgonagall, pensieve, pomonaSprout, protego1, protego2, protego3, severusSnape, triwizardCup, viktorKrum);
                     if (activeGame !== "Game 4") {
                         hogwartsCards.push(choChang, fredWeasley, georgeWeasley, kingsleyShacklebolt, lunaLovegood, nymphadoraTonks, owls1, owls2, stupefy1, stupefy2);
-                        if (activeGame !== "Game 5" && activeGame !== "Box 1") {
+                        if (activeGame !== "Game 5") {
                             hogwartsCards.push(advancedPotionMaking, bezoar1, bezoar2, confundus1, confundus2, deluminator, elderWand, felixFelicis, horaceSlughorn);
-                            if (activeGame !== "Game 6" && activeGame !== "Box 2") {
+                            if (activeGame !== "Game 6") {
                                 hogwartsCards.push(swordOfGryffindor);
                             }
                         }
@@ -1149,7 +1370,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         // adds Box expansion Hogwarts Cards
-        if (activeGame.includes("Box")) {
+        if (activeGame.includes("Box") || activeGame.includes("Pack")) {
             hogwartsCards.push(argusFilchAndMrsNorris, fang, finiteIncantatem1, finiteIncantatem2, harp, oldSock1, oldSock2, tergeo1, tergeo2, tergeo3, tergeo4, tergeo5, tergeo6);
             if (activeGame !== "Box 1") {
                 hogwartsCards.push(buckbeak, depulso1, depulso2, immobulus1, immobulus2, immobulus3, monsterBookOfMonsters1, monsterBookOfMonsters2, monsterBookOfMonsters3);
@@ -1159,6 +1380,11 @@ document.getElementById("submitPlayers").onclick = () => {
                         hogwartsCards.push(dragonsBlood, gillyweed1, gillyweed2, goldenEgg, igorKarkaroff, madameMaxime, prioriIncantatem1, prioriIncantatem2);
                     }
                 }
+            }
+
+            // add Pack expansion Hogwarts Cards
+            if (activeGame.includes("Pack")) {
+                hogwartsCards.push(arrestoMomentum1, arrestoMomentum2, ascendio1, ascendio2, autoAnswerQuill, barnOwl1, barnOwl2, barnOwl3, deanThomas, errol, harryPotter, hermioneGranger, lavenderBrown, locomotor1, locomotor2, nevilleLongbottom, padmaAndParvatiPatil, ronWeasley, scourgify1, scourgify2, scourgify3, scourgify4, scourgify5, scourgify6, screechOwl1, screechOwl2, selfCorrectingInk1, selfCorrectingInk2, selfCorrectingInk3);
             }
         }
 
@@ -1718,6 +1944,20 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (this.hand[index] === lacewingFlies1 || this.hand[index] === lacewingFlies2) {
                     this.attack++;
                 }
+                // Arresto Momentum effect
+                else if ((this.hand[index] === arrestoMomentum1 || this.hand[index] === arrestoMomentum2) && activeDarkArtsEvents.length) {
+                    activeDarkArtsEvents[activeDarkArtsEvents.length - 1].img.remove();
+                    activeDarkArtsEvents.splice(activeDarkArtsEvents.length - 1);
+                    // TO-DO: undo passive effects of top DAE like Petrified?
+                }
+                // Barn Owl effect
+                else if (this.hand[index] === barnOwl1 || this.hand[index] === barnOwl2 || this.hand[index] === barnOwl3) {
+                    players.forEach(player => {player.health += 2;});
+                }
+                // Errol effect
+                else if (this.hand[index] === errol) {
+                    players.forEach(player => {player.drawCards(1);});
+                }
 
                 if (villainOrDAE) {
                     // Crabbe and Goyle effect
@@ -1911,6 +2151,10 @@ document.getElementById("submitPlayers").onclick = () => {
         // remove Hogwarts cards for current players
         if (players.map(player => {return player.hero;}).includes("Luna Lovegood") && hogwartsCards.includes(lunaLovegood)) hogwartsCards.splice(hogwartsCards.indexOf(lunaLovegood), 1);
         if (players.map(player => {return player.hero;}).includes("Ginny Weasley") && hogwartsCards.includes(ginnyWeasley)) hogwartsCards.splice(hogwartsCards.indexOf(ginnyWeasley), 1);
+        if (players.map(player => {return player.hero;}).includes("Harry Potter") && hogwartsCards.includes(harryPotter)) hogwartsCards.splice(hogwartsCards.indexOf(harryPotter), 1);
+        if (players.map(player => {return player.hero;}).includes("Hermione Granger") && hogwartsCards.includes(hermioneGranger)) hogwartsCards.splice(hogwartsCards.indexOf(hermioneGranger), 1);
+        if (players.map(player => {return player.hero;}).includes("Neville Longbottom") && hogwartsCards.includes(nevilleLongbottom)) hogwartsCards.splice(hogwartsCards.indexOf(nevilleLongbottom), 1);
+        if (players.map(player => {return player.hero;}).includes("Ron Weasley") && hogwartsCards.includes(ronWeasley)) hogwartsCards.splice(hogwartsCards.indexOf(ronWeasley), 1);
 
         // locations
         class Location {
@@ -2464,6 +2708,13 @@ document.getElementById("submitPlayers").onclick = () => {
                                 if (activePlayer.passives.includes(igorKarkaroff) && !activeMermaid()) {
                                     activePlayer.attack++;
                                     activePlayer.influence++;
+                                }
+                                // Auto Answer Quill effect
+                                if (activePlayer.passives.includes(autoAnswerQuill)) {
+                                    activeLocation.removeFromLocation();
+                                }
+                                if (activePlayer.passives.includes(ronWeasley)) {
+                                    players.forEach(player => {player.health++;});
                                 }
                             }
                             if (this.type.includes("creature")) { // some rewards are specific to creatures
