@@ -239,6 +239,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 // And swap it with the current element.
                 [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
             }
+            return array;
         };
 
         // replace encounter with next
@@ -2858,21 +2859,27 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             }
         }, () => {rollHouseDie("yellow", false, false, false); rollHouseDie("phoenix", false, true, false);}, false);
+        const box1Villains = [basilisk, cornishPixies, dementor, fluffy, norbert, troll];
+        const box2Villains = [boggart, scabbers, werewolf];
+        const box3Villains = [aragog, centaur, grawp, ukrainianIronbelly];
+        const box4Villains = [chineseFireball, commonWelshGreen, grindylow, hungarianHorntail, mermaid, swedishShortSnout];
 
         // add villains to game
-        if (activeGame.includes("Box")) {
-            inactiveVillains.splice(inactiveVillains.indexOf(basilisk));
-            inactiveVillains.splice(inactiveVillains.indexOf(dementor));
-            inactiveVillains = inactiveVillains.splice(0, 5);
-            inactiveVillains.push(basilisk, cornishPixies, dementor, fluffy, norbert, troll);
-            if (activeGame !== "Box 1") {
-                inactiveVillains.push(boggart, scabbers, werewolf);
-                if (activeGame !== "Box 2") {
-                    inactiveVillains.push(aragog, centaur, grawp, ukrainianIronbelly);
-                    if (activeGame !== "Box 3") {
-                        inactiveVillains.push(chineseFireball, commonWelshGreen, grindylow, hungarianHorntail, mermaid, swedishShortSnout);
-                    }
-                }
+        if (activeGame.includes("Box")) {          
+            switch (activeGame) {
+                case "Box 1":
+                    inactiveVillains.splice(inactiveVillains.indexOf(basilisk), 1);
+                    inactiveVillains.splice(inactiveVillains.indexOf(dementor), 1);
+                    inactiveVillains = inactiveVillains.slice(0, 5).concat(box1Villains);
+                case "Box 2":
+                    inactiveVillains.splice(inactiveVillains.indexOf(peterPettigrew), 1);
+                    inactiveVillains.splice(inactiveVillains.indexOf(fenrirGreyback), 1);
+                    inactiveVillains = shuffle(inactiveVillains.concat(box1Villains)).slice(0, 6).concat(box2Villains, [peterPettigrew, fenrirGreyback]);
+                case "Box 3":
+                    inactiveVillains.splice(inactiveVillains.indexOf(doloresUmbridge), 1);
+                    inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains)).slice(0, 7).concat(box3Villains, [doloresUmbridge]);
+                case "Box 4":
+                    inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains)).slice(0, 8).concat(box4Villains);
             }
             shuffle(inactiveVillains);
         }
