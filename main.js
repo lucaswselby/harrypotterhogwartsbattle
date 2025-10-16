@@ -1563,6 +1563,18 @@ document.getElementById("submitPlayers").onclick = () => {
                             activeLocation.addToLocation();
                             werewolf.activated = true;
                         }
+                        // Pansy Parkinson effect
+                        if (activeVillains.includes(pansyParkinson) && !pansyParkinson.activated && this.healthLost >= 3) {
+                            if (activePlayer.hand.length) {
+                                addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
+                                    for (let i = 0; i < activePlayer.hand.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true)};
+                                    }
+                                });
+                            }
+                            pansyParkinson.activated = true;
+                        }
                     }
                     // healing
                     else if (this.health < health) {
@@ -3172,25 +3184,70 @@ document.getElementById("submitPlayers").onclick = () => {
         const box3Villains = [aragog, centaur, grawp, ukrainianIronbelly];
         const box4Villains = [chineseFireball, commonWelshGreen, grindylow, hungarianHorntail, mermaid, swedishShortSnout];
 
-        // add villains to game
-        if (activeGame.includes("Box")) {          
-            switch (activeGame) {
-                case "Box 1":
-                    inactiveVillains.splice(inactiveVillains.indexOf(basilisk), 1);
-                    inactiveVillains.splice(inactiveVillains.indexOf(dementor), 1);
-                    inactiveVillains = inactiveVillains.slice(0, 5).concat(box1Villains);
-                case "Box 2":
-                    inactiveVillains.splice(inactiveVillains.indexOf(peterPettigrew), 1);
-                    inactiveVillains.splice(inactiveVillains.indexOf(fenrirGreyback), 1);
-                    inactiveVillains = shuffle(inactiveVillains.concat(box1Villains)).slice(0, 6).concat(box2Villains, [peterPettigrew, fenrirGreyback]);
-                case "Box 3":
-                    inactiveVillains.splice(inactiveVillains.indexOf(doloresUmbridge), 1);
-                    inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains)).slice(0, 7).concat(box3Villains, [doloresUmbridge]);
-                case "Box 4":
-                    inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains)).slice(0, 8).concat(box4Villains);
+        // Pack expansion villains
+        const marcusFlint = new Villain("Marcus Flint", "Pack 1", "villain", 6, 0, () => {
+            const items = activePlayer.hand.filter(card => {return card.type === "item";});
+            if (items.length) {
+                if (items.length > 1) {
+                    addPlayerChoice("Discard:", () => {return items.length;}, 1, () => {
+                        for (let i = 0; i < items.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {activePlayer.forcedDiscardAt(i, true)};
+                        }
+                    });
+                }
+                else activePlayer.forcedDiscardAt(0, true);
             }
-            shuffle(inactiveVillains);
+            else activePlayer.health -= 2;
+        }, () => {
+            players.forEach(player => {const items = player.discard.filter(card => {return card.type === "item"}); if (items.length) {const discardToHand = index => {player.addToHand(items[index]); player.discard.splice(player.discard.indexOf(items[index]), 1);}; if (items.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}});
+        }, false);
+        const pansyParkinson = new Villain("Pansy Parkinson", "Pack 1", "villain", 0, 5, () => {}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();}, true);
+        const pack1Villains = [marcusFlint, pansyParkinson];
+        const pack2Villains = [];
+        const pack3Villains = [];
+        const pack4Villains = [];
+
+        // add Box or Pack villains to inactiveVilains
+        switch (activeGame) {
+            case "Box 1":
+                inactiveVillains.splice(inactiveVillains.indexOf(basilisk), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(dementor), 1);
+                inactiveVillains = inactiveVillains.slice(0, 5).concat(box1Villains);
+            case "Box 2":
+                inactiveVillains.splice(inactiveVillains.indexOf(peterPettigrew), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(fenrirGreyback), 1);
+                inactiveVillains = shuffle(inactiveVillains.concat(box1Villains)).slice(0, 6).concat(box2Villains, [peterPettigrew, fenrirGreyback]);
+            case "Box 3":
+                inactiveVillains.splice(inactiveVillains.indexOf(doloresUmbridge), 1);
+                inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains)).slice(0, 7).concat(box3Villains, [doloresUmbridge]);
+            case "Box 4":
+                inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains)).slice(0, 8).concat(box4Villains);
+            case "Pack 1":
+                inactiveVillains.splice(inactiveVillains.indexOf(dracoMalfoy), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(crabbeAndGoyle), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(luciusMalfoy), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(doloresUmbridge), 1);
+                inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains, box4Villains)).slice(0, 4).concat(pack1Villains, [dracoMalfoy, crabbeAndGoyle, luciusMalfoy, doloresUmbridge]);
+            case "Pack 2":
+                inactiveVillains.splice(inactiveVillains.indexOf(doloresUmbridge), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(deathEater1), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(deathEater2), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(luciusMalfoy), 1);
+                inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains, box4Villains, pack1Villains)).slice(0, 3).concat(pack2Villains, [doloresUmbridge, deathEater1, deathEater2, luciusMalfoy]);
+            case "Pack 3":
+                inactiveVillains.splice(inactiveVillains.indexOf(dracoMalfoy), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(luciusMalfoy), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(tomRiddle), 1);
+                inactiveVillains.splice(inactiveVillains.indexOf(bellatrixLestrange), 1);
+                inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains, box4Villains, pack1Villains, pack2Villains)).slice(0, 5).concat(pack3Villains, [dracoMalfoy, luciusMalfoy, tomRiddle, bellatrixLestrange]);
+            case "Pack 4":
+                inactiveVillains.splice(inactiveVillains.indexOf(bellatrixLestrange), 1);
+                inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains, box4Villains, pack1Villains, pack2Villains, pack3Villains)).slice(0, 8).concat(pack4Villains, [bellatrixLestrange]);
         }
+        shuffle(inactiveVillains);
+
+        // add villains to game
         let activeVillains = [inactiveVillains.shift()];
         if (activeGame !== "Game 1" && activeGame !== "Game 2") {
             activeVillains.push(inactiveVillains.shift());
