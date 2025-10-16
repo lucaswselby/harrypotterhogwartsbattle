@@ -1559,9 +1559,9 @@ document.getElementById("submitPlayers").onclick = () => {
                         this._healthLost += this.health - health;
                         
                         // Werewolf effect
-                        if (activeVillains.includes(werewolf) && this.healthLost >= 4) {
+                        if (activeVillains.includes(werewolf) && !werewolf.activated && this.healthLost >= 4) {
                             activeLocation.addToLocation();
-                            this._healthLost = -99;
+                            werewolf.activated = true;
                         }
                     }
                     // healing
@@ -2615,6 +2615,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._reward = reward;
                 this._passive = passive;
                 this._petrifiedBy = null;
+                this._activated = false;
                 this._ginnyUsed = false;
             }
             get name() {
@@ -2880,6 +2881,12 @@ document.getElementById("submitPlayers").onclick = () => {
                     setTimeout(() => {populateVillains();}, 1000); // fixes bug where darken doesn't work after petrification
                 }
             }
+            get activated() {
+                return this._activated;
+            }
+            set activated(activated) {
+                this._activated = activated;
+            }
             get ginnyUsed() {
                 return this._ginnyUsed;
             }
@@ -2972,6 +2979,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         shuffle(inactiveVillains);
+
         // Box expansion villains
         const cornishPixies = new Villain("Cornish Pixies", "Box 1", "creature", 6, 0, () => {activePlayer.health -= activePlayer.hand.filter(card => {return card.cost && card.cost % 2 === 0;}).length * 2}, () => {players.forEach(player => {player.health += 2; player.influence++;});}, false);
         const fluffy = new Villain("Fluffy", "Box 1", "creature", 8, 0, () => {
@@ -3834,6 +3842,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
             // replace with new villain
             for (let i = 0; i < activeVillains.length; i++) {
+                activeVillains[i].activated = false;
                 if (activeVillains[i].health <= 0 && activeVillains[i].influence <= 0) {
                     // add new villain
                     if (inactiveVillains.length) {
