@@ -1662,6 +1662,12 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (this.influence < 0) {
                         this._influence = 0;
                     }
+
+                    // The Ministry is Meddling completion
+                    if (encounters.length && encounters[0] === theMinistryIsMeddling && this.influence >= 8) {
+                        this.addDestroyedHorcrux(encounters.shift());
+                        displayNextEncounter();
+                    }
                     
                     // display influence icons
                     if (activePlayer === this) {
@@ -1753,8 +1759,6 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
                 }
-                // Escape completion
-                if (encounters.length && encounters[0] === escape && spellsCast >= 6) this.addDestroyedHorcrux(encounters.shift());
 
                 // check for items cast
                 let itemsCast = this.played.filter(card => {return card.type === "item";}).length;
@@ -1797,6 +1801,15 @@ document.getElementById("submitPlayers").onclick = () => {
                     this.addDestroyedHorcrux(encounters.shift());
                     displayNextEncounter();
                 }
+                // Escape completion
+                else if (encounters.length && encounters[0] === escape && spellsCast >= 6) this.addDestroyedHorcrux(encounters.shift());
+                // Sneaking in the Halls completion
+                else if (encounters.length && encounters[0] === sneakingInTheHalls && itemsCast >= 4) {
+                    this.addDestroyedHorcrux(encounters.shift());
+                    displayNextEncounter();
+                }
+                // Detention with Dolores completion
+                else if (encounters.length && encounters[0] === detentionWithDolores && this.played.map(card => {return card.cost;}).filter(cost => {cost >= 4;}).length >= 3) this.addDestroyedHorcrux(encounters.shift());
 
                 // Potions Proficiency effect
                 if (this.proficiency === "Potions" && spellsCast > 0 && itemsCast > 0 && alliesCast > 0 && !this._potionsProficiencyUsed) {
@@ -3438,12 +3451,64 @@ document.getElementById("submitPlayers").onclick = () => {
         });
         const theSecondTask = new Encounter("The Second Task", "Box 4", [], () => {if (activePlayer.hand.filter(card => {return card.type === "ally"}).length) activeLocation.addToLocation();}, () => {activeLocation.removeFromLocation(); players.forEach(player => {player.drawCards(1);}); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theSecondTask), 1); theSecondTask.img.remove();});
         const theThirdTask = new Encounter("The Third Task", "Box 4", ["health", "health", "health"], () => {activePlayer.health -= 2;}, () => {if (canHeal(activePlayer)) {players.forEach(player => {player.health = 10;}); activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theThirdTask), 1); theThirdTask.img.remove();}});
+        const sneakingInTheHalls = new Encounter("Sneaking In The Halls", "Pack 1", [], () => {if (activePlayer.hand.filter(card => {return card.type === "item";}).length >= 3) activeLocation.addToLocation();}, () => {
+            players.forEach(player => {
+                const banishable = player.hand.concat(player.discard);
+                if (banishable.length) {
+                    addPlayerChoice(`Choose 1 for ${player.hero}:`, () => {return 2;}, 1, () => {
+                        document.getElementsByClassName("choice")[0].innerHTML = `<p>Banish:</p>${choiceScroll(banishable)}`;
+                        document.getElementsByClassName("choice")[0].onclick = () => {
+                            playerChoices.unshift(new PlayerChoice(`Banish for ${player.hero}:`, () => {return banishable.length;}, 1, () => {
+                                for (let i = 0; i < player.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                        player.banishAt(i);
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(sneakingInTheHalls), 1);
+                                        sneakingInTheHalls.img.remove();
+                                    };
+                                }
+                                for (let i = 0; i < player.discard.length; i++) {
+                                    document.getElementsByClassName("choice")[player.hand.length + i].innerHTML = `<img src="${player.discard[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
+                                        player.hand.unshift(player.discard.splice(i, 1)[0]);
+                                        player.banishAt(0);
+                                        activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(sneakingInTheHalls), 1);
+                                        sneakingInTheHalls.img.remove();
+                                    };
+                                }
+                            }));
+                        };
+                        document.getElementsByClassName("choice")[1].innerHTML = "<p>Nothing</p>";
+                    });
+                }
+            });
+        });
+        const theMinistryIsMeddling = new Encounter("The Ministry Is Meddling", "Pack 1", [], () => {
+            if (activePlayer.attack || activePlayer.influence) {
+                activePlayer.attack = 0;
+                activePlayer.influence = 0;
+                activePlayer.health -= 2;
+            }
+        }, () => {
+            players.forEach(player => {player.influence++;});
+            activeLocation.removeFromLocation();
+            activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(theMinistryIsMeddling), 1);
+            theMinistryIsMeddling.img.remove();
+        });
+        const detentionWithDolores = new Encounter("Detention With Dolores", "Pack 1", [], () => {if (activePlayer.hand.map(card => {return card.cost;}).filter(cost => {return cost >= 4;})) activeLocation.addToLocation();}, () => {
+            players.forEach(player => {player.influence += 2;});
+            activePlayer.horcruxesDestroyed.splice(activePlayer.horcruxesDestroyed.indexOf(detentionWithDolores), 1);
+            detentionWithDolores.img.remove();
+        });
         let encounters = [];
-        if (activeGame === "Game 7") encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
-        else if (activeGame === "Box 1") encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
-        else if (activeGame === "Box 2") encounters = [unregisteredAnimagus, fullMoonRises, defensiveTraining];
-        else if (activeGame === "Box 3") encounters = [forbiddenForestEncounter, filthyHalfBreed, escape];
-        else if (activeGame === "Box 4") encounters = [theFirstTask, theSecondTask, theThirdTask];
+        switch (activeGame) {
+            case "Game 7": encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
+            case "Box 1": encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
+            case "Box 2": encounters = [unregisteredAnimagus, fullMoonRises, defensiveTraining];
+            case "Box 3": encounters = [forbiddenForestEncounter, filthyHalfBreed, escape];
+            case "Box 4": encounters = [theFirstTask, theSecondTask, theThirdTask];
+            case "Pack 1": encounters = [sneakingInTheHalls, theMinistryIsMeddling, detentionWithDolores];
+        }
 
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
