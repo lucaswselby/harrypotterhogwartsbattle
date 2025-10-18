@@ -21,7 +21,7 @@ main {
 h1 {
     text-align: center;
 }
-#gameChoice, .playerChoice, .proficiencyChoice {
+#gameChoice, .playerChoice, .proficiencyChoice, .charmChoice {
     display: flex;
     flex-flow: row nowrap;
     max-width: 100%;
@@ -29,7 +29,7 @@ h1 {
     scrollbar-width: none;
     height: calc(50vh + 3em);
 }
-.proficiencyChoice {
+.proficiencyChoice, .charmChoice {
     display: none;
 }
 input[type="radio"] {
@@ -58,7 +58,7 @@ input[type="submit"] {
     font-size: 10vh;
 }
 
-.playerProficiency, .boxOnly {
+.playerProficiency, .boxOnly, .playerCharm {
     display: none;
 }
 
@@ -356,6 +356,9 @@ input[type="submit"] {
 }
 #playerHero, #playerProficiency {
     width: 50%;
+}
+#playerCharm {
+    width: 100%;
 }
 
 #horcruxesDestroyed {

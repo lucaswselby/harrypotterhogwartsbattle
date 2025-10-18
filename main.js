@@ -3,8 +3,9 @@ const displayGameChoices = playerNumber => {
     const game = document.querySelector("input[name=\"game\"]:checked").value;
     const player = document.querySelector(`input[name="player${playerNumber}"]:checked`).value;
     const proficiecyElem = document.getElementById(`player${playerNumber}Proficiency`);
+    const charmElem = document.getElementById(`player${playerNumber}Charm`);
 
-    if (game === "Game 7" || game.includes("Box")) {
+    if (game === "Game 7" || game.includes("Box") || game.includes("Pack")) {
         // change player images based on game
         document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/harryPotter.png";
         document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/ronWeasley.png";
@@ -16,7 +17,7 @@ const displayGameChoices = playerNumber => {
 
         // Patronus options
         let patronusDisplay = "none";
-        if (game === "Box 3" || game === "Box 4") patronusDisplay = "inline";
+        if (game === "Box 3" || game === "Box 4" || game.includes("Pack")) patronusDisplay = "inline";
         else patronusDisplay = "none";
         for (let i = 0; i < document.getElementsByClassName("patronus").length; i++) {
             document.getElementsByClassName("patronus")[i].style.display = patronusDisplay;
@@ -42,11 +43,14 @@ const displayGameChoices = playerNumber => {
     }
 
     // display proficiency choice
-    if (player && (game === "Game 6" || game === "Game 7" || game.includes("Box"))) {
+    if (player && (game === "Game 6" || game === "Game 7" || game.includes("Box") || game.includes("Pack"))) {
         proficiecyElem.style.display = "flex";
+        if (game.includes("Pack")) charmElem.style.display = "flex";
+        else charmElem.style.display = "none";
     }
     else {
         proficiecyElem.style.display = "none";
+        charmElem.style.display = "none";
     }
 }
 /*document.getElementById("player3Hero").onchange = () => {
@@ -54,6 +58,9 @@ const displayGameChoices = playerNumber => {
 }
 document.getElementById("player4Hero").onchange = () => {
     displayGameChoices(4);
+}
+document.getElementById("player5Hero").onchange = () => {
+    displayGameChoices(5);
 }*/
 const gameElems = document.getElementsByName("game");
 for (let i = 0; i < gameElems.length; i++) {
@@ -106,6 +113,15 @@ document.getElementById("submitPlayers").onclick = () => {
         if (document.getElementsByClassName("proficiencyChoice")[i].style.display === "flex" && document.querySelector(`input[name="player${i + 1}Proficiency"]:checked`).value !== "Patronus") {
             for (let j = i + 1; j < document.getElementsByClassName("proficiencyChoice").length; j++) {
                 if (document.getElementsByClassName("proficiencyChoice")[j].style.display === "flex" && document.querySelector(`input[name="player${i + 1}Proficiency"]:checked`).value === document.querySelector(`input[name="player${j + 1}Proficiency"]:checked`).value && document.querySelector(`input[name="player${j + 1}Proficiency"]:checked`).value !== "Patronus") {
+                    continueGame = false;
+                }
+            }
+        }
+    }
+    for (let i = 0; i < document.getElementsByClassName("charmChoice").length - 1; i++) {
+        if (document.getElementsByClassName("charmChoice")[i].style.display === "flex") {
+            for (let j = i + 1; j < document.getElementsByClassName("charmChoice").length; j++) {
+                if (document.getElementsByClassName("charmChoice")[j].style.display === "flex" && document.querySelector(`input[name="player${i + 1}Charm"]:checked`).value === document.querySelector(`input[name="player${j + 1}Charm"]:checked`).value) {
                     continueGame = false;
                 }
             }
@@ -1453,20 +1469,23 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // players
         class Player {
-            constructor(hero, proficiency) {
+            constructor(hero, proficiency, charm) {
+                charm += " Charm";
                 this._hero = hero;
                 this._heroImage = document.createElement("img");
                 this._heroImage.id = "playerHero";
                 this._heroImage.src = "./images/";
                 if (hero.includes("Box")) this._heroImage.src += "Box 1";
-                else if (activeGame.includes("Box") || activeGame === "Game 7") this._heroImage.src += "Game 7";
+                else if (activeGame.includes("Box") || activeGame.includes("Pack") || activeGame === "Game 7") this._heroImage.src += "Game 7";
                 else this._heroImage.src += parseInt(activeGame[activeGame.length - 1]) < 3 ? "Game 1" : "Game 3";
                 this._heroImage.src += `/${src(hero.includes("Box") ? hero.substring(0, hero.indexOf(" Box")) : hero)}`;
                 this._heroImage.alt = hero;
                 this._proficiency = "";
                 this._proficiencyImage = document.createElement("div");
                 let proficiencyGame = "Game 6";
-                if (activeGame === "Game 6" || activeGame === "Game 7" || activeGame.includes("Box")) {
+                this._charm = "";
+                this._charmImage = document.createElement("div");
+                if (activeGame === "Game 6" || activeGame === "Game 7" || activeGame.includes("Box") || activeGame.includes("Pack")) {
                     if (proficiency === "Patronus") {
                         proficiencyGame = "Box 3";
                         if (hero.includes("Harry Potter")) proficiency = "Stag Patronus";
@@ -1481,10 +1500,20 @@ document.getElementById("submitPlayers").onclick = () => {
                         else alert(`${hero} is not a valid Hero.`);
                     }
                     this._proficiency = proficiency;
+                    this._proficiencyImage.remove();
                     this._proficiencyImage = document.createElement("img");
                     this._proficiencyImage.id = "playerProficiency";
                     this._proficiencyImage.src = `./images/${proficiencyGame}/${src(proficiency)}`;
                     this._proficiencyImage.alt = proficiency;
+
+                    if (activeGame.includes("Pack")) {
+                        this._charm = charm;
+                        this._charmImage.remove();
+                        this._charmImage = document.createElement("IMG");
+                        this._charmImage.id = "playerCharm";
+                        this._charmImage.src = `./images/Pack 1/${src(charm)}`;
+                        this._charmImage.alt = charm;
+                    }
                 }
                 this._health = 10;
                 this._attack = 0;
@@ -1528,6 +1557,12 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             get proficiencyImage() {
                 return this._proficiencyImage;
+            }
+            get charm() {
+                return this._charm;
+            }
+            get charmImage() {
+                return this._charmImage;
             }
             get health() {
                 return this._health;
@@ -2069,6 +2104,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.petrified = false;
                 this.heroImage.remove();
                 this.proficiencyImage.remove();
+                this.charmImage.remove();
                 document.getElementById("horcruxesDestroyed").innerHTML = "";
                 while (this.hand.length) this.discardAt(0);
                 this.attack = 0;
@@ -2166,11 +2202,12 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
         }
-        const player1 = new Player(document.querySelector("input[name=\"player1\"]:checked").value, document.querySelector("input[name=\"player1Proficiency\"]:checked").value);
-        const player2 = new Player(document.querySelector("input[name=\"player2\"]:checked").value, document.querySelector("input[name=\"player2Proficiency\"]:checked").value);
+        const player1 = new Player(document.querySelector("input[name=\"player1\"]:checked").value, document.querySelector("input[name=\"player1Proficiency\"]:checked").value, document.querySelector("input[name=\"player1Charm\"]:checked").value);
+        const player2 = new Player(document.querySelector("input[name=\"player2\"]:checked").value, document.querySelector("input[name=\"player2Proficiency\"]:checked").value, document.querySelector("input[name=\"player2Charm\"]:checked").value);
         const players = [player1, player2];
-        /*if (document.getElementById("player3Hero").value) players.push(new Player(document.getElementById("player3Hero").value, document.getElementById("player3Proficiency").value));
-        if (document.getElementById("player4Hero").value) players.push(new Player(document.getElementById("player4Hero").value, document.getElementById("player4Proficiency").value));*/
+        /*if (document.getElementById("player3Hero").value) players.push(new Player(document.getElementById("player3Hero").value, document.getElementById("player3Proficiency").value), document.getElementById("player3Charm").value));
+        if (document.getElementById("player4Hero").value) players.push(new Player(document.getElementById("player4Hero").value, document.getElementById("player4Proficiency").value, document.getElementById("player4Charm").value));
+        if (document.getElementById("player5Hero").value) players.push(new Player(document.getElementById("player5Hero").value, document.getElementById("player5Proficiency").value, document.getElementById("player5Charm").value));*/
         let activePlayer = players[players.length - 1]; // sets to last hero because turn starts with next hero
 
         // remove Hogwarts cards for current players
@@ -3541,6 +3578,7 @@ document.getElementById("submitPlayers").onclick = () => {
         <div id="playerContainer">
             <div id="heroImage" style="display: flex"></div>
             <div id="horcruxesDestroyed"></div>
+            <div id="charm"></div>
             <div id="playerBoardContainer">
                 <img id="playerBoard" src="./images/playerBoard.png" alt="player board">
                 <img id="healthTracker" src="./images/healthTracker.png" alt="health tracker">
@@ -3676,6 +3714,7 @@ document.getElementById("submitPlayers").onclick = () => {
             activePlayer.populateHand();
             document.getElementById("heroImage").appendChild(activePlayer.heroImage);
             document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
+            document.getElementById("charm").appendChild(activePlayer.charmImage);
             activePlayer.horcruxesDestroyed.forEach(horcrux => {document.getElementById("horcruxesDestroyed").appendChild(horcrux.img);});
             activePlayer.attack = activePlayer.attack;
             activePlayer.influence = activePlayer.influence;
