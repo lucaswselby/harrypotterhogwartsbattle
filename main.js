@@ -1470,7 +1470,6 @@ document.getElementById("submitPlayers").onclick = () => {
         // players
         class Player {
             constructor(hero, proficiency, charm) {
-                charm += " Charm";
                 this._hero = hero;
                 this._heroImage = document.createElement("img");
                 this._heroImage.id = "playerHero";
@@ -1511,7 +1510,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         this._charmImage.remove();
                         this._charmImage = document.createElement("IMG");
                         this._charmImage.id = "playerCharm";
-                        this._charmImage.src = `./images/Pack 1/${src(charm)}`;
+                        this._charmImage.src = `./images/Pack 1/${src(charm + " Charm")}`;
                         this._charmImage.alt = charm;
                     }
                 }
