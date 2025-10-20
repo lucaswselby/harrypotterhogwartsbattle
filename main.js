@@ -1700,27 +1700,31 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (this.charm === "Apparition" && !this.gainedHealth) {
                                 // TO-DO: highlight Apparition Charm
                                 document.getElementById("playerCharm").onclick = () => {
-                                    addPlayerChoice("Affect another Hero with:", () => {return this.played.length + 1;}, 1, () => {
-                                        for (let i = 0; i < this.played.length; i++) {
-                                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${this.played[i].img.src}">`;
-                                            document.getElementsByClassName("choice")[i].onclick = () => {
-                                                const remainingPlayers = players.filter(player => {return player !== this});
-                                                const gainBenefit = player => {
-                                                    this.played[i].effect(player);
+                                    const cheapCards = this.played.filter(card => {return card.cost <= 3;});
+                                    if (cheapCards.length) {
+                                        addPlayerChoice("Affect another Hero with:", () => {return cheapCards.length + 1;}, 1, () => {
+                                            for (let i = 0; i < cheapCards.length; i++) {
+                                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {
+                                                    const remainingPlayers = players.filter(player => {return player !== this});
+                                                    const gainBenefit = player => {
+                                                        cheapCards[i].effect(player);
+                                                        document.getElementById("playerCharm").onclick = () => {};
+                                                    };
+                                                    if (remainingPlayers.length > 1) {
+                                                        playerChoices.push(new PlayerChoice("Affect:", () => {return remainingPlayers.length;}, 1, () => {
+                                                            for (let j = 0; j < remainingPlayers.length; j++) {
+                                                                document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode());
+                                                                document.getElementsByClassName("choice")[j].onclick = () => {gainBenefit(remainingPlayers[j]);};
+                                                            }
+                                                        }));
+                                                    }
+                                                    else gainBenefit(remainingPlayers[0]);
                                                 };
-                                                if (remainingPlayers.length > 1) {
-                                                    playerChoices.push(new PlayerChoice("Affect:", () => {return remainingPlayers.length;}, 1, () => {
-                                                        for (let j = 0; j < remainingPlayers.length; j++) {
-                                                            document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode());
-                                                            document.getElementsByClassName("choice")[j].onclick = () => {gainBenefit(remainingPlayers[j]);};
-                                                        }
-                                                    }));
-                                                }
-                                                else gainBenefit(remainingPlayers[0]);
-                                            };
-                                        }
-                                        document.getElementsByClassName("choie")[this.played.length].innerHTML = "Nothing";
-                                    });
+                                            }
+                                            document.getElementsByClassName("choie")[cheapCards.length].innerHTML = "Nothing";
+                                        });
+                                    }
                                 };
                             }
                             this.gainedHealth = true;
