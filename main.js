@@ -1546,6 +1546,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 let proficiencyGame = "Game 6";
                 this._charm = "";
                 this._charmImage = document.createElement("div");
+                this._charmUsed = false;
                 if (activeGame === "Game 6" || activeGame === "Game 7" || activeGame.includes("Box") || activeGame.includes("Pack")) {
                     if (proficiency === "Patronus") {
                         proficiencyGame = "Box 3";
@@ -1907,6 +1908,14 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
 
+                // Cheering Charm
+                if (this.charm === "Cheering" && spellsCast === 3 && !this._charmUsed) {
+                    if (this.health > 7) this.influence++;
+                    else if (this.health < 4) rollHouseDie(this, "red", false, false, false);
+                    else this.drawCards(1);
+                    this._charmUsed = true;
+                }
+
                 // check for items cast
                 let itemsCast = this.played.filter(card => {return card.type === "item";}).length;
 
@@ -2235,6 +2244,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 players.forEach(player => {player._invulnerable = false;});
                 this._horcrux1Used = false;
                 this.firstTaskCompletion = 0;
+                this._charmUsed = false;
                 playerTurn = false;
                 
                 // Peskipiksi Pesternomi effect
