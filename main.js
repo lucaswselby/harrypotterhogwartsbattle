@@ -1700,30 +1700,50 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (this.charm === "Apparition" && !this.gainedHealth) {
                                 // TO-DO: highlight Apparition Charm
                                 document.getElementById("playerCharm").onclick = () => {
-                                    const cheapCards = this.played.filter(card => {return card.cost <= 3;});
-                                    if (cheapCards.length) {
-                                        addPlayerChoice("Affect another Hero with:", () => {return cheapCards.length + 1;}, 1, () => {
-                                            for (let i = 0; i < cheapCards.length; i++) {
-                                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`;
-                                                document.getElementsByClassName("choice")[i].onclick = () => {
-                                                    const remainingPlayers = players.filter(player => {return player !== this});
-                                                    const gainBenefit = player => {
-                                                        cheapCards[i].effect(player);
+                                    if (this.health > 7) {
+                                        const cheapCards = this.played.filter(card => {return card.cost <= 3;});
+                                        if (cheapCards.length) {
+                                            addPlayerChoice("Affect another Hero with:", () => {return cheapCards.length + 1;}, 1, () => {
+                                                for (let i = 0; i < cheapCards.length; i++) {
+                                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`;
+                                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                                        const remainingPlayers = players.filter(player => {return player !== this});
+                                                        const gainBenefit = player => {
+                                                            cheapCards[i].effect(player);
+                                                            document.getElementById("playerCharm").onclick = () => {};
+                                                        };
+                                                        if (remainingPlayers.length > 1) {
+                                                            playerChoices.push(new PlayerChoice("Affect:", () => {return remainingPlayers.length;}, 1, () => {
+                                                                for (let j = 0; j < remainingPlayers.length; j++) {
+                                                                    document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode());
+                                                                    document.getElementsByClassName("choice")[j].onclick = () => {gainBenefit(remainingPlayers[j]);};
+                                                                }
+                                                            }));
+                                                        }
+                                                        else gainBenefit(remainingPlayers[0]);
+                                                    };
+                                                }
+                                                document.getElementsByClassName("choie")[cheapCards.length].innerHTML = "Nothing";
+                                            });
+                                        }
+                                    }
+                                    else if (this.health < 4) {
+                                        rollHouseDie(this, "yellow", false, false, false);
+                                        document.getElementById("playerCharm").onclick = () => {};
+                                    }
+                                    else {
+                                        const items = this.discard.filter(card => {return card.type === "item";});
+                                        if (items.length) {
+                                            addPlayerChoice("Move to hand:", () => {return items.length;}, 1, () => {
+                                                for (let i = 0; i < items.length; i++) {
+                                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`;
+                                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                                        this.addToHand(this.discard.splice(this.discard.indexOf(items[i]), 1)[0]);
                                                         document.getElementById("playerCharm").onclick = () => {};
                                                     };
-                                                    if (remainingPlayers.length > 1) {
-                                                        playerChoices.push(new PlayerChoice("Affect:", () => {return remainingPlayers.length;}, 1, () => {
-                                                            for (let j = 0; j < remainingPlayers.length; j++) {
-                                                                document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode());
-                                                                document.getElementsByClassName("choice")[j].onclick = () => {gainBenefit(remainingPlayers[j]);};
-                                                            }
-                                                        }));
-                                                    }
-                                                    else gainBenefit(remainingPlayers[0]);
-                                                };
-                                            }
-                                            document.getElementsByClassName("choie")[cheapCards.length].innerHTML = "Nothing";
-                                        });
+                                                }
+                                            });
+                                        }
                                     }
                                 };
                             }
