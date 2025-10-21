@@ -1626,6 +1626,9 @@ document.getElementById("submitPlayers").onclick = () => {
             get charmImage() {
                 return this._charmImage;
             }
+            get charmUsed() {
+                return this._charmUsed;
+            }
             get health() {
                 return this._health;
             }
@@ -1909,7 +1912,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
 
                 // Cheering Charm
-                if (this.charm === "Cheering" && spellsCast === 3 && !this._charmUsed) {
+                if (this.charm === "Cheering" && spellsCast === 3 && !this.charmUsed) {
                     if (this.health > 7) this.influence++;
                     else if (this.health < 4) rollHouseDie(this, "red", false, false, false);
                     else this.drawCards(1);
@@ -2811,6 +2814,9 @@ document.getElementById("submitPlayers").onclick = () => {
             get type() {
                 return this._type;
             }
+            get maxHealth() {
+                return this._maxHealth;
+            }
             get health() {
                 return this._health;
             }
@@ -2819,7 +2825,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             displayDamage() {
                 document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML = "";
-                for (let i = 0; i < this._maxHealth - this.health; i++) {
+                for (let i = 0; i < this.maxHealth - this.health; i++) {
                     document.getElementsByClassName("villainDamage")[activeVillains.indexOf(this)].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
                 }
                 for (let i = 0; i < this._maxInfluence - this.influence; i++) {
@@ -2829,7 +2835,7 @@ document.getElementById("submitPlayers").onclick = () => {
             setHealth(health, healthType) {
                 // set up for correct healthType
                 let thisHealth = this.health;
-                let thisMaxHealth = this._maxHealth;
+                let thisMaxHealth = this.maxHealth;
                 if (healthType === "influence") {
                     thisHealth = this.influence;
                     thisMaxHealth = this._maxInfluence;
@@ -3976,6 +3982,75 @@ document.getElementById("submitPlayers").onclick = () => {
                         activePlayer.attack--;
                         players.forEach(player => {player.drawCards(1);});
                         document.getElementById("playerProficiency").onclick = () => {};
+                    }
+                }
+            }
+
+            // Defensive Charm
+            if (activePlayer.charm === "Defensive") {
+                document.getElementById("playerCharm").onclick = () => {
+                    if (!activePlayer.charmUsed) {
+                        if (activePlayer.health > 7) {
+                            const hurtVillains = activeVillains.filter(villain => {return villain.health < villain.maxHealth});
+                            const hurtableVillains = activeVillains.filter(villain => {return villain.health > 0;});
+                            if (hurtVillains.length && hurtableVillains.length && (hurtVillains.length > 1 || hurtableVillains.length > 1 || hurtVillains[0] !== hurtableVillains[0])) {
+                                addPlayerChoice("Remove attack from:", () => {return hurtVillains.length + 1;}, 1, () => {
+                                    for (let i = 0; i < hurtVillains.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${hurtVillains[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {
+                                            if (hurtableVillains.includes(hurtVillains[i])) hurtableVillains.splice(hurtableVillains.indexOf(hurtVillains[i]), 1);
+                                            playerChoices.unshift(new PlayerChoice("Add attack to:", () => {return hurtableVillains.length + 1;}, 1, () => {
+                                                for (let j = 0; j < hurtableVillains.length; j++) {
+                                                    document.getElementsByClassName("choice")[j].innerHTML = `<img src="${hurtableVillains[j].img.src}">`;
+                                                    document.getElementsByClassName("choice")[j].onclick = () => {
+                                                        hurtVillains[i].health++;
+                                                        hurtableVillains[j].health--;
+                                                        document.getElementById("playerCharm").onclick = () => {};
+                                                    };
+                                                }
+                                                document.getElementsByClassName("choice")[hurtableVillains.length].innerHTML = "<p>Nevermind</p>";
+                                            }));
+                                        };
+                                    }
+                                    document.getElementsByClassName("choice")[hurtVillains.length].innerHTML = "<p>Nevermind</p>";
+                                });
+                            }
+                        }
+                        else if (activePlayer.health < 4) {
+                            if (activePlayer.hand.length) {
+                                if (activePlayer.hand.length > 1) {
+                                    addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
+                                        for (let i = 0; i < activePlayer.hand.length; i++) {
+                                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
+                                            document.getElementsByClassName("choice")[i].onclick = () => {
+                                                activePlayer.forcedDiscardAt(i, false);
+                                                rollHouseDie(activePlayer, "green", false, false, false);
+                                                        document.getElementById("playerCharm").onclick = () => {};
+                                            };
+                                        }
+                                    });
+                                }
+                                else {
+                                    activePlayer.forcedDiscardAt(0, false);
+                                    rollHouseDie(activePlayer, "green", false, false, false);
+                                    document.getElementById("playerCharm").onclick = () => {};
+                                }
+                            }
+                        }
+                        else {
+                            if (!darkArtsEvents.length) {
+                                shuffle(inactiveDarkArtsEvents); 
+                                while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
+                            } 
+                            addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
+                                document.getElementsByClassName("choice")[0].innerHTML = `<img src="${darkArtsEvents[0].img.src}"><p>Keep</p>`; 
+                                document.getElementsByClassName("choice")[1].innerHTML = `<img src="${darkArtsEvents[0].img.src}"><p>Banish</p>`; 
+                                document.getElementsByClassName("choice")[1].onclick = () => {
+                                    darkArtsEvents.splice(0, 1);
+                                    document.getElementById("playerCharm").onclick = () => {};
+                                };
+                            });
+                        }
                     }
                 }
             }
