@@ -4079,6 +4079,60 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                 }
             }
+            // Hover Charm
+            if (activePlayer.charm === "Hover") {
+                document.getElementById("playerCharm").onclick = () => {
+                    if (activePlayer.hand.length) {
+                        const hoverCharmEffect = () => {
+                            if (activePlayer.health > 7) activePlayer.influence += 2;
+                            else if (activePlayer.health < 4) {
+                                activePlayer.attack++;
+                                const banishable = players.filter(player => {return player.discard.length;});
+                                playerChoices.unshift(new PlayerChoice("Banish from:", () => {return banishable.length + 1;}, 1, () => {
+                                    for (let i = 0; i < banishable.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = choiceScroll(banishable[i].discard);
+                                        document.getElementsByClassName("choice")[i].onclick = () => {
+                                            if (banishable[i].discard.length > 1) {
+                                                playerChoices.unshift(new PlayerChoice("Banish:", () => {return banishable[i].discard.length;}, 1, () => {
+                                                    for (let j = 0; j < banishable[i].discard.length; j++) {
+                                                        document.getElementsByClassName("choice")[j].innerHTML = `<img src="${banishable[i].discard[j].img.src}">`;
+                                                        document.getElementsByClassName("choice")[j].onclick = () => {
+                                                            banishable[i].hand.unshift(banishable[i].discard.splice(i, 1)[0]);
+                                                            banishable[i].banishAt(0);
+                                                        };
+                                                    }
+                                                }));
+                                            }
+                                            else {
+                                                banishable[i].hand.unshift(banishable[i].discard.splice(0, 1)[0]);
+                                                banishable[i].banishAt(0);
+                                            }
+                                        };
+                                    }
+                                    document.getElementsByClassName("choice")[banishable.length].innerHTML = "<p>None</p>";
+                                }));
+                            }
+                            else activePlayer.drawCards(1);
+                        };
+                        if (activePlayer.hand.length > 1) {
+                            addPlayerChoice("Discard:", () => {return activePlayer.hand.length;}, 1, () => {
+                                for (let i = 0; i < activePlayer.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                        activePlayer.forcedDiscardAt(i, false);
+                                        hoverCharmEffect();
+                                    };
+                                }
+                            });
+                        }
+                        else {
+                            activePlayer.forcedDiscardAt(0, false);
+                            hoverCharmEffect();
+                        }
+                        document.getElementById("playerCharm").onclick = () => {};
+                    }
+                }
+            }
 
             // horcrux rewards
             if (activeGame === "Game 7") {
