@@ -2256,8 +2256,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.charmImage.remove();
                 document.getElementById("horcruxesDestroyed").innerHTML = "";
                 while (this.hand.length) this.discardAt(0);
-                this.attack = 0;
-                this.influence = 0;
+                if (this.charm !== "Permanent Sticking" || this.health > 7) this.attack = 0;
+                if (this.charm !== "Permanent Sticking") this.influence = 0;
                 this._passives = [];
                 this._played = [];
                 this._hermioneSpecialUsed = false;
@@ -4344,8 +4344,24 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
 
-            // start new turn
-            startTurn();
+            // Permanent Sticking Charm activates before starting the next turn
+            if (activePlayer.charm === "Permanent Sticking" && activePlayer.health < 4) {
+                const remainingPlayers = players.filter(player => {return player !== activePlayer});
+                addPlayerChoice(`Give ${activePlayer.attack} attacks and ${activePlayer.influence} influence to:`, () => {return remainingPlayers.length;}, 1, () => {
+                    for (let i = 0; i < remainingPlayers.length; i++) {
+                        document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Attacks: ${remainingPlayers[i].attack}</p><p>Influence: ${remainingPlayers[i].influence}</p>`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            remainingPlayers[i].attack += activePlayer.attack;
+                            activePlayer.attack = 0;
+                            remainingPlayers[i].influence += activePlayer.influence;
+                            activePlayer.influence = 0;
+                            startTurn();
+                        };
+                    }
+                });
+            }
+            else startTurn();
         }
     }
     else {
