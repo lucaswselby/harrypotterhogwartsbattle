@@ -672,6 +672,31 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                         }
 
+                        // Healing Charm
+                        if (activePlayer.charm === "Healing" && this.type === "ally") {
+                            if (activePlayer.health > 7) {
+                                const hurtPlayers = players.filter(player => {return canHeal(player);});
+                                if (hurtPlayers.length) {
+                                    if (hurtPlayers.length > 1) {
+                                        addPlayerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
+                                            for (let i = 0; i < hurtPlayers.length; i++) {
+                                                document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].img.src);
+                                                document.getElementsByClassName("choice")[i].innerHTML += `Health: ${hurtPlayers[i].health}`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                            }
+                                        });
+                                    }
+                                    else hurtPlayers[0].health += 2;
+                                }
+                            }
+                            else if (activePlayer.health < 4) {
+                                players.forEach(player => {player.health += 2;});
+                            }
+                            else {
+                                getNeighbors(activePlayer).concat(activePlayer).forEach(player => {player.health += 2;});
+                            }
+                        }
+
                         activePlayer.playedPush(this);
                     }
                 }
