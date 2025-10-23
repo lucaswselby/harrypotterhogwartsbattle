@@ -4080,7 +4080,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
             // Hover Charm
-            if (activePlayer.charm === "Hover") {
+            else if (activePlayer.charm === "Hover") {
                 document.getElementById("playerCharm").onclick = () => {
                     if (activePlayer.hand.length) {
                         const hoverCharmEffect = () => {
@@ -4129,6 +4129,29 @@ document.getElementById("submitPlayers").onclick = () => {
                             activePlayer.forcedDiscardAt(0, false);
                             hoverCharmEffect();
                         }
+                        document.getElementById("playerCharm").onclick = () => {};
+                    }
+                }
+            }
+            // Memory Charm
+            else if (activePlayer.charm === "Memory") {
+                document.getElementById("playerCharm").onclick = () => {
+                    const cheapCards = activePlayer.hand.filter(card => {return !card.cost || (card.cost <= 3 && activePlayer.health < 8) || (card.cost <= 5 && activePlayer.health < 4);});
+                    if (cheapCards.length) {
+                        const memoryCloneAt = index => {
+                            const cardClone = cheapCards[index].clone();
+                            activePlayer.addToHand(cardClone);
+                            cardClone.img.onclick += () => {activePlayer.discard.splice(activePlayer.discard.indexOf(cardClone), 1);};
+                        };
+                        if (cheapCards.length > 1) {
+                            addPlayerChoice("Clone:", () => {return cheapCards.length;}, 1, () => {
+                                for (let i = 0; i < cheapCards.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {memoryCloneAt(i);};
+                                }
+                            });
+                        }
+                        else memoryCloneAt(0);
                         document.getElementById("playerCharm").onclick = () => {};
                     }
                 }
