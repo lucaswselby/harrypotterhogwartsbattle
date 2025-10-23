@@ -4186,92 +4186,128 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (activePlayer.horcruxesDestroyed.includes(theThirdTask)) theThirdTask.img.onclick = () => {if (!document.getElementById("playerChoice")) theThirdTask.reward();};
             }
 
-            // update activeDarkArtsEvents
-            let daeDraws = activeLocation.darkArtsEventDraws;
-            if (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) daeDraws++; // Bellatrix adds 1 draw
-            if (activeVillains.includes(chineseFireball) && !chineseFireball.petrifiedBy && chineseFireball.influence > 0) daeDraws++; // Chinese Fireball adds 1 draw
-            if (activePlayer.passives.includes(finiteIncantatem1) || activePlayer.passives.includes(finiteIncantatem2)) daeDraws = 1; // Finite Incantatem limits draws to 1
-            for (let i = 0; i < daeDraws; i++) {
-                if (!darkArtsEvents.length) {
-                    shuffle(inactiveDarkArtsEvents);
-                    while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
+            const darkArts = protean => {
+                // update activeDarkArtsEvents
+                let daeDraws = activeLocation.darkArtsEventDraws;
+                if (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) daeDraws++; // Bellatrix adds 1 draw
+                if (activeVillains.includes(chineseFireball) && !chineseFireball.petrifiedBy && chineseFireball.influence > 0) daeDraws++; // Chinese Fireball adds 1 draw
+                if (activePlayer.passives.includes(finiteIncantatem1) || activePlayer.passives.includes(finiteIncantatem2)) daeDraws = 1; // Finite Incantatem limits draws to 1
+                if (protean && daeDraws) daeDraws--; // Protean Charm can reduce daeDraws by 1
+                for (let i = 0; i < daeDraws; i++) {
+                    if (!darkArtsEvents.length) {
+                        shuffle(inactiveDarkArtsEvents);
+                        while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());
+                    }
+                    darkArtsEvents[0].generateImg();
+                    if ((darkArtsEvents[0] === avadaKedavra1 || darkArtsEvents[0] === crucio1 || darkArtsEvents[0] === imperio1 || darkArtsEvents[0] === avadaKedavra2 || darkArtsEvents[0] === crucio2 || darkArtsEvents[0] === imperio2 || darkArtsEvents[0] === avadaKedavra3 || darkArtsEvents[0] === crucio3 || darkArtsEvents[0] === imperio3) && !activePlayer.passives.includes(finiteIncantatem1) && !activePlayer.passives.includes(finiteIncantatem2)) i--; // some DAEs draw additional DAEs and Finite Incantatem limits draws to 1
+                    activeDarkArtsEvents.push(darkArtsEvents.shift());
                 }
-                darkArtsEvents[0].generateImg();
-                if ((darkArtsEvents[0] === avadaKedavra1 || darkArtsEvents[0] === crucio1 || darkArtsEvents[0] === imperio1 || darkArtsEvents[0] === avadaKedavra2 || darkArtsEvents[0] === crucio2 || darkArtsEvents[0] === imperio2 || darkArtsEvents[0] === avadaKedavra3 || darkArtsEvents[0] === crucio3 || darkArtsEvents[0] === imperio3) && !activePlayer.passives.includes(finiteIncantatem1) && !activePlayer.passives.includes(finiteIncantatem2)) i--; // some DAEs draw additional DAEs and Finite Incantatem limits draws to 1
-                activeDarkArtsEvents.push(darkArtsEvents.shift());
-            }
 
-            // flip Dark Arts Event(s)
-            for (let i = 0; i < activeDarkArtsEvents.length; i++) {
-                setTimeout(() => {
-                    // reveal Dark Arts Event
-                    const darkArtsEventsElement = document.getElementById("darkArtsEvents");
-                    darkArtsEventsElement.appendChild(activeDarkArtsEvents[i].img);
-                    activeDarkArtsEvents[i].img.classList.toggle("flipped");
+                // flip Dark Arts Event(s)
+                for (let i = 0; i < activeDarkArtsEvents.length; i++) {
                     setTimeout(() => {
-                        activeDarkArtsEvents[i].effect();
-        
-                        // villain effects
-                        if (activeDarkArtsEvents.indexOf(activeDarkArtsEvents[i]) === activeDarkArtsEvents.length - 1) {
-                            setTimeout(() => {
-                                const nonPassiveVillains = activeVillains.filter(villain => {return !villain.passive && !villain.petrifiedBy;});
-                                for (let i = 0; i < (nonPassiveVillains.length > 1 ? nonPassiveVillains.length : 1); i++) {
-                                    setTimeout(() => {
-                                        if (nonPassiveVillains.length && !nonPassiveVillains[i].petrifiedBy) nonPassiveVillains[i].effect();
+                        // reveal Dark Arts Event
+                        const darkArtsEventsElement = document.getElementById("darkArtsEvents");
+                        darkArtsEventsElement.appendChild(activeDarkArtsEvents[i].img);
+                        activeDarkArtsEvents[i].img.classList.toggle("flipped");
+                        setTimeout(() => {
+                            activeDarkArtsEvents[i].effect();
+            
+                            // villain effects
+                            if (activeDarkArtsEvents.indexOf(activeDarkArtsEvents[i]) === activeDarkArtsEvents.length - 1) {
+                                setTimeout(() => {
+                                    const nonPassiveVillains = activeVillains.filter(villain => {return !villain.passive && !villain.petrifiedBy;});
+                                    for (let i = 0; i < (nonPassiveVillains.length > 1 ? nonPassiveVillains.length : 1); i++) {
+                                        setTimeout(() => {
+                                            if (nonPassiveVillains.length && !nonPassiveVillains[i].petrifiedBy) nonPassiveVillains[i].effect();
 
-                                        if (!nonPassiveVillains.length || i === nonPassiveVillains.length - 1) {
-                                            // Voldemort
-                                            if (invulnerableVoldemort()) {
-                                                setTimeout(() => {
-                                                    if (!invulnerableVoldemort().petrifiedBy) invulnerableVoldemort().effect();
-                                                    else if (invulnerableVoldemort().petrifiedBy === activePlayer) invulnerableVoldemort().petrifiedBy = null;
-                                                    // reactivate end turn
-                                                    document.getElementById("endTurn").style.display = "initial";
-                                                }, 1000);
-                                            }
-
-                                            // Horcrux effects
-                                            if (encounters.length) {
-                                                setTimeout(() => {
-                                                    encounters[0].effect();
-                                                    darken(encounters[0].img);
-                                                }, 1000 + (invulnerableVoldemort() ? 1000 : 0));
-                                            }
-
-                                            setTimeout(() => {
-                                                // magnify images
-                                                for (let j = 0; j < document.getElementsByTagName("IMG").length; j++) {
-                                                    const img = document.getElementsByTagName("IMG")[j];
-                                                    img.oncontextmenu = event => {magnify(event);};
+                                            if (!nonPassiveVillains.length || i === nonPassiveVillains.length - 1) {
+                                                // Voldemort
+                                                if (invulnerableVoldemort()) {
+                                                    setTimeout(() => {
+                                                        if (!invulnerableVoldemort().petrifiedBy) invulnerableVoldemort().effect();
+                                                        else if (invulnerableVoldemort().petrifiedBy === activePlayer) invulnerableVoldemort().petrifiedBy = null;
+                                                        // reactivate end turn
+                                                        document.getElementById("endTurn").style.display = "initial";
+                                                    }, 1000);
                                                 }
 
-                                                // reset villains
-                                                activeVillains.forEach(villain => {
-                                                    if (villain.petrifiedBy === activePlayer) {
-                                                        villain.petrifiedBy = null;
+                                                // Horcrux effects
+                                                if (encounters.length) {
+                                                    setTimeout(() => {
+                                                        encounters[0].effect();
+                                                        darken(encounters[0].img);
+                                                    }, 1000 + (invulnerableVoldemort() ? 1000 : 0));
+                                                }
+
+                                                setTimeout(() => {
+                                                    // magnify images
+                                                    for (let j = 0; j < document.getElementsByTagName("IMG").length; j++) {
+                                                        const img = document.getElementsByTagName("IMG")[j];
+                                                        img.oncontextmenu = event => {magnify(event);};
                                                     }
-                                                    villain.attackDamageTaken = 0;
-                                                    villain.influenceDamageTaken = 0;
-                                                    villain.ginnyUsed = false;
-                                                });
 
-                                                // reenable all events
-                                                disableScreen.style.display = "none";
-                                                root.style.setProperty("--playerChoiceDisplay", "flex");
-                                                root.style.setProperty("--revealBoardDisplay", "block");
+                                                    // reset villains
+                                                    activeVillains.forEach(villain => {
+                                                        if (villain.petrifiedBy === activePlayer) {
+                                                            villain.petrifiedBy = null;
+                                                        }
+                                                        villain.attackDamageTaken = 0;
+                                                        villain.influenceDamageTaken = 0;
+                                                        villain.ginnyUsed = false;
+                                                    });
 
-                                                // start player choices
-                                                playerTurn = true;
-                                                if (playerChoices.length) playerChoices[0].display(); // display the first player choice from the evil turn
-                                            }, 1000 + (invulnerableVoldemort() ? 1000 : 0) + (encounters.length ? 1000 : 0));
-                                        }
-                                    }, nonPassiveVillains.length ? i * 1000 : 0);
-                                }
-                            }, 1000);
-                        }
-                    }, 1000);
-                }, i * 2000 + 1000);
+                                                    // reenable all events
+                                                    disableScreen.style.display = "none";
+                                                    root.style.setProperty("--playerChoiceDisplay", "flex");
+                                                    root.style.setProperty("--revealBoardDisplay", "block");
+
+                                                    // start player choices
+                                                    playerTurn = true;
+                                                    if (playerChoices.length) playerChoices[0].display(); // display the first player choice from the evil turn
+                                                }, 1000 + (invulnerableVoldemort() ? 1000 : 0) + (encounters.length ? 1000 : 0));
+                                            }
+                                        }, nonPassiveVillains.length ? i * 1000 : 0);
+                                    }
+                                }, 1000);
+                            }
+                        }, 1000);
+                    }, i * 2000 + 1000);
+                }
             }
+
+            // Protean Charm activates before the Dark Arts
+            if (activePlayer.charm === "Protean" && activePlayer.hand.length) {
+                const unpetrifiedVillains = activeVillains.filter(villain => {return villain.type.includes("villain") && !villain.petrifiedBy;});
+                addPlayerChoice("Discard to ignore Villain:", () => {return activePlayer.hand.length + 1;}, 1, () => {
+                    for (let i = 0; i < activePlayer.hand.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${activePlayer.hand[i].img.src}">`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            activePlayer.forcedDiscardAt(i, false);
+                            if (activePlayer.health > 7 || activePlayer.health < 4) {
+                                if (unpetrifiedVillains.length > 1) {
+                                    playerChoices.unshift(new PlayerChoice("Ignore:", () => {return unpetrifiedVillains.length;}, 1, () => {
+                                        for (let j = 0; j < unpetrifiedVillains.length; j++) {
+                                            document.getElementsByClassName("choice")[j].innerHTML = `<img src="${unpetrifiedVillains[j].img.src}">`;
+                                            document.getElementsByClassName("choice")[j].onclick = () => {
+                                                unpetrifiedVillains[j].petrifiedBy = activePlayer;
+                                                darkArts(activePlayer.health < 4);
+                                            };
+                                        }
+                                    }));
+                                }
+                                else {
+                                    unpetrifiedVillains[o].petrifiedBy = activePlayer;
+                                    darkArts(activePlayer.health < 4);
+                                }
+                            }
+                            else darkArts(activePlayer.health < 8);
+                        }
+                    }
+                    document.getElementsByClassName("choice")[activePlayer.hand.length].innerHTML = "<p>Nothing</p>";
+                });
+            }
+            else darkArts(false);
         };
         document.getElementsByTagName("IMG")[document.getElementsByTagName("IMG").length - 1].onload = startTurn;
 
