@@ -58,7 +58,7 @@ input[type="submit"] {
     font-size: 10vh;
 }
 
-.playerProficiency, .boxOnly, .playerCharm {
+.playerProficiency, .boxOnly, .packOnly, .playerCharm {
     display: none;
 }
 

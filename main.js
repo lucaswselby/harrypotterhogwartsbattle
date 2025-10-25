@@ -16,6 +16,11 @@ const displayGameChoices = playerNumber => {
                 document.getElementsByClassName("boxOnly")[i].style.display = "initial";
             }
         }
+        if (game.includes("Pack")) {
+            for (let i = 0; i < document.getElementsByClassName("packOnly").length; i++) {
+                document.getElementsByClassName("packOnly")[i].style.display = "initial";
+            }            
+        }
 
         // Patronus options
         let patronusDisplay = "none";
@@ -29,6 +34,9 @@ const displayGameChoices = playerNumber => {
         // change player images based on game
         for (let i = 0; i < document.getElementsByClassName("boxOnly").length; i++) {
             document.getElementsByClassName("boxOnly")[i].style.display = "none";
+        }
+        for (let i = 0; i < document.getElementsByClassName("packOnly").length; i++) {
+            document.getElementsByClassName("packOnly")[i].style.display = "none";
         }
         if (game === "Game 1" || game === "Game 2") {
             document.querySelector(`label[for="player${playerNumber}Harry"]`).getElementsByTagName("IMG")[0].src = "./images/Game 1/harryPotter.png";
