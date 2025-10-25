@@ -2844,7 +2844,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._name = name;
                 this._img = document.createElement("img");
                 this._img.className = "villain";
-                this._img.src = `./images/${activeGame.includes("Box") && (name === "Basilisk" || name === "Dementor") ? "Box 1" : game}/${src(name)}`;
+                this._img.src = `./images/${(activeGame.includes("Box") || activeGame.includes("Pack")) && (name === "Basilisk" || name === "Dementor") ? "Box 1" : game}/${src(name)}`;
                 this._img.alt = name;
                 this._type = type;
                 this._maxHealth = health;
