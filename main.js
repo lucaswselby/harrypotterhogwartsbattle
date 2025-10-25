@@ -696,6 +696,26 @@ document.getElementById("submitPlayers").onclick = () => {
                                 getNeighbors(activePlayer).concat(activePlayer).forEach(player => {player.health += 2;});
                             }
                         }
+                        // Summoning Charm
+                        else if (activePlayer.charm === "Summoning" && activePlayer.played.filter(card => {return card.type === "item"}).length && this.type === "ally") {
+                            if (activePlayer.health > 7) activePlayer.attack++;
+                            else if (activePlayer.health < 4) {
+                                const healable = players.filter(player => {return canHeal(player);});
+                                if (healable.length) {
+                                    if (healable.length > 1) {
+                                        addPlayerChoice("Heal for 2:", () => {return healable.length;}, 1, () => {
+                                            for (let i = 0; i < healable.length; i++) {
+                                                document.getElementsByClassName("choice")[i].appendChild(healable[i].heroImage.cloneNode());
+                                                document.getElementsByClassName("choice")[i].innerHTML += `Health: ${healable[i].health}`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {healable[i].health += 2;};
+                                            }
+                                        });
+                                    }
+                                    else healable[0].health += 2;
+                                }
+                            }
+                            else activePlayer.influence++;
+                        }
 
                         activePlayer.playedPush(this);
                     }
