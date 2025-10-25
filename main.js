@@ -11,8 +11,10 @@ const displayGameChoices = playerNumber => {
         document.querySelector(`label[for="player${playerNumber}Ron"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/ronWeasley.png";
         document.querySelector(`label[for="player${playerNumber}Hermione"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/hermioneGranger.png";
         document.querySelector(`label[for="player${playerNumber}Neville"]`).getElementsByTagName("IMG")[0].src = "./images/Game 7/nevilleLongbottom.png";
-        for (let i = 0; i < document.getElementsByClassName("boxOnly").length; i++) {
-            document.getElementsByClassName("boxOnly")[i].style.display = "initial";
+        if (game.includes("Box") || game.includes("Pack")) {
+            for (let i = 0; i < document.getElementsByClassName("boxOnly").length; i++) {
+                document.getElementsByClassName("boxOnly")[i].style.display = "initial";
+            }
         }
 
         // Patronus options
