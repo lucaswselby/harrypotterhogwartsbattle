@@ -690,7 +690,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     if (hurtPlayers.length > 1) {
                                         addPlayerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
                                             for (let i = 0; i < hurtPlayers.length; i++) {
-                                                document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].img.src);
+                                                document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].img.cloneNode());
                                                 document.getElementsByClassName("choice")[i].innerHTML += `Health: ${hurtPlayers[i].health}`;
                                                 document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
                                             }
