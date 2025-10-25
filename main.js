@@ -4034,7 +4034,7 @@ document.getElementById("submitPlayers").onclick = () => {
             // Defensive Charm
             if (activePlayer.charm === "Defensive") {
                 document.getElementById("playerCharm").onclick = () => {
-                    if (!activePlayer.charmUsed) {
+                    if (!document.getElementById("playerChoice")) {
                         if (activePlayer.health > 7) {
                             const hurtVillains = activeVillains.filter(villain => {return villain.health < villain.maxHealth});
                             const hurtableVillains = activeVillains.filter(villain => {return villain.health > 0;});
@@ -4102,7 +4102,7 @@ document.getElementById("submitPlayers").onclick = () => {
             // Hover Charm
             else if (activePlayer.charm === "Hover") {
                 document.getElementById("playerCharm").onclick = () => {
-                    if (activePlayer.hand.length) {
+                    if (activePlayer.hand.length && !document.getElementById("playerChoice")) {
                         const hoverCharmEffect = () => {
                             if (activePlayer.health > 7) activePlayer.influence += 2;
                             else if (activePlayer.health < 4) {
@@ -4156,25 +4156,46 @@ document.getElementById("submitPlayers").onclick = () => {
             // Memory Charm
             else if (activePlayer.charm === "Memory") {
                 document.getElementById("playerCharm").onclick = () => {
-                    const cheapCards = activePlayer.hand.filter(card => {return !card.cost || (card.cost <= 3 && activePlayer.health < 8) || (card.cost <= 5 && activePlayer.health < 4);});
-                    if (cheapCards.length) {
-                        const memoryCloneAt = index => {
-                            const cardClone = cheapCards[index].clone();
-                            activePlayer.addToHand(cardClone);
-                            cardClone.img.onclick += () => {activePlayer.discard.splice(activePlayer.discard.indexOf(cardClone), 1);};
-                        };
-                        if (cheapCards.length > 1) {
-                            addPlayerChoice("Clone:", () => {return cheapCards.length;}, 1, () => {
-                                for (let i = 0; i < cheapCards.length; i++) {
-                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`;
-                                    document.getElementsByClassName("choice")[i].onclick = () => {memoryCloneAt(i);};
-                                }
-                            });
+                    if (!document.getElementById("playerChoice")) {
+                        const cheapCards = activePlayer.hand.filter(card => {return !card.cost || (card.cost <= 3 && activePlayer.health < 8) || (card.cost <= 5 && activePlayer.health < 4);});
+                        if (cheapCards.length) {
+                            const memoryCloneAt = index => {
+                                const cardClone = cheapCards[index].clone();
+                                activePlayer.addToHand(cardClone);
+                                cardClone.img.onclick += () => {activePlayer.discard.splice(activePlayer.discard.indexOf(cardClone), 1);};
+                            };
+                            if (cheapCards.length > 1) {
+                                addPlayerChoice("Clone:", () => {return cheapCards.length;}, 1, () => {
+                                    for (let i = 0; i < cheapCards.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {memoryCloneAt(i);};
+                                    }
+                                });
+                            }
+                            else memoryCloneAt(0);
+                            document.getElementById("playerCharm").onclick = () => {};
                         }
-                        else memoryCloneAt(0);
-                        document.getElementById("playerCharm").onclick = () => {};
                     }
                 }
+            }
+            // Undetectable Extension Charm
+            else if (activePlayer.charm === "Undetectable Extension") {
+                document.getElementById("playerCharm").onclick = () => {
+                    if (!document.getElementById("playerChoice")) {
+                        if (!activePlayer.draw.length) activePlayer.shuffle();
+                        if (activePlayer.health < 8 && activePlayer.health > 3 && activePlayer.draw[0].cost) activePlayer.drawCards(1);
+                        else {
+                            addPlayerChoice("Top card:", () => {return 1;}, 1, () => {
+                                document.getElementsByClassName("choice")[0].innerHTML = `<img src="${activePlayer.draw[0].img.src}">`;
+                                document.getElementsByClassName("choice")[0].onclick = () => {
+                                    if (activePlayer.health > 7 && !activePlayer.draw[0].cost) activePlayer.influence += 2;
+                                    else if (activePlayer.health < 4 && activePlayer.draw[0].cost) rollHouseDie(activePlayer, "blue", false, false, false);
+                                };
+                            });
+                        }
+                        document.getElementById("playerCharm").onclick = () => {};
+                    }
+                };
             }
 
             // horcrux rewards
