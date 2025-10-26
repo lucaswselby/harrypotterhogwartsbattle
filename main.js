@@ -830,11 +830,12 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraGinny7 = alohomoraGinny1.clone();
         const arnold = new Card("Arnold", "Pack 1", "ally", 0, startingAllyEffect, false, false);
         const batBogeyHex = new Card("Bat Bogey Hex", "Pack 1", "spell", 0, affectedPlayer => {
-            if (players.filter(player => {return canHeal(player);}).length) {
+            const healable = players.filter(player => {return canHeal(player);});
+            if (healable.length) {
                 addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
                     document.getElementsByClassName("choice")[0].innerHTML = attackToken;
                     document.getElementsByClassName("choice")[0].onclick = () => {affectedPlayer.attack++;};
-                    document.getElementsByClassName("choice")[1].innerHTML = `<p>ALL Heroes:</p>${healthToken}`;
+                    document.getElementsByClassName("choice")[1].innerHTML = `<p>ALL Heroes:</p>${healthToken + healable.reduce((prev, curr) => {return prev + `<p>${curr.hero}: ${curr.health}</p>`}, "")}`;
                     document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.health++;});};
                 });
             }
