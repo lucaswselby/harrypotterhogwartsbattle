@@ -320,9 +320,13 @@ document.getElementById("submitPlayers").onclick = () => {
                     let commonRoll;
                     switch (color) {
                         case "red": commonRoll = "influence";
+                            break;
                         case "blue": commonRoll = "draw";
+                            break;
                         case "yellow": commonRoll = "health";
+                            break;
                         case "green": commonRoll = "attack";
+                            break;
                         default: alert(`${color} is not a die color.`);
                         // TO-DO: add Phoenix die options, then make arithmancyUsed false for phoenix die users like Kreacher and Boggart
                     }
@@ -3448,33 +3452,40 @@ document.getElementById("submitPlayers").onclick = () => {
                 inactiveVillains.splice(inactiveVillains.indexOf(basilisk), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(dementor), 1);
                 inactiveVillains = inactiveVillains.slice(0, 5).concat(box1Villains);
+                break;
             case "Box 2":
                 inactiveVillains.splice(inactiveVillains.indexOf(peterPettigrew), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(fenrirGreyback), 1);
                 inactiveVillains = shuffle(inactiveVillains.concat(box1Villains)).slice(0, 6).concat(box2Villains, [peterPettigrew, fenrirGreyback]);
+                break;
             case "Box 3":
                 inactiveVillains.splice(inactiveVillains.indexOf(doloresUmbridge), 1);
                 inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains)).slice(0, 7).concat(box3Villains, [doloresUmbridge]);
+                break;
             case "Box 4":
                 inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains)).slice(0, 8).concat(box4Villains);
+                break;
             case "Pack 1":
                 inactiveVillains.splice(inactiveVillains.indexOf(dracoMalfoy), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(crabbeAndGoyle), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(luciusMalfoy), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(doloresUmbridge), 1);
                 inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains, box4Villains)).slice(0, 4).concat(pack1Villains, [dracoMalfoy, crabbeAndGoyle, luciusMalfoy, doloresUmbridge]);
+                break;
             case "Pack 2":
                 inactiveVillains.splice(inactiveVillains.indexOf(doloresUmbridge), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(deathEater1), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(deathEater2), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(luciusMalfoy), 1);
                 inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains, box4Villains, pack1Villains)).slice(0, 3).concat(pack2Villains, [doloresUmbridge, deathEater1, deathEater2, luciusMalfoy]);
+                break;
             case "Pack 3":
                 inactiveVillains.splice(inactiveVillains.indexOf(dracoMalfoy), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(luciusMalfoy), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(tomRiddle), 1);
                 inactiveVillains.splice(inactiveVillains.indexOf(bellatrixLestrange), 1);
                 inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains, box4Villains, pack1Villains, pack2Villains)).slice(0, 5).concat(pack3Villains, [dracoMalfoy, luciusMalfoy, tomRiddle, bellatrixLestrange]);
+                break;
             case "Pack 4":
                 inactiveVillains.splice(inactiveVillains.indexOf(bellatrixLestrange), 1);
                 inactiveVillains = shuffle(inactiveVillains.concat(box1Villains, box2Villains, box3Villains, box4Villains, pack1Villains, pack2Villains, pack3Villains)).slice(0, 8).concat(pack4Villains, [bellatrixLestrange]);
@@ -3724,11 +3735,17 @@ document.getElementById("submitPlayers").onclick = () => {
         let encounters = [];
         switch (activeGame) {
             case "Game 7": encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
+                break;
             case "Box 1": encounters = [peskipiksiPesternomi, studentsOutOfBed, thirdFloorCorridor];
+                break;
             case "Box 2": encounters = [unregisteredAnimagus, fullMoonRises, defensiveTraining];
+                break;
             case "Box 3": encounters = [forbiddenForestEncounter, filthyHalfBreed, escape];
+                break;
             case "Box 4": encounters = [theFirstTask, theSecondTask, theThirdTask];
+                break;
             case "Pack 1": encounters = [sneakingInTheHalls, theMinistryIsMeddling, detentionWithDolores];
+                break;
         }
 
         // display game
