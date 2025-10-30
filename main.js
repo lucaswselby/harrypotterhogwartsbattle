@@ -2916,7 +2916,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // Ginny Weasley special
-                    if (!this.ginnyUsed && activePlayer === "Ginny Weasley" && activeVillains.filter(villain => {return villain.attackDamageTaken || villain.influenceDamageTaken;}).length === 2) {
+                    if (!this.ginnyUsed && activePlayer === "Ginny Weasley" && activeVillains.filter(villain => {return villain.attackDamageTaken || villain.influenceDamageTaken;}).length >= 2) {
                         players.forEach(player => {player.influence++;});
                         this.ginnyUsed = true;
                     }
