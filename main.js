@@ -2696,7 +2696,15 @@ document.getElementById("submitPlayers").onclick = () => {
         const heirOfSlytherin1 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie(activePlayer,"green", true, false, false);});
         const heirOfSlytherin2 = heirOfSlytherin1.clone();
         const imperio1 = new DarkArtsEvent("Imperio", "Game 4", () => {const otherPlayers = players.filter(player => {return player !== activePlayer;}); if (otherPlayers.length) {if (otherPlayers.length > 1) {addPlayerChoice("Choose to lose 2 health:", () => {return otherPlayers.length;}, 1, () => {for (let i = 0; i < otherPlayers.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${otherPlayers[i].img.src}"><p>Health: ${otherPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {otherPlayers[i].health -= 2;};}});} else otherPlayers[0].health -= 2;}});
-        const morsmordre1 = new DarkArtsEvent("Morsmordre", "Game 4", () => {players.forEach(player => {player.health--;});activeLocation.addToLocation(); if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});});
+        const morsmordre1 = new DarkArtsEvent("Morsmordre", "Game 4", () => {
+            players.forEach(player => {player.health--;});
+            activeLocation.addToLocation(); 
+            if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); 
+            if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});
+            if (activeVillains.includes(corneliusFudge) && !corneliusFudge.petrifiedBy) players.forEach(player => {
+                // TO-DO: banish top card
+            });
+        });
         const morsmordre2 = morsmordre1.clone();
         const regeneration = new DarkArtsEvent("Regeneration", "Game 4", () => {activeVillains.filter(villain => {return villain.type.includes("villain")}).forEach(villain => {villain.health += 2;})});
         const avadaKedavra2 = avadaKedavra1.clone();
@@ -3423,6 +3431,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const box4Villains = [chineseFireball, commonWelshGreen, grindylow, hungarianHorntail, mermaid, swedishShortSnout];
 
         // Pack expansion villains
+        const corneliusFudge = new Villain("Cornelius Fudge", "Pack 1", "villain", 0, 7, () => {}, () => {players.forEach(player => {player.drawCards(1);});}, true);
         const marcusFlint = new Villain("Marcus Flint", "Pack 1", "villain", 6, 0, () => {
             const items = activePlayer.hand.filter(card => {return card.type === "item";});
             if (items.length) {
@@ -3441,7 +3450,7 @@ document.getElementById("submitPlayers").onclick = () => {
             players.forEach(player => {const items = player.discard.filter(card => {return card.type === "item"}); if (items.length) {const discardToHand = index => {player.addToHand(items[index]); player.discard.splice(player.discard.indexOf(items[index]), 1);}; if (items.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}});
         }, false);
         const pansyParkinson = new Villain("Pansy Parkinson", "Pack 1", "villain", 0, 5, () => {}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();}, true);
-        const pack1Villains = [marcusFlint, pansyParkinson];
+        const pack1Villains = [corneliusFudge, marcusFlint, pansyParkinson];
         const pack2Villains = [];
         const pack3Villains = [];
         const pack4Villains = [];
@@ -4415,6 +4424,9 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (inactiveVillains[inactiveVillains.length - 1].type.includes("villain")) {
                             if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy && deathEater1.health > 0) players.forEach(player => {player.health--;});
                             if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy && deathEater2.health > 0) players.forEach(player => {player.health--;});
+                            if (activeVillains.includes(corneliusFudge) && !corneliusFudge.petrifiedBy && corneliusFudge.health > 0) players.forEach(player => {
+                                // TO-DO: banish top card
+                            });
                         }
                         // Common Welsh Green effect
                         if (inactiveVillains[inactiveVillains.length - 1].type.includes("creature") && activeVillains.includes(commonWelshGreen) && !commonWelshGreen.petrifiedBy && commonWelshGreen.health > 0) players.forEach(player => {player.health -= 2;});
