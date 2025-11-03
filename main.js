@@ -293,14 +293,7 @@ document.getElementById("submitPlayers").onclick = () => {
             const arithmancyCheck = effect => {
                 // Destroy Horcrux
                 const destroyedHorcrux = () => {
-                    if (encounters.length && encounters[0].remaining.length && !evil) {
-                        encounters[0].addSymbol(result);
-                        if (!encounters[0].remaining.length) {
-                            document.getElementById("encounters").innerHTML = "";
-                            affectedPlayer.addDestroyedHorcrux(encounters.shift());
-                            displayNextEncounter();
-                        }
-                    }
+                    if (encounters.length && encounters[0].remaining.length && !evil) encounters[0].addSymbol(result);
                 };
 
                 // returns the imge corresponding the to result of the dice roll
@@ -2069,6 +2062,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._horcruxesDestroyed;
             }
             addDestroyedHorcrux(destroyedHorcrux) {
+                document.getElementById("encounters").innerHTML = "";
                 this._horcruxesDestroyed.push(destroyedHorcrux);
                 destroyedHorcrux.img.classList.toggle("event");
                 document.getElementById("horcruxesDestroyed").appendChild(destroyedHorcrux.img);
@@ -2230,6 +2224,7 @@ document.getElementById("submitPlayers").onclick = () => {
             endTurn() {
                 // check for encounter completion
                 if (encounters.length && (
+                    (encounters[0].destroys.length && !encounters[0].remaining.length) ||
                     (encounters[0] === peskipiksiPesternomi && this.played.filter(card => {return card.cost && card.cost % 2 === 0;}).length === 2) || // Peskipiksi Pesternomi completion
                     (encounters[0] === thirdFloorCorridor && this.played.filter(card => {card.type === "spell"}).length >= 2 && this.played.filter(card => {card.type === "item"}).length >= 2 && this.played.filter(card => {card.type === "ally"}).length >= 2) || // Third Floor Corridor completion
                     (encounters[0] === unregisteredAnimagus && (this.attacks === 5 || (!inactiveVillains.length && !activeVillains.filter(villain => {return villain.health || villain.influence;}).length))) || // Unregistered Animagus completion
@@ -3469,6 +3464,9 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             get img() {
                 return this._img;
+            }
+            get destroys() {
+                return this._destroys;
             }
             get remaining() {
                 return this._remaining;
