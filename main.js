@@ -1569,11 +1569,8 @@ document.getElementById("submitPlayers").onclick = () => {
                             darken(doloresUmbridge.img);
                         }
 
-                        // The First Task completion
-                        if (encounters.length) {
-                            if (encounters[0] === theFirstTask && card.type === "item") activePlayer.firstTaskCompletion += card.cost;
-                            if (encounters[0] === theSecondTask && card.type === "ally") activePlayer.secondTaskCompletion++;
-                        }
+                        // adds card to player's bought array
+                        activePlayer.bought.push(card);
 
                         // replaces previous card with next card in store
                         document.getElementsByClassName("shop")[activeShops.indexOf(card)].getElementsByTagName("IMG")[0].remove();
@@ -1666,8 +1663,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._cardsDrawn = -5;
                 this._horcrux1Used = false;
                 this._invulnerable = false;
-                this._firstTaskCompletion = 0;
-                this._secondTaskCompletion = 0;
+                this._bought = [];
             }
             get hero() {
                 return this._hero;
@@ -1874,12 +1870,6 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (this.influence < 0) {
                         this._influence = 0;
                     }
-
-                    // The Ministry is Meddling completion
-                    if (encounters.length && encounters[0] === theMinistryIsMeddling && this.influence >= 8) {
-                        this.addDestroyedHorcrux(encounters.shift());
-                        displayNextEncounter();
-                    }
                     
                     // display influence icons
                     if (activePlayer === this) {
@@ -2007,30 +1997,6 @@ document.getElementById("submitPlayers").onclick = () => {
                     this._horcrux1Used = true;
                 }
 
-                // Peskipiksi Pesternomi completion
-                if (encounters.length && encounters[0] === peskipiksiPesternomi && this.played.filter(card => {return card.cost && card.cost % 2 === 0;}).length === 2) {
-                    this.addDestroyedHorcrux(encounters.shift());
-                    displayNextEncounter();
-                }
-                // Third Floor Corridor completion
-                else if (encounters.length && encounters[0] === thirdFloorCorridor && spellsCast >= 2 && itemsCast >= 2 && alliesCast >= 2) {
-                    this.addDestroyedHorcrux(encounters.shift());
-                }
-                // Filthy Half-Breed completion
-                else if (encounters.length && encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return cost > 0 && arr.indexOf(cost) === ind;}).length >= 3) {
-                    this.addDestroyedHorcrux(encounters.shift());
-                    displayNextEncounter();
-                }
-                // Escape completion
-                else if (encounters.length && encounters[0] === escape && spellsCast >= 6) this.addDestroyedHorcrux(encounters.shift());
-                // Sneaking in the Halls completion
-                else if (encounters.length && encounters[0] === sneakingInTheHalls && itemsCast >= 4) {
-                    this.addDestroyedHorcrux(encounters.shift());
-                    displayNextEncounter();
-                }
-                // Detention with Dolores completion
-                else if (encounters.length && encounters[0] === detentionWithDolores && this.played.map(card => {return card.cost;}).filter(cost => {cost >= 4;}).length >= 3) this.addDestroyedHorcrux(encounters.shift());
-
                 // Potions Proficiency effect
                 if (this.proficiency === "Potions" && spellsCast > 0 && itemsCast > 0 && alliesCast > 0 && !this._potionsProficiencyUsed) {
                     addPlayerChoice("Heal for 1 and gain 1 attack:", () => {return players.length;}, 1, () => {
@@ -2081,12 +2047,6 @@ document.getElementById("submitPlayers").onclick = () => {
                         players.forEach(player => {player.health++;});
                     }
                 }
-
-                // Unregistered Animagus completion
-                if (encounters.length && encounters[0] === unregisteredAnimagus && this.attacks === 5) {
-                    this.addDestroyedHorcrux(encounters.shift());
-                    displayNextEncounter();
-                }
             }
             get influences() {
                 return this._influences;
@@ -2113,6 +2073,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 destroyedHorcrux.img.classList.toggle("event");
                 document.getElementById("horcruxesDestroyed").appendChild(destroyedHorcrux.img);
                 destroyedHorcrux.img.onclick = destroyedHorcrux.reward;
+                displayNextEncounter();
             }
             get cardsDrawn() {
                 return this._cardsDrawn;
@@ -2123,27 +2084,8 @@ document.getElementById("submitPlayers").onclick = () => {
             get invulnerable() {
                 return this._invulnerable;
             }
-            get firstTaskCompletion() {
-                return this._firstTaskCompletion;
-            }
-            set firstTaskCompletion(firstTaskCompletion) {
-                this._firstTaskCompletion = firstTaskCompletion;
-                if (encounters.length && encounters[0] === theFirstTask && (this.firstTaskCompletion >= 7 || 
-                    hogwartsCards.filter(card => {return card.type === "item"}).length === 1)) { // catch for no more items in the shop
-                    this.addDestroyedHorcrux(encounters.shift());
-                    displayNextEncounter();
-                }
-            }
-            get secondTaskCompletion() {
-                return this._secondTaskCompletion;
-            }
-            set secondTaskCompletion(secondTaskCompletion) {
-                this._secondTaskCompletion = secondTaskCompletion;
-                if (encounters.length && encounters[0] === theSecondTask && (this.secondTaskCompletion === 2 ||
-                    hogwartsCards.filter(card => {return card.type === "ally"}).length === 1)) { // catch for no more allies in the shop
-                    this.addDestroyedHorcrux(encounters.shift());
-                    displayNextEncounter();
-                }
+            get bought() {
+                return this._bought;
             }
 
             banishAt(index) {
@@ -2286,6 +2228,27 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
             }
             endTurn() {
+                // check for encounter completion
+                if (encounters.length && (
+                    (encounters[0] === peskipiksiPesternomi && this.played.filter(card => {return card.cost && card.cost % 2 === 0;}).length === 2) || // Peskipiksi Pesternomi completion
+                    (encounters[0] === thirdFloorCorridor && this.played.filter(card => {card.type === "spell"}).length >= 2 && this.played.filter(card => {card.type === "item"}).length >= 2 && this.played.filter(card => {card.type === "ally"}).length >= 2) || // Third Floor Corridor completion
+                    (encounters[0] === unregisteredAnimagus && (this.attacks === 5 || (!inactiveVillains.length && !activeVillains.filter(villain => {return villain.health || villain.influence;}).length))) || // Unregistered Animagus completion
+                    (encounters[0] === fullMoonRises && !activeVillains.filter(villain => {return villain.health || villain.influence;}).length) || // Full Moon Rises completion
+                    (encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return cost > 0 && arr.indexOf(cost) === ind;}).length >= 3) || // Filthy Half-Breed completion
+                    (encounters[0] === escape && this.played.filter(card => {card.type === "spell"}).length >= 6) || // Escape completion
+                    (encounters[0] === theFirstTask && ( // The First Task completion
+                        this.bought.reduce((prev, curr) => {return prev + curr.cost}, 0) >= 7 || 
+                        !hogwartsCards.filter(card => {return card.type === "item"}).length // catch for no more items in the shop
+                    )) ||
+                    (encounters[0] === theSecondTask && ( // The Second Task completion
+                        this.bought.filter(card => {return card.type === "ally"}).length >= 2 ||
+                        !hogwartsCards.filter(card => {return card.type === "ally"}).length // catch for no more allies in the shop
+                    )) ||
+                    (encounters[0] === sneakingInTheHalls && this.played.filter(card => {return card.type === "item"}).length >= 4) || // Sneaking in the Halls completion
+                    (encounters[0] === theMinistryIsMeddling && this.influence >= 8) || // The Ministry is Meddling completion
+                    (encounters[0] === detentionWithDolores && this.played.map(card => {return card.cost;}).filter(cost => {cost >= 4;}).length >= 3) // Detention with Dolores completion
+                )) this.addDestroyedHorcrux(encounters.shift());
+
                 this.petrified = false;
                 this.heroImage.remove();
                 this.proficiencyImage.remove();
@@ -2307,7 +2270,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._healthLost = 0;
                 players.forEach(player => {player._invulnerable = false;});
                 this._horcrux1Used = false;
-                this.firstTaskCompletion = 0;
+                this._bought = [];
                 this._charmUsed = false;
                 playerTurn = false;
                 
@@ -3035,24 +2998,6 @@ document.getElementById("submitPlayers").onclick = () => {
                                         activeLocation.removeFromLocation();
                                         darken(activePlayer.proficiencyImage);
                                     }, 1000);
-                                }
-                            }
-                            if (encounters.length) {
-                                let allVillainsDefeated = true;
-                                for (let i = 0; i < document.getElementsByClassName("activeVillain").length; i++) {
-                                    if (document.getElementsByClassName("activeVillain")[i].innerHTML !== "") allVillainsDefeated = false;
-                                }
-                                if (allVillainsDefeated) {
-                                    // Unregistered Animgaus backup completion
-                                    if (encounters[0] === unregisteredAnimagus && !inactiveVillains.length) {
-                                        activePlayer.addDestroyedHorcrux(encounters.shift());
-                                        displayNextEncounter();
-                                    }
-                                    // Full Moon Rises completion
-                                    if (encounters[0] === fullMoonRises) {
-                                        activePlayer.addDestroyedHorcrux(encounters.shift());
-                                        displayNextEncounter();
-                                    }
                                 }
                             }
 
