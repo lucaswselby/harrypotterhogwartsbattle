@@ -2701,9 +2701,7 @@ document.getElementById("submitPlayers").onclick = () => {
             activeLocation.addToLocation(); 
             if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy) players.forEach(player => {player.health--;}); 
             if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy) players.forEach(player => {player.health--;});
-            if (activeVillains.includes(corneliusFudge) && !corneliusFudge.petrifiedBy) players.forEach(player => {
-                // TO-DO: banish top card
-            });
+            if (activeVillains.includes(corneliusFudge) && !corneliusFudge.petrifiedBy) players.forEach(player => {player.draw.splice(0, 1);});
         });
         const morsmordre2 = morsmordre1.clone();
         const regeneration = new DarkArtsEvent("Regeneration", "Game 4", () => {activeVillains.filter(villain => {return villain.type.includes("villain")}).forEach(villain => {villain.health += 2;})});
@@ -4424,9 +4422,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (inactiveVillains[inactiveVillains.length - 1].type.includes("villain")) {
                             if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy && deathEater1.health > 0) players.forEach(player => {player.health--;});
                             if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy && deathEater2.health > 0) players.forEach(player => {player.health--;});
-                            if (activeVillains.includes(corneliusFudge) && !corneliusFudge.petrifiedBy && corneliusFudge.health > 0) players.forEach(player => {
-                                // TO-DO: banish top card
-                            });
+                            if (activeVillains.includes(corneliusFudge) && !corneliusFudge.petrifiedBy && corneliusFudge.health > 0) players.forEach(player => {player.draw.splice(0, 1);});
                         }
                         // Common Welsh Green effect
                         if (inactiveVillains[inactiveVillains.length - 1].type.includes("creature") && activeVillains.includes(commonWelshGreen) && !commonWelshGreen.petrifiedBy && commonWelshGreen.health > 0) players.forEach(player => {player.health -= 2;});
