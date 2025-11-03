@@ -2618,7 +2618,7 @@ document.getElementById("submitPlayers").onclick = () => {
             players.forEach(player => {
                 const allies = () => {return player.hand.filter(card => {return card.type === "ally";});}; 
                 if (allies().length && player.health > 0) {
-                    addPlayerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {
+                    addPlayerChoice(`${player.hero} loses:`, () => {return allies().length ? 2 : 0;}, 1, () => {
                         document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(allies()); 
                         document.getElementsByClassName("choice")[0].onclick = () => {
                             if (allies().length > 1) {
