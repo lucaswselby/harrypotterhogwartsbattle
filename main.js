@@ -1367,7 +1367,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             const transfer = (index, player) => {player.addToHand(affectedPlayer.discard.splice(index, 1)[0]);};
                             const otherPlayers = players.filter(player => {return player !== affectedPlayer;});
                             if (otherPlayers.length > 1) {
-                                playerChoices.push(new PlayerChoice(`Give ${affectedPlayer.discard[i].name} to:`, () => {return otherPlayers.length;}, 1, () => {
+                                playerChoices.unshift(new PlayerChoice(`Give ${affectedPlayer.discard[i].name} to:`, () => {return otherPlayers.length;}, 1, () => {
                                     for (let j = 0; j < otherPlayers.length; j++) {
                                         document.getElementsByClassName("choice")[j].appendChild(otherPlayers[j].heroImage.cloneNode());
                                         document.getElementsByClassName("choice")[j].onclick = () => {transfer(i, otherPlayers[j]);};
