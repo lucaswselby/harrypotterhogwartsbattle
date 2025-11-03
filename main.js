@@ -291,9 +291,9 @@ document.getElementById("submitPlayers").onclick = () => {
             else if (color === "blue") sides.push("draw", "draw");
             let result = sides[Math.floor(Math.random() * sides.length)];
             const arithmancyCheck = effect => {
-                // Destroy Horcrux
-                const destroyedHorcrux = () => {
-                    if (encounters.length && encounters[0].remaining.length && !evil) encounters[0].addSymbol(result);
+                const activateEffect = () => {
+                    effect();
+                    if (encounters.length && encounters[0].remaining.length && !evil) encounters[0].addSymbol(result); // add symbol to encounter
                 };
 
                 // returns the imge corresponding the to result of the dice roll
@@ -338,8 +338,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             document.getElementsByClassName("choice")[i + 1].onclick = () => {
                                 affectedPlayer.influence--;
                                 result = otherResults[i];
-                                effect();
-                                destroyedHorcrux();
+                                activateEffect();
                             };
                         }
                     });
@@ -348,10 +347,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (rerollViable()) {
                     addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
                         document.getElementsByClassName("choice")[0].innerHTML = rewardImg(result);
-                        document.getElementsByClassName("choice")[0].onclick = () => {
-                            effect();
-                            destroyedHorcrux();
-                        };
+                        document.getElementsByClassName("choice")[0].onclick = activateEffect;
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Re-roll</p>";
                         document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie(affectedPlayer, color, evil, true, originalSelfCorrectingInkRoll);};
                         if (affectedPlayer.proficiency === "Arithmancy") darken(affectedPlayer.proficiencyImage);
@@ -359,8 +355,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     });
                 }
                 else {
-                    effect();
-                    destroyedHorcrux();
+                    activateEffect();
                 }
             };
             if (evil) {
