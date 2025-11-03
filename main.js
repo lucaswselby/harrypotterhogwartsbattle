@@ -1762,7 +1762,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                             document.getElementById("playerCharm").onclick = () => {};
                                                         };
                                                         if (remainingPlayers.length > 1) {
-                                                            playerChoices.push(new PlayerChoice("Affect:", () => {return remainingPlayers.length;}, 1, () => {
+                                                            playerChoices.unshift(new PlayerChoice("Affect:", () => {return remainingPlayers.length;}, 1, () => {
                                                                 for (let j = 0; j < remainingPlayers.length; j++) {
                                                                     document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode());
                                                                     document.getElementsByClassName("choice")[j].onclick = () => {gainBenefit(remainingPlayers[j]);};
