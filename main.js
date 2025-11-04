@@ -1262,11 +1262,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     addPlayerChoice("Copy effects of:", () => {return spells.length;}, 1, () => {
                         for (let i = 0; i < spells.length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`;
-                            document.getElementsByClassName("choice")[i].onclick = () => {spells[i].effect();}; // no spells have passive effects
+                            document.getElementsByClassName("choice")[i].onclick = () => {spells[i].effect(affectedPlayer);}; // no spells have passive effects
                         }
                     });
                 }
-                else spells[0].effect();
+                else spells[0].effect(affectedPlayer);
             }
         }, false, false);
         const prioriIncantatem2 = prioriIncantatem1.clone();
