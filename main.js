@@ -756,7 +756,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraHarry6 = alohomoraHarry1.clone();
         const alohomoraHarry7 = alohomoraHarry1.clone();
         const firebolt = new Card("Firebolt", "Game 1", "item", 0, affectedPlayer => {affectedPlayer.attack++;}, true, false);
-        const hedwig = new Card("Hedwig", "Game 1", "ally", 0, startingAllyEffect, false, false);
+        const hedwig = new Card("Hedwig", "Game 1", "ally", 0, affectedPlayer => {startingAllyEffect(affectedPlayer);}, false, false);
         const invisibilityCloak = new Card("Invisibility Cloak", "Game 1", "item", 0, affectedPlayer => {affectedPlayer.influence++;}, true, false);
         const harryStartingCards = [alohomoraHarry1, alohomoraHarry2, alohomoraHarry3, alohomoraHarry4, alohomoraHarry5, alohomoraHarry6, alohomoraHarry7, firebolt, hedwig, invisibilityCloak];
 
@@ -770,7 +770,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraRon7 = alohomoraRon1.clone();
         const cleansweep11 = new Card("Cleansweep 11", "Game 1", "item", 0, affectedPlayer => {affectedPlayer.attack++;}, true, false);
         const everyFlavourBeans = new Card("Every-Flavour Beans", "Game 1", "item", 0, affectedPlayer => {affectedPlayer.influence++;}, true, false);
-        const pigwidgeon = new Card("Pigwidgeon", "Game 1", "ally", 0, startingAllyEffect, false, false);
+        const pigwidgeon = new Card("Pigwidgeon", "Game 1", "ally", 0, affectedPlayer => {startingAllyEffect(affectedPlayer);}, false, false);
         const ronStartingCards = [alohomoraRon1, alohomoraRon2, alohomoraRon3, alohomoraRon4, alohomoraRon5, alohomoraRon6, alohomoraRon7, cleansweep11, everyFlavourBeans, pigwidgeon];
 
         // Hermione starting cards
@@ -781,7 +781,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraHermione5 = alohomoraHermione1.clone();
         const alohomoraHermione6 = alohomoraHermione1.clone();
         const alohomoraHermione7 = alohomoraHermione1.clone();
-        const crookshanks = new Card("Crookshanks", "Game 1", "ally", 0, startingAllyEffect, false, false);
+        const crookshanks = new Card("Crookshanks", "Game 1", "ally", 0, affectedPlayer => {startingAllyEffect(affectedPlayer);}, false, false);
         const theTalesOfBeedleTheBard = new Card("The Tales Of Beedle The Bard", "Game 1", "item", 0, affectedPlayer => {if (encounters[0] === horcrux3) affectedPlayer.influence += 2; else {addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${influenceToken + influenceToken}</div>`; document.getElementsByClassName("choice")[0].onclick = () => {affectedPlayer.influence += 2;}; document.getElementsByClassName("choice")[1].innerHTML = `ALL Heroes: ${influenceToken}`; document.getElementsByClassName("choice")[1].onclick = () => {players.forEach(player => {player.influence++;});};});}}, false, false);
         const timeTurner = new Card("Time Turner", "Game 1", "item", 0, affectedPlayer => {affectedPlayer.influence++;}, true, false);
         const hermioneStartingCards = [alohomoraHermione1, alohomoraHermione2, alohomoraHermione3, alohomoraHermione4, alohomoraHermione5, alohomoraHermione6, alohomoraHermione7, crookshanks, theTalesOfBeedleTheBard, timeTurner];
@@ -796,7 +796,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraNeville7 = alohomoraNeville1.clone();
         const mandrake = new Card("Mandrake", "Game 1", "item", 0, affectedPlayer => {const hurtPlayers = players.filter(player => {return canHeal(player);}); if (hurtPlayers.length) {addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = attackToken; document.getElementsByClassName("choice")[0].onclick = () => {affectedPlayer.attack++;}; document.getElementsByClassName("choice")[1].innerHTML = `<p>Any one Hero</p><div class="choiceContainer">${healthToken + healthToken}</div><div>${hurtPlayers.reduce((prev, curr) => {return prev + `<p>${curr.hero}'s Health: ${curr.health}</p>`;}, "")}</div>`; document.getElementsByClassName("choice")[1].onclick = () => {if (hurtPlayers.length > 1) {addPlayerChoice("Pick a player to heal:", () => {return hurtPlayers.length;}, 1, () => {for (let i = 0; i < hurtPlayers.length; i++) {document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<div>Health: ${hurtPlayers[i].health}</div>`; document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};}});} else hurtPlayers[0].health += 2;};});} else affectedPlayer.attack++;}, false, false);
         const remembrall = new Card("Remembrall", "Game 1", "item", 0, affectedPlayer => {affectedPlayer.influence++;}, false, false);
-        const trevor = new Card("Trevor", "Game 1", "ally", 0, startingAllyEffect, false, false);
+        const trevor = new Card("Trevor", "Game 1", "ally", 0, affectedPlayer => {startingAllyEffect(affectedPlayer);}, false, false);
         const nevilleStartingCards = [alohomoraNeville1, alohomoraNeville2, alohomoraNeville3, alohomoraNeville4, alohomoraNeville5, alohomoraNeville6, alohomoraNeville7, mandrake, remembrall, trevor];
 
         // Luna starting cards
@@ -807,7 +807,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraLuna5 = alohomoraLuna1.clone();
         const alohomoraLuna6 = alohomoraLuna1.clone();
         const alohomoraLuna7 = alohomoraLuna1.clone();
-        const crumpleHornedSnorkack = new Card("Crumple Horned Snorkack", "Box 1", "ally", 0, startingAllyEffect, false, false);
+        const crumpleHornedSnorkack = new Card("Crumple Horned Snorkack", "Box 1", "ally", 0, affectedPlayer => {startingAllyEffect(affectedPlayer);}, false, false);
         const lionHat = new Card("Lion Hat", "Box 1", "item", 0, affectedPlayer => {affectedPlayer.influence++; if (players.filter(player => {return player !== affectedPlayer && (player.hand.includes(quidditchGear1) || player.hand.includes(quidditchGear2) || player.hand.includes(quidditchGear3) || player.hand.includes(quidditchGear4) || player.hand.includes(firebolt) ||  player.hand.includes(cleansweep11) ||  player.hand.includes(nimbusTwoThousandAndOne1) ||  player.hand.includes(nimbusTwoThousandAndOne2) ||  player.hand.includes(nimbus2000));}).length) affectedPlayer.attack++;}, false, false);
         const spectrespecs = new Card("Spectrespecs", "Box 1", "item", 0, affectedPlayer => {affectedPlayer.influence++; if (!darkArtsEvents.length) {shuffle(inactiveDarkArtsEvents); while (inactiveDarkArtsEvents.length) darkArtsEvents.push(inactiveDarkArtsEvents.shift());} addPlayerChoice("Choose:", () => {return 2;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<img src="${darkArtsEvents[0].img.src}"><p>Keep</p>`; document.getElementsByClassName("choice")[1].innerHTML = `<img src="${darkArtsEvents[0].img.src}"><p>Discard</p>`; document.getElementsByClassName("choice")[1].onclick = () => {inactiveDarkArtsEvents.push(darkArtsEvents.shift());};});}, false, false);
         const lunaStartingCards = [alohomoraLuna1, alohomoraLuna2, alohomoraLuna3, alohomoraLuna4, alohomoraLuna5, alohomoraLuna6, alohomoraLuna7, crumpleHornedSnorkack, lionHat, spectrespecs];
@@ -820,7 +820,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const alohomoraGinny5 = alohomoraGinny1.clone();
         const alohomoraGinny6 = alohomoraGinny1.clone();
         const alohomoraGinny7 = alohomoraGinny1.clone();
-        const arnold = new Card("Arnold", "Pack 1", "ally", 0, startingAllyEffect, false, false);
+        const arnold = new Card("Arnold", "Pack 1", "ally", 0, affectedPlayer => {startingAllyEffect(affectedPlayer);}, false, false);
         const batBogeyHex = new Card("Bat Bogey Hex", "Pack 1", "spell", 0, affectedPlayer => {
             const healable = players.filter(player => {return canHeal(player);});
             if (healable.length) {
