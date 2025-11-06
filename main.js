@@ -475,24 +475,6 @@ document.getElementById("submitPlayers").onclick = () => {
             document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
         };
 
-        // populate details to show other players' hands
-        const populateOtherHands = () => {
-            document.getElementById("otherPlayerHands").innerHTML = "";
-            players.filter(player => {return player !== activePlayer;}).forEach(player => {
-                const otherPlayerHandDetails = document.createElement("details");
-                otherPlayerHandDetails.open = true;
-                otherPlayerHandDetails.innerHTML = `<summary>${player.hero}'s Hand</summary>`;
-                const otherPlayerHand = document.createElement("div");
-                player.hand.forEach(card => {
-                    const cardImg = card.img.cloneNode(false);
-                    cardImg.onclick = () => {};
-                    otherPlayerHand.appendChild(cardImg);
-                });
-                otherPlayerHandDetails.appendChild(otherPlayerHand);
-                document.getElementById("otherPlayerHands").appendChild(otherPlayerHandDetails);
-            });
-        };
-
         // Mermaid effect
         const activeMermaid = () => {
             if (activeVillains.includes(mermaid) && !mermaid.petrifiedBy && mermaid.influence > 0) {
@@ -542,7 +524,6 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._img.className = "card";
                 this._img.alt = name;
                 this._effect = effect;
-                this.generateOnClick();
                 this._type = type;
                 this._cost = cost;
                 this._passive = passive;
@@ -565,7 +546,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             generateOnClick() {
                 this._img.onclick = () => {
-                    if (!document.getElementById("playerChoice")) {
+                    if (!document.getElementById("playerChoice") && activePlayer.hand.includes(this)) {
                         // Escape effect
                         if (encounters.length && encounters[0] === escape && (this.type === "item" || this.type === "ally")) {
                             activePlayer.health--;
@@ -1549,7 +1530,6 @@ document.getElementById("submitPlayers").onclick = () => {
                         else {
                             activePlayer.discard.push(card);
                         }
-                        card.generateOnClick();
 
                         // Dolores Umbridge effect
                         if (activeVillains.includes(doloresUmbridge) && card.cost >= 4 && !doloresUmbridge.petrifiedBy && doloresUmbridge.health > 0) {
@@ -1678,7 +1658,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 return this._health;
             }
             displayHealth() {
-                const healthTracker = document.getElementById("healthTracker");
+                const healthTracker = document.getElementsByClassName("healthTracker")[players.indexOf(this)];
                 healthTracker.style.left = `${10.3 + 8.3 * (9 - activePlayer.health)}%`;
                 if (activePlayer.health % 2 === 1) {
                     healthTracker.style.top = "33%";
@@ -1748,7 +1728,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             // Apparition Charm
                             if (this.charm === "Apparition" && !this.gainedHealth) {
                                 // TO-DO: highlight Apparition Charm
-                                document.getElementById("playerCharm").onclick = () => {
+                                document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {
                                     if (this.health > 7) {
                                         const cheapCards = this.played.filter(card => {return card.cost <= 3;});
                                         if (cheapCards.length) {
@@ -1759,7 +1739,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                         const remainingPlayers = players.filter(player => {return player !== this});
                                                         const gainBenefit = player => {
                                                             cheapCards[i].effect(player);
-                                                            document.getElementById("playerCharm").onclick = () => {};
+                                                            document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {};
                                                         };
                                                         if (remainingPlayers.length > 1) {
                                                             playerChoices.unshift(new PlayerChoice("Affect:", () => {return remainingPlayers.length;}, 1, () => {
@@ -1778,7 +1758,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     }
                                     else if (this.health < 4) {
                                         rollHouseDie(this, "yellow", false, false, false);
-                                        document.getElementById("playerCharm").onclick = () => {};
+                                        document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {};
                                     }
                                     else {
                                         const items = this.discard.filter(card => {return card.type === "item";});
@@ -1788,7 +1768,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`;
                                                     document.getElementsByClassName("choice")[i].onclick = () => {
                                                         this.addToHand(this.discard.splice(this.discard.indexOf(items[i]), 1)[0]);
-                                                        document.getElementById("playerCharm").onclick = () => {};
+                                                        document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {};
                                                     };
                                                 }
                                             });
@@ -1841,9 +1821,9 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     // display attack icons
                     if (activePlayer === this) {
-                        document.getElementById("attackTokens").innerHTML = "";
+                        document.getElementsByClassName("attackTokens")[players.indexOf(this)].innerHTML = "";
                         for (let i = 0; i < this.attack; i++) {
-                            document.getElementById("attackTokens").innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
+                            document.getElementsByClassName("attackTokens")[players.indexOf(this)].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
                         }
                     }
                 }
@@ -1861,9 +1841,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     
                     // display influence icons
                     if (activePlayer === this) {
-                        document.getElementById("influenceTokens").innerHTML = "";
+                        document.getElementsByClassName("influenceTokens")[players.indexOf(this)].innerHTML = "";
                         for (let i = 0; i < this.influence; i++) {
-                            document.getElementById("influenceTokens").innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
+                            document.getElementsByClassName("influenceTokens")[players.indexOf(this)].innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
                         }
                     }
                 }
@@ -2060,7 +2040,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 document.getElementById("encounters").innerHTML = "";
                 this._horcruxesDestroyed.push(destroyedHorcrux);
                 destroyedHorcrux.img.classList.toggle("event");
-                document.getElementById("horcruxesDestroyed").appendChild(destroyedHorcrux.img);
+                document.getElementsByClassName("horcruxesDestroyed")[players.indexOf(this)].appendChild(destroyedHorcrux.img);
                 destroyedHorcrux.img.onclick = destroyedHorcrux.reward;
                 displayNextEncounter();
             }
@@ -2078,16 +2058,14 @@ document.getElementById("submitPlayers").onclick = () => {
             }
 
             banishAt(index) {
-                if (document.getElementById("playerHand").contains(this.hand[index].img)) document.getElementById("playerHand").removeChild(this.hand[index].img);
+                if (document.getElementsByClassName("playerHand")[players.indexOf(this)].contains(this.hand[index].img)) document.getElementsByClassName("playerHand")[players.indexOf(this)].removeChild(this.hand[index].img);
                 if (this.passives.includes(this.hand[index])) this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
                 this._hand.splice(index, 1);
-                populateOtherHands();
             }
             discardAt(index) {
                 this._discard.push(this.hand[index]);
-                if (document.getElementById("playerHand").contains(this.hand[index].img)) document.getElementById("playerHand").removeChild(this.hand[index].img);
+                if (document.getElementsByClassName("playerHand")[players.indexOf(this)].contains(this.hand[index].img)) document.getElementsByClassName("playerHand")[players.indexOf(this)].removeChild(this.hand[index].img);
                 this._hand.splice(index, 1);
-                if (this !== activePlayer) populateOtherHands();
             }
             forcedDiscardAt(index, villainOrDAE) {
                 // Remembrall and Old Sock effects
@@ -2153,9 +2131,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.discardAt(index);
             }
             populateHand() {
-                document.getElementById("playerHand").innerHTML = "";
+                document.getElementsByClassName("playerHand")[players.indexOf(this)].innerHTML = "";
                 this.hand.forEach(card => {
-                    document.getElementById("playerHand").appendChild(card.img);
+                    document.getElementsByClassName("playerHand")[players.indexOf(this)].appendChild(card.img);
                 });
             }
             shuffle() {
@@ -2171,15 +2149,13 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             addToHand(card) {
                 this.hand.push(card);
-                if (card.passive) {
-                    this._passives.push(card);
-                }
+                document.getElementsByClassName("playerHand")[players.indexOf(this)].appendChild(card.img);
                 if (this === activePlayer) {
-                    document.getElementById("playerHand").appendChild(card.img);
+                    if (card.passive) {
+                        this._passives.push(card);
+                    }
+                    card.generateOnClick();
                 }
-                card.generateOnClick();
-
-                if (this !== activePlayer) populateOtherHands();
             }
             drawCards(numberOfCards) {
                 if (!this.petrified) {
@@ -2213,7 +2189,6 @@ document.getElementById("submitPlayers").onclick = () => {
                             i--;
                         }
                     }
-                    this.hand.forEach(card => {card.generateOnClick();});
                 }
             }
             endTurn() {
@@ -2243,7 +2218,6 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.heroImage.remove();
                 this.proficiencyImage.remove();
                 this.charmImage.remove();
-                document.getElementById("horcruxesDestroyed").innerHTML = "";
                 while (this.hand.length) this.discardAt(0);
                 if (this.charm !== "Permanent Sticking" || this.health > 7) this.attack = 0;
                 if (this.charm !== "Permanent Sticking") this.influence = 0;
@@ -2262,6 +2236,8 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._horcrux1Used = false;
                 this._bought = [];
                 this._charmUsed = false;
+                this.proficiencyImage.onclick = () => {};
+                this.charmImage.onclick = () => {};
                 playerTurn = false;
                 
                 // Peskipiksi Pesternomi effect
@@ -3719,20 +3695,7 @@ document.getElementById("submitPlayers").onclick = () => {
             <div class="shop" id="shop5"></div>
             <div class="shop" id="shop6"></div>
         </div>
-        <div id="playerContainer">
-            <div id="heroImage" style="display: flex"></div>
-            <div id="horcruxesDestroyed"></div>
-            <div id="charm"></div>
-            <div id="playerBoardContainer">
-                <img id="playerBoard" src="./images/playerBoard.png" alt="player board">
-                <img id="healthTracker" src="./images/healthTracker.png" alt="health tracker">
-                <div id="attackTokens"></div>
-                <div id="influenceTokens"></div>
-            </div>
-            <div id="playerHand"></div>
-            <div id="otherPlayerHands"></div>
-            <input type="button" id="endTurn" value="End Turn">
-        </div>`;
+        <div id="playersContainer"></div>`;
         const disableScreen = document.createElement("DIV");
         disableScreen.id = "disableScreen";
         document.getElementsByTagName("MAIN")[0].appendChild(disableScreen);
@@ -3839,6 +3802,24 @@ document.getElementById("submitPlayers").onclick = () => {
         }
         populateShop();
 
+        // populate players
+        for (let i = 0; i < players.length; i++) {
+            document.getElementById("playersContainer").innerHTML += `<div class="heroImage" style="display: flex"></div>
+            <div class="horcruxesDestroyed"></div>
+            <div class="charm"></div>
+            <div class="playerBoardContainer">
+                <img class="playerBoard" src="./images/playerBoard.png" alt="player board">
+                <img class="healthTracker" src="./images/healthTracker.png" alt="health tracker">
+                <div class="attackTokens"></div>
+                <div class="influenceTokens"></div>
+            </div>
+            <div class="playerHand"></div>`;
+            document.getElementsByClassName("heroImage")[i].appendChild(players[i].heroImage);
+            document.getElementsByClassName("heroImage")[i].appendChild(players[i].proficiencyImage);
+            document.getElementsByClassName("charm")[i].appendChild(players[i].charmImage);
+        }
+        document.getElementById("playersContainer").innerHTML += `<input type="button" id="endTurn" value="End Turn">`;
+
         // start a new turn
         let firstTurn = true;
         const startTurn = () => {
@@ -3855,17 +3836,15 @@ document.getElementById("submitPlayers").onclick = () => {
                 players.forEach(player => {player.drawCards(5);});
                 firstTurn = false;
             }
-            activePlayer.populateHand();
-            document.getElementById("heroImage").appendChild(activePlayer.heroImage);
-            document.getElementById("heroImage").appendChild(activePlayer.proficiencyImage);
-            document.getElementById("charm").appendChild(activePlayer.charmImage);
-            activePlayer.horcruxesDestroyed.forEach(horcrux => {document.getElementById("horcruxesDestroyed").appendChild(horcrux.img);});
-            activePlayer.attack = activePlayer.attack;
-            activePlayer.influence = activePlayer.influence;
-            populateOtherHands();
+            activePlayer.hand.forEach(card => {card.generateOnClick();});
 
-            // unstun everyone
             players.forEach(player => {
+                // populate players' resources
+                player.populateHand();
+                player.attack = activePlayer.attack;
+                player.influence = activePlayer.influence;
+                
+                // unstun everyone
                 if (player.stunned) {
                     player.stunned = false;
                     player.health = 10;
@@ -3874,7 +3853,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
             // Charms proficiency
             if (activePlayer.proficiency === "Charms" && !activePlayer.petrified) {
-                document.getElementById("playerProficiency").onclick = () => {
+                activePlayer.proficiencyImage.onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         let spells = activePlayer.hand.filter(card => {return card.type === "spell";});
                         if (spells.length >= 2) {
@@ -3889,23 +3868,23 @@ document.getElementById("submitPlayers").onclick = () => {
                             else spells.forEach(spell => {activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spell), false);});
                             players.forEach(player => {player.influence++; player.drawCards(1);});
                         }
-                        document.getElementById("playerProficiency").onclick = () => {};
+                        activePlayer.proficiencyImage.onclick = () => {};
                     }
                 };
             }
             // Flying Lessons proficiency
             else if (activePlayer.proficiency === "Flying Lessons") {
-                document.getElementById("playerProficiency").onclick = () => {
+                activePlayer.proficiencyImage.onclick = () => {
                     if (activePlayer.influence >= 5 && !document.getElementById("playerChoice")) {
                         activePlayer.influence -= 5;
                         activeLocation.removeFromLocation();
-                        document.getElementById("playerProficiency").onclick = () => {};
+                        activePlayer.proficiencyImage.onclick = () => {};
                     }
                 }
             }
             // Transfiguration proficiency
             else if (activePlayer.proficiency === "Transfiguration") {
-                document.getElementById("playerProficiency").onclick = () => {
+                activePlayer.proficiencyImage.onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         const items = activePlayer.hand.filter(card => {return card.type === "item";});
                         if (items.length) {
@@ -3942,14 +3921,14 @@ document.getElementById("submitPlayers").onclick = () => {
                                 });
                             }
                             else transfigure(0);
-                            document.getElementById("playerProficiency").onclick = () => {};
+                            activePlayer.proficiencyImage.onclick = () => {};
                         }
                     }
                 };
             }
             // Otter Patronus
             else if (activePlayer.proficiency === "Otter Patronus") {
-                document.getElementById("playerProficiency").onclick = () => {
+                activePlayer.proficiencyImage.onclick = () => {
                     if (activePlayer.influence >= 1 && !document.getElementById("playerChoice")) {
                         activePlayer.influence--;
                         if (!activePlayer.draw.length) activePlayer.shuffle();
@@ -3958,13 +3937,13 @@ document.getElementById("submitPlayers").onclick = () => {
                             activePlayer.attack++;
                         }
                         else addPlayerChoice("Top card:", () => {return 1;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<img src="${activePlayer.draw[0].img.src}">`;});
-                        document.getElementById("playerProficiency").onclick = () => {};
+                        activePlayer.proficiencyImage.onclick = () => {};
                     }
                 }
             }
             // Rabbit Patronus
             else if (activePlayer.proficiency === "Rabbit Patronus") {
-                document.getElementById("playerProficiency").onclick = () => {
+                activePlayer.proficiencyImage.onclick = () => {
                     const spells = activePlayer.hand.filter(card => {return card.type === "spell";});
                     if (spells.length && !document.getElementById("playerChoice")) {
                         if (spells.length > 1) {
@@ -3977,34 +3956,34 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         else activePlayer.forcedDiscardAt(activePlayer.hand.indexOf(spells[0]), false);
                         rollHouseDie(activePlayer,"blue", false, false, false);
-                        document.getElementById("playerProficiency").onclick = () => {};
+                        activePlayer.proficiencyImage.onclick = () => {};
                     }
                 }
             }
             // Terrier Patronus
             else if (activePlayer.proficiency === "Terrier Patronus") {
-                document.getElementById("playerProficiency").onclick = () => {
+                activePlayer.proficiencyImage.onclick = () => {
                     if (activePlayer.attack >= 1 && !document.getElementById("playerChoice")) {
                         activePlayer.attack--;
                         rollHouseDie(activePlayer,"red", false, false, false);
-                        document.getElementById("playerProficiency").onclick = () => {};
+                        activePlayer.proficiencyImage.onclick = () => {};
                     }
                 }
             }
             // Horse Patronus
             else if (activePlayer.proficiency === "Horse Patronus") {
-                document.getElementById("playerProficiency").onclick = () => {
+                activePlayer.proficiencyImage.onclick = () => {
                     if (activePlayer.attack >= 1 && players.filter(player => {return !player.petrified;}).length && !document.getElementById("playerChoice")) {
                         activePlayer.attack--;
                         players.forEach(player => {player.drawCards(1);});
-                        document.getElementById("playerProficiency").onclick = () => {};
+                        activePlayer.proficiencyImage.onclick = () => {};
                     }
                 }
             }
 
             // Defensive Charm
             if (activePlayer.charm === "Defensive") {
-                document.getElementById("playerCharm").onclick = () => {
+                activePlayer.charmImage.onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         if (activePlayer.health > 7) {
                             const hurtVillains = activeVillains.filter(villain => {return villain.health < villain.maxHealth});
@@ -4021,7 +4000,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementsByClassName("choice")[j].onclick = () => {
                                                         hurtVillains[i].health++;
                                                         hurtableVillains[j].health--;
-                                                        document.getElementById("playerCharm").onclick = () => {};
+                                                        activePlayer.charmImage.onclick = () => {};
                                                     };
                                                 }
                                                 document.getElementsByClassName("choice")[hurtableVillains.length].innerHTML = "<p>Nevermind</p>";
@@ -4041,7 +4020,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                             document.getElementsByClassName("choice")[i].onclick = () => {
                                                 activePlayer.forcedDiscardAt(i, false);
                                                 rollHouseDie(activePlayer, "green", false, false, false);
-                                                        document.getElementById("playerCharm").onclick = () => {};
+                                                        activePlayer.charmImage.onclick = () => {};
                                             };
                                         }
                                     });
@@ -4049,7 +4028,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 else {
                                     activePlayer.forcedDiscardAt(0, false);
                                     rollHouseDie(activePlayer, "green", false, false, false);
-                                    document.getElementById("playerCharm").onclick = () => {};
+                                    activePlayer.charmImage.onclick = () => {};
                                 }
                             }
                         }
@@ -4063,7 +4042,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 document.getElementsByClassName("choice")[1].innerHTML = `<img src="${darkArtsEvents[0].img.src}"><p>Banish</p>`; 
                                 document.getElementsByClassName("choice")[1].onclick = () => {
                                     darkArtsEvents.splice(0, 1);
-                                    document.getElementById("playerCharm").onclick = () => {};
+                                    activePlayer.charmImage.onclick = () => {};
                                 };
                             });
                         }
@@ -4072,7 +4051,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             // Hover Charm
             else if (activePlayer.charm === "Hover") {
-                document.getElementById("playerCharm").onclick = () => {
+                activePlayer.charmImage.onclick = () => {
                     if (activePlayer.hand.length && !document.getElementById("playerChoice")) {
                         const hoverCharmEffect = () => {
                             if (activePlayer.health > 7) activePlayer.influence += 2;
@@ -4120,13 +4099,13 @@ document.getElementById("submitPlayers").onclick = () => {
                             activePlayer.forcedDiscardAt(0, false);
                             hoverCharmEffect();
                         }
-                        document.getElementById("playerCharm").onclick = () => {};
+                        activePlayer.charmImage.onclick = () => {};
                     }
                 }
             }
             // Memory Charm
             else if (activePlayer.charm === "Memory") {
-                document.getElementById("playerCharm").onclick = () => {
+                activePlayer.charmImage.onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         const cheapCards = activePlayer.hand.filter(card => {return !card.cost || (card.cost <= 3 && activePlayer.health < 8) || (card.cost <= 5 && activePlayer.health < 4);});
                         if (cheapCards.length) {
@@ -4144,14 +4123,14 @@ document.getElementById("submitPlayers").onclick = () => {
                                 });
                             }
                             else memoryCloneAt(0);
-                            document.getElementById("playerCharm").onclick = () => {};
+                            activePlayer.charmImage.onclick = () => {};
                         }
                     }
                 }
             }
             // Undetectable Extension Charm
             else if (activePlayer.charm === "Undetectable Extension") {
-                document.getElementById("playerCharm").onclick = () => {
+                activePlayer.charmImage.onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         if (!activePlayer.draw.length) activePlayer.shuffle();
                         if (activePlayer.health < 8 && activePlayer.health > 3 && activePlayer.draw[0].cost) activePlayer.drawCards(1);
@@ -4164,7 +4143,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 };
                             });
                         }
-                        document.getElementById("playerCharm").onclick = () => {};
+                        activePlayer.charmImage.onclick = () => {};
                     }
                 };
             }

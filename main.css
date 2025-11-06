@@ -62,7 +62,7 @@ input[type="submit"] {
     display: none;
 }
 
-#gameBoardContainer, #playerBoardContainer {
+#gameBoardContainer, .playerBoardContainer {
     position: relative;
 }
 #gameBoardContainer {
@@ -343,7 +343,7 @@ input[type="submit"] {
     left: 76%;
 }
 
-#playerContainer {
+#playersContainer {
     height: 100%;
     padding-top: 1em;
     display: flex;
@@ -351,7 +351,7 @@ input[type="submit"] {
     align-items: center;
     overflow-y: auto;
 }
-#heroImage {
+.heroImage {
     width: 100%;
 }
 #playerHero, #playerProficiency {
@@ -361,25 +361,25 @@ input[type="submit"] {
     width: 100%;
 }
 
-#horcruxesDestroyed {
+.horcruxesDestroyed {
     display: flex;
     width: 100%;
 }
-#horcruxesDestroyed img {
+.horcruxesDestroyed img {
     width: calc(100% / 6);
 }
 
-#playerBoard {
+.playerBoard {
     width: 100%;
 }
-#healthTracker {
+.healthTracker {
     height: 20%;
     position: absolute;
     top: 12%;
     left: 2%;
     transition: top 1s, left 1s;
 }
-#attackTokens, #influenceTokens {
+.attackTokens, .influenceTokens {
     height: 28%;
     width: 46%;
     position: absolute;
@@ -387,17 +387,17 @@ input[type="submit"] {
     display: flex;
     flex-flow: row wrap;
 }
-#attackTokens {
+.attackTokens {
     left: 3%;
 }
-#influenceTokens {
+.influenceTokens {
     left: 50%;
 }
 .attackToken, .influenceToken {
     height: 50%;
 }
 
-#playerHand, .otherPlayerHand {
+.playerHand {
     width: 100%;
     display: flex;
     flex-flow: row wrap;
@@ -406,7 +406,7 @@ input[type="submit"] {
     width: 20%;
 }
 
-#playerContainer input[type="button"] {
+#playersContainer input[type="button"] {
     margin-top: 1em;
 }
 
