@@ -407,7 +407,7 @@ input[type="submit"] {
 }
 
 #playersContainer input[type="button"] {
-    margin-top: 1em;
+    margin: 1em;
 }
 
 #playerChoiceContainer {
