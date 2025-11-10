@@ -1,6 +1,5 @@
 :root {
     --backgroundColor: white;
-    --boardWidth: 74%;
     --playerChoiceLabelSize: 10vh;
     --playerChoiceDisplay: flex;
     --revealBoardDisplay: block;
