@@ -141,7 +141,7 @@ document.getElementById("submitPlayers").onclick = () => {
     // display game
     if (continueGame) {
         document.getElementsByTagName("MAIN")[0].style.display = "flex";
-        document.getElementsByTagName("MAIN")[0].style.overflow = "hidden";
+        document.getElementsByTagName("MAIN")[0].style.overflowY = "hidden";
         let activeGame = document.querySelector("input[name=\"game\"]:checked").value;
         const attackToken = "<img src=\"./images/attackToken.png\" alt=\"Choose Attack Token\" style=\"width: 33%;\">";
         const influenceToken = "<img src=\"./images/influenceToken.png\" alt=\"Choose Influece Token\" style=\"width: 33%;\">";

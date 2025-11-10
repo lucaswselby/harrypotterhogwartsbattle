@@ -344,7 +344,7 @@ input[type="submit"] {
 
 #playersContainer {
     height: 100%;
-    padding-top: 1em;
+    min-width: 30em;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
@@ -505,5 +505,13 @@ input[type="submit"] {
     }
     100% {
         filter: brightness(1);
+    }
+}
+
+@media (orientation: portrait) {
+    main {
+        height: auto;
+        width: 100%;
+        flex-direction: column;
     }
 }
