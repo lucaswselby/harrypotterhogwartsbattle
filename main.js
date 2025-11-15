@@ -3694,6 +3694,9 @@ document.getElementById("submitPlayers").onclick = () => {
             <div class="shop" id="shop5"></div>
             <div class="shop" id="shop6"></div>
         </div>
+        ${activeGame.includes("Pack") && activeGame !== "Pack 1" ? `<div id="potionsBoardContainer">
+            <img src=\"./images/Pack 2/potionListA.png\" id=\"potionsBoard\" alt=\"Potions Board\">
+        </div>` : ""}
         <div id="playersContainer"></div>`;
         const disableScreen = document.createElement("DIV");
         disableScreen.id = "disableScreen";
@@ -3821,6 +3824,28 @@ document.getElementById("submitPlayers").onclick = () => {
                 document.getElementsByClassName("heroImage")[i].appendChild(players[i].heroImage);
                 document.getElementsByClassName("heroImage")[i].appendChild(players[i].proficiencyImage);
                 document.getElementsByClassName("charm")[i].appendChild(players[i].charmImage);
+            }
+
+            // Packs 2-4 styling
+            if (activeGame.includes("Pack") && activeGame !== "Pack 1") {
+                const main = document.getElementsByTagName("MAIN")[0];
+                main.style.overflowY = "auto";
+                main.style.height = "auto";
+                main.style.flexWrap = "wrap";
+                const gameBoardContainerWidth = "75.1%";
+                document.getElementById("gameBoardContainer").style.width = gameBoardContainerWidth;
+                document.getElementById("potionsBoardContainer").style.width = `calc(100% - ${gameBoardContainerWidth})`;
+                const playersContainer = document.getElementById("playersContainer");
+                const reorientPlayersContainer = () => {
+                    if (window.matchMedia("(orientation: portrait)").matches) {
+                        playersContainer.style.gridTemplateColumns = "auto";
+                    }
+                    else {
+                        playersContainer.style.gridTemplateColumns = `repeat(${players.length + 1}, auto)`;
+                    }
+                }
+                reorientPlayersContainer();
+                window.onresize = reorientPlayersContainer;
             }
 
             // end turn
