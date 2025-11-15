@@ -469,9 +469,7 @@ document.getElementById("submitPlayers").onclick = () => {
             magnifyContainer.onclick = () => {
                 while(document.getElementsByClassName("magnifyContainer")[0]) document.getElementsByClassName("magnifyContainer")[0].remove();
             };
-            const magnifiedImg = event.target.cloneNode();
-            magnifiedImg.classList = [];
-            magnifyContainer.appendChild(magnifiedImg);
+            magnifyContainer.innerHTML = `<img src="${event.target.src}">`;
             document.getElementsByTagName("MAIN")[0].appendChild(magnifyContainer);
         };
 
