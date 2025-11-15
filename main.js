@@ -2062,7 +2062,9 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             discardAt(index) {
                 this._discard.push(this.hand[index]);
-                if (document.getElementsByClassName("playerHand")[players.indexOf(this)].contains(this.hand[index].img)) document.getElementsByClassName("playerHand")[players.indexOf(this)].removeChild(this.hand[index].img);
+                const handElem = document.getElementsByClassName("playerHand")[players.indexOf(this)];
+                const cardImg = this.hand[index].img;
+                if (handElem.contains(cardImg)) handElem.removeChild(cardImg);
                 this._hand.splice(index, 1);
             }
             forcedDiscardAt(index, villainOrDAE) {
