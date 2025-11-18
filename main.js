@@ -1598,7 +1598,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         this._charmImage = document.createElement("IMG");
                         this._charmImage.id = "playerCharm";
                         this._charmImage.src = `./images/Pack 1/${src(charm + " Charm")}`;
-                        this._charmImage.alt = charm;
+                        this._charmImage.alt = `${charm} Charm`;
                     }
                 }
                 this._health = 10;
@@ -1626,7 +1626,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._healthGained = 0;
                 this._healthLost = 0;
                 this._horcruxesDestroyed = [];
-                this._cardsDrawn = -5;
+                this._cardsDrawn = -5; // start game by drawing 5 cards
                 this._horcrux1Used = false;
                 this._invulnerable = false;
                 this._bought = [];
