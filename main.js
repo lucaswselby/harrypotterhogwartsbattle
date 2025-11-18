@@ -1930,7 +1930,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 // Cheering Charm
                 if (this.charm === "Cheering" && spellsCast === 3 && !this.charmUsed) {
-                    if (this.health > 7) this.influence++;
+                    if (this.health > 7) this.influence += 2;
                     else if (this.health < 4) rollHouseDie(this, "red", false, false, false);
                     else this.drawCards(1);
                     this._charmUsed = true;
