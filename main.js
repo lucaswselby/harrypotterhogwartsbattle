@@ -1557,7 +1557,7 @@ document.getElementById("submitPlayers").onclick = () => {
             constructor(hero, proficiency, charm) {
                 this._hero = hero;
                 this._heroImage = document.createElement("img");
-                this._heroImage.id = "playerHero";
+                this._heroImage.className = "playerHero";
                 this._heroImage.src = "./images/";
                 if (hero.includes("Box") || hero === "Luna Lovegood") this._heroImage.src += "Box 1";
                 else if (hero === "Ginny Weasley") this._heroImage.src += "Pack 1";
@@ -1588,7 +1588,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     this._proficiency = proficiency;
                     this._proficiencyImage.remove();
                     this._proficiencyImage = document.createElement("img");
-                    this._proficiencyImage.id = "playerProficiency";
+                    this._proficiencyImage.className = "playerProficiency";
                     this._proficiencyImage.src = `./images/${proficiencyGame}/${src(proficiency)}`;
                     this._proficiencyImage.alt = proficiency;
 
@@ -1596,7 +1596,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         this._charm = charm;
                         this._charmImage.remove();
                         this._charmImage = document.createElement("IMG");
-                        this._charmImage.id = "playerCharm";
+                        this._charmImage.className = "playerCharm";
                         this._charmImage.src = `./images/Pack 1/${src(charm + " Charm")}`;
                         this._charmImage.alt = `${charm} Charm`;
                     }

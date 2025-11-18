@@ -58,7 +58,7 @@ input[type="submit"] {
     font-size: 10vh;
 }
 
-.playerProficiency, .boxOnly, .packOnly, .playerCharm {
+.boxOnly, .packOnly {
     display: none;
 }
 
@@ -363,10 +363,10 @@ input[type="submit"] {
 .heroImage {
     width: 100%;
 }
-#playerHero, #playerProficiency {
+.playerHero, .playerProficiency {
     width: 50%;
 }
-#playerCharm {
+.playerCharm {
     width: 100%;
 }
 
