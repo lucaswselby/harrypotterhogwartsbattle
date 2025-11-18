@@ -2958,7 +2958,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 if (players[0].proficiency === "Care Of Magical Creatures") {
                                     setTimeout(() => {
                                         activeLocation.removeFromLocation();
-                                        darken(players[0].proficiencyImage);
+                                        darken(document.getElementsByClassName("playerProficiency")[0]);
                                     }, 1000);
                                 }
                             }
@@ -3973,7 +3973,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
             // Charms proficiency
             if (players[0].proficiency === "Charms" && !players[0].petrified) {
-                players[0].proficiencyImage.onclick = () => {
+                document.getElementsByClassName("playerProficiency")[0].onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         let spells = players[0].hand.filter(card => {return card.type === "spell";});
                         if (spells.length >= 2) {
@@ -3988,23 +3988,23 @@ document.getElementById("submitPlayers").onclick = () => {
                             else spells.forEach(spell => {players[0].forcedDiscardAt(players[0].hand.indexOf(spell), false);});
                             players.forEach(player => {player.influence++; player.drawCards(1);});
                         }
-                        players[0].proficiencyImage.onclick = () => {};
+                        document.getElementsByClassName("playerProficiency")[0].onclick = () => {};
                     }
                 };
             }
             // Flying Lessons proficiency
             else if (players[0].proficiency === "Flying Lessons") {
-                players[0].proficiencyImage.onclick = () => {
+                document.getElementsByClassName("playerProficiency")[0].onclick = () => {
                     if (players[0].influence >= 5 && !document.getElementById("playerChoice")) {
                         players[0].influence -= 5;
                         activeLocation.removeFromLocation();
-                        players[0].proficiencyImage.onclick = () => {};
+                        document.getElementsByClassName("playerProficiency")[0].onclick = () => {};
                     }
                 }
             }
             // Transfiguration proficiency
             else if (players[0].proficiency === "Transfiguration") {
-                players[0].proficiencyImage.onclick = () => {
+                document.getElementsByClassName("playerProficiency")[0].onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         const items = players[0].hand.filter(card => {return card.type === "item";});
                         if (items.length) {
@@ -4041,14 +4041,14 @@ document.getElementById("submitPlayers").onclick = () => {
                                 });
                             }
                             else transfigure(0);
-                            players[0].proficiencyImage.onclick = () => {};
+                            document.getElementsByClassName("playerProficiency")[0].onclick = () => {};
                         }
                     }
                 };
             }
             // Otter Patronus
             else if (players[0].proficiency === "Otter Patronus") {
-                players[0].proficiencyImage.onclick = () => {
+                document.getElementsByClassName("playerProficiency")[0].onclick = () => {
                     if (players[0].influence >= 1 && !document.getElementById("playerChoice")) {
                         players[0].influence--;
                         if (!players[0].draw.length) players[0].shuffle();
@@ -4057,13 +4057,13 @@ document.getElementById("submitPlayers").onclick = () => {
                             players[0].attack++;
                         }
                         else addPlayerChoice("Top card:", () => {return 1;}, 1, () => {document.getElementsByClassName("choice")[0].innerHTML = `<img src="${players[0].draw[0].img.src}">`;});
-                        players[0].proficiencyImage.onclick = () => {};
+                        document.getElementsByClassName("playerProficiency")[0].onclick = () => {};
                     }
                 }
             }
             // Rabbit Patronus
             else if (players[0].proficiency === "Rabbit Patronus") {
-                players[0].proficiencyImage.onclick = () => {
+                document.getElementsByClassName("playerProficiency")[0].onclick = () => {
                     const spells = players[0].hand.filter(card => {return card.type === "spell";});
                     if (spells.length && !document.getElementById("playerChoice")) {
                         if (spells.length > 1) {
@@ -4076,34 +4076,34 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         else players[0].forcedDiscardAt(players[0].hand.indexOf(spells[0]), false);
                         rollHouseDie(players[0],"blue", false, false, false);
-                        players[0].proficiencyImage.onclick = () => {};
+                        document.getElementsByClassName("playerProficiency")[0].onclick = () => {};
                     }
                 }
             }
             // Terrier Patronus
             else if (players[0].proficiency === "Terrier Patronus") {
-                players[0].proficiencyImage.onclick = () => {
+                document.getElementsByClassName("playerProficiency")[0].onclick = () => {
                     if (players[0].attack >= 1 && !document.getElementById("playerChoice")) {
                         players[0].attack--;
                         rollHouseDie(players[0],"red", false, false, false);
-                        players[0].proficiencyImage.onclick = () => {};
+                        document.getElementsByClassName("playerProficiency")[0].onclick = () => {};
                     }
                 }
             }
             // Horse Patronus
             else if (players[0].proficiency === "Horse Patronus") {
-                players[0].proficiencyImage.onclick = () => {
+                document.getElementsByClassName("playerProficiency")[0].onclick = () => {
                     if (players[0].attack >= 1 && players.filter(player => {return !player.petrified;}).length && !document.getElementById("playerChoice")) {
                         players[0].attack--;
                         players.forEach(player => {player.drawCards(1);});
-                        players[0].proficiencyImage.onclick = () => {};
+                        document.getElementsByClassName("playerProficiency")[0].onclick = () => {};
                     }
                 }
             }
 
             // Defensive Charm
             if (players[0].charm === "Defensive") {
-                players[0].charmImage.onclick = () => {
+                document.getElementsByClassName("playerCharm")[0].onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         if (players[0].health > 7) {
                             const hurtVillains = activeVillains.filter(villain => {return villain.health < villain.maxHealth});
@@ -4120,7 +4120,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                     document.getElementsByClassName("choice")[j].onclick = () => {
                                                         hurtVillains[i].health++;
                                                         hurtableVillains[j].health--;
-                                                        players[0].charmImage.onclick = () => {};
+                                                        document.getElementsByClassName("playerCharm")[0].onclick = () => {};
                                                     };
                                                 }
                                                 document.getElementsByClassName("choice")[hurtableVillains.length].innerHTML = "<p>Nevermind</p>";
@@ -4140,7 +4140,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                             document.getElementsByClassName("choice")[i].onclick = () => {
                                                 players[0].forcedDiscardAt(i, false);
                                                 rollHouseDie(players[0], "green", false, false, false);
-                                                        players[0].charmImage.onclick = () => {};
+                                                        document.getElementsByClassName("playerCharm")[0].onclick = () => {};
                                             };
                                         }
                                     });
@@ -4148,7 +4148,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 else {
                                     players[0].forcedDiscardAt(0, false);
                                     rollHouseDie(players[0], "green", false, false, false);
-                                    players[0].charmImage.onclick = () => {};
+                                    document.getElementsByClassName("playerCharm")[0].onclick = () => {};
                                 }
                             }
                         }
@@ -4162,7 +4162,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 document.getElementsByClassName("choice")[1].innerHTML = `<img src="${darkArtsEvents[0].img.src}"><p>Banish</p>`; 
                                 document.getElementsByClassName("choice")[1].onclick = () => {
                                     darkArtsEvents.splice(0, 1);
-                                    players[0].charmImage.onclick = () => {};
+                                    document.getElementsByClassName("playerCharm")[0].onclick = () => {};
                                 };
                             });
                         }
@@ -4171,7 +4171,7 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             // Hover Charm
             else if (players[0].charm === "Hover") {
-                players[0].charmImage.onclick = () => {
+                document.getElementsByClassName("playerCharm")[0].onclick = () => {
                     if (players[0].hand.length && !document.getElementById("playerChoice")) {
                         const hoverCharmEffect = () => {
                             if (players[0].health > 7) players[0].influence += 2;
@@ -4219,13 +4219,13 @@ document.getElementById("submitPlayers").onclick = () => {
                             players[0].forcedDiscardAt(0, false);
                             hoverCharmEffect();
                         }
-                        players[0].charmImage.onclick = () => {};
+                        document.getElementsByClassName("playerCharm")[0].onclick = () => {};
                     }
                 }
             }
             // Memory Charm
             else if (players[0].charm === "Memory") {
-                players[0].charmImage.onclick = () => {
+                document.getElementsByClassName("playerCharm")[0].onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         const cheapCards = players[0].hand.filter(card => {return !card.cost || (card.cost <= 3 && players[0].health < 8) || (card.cost <= 5 && players[0].health < 4);});
                         if (cheapCards.length) {
@@ -4243,14 +4243,14 @@ document.getElementById("submitPlayers").onclick = () => {
                                 });
                             }
                             else memoryCloneAt(0);
-                            players[0].charmImage.onclick = () => {};
+                            document.getElementsByClassName("playerCharm")[0].onclick = () => {};
                         }
                     }
                 }
             }
             // Undetectable Extension Charm
             else if (players[0].charm === "Undetectable Extension") {
-                players[0].charmImage.onclick = () => {
+                document.getElementsByClassName("playerCharm")[0].onclick = () => {
                     if (!document.getElementById("playerChoice")) {
                         if (!players[0].draw.length) players[0].shuffle();
                         if (players[0].health < 8 && players[0].health > 3 && players[0].draw[0].cost) players[0].drawCards(1);
@@ -4263,7 +4263,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 };
                             });
                         }
-                        players[0].charmImage.onclick = () => {};
+                        document.getElementsByClassName("playerCharm")[0].onclick = () => {};
                     }
                 };
             }
