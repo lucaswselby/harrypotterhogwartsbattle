@@ -2215,9 +2215,6 @@ document.getElementById("submitPlayers").onclick = () => {
                 )) this.addDestroyedHorcrux(encounters.shift());
 
                 this.petrified = false;
-                this.heroImage.remove();
-                this.proficiencyImage.remove();
-                this.charmImage.remove();
                 while (this.hand.length) this.discardAt(0);
                 if (this.charm !== "Permanent Sticking" || this.health > 7) this.attack = 0;
                 if (this.charm !== "Permanent Sticking") this.influence = 0;
