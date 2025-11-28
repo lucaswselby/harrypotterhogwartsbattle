@@ -2038,7 +2038,6 @@ document.getElementById("submitPlayers").onclick = () => {
                 document.getElementById("encounters").innerHTML = "";
                 this._horcruxesDestroyed.push(destroyedHorcrux);
                 destroyedHorcrux.img.classList.toggle("event");
-                document.getElementsByClassName("horcruxesDestroyed")[players.indexOf(this)].appendChild(destroyedHorcrux.img);
                 destroyedHorcrux.img.onclick = destroyedHorcrux.reward;
                 displayNextEncounter();
             }
@@ -3426,6 +3425,7 @@ document.getElementById("submitPlayers").onclick = () => {
             constructor(name, game, destroys, effect, reward) {
                 this._name = name;
                 this._img = document.createElement("IMG");
+                this._img.id = name;
                 this._img.className = "event";
                 this._img.src = `./images/${game}/${src(name)}`;
                 this._img.alt = name;
@@ -3823,6 +3823,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 ${i ? "" : "<input type=\"button\" id=\"endTurn\" value=\"End Turn\">"}`;
                 document.getElementsByClassName("heroImage")[i].appendChild(players[i].heroImage);
                 document.getElementsByClassName("heroImage")[i].appendChild(players[i].proficiencyImage);
+                players[i].horcruxesDestroyed.forEach(encounter => {
+                    document.getElementsByClassName("horcruxesDestroyed")[i].appendChild(encounter.img);
+                });
                 document.getElementsByClassName("charm")[i].appendChild(players[i].charmImage);
             }
 
@@ -4273,31 +4276,31 @@ document.getElementById("submitPlayers").onclick = () => {
 
             // horcrux rewards
             if (activeGame === "Game 7") {
-                if (players[0].horcruxesDestroyed.includes(horcrux2)) horcrux2.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux2.reward();};
-                if (players[0].horcruxesDestroyed.includes(horcrux3)) horcrux3.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux3.reward();};
-                if (players[0].horcruxesDestroyed.includes(horcrux4)) horcrux4.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux4.reward();};
-                if (players[0].horcruxesDestroyed.includes(horcrux5)) horcrux5.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux5.reward();};
-                if (players[0].horcruxesDestroyed.includes(horcrux6)) horcrux6.img.onclick = () => {if (!document.getElementById("playerChoice")) horcrux6.reward();};
+                if (players[0].horcruxesDestroyed.includes(horcrux2)) document.getElementById(horcrux2.img.id).onclick = () => {if (!document.getElementById("playerChoice")) horcrux2.reward();};
+                if (players[0].horcruxesDestroyed.includes(horcrux3)) document.getElementById(horcrux3.img.id).onclick = () => {if (!document.getElementById("playerChoice")) horcrux3.reward();};
+                if (players[0].horcruxesDestroyed.includes(horcrux4)) document.getElementById(horcrux4.img.id).onclick = () => {if (!document.getElementById("playerChoice")) horcrux4.reward();};
+                if (players[0].horcruxesDestroyed.includes(horcrux5)) document.getElementById(horcrux5.img.id).onclick = () => {if (!document.getElementById("playerChoice")) horcrux5.reward();};
+                if (players[0].horcruxesDestroyed.includes(horcrux6)) document.getElementById(horcrux6.img.id).onclick = () => {if (!document.getElementById("playerChoice")) horcrux6.reward();};
             }
             // encounter rewards
             if (activeGame === "Box 1") {
-                if (players[0].horcruxesDestroyed.includes(studentsOutOfBed)) studentsOutOfBed.img.onclick = () => {if (!document.getElementById("playerChoice")) studentsOutOfBed.reward();};
-                if (players[0].horcruxesDestroyed.includes(thirdFloorCorridor)) thirdFloorCorridor.img.onclick = () => {if (!document.getElementById("playerChoice")) thirdFloorCorridor.reward();};
+                if (players[0].horcruxesDestroyed.includes(studentsOutOfBed)) document.getElementById(studentsOutOfBed.img.id).onclick = () => {if (!document.getElementById("playerChoice")) studentsOutOfBed.reward();};
+                if (players[0].horcruxesDestroyed.includes(thirdFloorCorridor)) document.getElementById(thirdFloorCorridor.img.id).onclick = () => {if (!document.getElementById("playerChoice")) thirdFloorCorridor.reward();};
             }
             else if (activeGame === "Box 2") {
-                if (players[0].horcruxesDestroyed.includes(unregisteredAnimagus)) unregisteredAnimagus.img.onclick = () => {if (!document.getElementById("playerChoice")) unregisteredAnimagus.reward();};
-                if (players[0].horcruxesDestroyed.includes(fullMoonRises)) fullMoonRises.img.onclick = () => {if (!document.getElementById("playerChoice")) fullMoonRises.reward();};
-                if (players[0].horcruxesDestroyed.includes(defensiveTraining)) defensiveTraining.img.onclick = () => {if (!document.getElementById("playerChoice")) defensiveTraining.reward();};
+                if (players[0].horcruxesDestroyed.includes(unregisteredAnimagus)) document.getElementById(unregisteredAnimagus.img.id).onclick = () => {if (!document.getElementById("playerChoice")) unregisteredAnimagus.reward();};
+                if (players[0].horcruxesDestroyed.includes(fullMoonRises)) document.getElementById(fullMoonRises.img.id).onclick = () => {if (!document.getElementById("playerChoice")) fullMoonRises.reward();};
+                if (players[0].horcruxesDestroyed.includes(defensiveTraining)) document.getElementById(defensiveTraining.img.id).onclick = () => {if (!document.getElementById("playerChoice")) defensiveTraining.reward();};
             }
             else if (activeGame === "Box 3") {
-                if (players[0].horcruxesDestroyed.includes(forbiddenForestEncounter)) forbiddenForestEncounter.img.onclick = () => {if (!document.getElementById("playerChoice")) forbiddenForestEncounter.reward();};
-                if (players[0].horcruxesDestroyed.includes(filthyHalfBreed)) filthyHalfBreed.img.onclick = () => {if (!document.getElementById("playerChoice")) filthyHalfBreed.reward();};
-                if (players[0].horcruxesDestroyed.includes(escape)) escape.img.onclick = () => {if (!document.getElementById("playerChoice")) escape.reward();};
+                if (players[0].horcruxesDestroyed.includes(forbiddenForestEncounter)) document.getElementById(forbiddenForestEncounter.img.id).onclick = () => {if (!document.getElementById("playerChoice")) forbiddenForestEncounter.reward();};
+                if (players[0].horcruxesDestroyed.includes(filthyHalfBreed)) document.getElementById(filthyHalfBreed.img.id).onclick = () => {if (!document.getElementById("playerChoice")) filthyHalfBreed.reward();};
+                if (players[0].horcruxesDestroyed.includes(escape)) document.getElementById(escape.img.id).onclick = () => {if (!document.getElementById("playerChoice")) escape.reward();};
             }
             else if (activeGame === "Box 4") {
-                if (players[0].horcruxesDestroyed.includes(theFirstTask)) theFirstTask.img.onclick = () => {if (!document.getElementById("playerChoice")) theFirstTask.reward();};
-                if (players[0].horcruxesDestroyed.includes(theSecondTask)) theSecondTask.img.onclick = () => {if (!document.getElementById("playerChoice")) theSecondTask.reward();};
-                if (players[0].horcruxesDestroyed.includes(theThirdTask)) theThirdTask.img.onclick = () => {if (!document.getElementById("playerChoice")) theThirdTask.reward();};
+                if (players[0].horcruxesDestroyed.includes(theFirstTask)) document.getElementById(theFirstTask.img.id).onclick = () => {if (!document.getElementById("playerChoice")) theFirstTask.reward();};
+                if (players[0].horcruxesDestroyed.includes(theSecondTask)) document.getElementById(theSecondTask.img.id).onclick = () => {if (!document.getElementById("playerChoice")) theSecondTask.reward();};
+                if (players[0].horcruxesDestroyed.includes(theThirdTask)) document.getElementById(theThirdTask.img.id).onclick = () => {if (!document.getElementById("playerChoice")) theThirdTask.reward();};
             }
 
             const darkArts = protean => {
