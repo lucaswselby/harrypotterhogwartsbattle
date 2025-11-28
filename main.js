@@ -2255,14 +2255,19 @@ document.getElementById("submitPlayers").onclick = () => {
                         this.influence = 0;
                         activeLocation.addToLocation();
                         let iterations = Math.floor(this.hand.length / 2);
-                        addPlayerChoice(`${this.hero} discard:`, () => {return this.hand.length;}, iterations, () => {
-                            for (let i = 0; i < this.hand.length; i++) {
-                                document.getElementsByClassName("choice")[i].innerHTML += `<img src="${this.hand[i].img.src}">`;
-                                document.getElementsByClassName("choice")[i].onclick = () => {
-                                    this.forcedDiscardAt(i, false);
-                                }
+                        if (this.hand.length && iterations) {
+                            if (this.hand.length > 1) {
+                                addPlayerChoice(`${this.hero} discard:`, () => {return this.hand.length;}, iterations, () => {
+                                    for (let i = 0; i < this.hand.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML += `<img src="${this.hand[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {
+                                            this.forcedDiscardAt(i, false);
+                                        }
+                                    }
+                                });
                             }
-                        });
+                            else this.forcedDiscardAt(0, false);
+                        }
 
                         // Avada Kedavra effect
                         if (avadaKill) {
