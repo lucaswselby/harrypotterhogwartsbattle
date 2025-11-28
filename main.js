@@ -3449,22 +3449,20 @@ document.getElementById("submitPlayers").onclick = () => {
                     else if (this.remaining.includes(symbol)) this._remaining.splice(this.remaining.indexOf(symbol), 1);
 
                     // add token img
-                    //if (this.remaining.length) {
-                        const symbolImg = document.createElement("IMG");
-                        symbolImg.className = "symbol";
-                        symbolImg.src = `./images/${symbol}Symbol.png`;
-                        let symbolIndex = this.destroys.indexOf(symbol);
-                        let thatSymbolsInDestroys = this._destroys.filter(destroyer => {return destroyer === symbol;}).length;
-                        if (thatSymbolsInDestroys > 1) {
-                            let thatSymbolRemaining = this.remaining.filter(remainder => {return remainder === symbol;}).length;
-                            while (thatSymbolsInDestroys - thatSymbolRemaining > 1) {
-                                symbolIndex += this._destroys.slice(symbolIndex + 1).indexOf(symbol) + 1;
-                                thatSymbolRemaining++;
-                            }
+                    const symbolImg = document.createElement("IMG");
+                    symbolImg.className = "symbol";
+                    symbolImg.src = `./images/${symbol}Symbol.png`;
+                    let symbolIndex = this.destroys.indexOf(symbol);
+                    let thatSymbolsInDestroys = this._destroys.filter(destroyer => {return destroyer === symbol;}).length;
+                    if (thatSymbolsInDestroys > 1) {
+                        let thatSymbolRemaining = this.remaining.filter(remainder => {return remainder === symbol;}).length;
+                        while (thatSymbolsInDestroys - thatSymbolRemaining > 1) {
+                            symbolIndex += this._destroys.slice(symbolIndex + 1).indexOf(symbol) + 1;
+                            thatSymbolRemaining++;
                         }
-                        symbolImg.style.left = `${this === horcrux6 || this === defensiveTraining || this === forbiddenForestEncounter || this === theThirdTask ? (5 + 13 * symbolIndex) : (6 + 20 * symbolIndex)}%`;
-                        document.getElementById("encounters").appendChild(symbolImg);
-                    //}
+                    }
+                    symbolImg.style.left = `${this === horcrux6 || this === defensiveTraining || this === forbiddenForestEncounter || this === theThirdTask ? (5 + 13 * symbolIndex) : (6 + 20 * symbolIndex)}%`;
+                    document.getElementById("encounters").appendChild(symbolImg);
                 }
             }
             effect() {
