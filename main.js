@@ -3599,7 +3599,7 @@ document.getElementById("submitPlayers").onclick = () => {
             players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(theFirstTask), 1); 
             theFirstTask.img.remove();
         });
-        const theSecondTask = new Encounter("The Second Task", "Box 4", [], () => {if (players[0].hand.filter(card => {return card.type === "ally"}).length) activeLocation.addToLocation();}, () => {activeLocation.removeFromLocation(); players.forEach(player => {player.drawCards(1);}); players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(theSecondTask), 1); theSecondTask.img.remove();});
+        const theSecondTask = new Encounter("The Second Task", "Box 4", [], () => {if (!players[0].hand.filter(card => {return card.type === "ally"}).length) activeLocation.addToLocation();}, () => {activeLocation.removeFromLocation(); players.forEach(player => {player.drawCards(1);}); players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(theSecondTask), 1); theSecondTask.img.remove();});
         const theThirdTask = new Encounter("The Third Task", "Box 4", ["health", "health", "health"], () => {players[0].health -= 2;}, () => {if (canHeal(players[0])) {players.forEach(player => {player.health = 10;}); players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(theThirdTask), 1); theThirdTask.img.remove();}});
         const sneakingInTheHalls = new Encounter("Sneaking In The Halls", "Pack 1", [], () => {if (players[0].hand.filter(card => {return card.type === "item";}).length >= 3) activeLocation.addToLocation();}, () => {
             players.forEach(player => {
