@@ -2201,7 +2201,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     (encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return cost > 0 && arr.indexOf(cost) === ind;}).length >= 3) || // Filthy Half-Breed completion
                     (encounters[0] === escape && this.played.filter(card => {card.type === "spell"}).length >= 6) || // Escape completion
                     (encounters[0] === theFirstTask && ( // The First Task completion
-                        this.bought.reduce((prev, curr) => {return prev + curr.cost}, 0) >= 7 || 
+                        this.bought.filter(card => {return card.type === "item";}).reduce((prev, curr) => {return prev + curr.cost}, 0) >= 7 || 
                         !hogwartsCards.filter(card => {return card.type === "item"}).length // catch for no more items in the shop
                     )) ||
                     (encounters[0] === theSecondTask && ( // The Second Task completion
