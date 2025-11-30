@@ -2041,6 +2041,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 destroyedHorcrux.img.onclick = destroyedHorcrux.reward;
                 displayNextEncounter();
             }
+            removeDestroyedHorcrux(encounter) {
+                this.horcruxesDestroyed.splice(this.horcruxesDestroyed.indexOf(encounter), 1); 
+                document.getElementById(encounter.img.id).remove();
+            }
             get cardsDrawn() {
                 return this._cardsDrawn;
             }
@@ -3477,7 +3481,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const horcrux3 = new Encounter("Horcrux 3", "Game 7", ["attack", "health"], () => {}, () => {if (players[0].hand.length) {if (players[0].hand.length > 1) {addPlayerChoice("Discard:", () => {return players[0].hand.length;}, 1, () => {for (let i = 0; i < players[0].hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[0].hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(i, false);};}});} else players[0].forcedDiscardAt(0, false); rollHouseDie(players[0],"green", false, false, false); horcrux3.img.onclick = () => {};}});
         const horcrux4 = new Encounter("Horcrux 4", "Game 7", ["health", "influence"], () => {activeVillains.forEach(villain => {villain.health++;});}, () => {if (players[0].hand.length) {if (players[0].hand.length > 1) {addPlayerChoice("Discard:", () => {return players[0].hand.length;}, 1, () => {for (let i = 0; i < players[0].hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[0].hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(i, false);};}});} else players[0].forcedDiscardAt(0, false); rollHouseDie(players[0],"yellow", false, false, false); horcrux4.img.onclick = () => {};}});
         const horcrux5 = new Encounter("Horcrux 5", "Game 7", ["draw", "attack"], () => {if (players[0].hand.filter(card => {return card.type === "ally"}).length && players[0].hand.filter(card => {return card.type === "item"}).length && players[0].hand.filter(card => {return card.type === "spell"}).length) players[0].health -= 2;}, () => {if (players[0].hand.length) {if (players[0].hand.length > 1) {addPlayerChoice("Discard:", () => {return players[0].hand.length;}, 1, () => {for (let i = 0; i < players[0].hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[0].hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(i, false);};}});} else players[0].forcedDiscardAt(0, false); rollHouseDie(players[0],"blue", false, false, false); horcrux5.img.onclick = () => {};}});
-        const horcrux6 = new Encounter("Horcrux 6", "Game 7", ["attack", "draw", "health"], () => {players[0].health--;}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, 1000); players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(horcrux6), 1); horcrux6.img.remove();});
+        const horcrux6 = new Encounter("Horcrux 6", "Game 7", ["attack", "draw", "health"], () => {players[0].health--;}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000);}, 1000); players[0].removeDestroyedHorcrux(horcrux6);});
         const peskipiksiPesternomi = new Encounter("Peskipiksi Pesternomi", "Box 1", [], () => {}, () => {});
         const studentsOutOfBed = new Encounter("Students Out Of Bed", "Box 1", ["health", "draw"], () => {}, () => {
             players.forEach(player => {
@@ -3504,15 +3508,17 @@ document.getElementById("submitPlayers").onclick = () => {
                     });
                 }
             });
-            players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(studentsOutOfBed), 1);
-            studentsOutOfBed.img.remove();
+            players[0].removeDestroyedHorcrux(studentsOutOfBed);
         });
         const thirdFloorCorridor = new Encounter("Third Floor Corridor", "Box 1", [], () => {}, () => {
             if (defeatedVillains.length) defeatedVillains[defeatedVillains.length - 1].reward();
-            players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(thirdFloorCorridor), 1);
-            thirdFloorCorridor.img.remove();
+            players[0].removeDestroyedHorcrux(thirdFloorCorridor);
         });
-        const unregisteredAnimagus = new Encounter("Unregistered Animagus", "Box 2", [], () => {if (activeLocation.added >= 2) players[0].health--;}, () => {rollHouseDie(players[0],"phoenix", false, true, false); rollHouseDie(players[0],"phoenix", false, true, false); unregisteredAnimagus.img.remove(); players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(unregisteredAnimagus), 1);});
+        const unregisteredAnimagus = new Encounter("Unregistered Animagus", "Box 2", [], () => {if (activeLocation.added >= 2) players[0].health--;}, () => {
+            rollHouseDie(players[0],"phoenix", false, true, false); 
+            rollHouseDie(players[0],"phoenix", false, true, false); 
+            players[0].removeDestroyedHorcrux(unregisteredAnimagus);
+        });
         const fullMoonRises = new Encounter("Full Moon Rises", "Box 2", [], () => {}, () => {
             players.forEach(player => {
                 player.health += 3;
@@ -3526,8 +3532,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                                     document.getElementsByClassName("choice")[i].onclick = () => {
                                         player.banishAt(i);
-                                        players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(fullMoonRises), 1);
-                                        fullMoonRises.img.remove();
+                                        players[0].removeDestroyedHorcrux(fullMoonRises);
                                     };
                                 }
                                 for (let i = 0; i < player.discard.length; i++) {
@@ -3535,8 +3540,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
                                         player.hand.unshift(player.discard.splice(i, 1)[0]);
                                         player.banishAt(0);
-                                        players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(fullMoonRises), 1);
-                                        fullMoonRises.img.remove();
+                                        players[0].removeDestroyedHorcrux(fullMoonRises);
                                     };
                                 }
                             }));
@@ -3551,8 +3555,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 player.influence += 2;
                 player.health += 2;
             });
-            players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(defensiveTraining), 1);
-            defensiveTraining.img.remove();
+            players[0].removeDestroyedHorcrux(defensiveTraining);
         });
         const forbiddenForestEncounter = new Encounter("Forbidden Forest", "Box 3", ["draw", "health", "influence"], () => {if (activeVillains.filter(villain => {return villain.type.includes("creature");}).length >= 2) players[0].health--;}, () => {});
         const filthyHalfBreed = new Encounter("Filthy Half-Breed", "Box 3", [], () => {if (activeShops.filter(card => {return card.type === "spell";}).length >= 2) players[0].health--;}, () => {
@@ -3567,11 +3570,10 @@ document.getElementById("submitPlayers").onclick = () => {
                         document.getElementsByClassName("choice")[player.hand.length].innerHTML = "<p>Nothing</p>";
                     });
                 });
-                players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(filthyHalfBreed), 1); 
-                filthyHalfBreed.img.remove();
+                players[0].removeDestroyedHorcrux(filthyHalfBreed);
             }
         });
-        const escape = new Encounter("Escape", "Box 3", [], () => {}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000); players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(escape), 1); escape.img.remove();});
+        const escape = new Encounter("Escape", "Box 3", [], () => {}, () => {activeLocation.removeFromLocation(); setTimeout(() => {activeLocation.removeFromLocation();}, 1000); players[0].removeDestroyedHorcrux(escape);});
         const theFirstTask = new Encounter("The First Task", "Box 4", [], () => {}, () => {
             let dieOptions = ["blue", "green", "red", "yellow"];
             addPlayerChoice("Roll 2 House Die:", () => {return dieOptions.length;}, 2, () => {
@@ -3596,11 +3598,19 @@ document.getElementById("submitPlayers").onclick = () => {
                     document.getElementsByClassName("choice")[choiceIndex].onclick = () => {rollHouseDie(players[0],"yellow", false, false, false); dieOptions.splice(dieOptions.indexOf("yellow"), 1);};
                 }
             });
-            players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(theFirstTask), 1); 
-            theFirstTask.img.remove();
+            players[0].removeDestroyedHorcrux(theFirstTask);
         });
-        const theSecondTask = new Encounter("The Second Task", "Box 4", [], () => {if (!players[0].hand.filter(card => {return card.type === "ally"}).length) activeLocation.addToLocation();}, () => {activeLocation.removeFromLocation(); players.forEach(player => {player.drawCards(1);}); players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(theSecondTask), 1); theSecondTask.img.remove();});
-        const theThirdTask = new Encounter("The Third Task", "Box 4", ["health", "health", "health"], () => {players[0].health -= 2;}, () => {if (canHeal(players[0])) {players.forEach(player => {player.health = 10;}); players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(theThirdTask), 1); theThirdTask.img.remove();}});
+        const theSecondTask = new Encounter("The Second Task", "Box 4", [], () => {if (!players[0].hand.filter(card => {return card.type === "ally"}).length) activeLocation.addToLocation();}, () => {
+            activeLocation.removeFromLocation(); 
+            players.forEach(player => {player.drawCards(1);}); 
+            players[0].removeDestroyedHorcrux(theSecondTask);
+        });
+        const theThirdTask = new Encounter("The Third Task", "Box 4", ["health", "health", "health"], () => {players[0].health -= 2;}, () => {
+            if (canHeal(players[0])) {
+                players.forEach(player => {player.health = 10;}); 
+                players[0].removeDestroyedHorcrux(theThirdTask);
+            }
+        });
         const sneakingInTheHalls = new Encounter("Sneaking In The Halls", "Pack 1", [], () => {if (players[0].hand.filter(card => {return card.type === "item";}).length >= 3) activeLocation.addToLocation();}, () => {
             players.forEach(player => {
                 const banishable = player.hand.concat(player.discard);
@@ -3613,8 +3623,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
                                     document.getElementsByClassName("choice")[i].onclick = () => {
                                         player.banishAt(i);
-                                        players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(sneakingInTheHalls), 1);
-                                        sneakingInTheHalls.img.remove();
+                                        players[0].removeDestroyedHorcrux(sneakingInTheHalls);
                                     };
                                 }
                                 for (let i = 0; i < player.discard.length; i++) {
@@ -3622,8 +3631,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     document.getElementsByClassName("choice")[player.hand.length + i].onclick = () => {
                                         player.hand.unshift(player.discard.splice(i, 1)[0]);
                                         player.banishAt(0);
-                                        players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(sneakingInTheHalls), 1);
-                                        sneakingInTheHalls.img.remove();
+                                        players[0].removeDestroyedHorcrux(sneakingInTheHalls);
                                     };
                                 }
                             }));
@@ -3642,13 +3650,11 @@ document.getElementById("submitPlayers").onclick = () => {
         }, () => {
             players.forEach(player => {player.influence++;});
             activeLocation.removeFromLocation();
-            players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(theMinistryIsMeddling), 1);
-            theMinistryIsMeddling.img.remove();
+            players[0].removeDestroyedHorcrux(theMinistryIsMeddling);
         });
         const detentionWithDolores = new Encounter("Detention With Dolores", "Pack 1", [], () => {if (players[0].hand.map(card => {return card.cost;}).filter(cost => {return cost >= 4;})) activeLocation.addToLocation();}, () => {
             players.forEach(player => {player.influence += 2;});
-            players[0].horcruxesDestroyed.splice(players[0].horcruxesDestroyed.indexOf(detentionWithDolores), 1);
-            detentionWithDolores.img.remove();
+            players[0].removeDestroyedHorcrux(detentionWithDolores);
         });
         let encounters = [];
         switch (activeGame) {
