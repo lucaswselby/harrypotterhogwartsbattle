@@ -2119,6 +2119,37 @@ document.getElementById("submitPlayers").onclick = () => {
                 else if (this.hand[index] === errol) {
                     players.forEach(player => {player.drawCards(1);});
                 }
+                // Screech Owl effect
+                else if (this.hand[index] === screechOwl1 || this.hand[index] === screechOwl2) {
+                    let remainingPlayers = players.filter(player => {return !activeMermaid() || canHeal(player);});
+                    if (remainingPlayers.length) {
+                        if (remainingPlayers.length > 2) {
+                            addPlayerChoice(`Give ${activeMermaid() ? "" : "1 attack, 1 influence, and "}1 health to:`, () => {return remainingPlayers.length;}, 2, () => {
+                                for (let i = 0; i < remainingPlayers.length; i++) {
+                                    document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                                    document.getElementsByClassName("choice")[i].innerHTML += `${activeMermaid() ? "" : `<p>Attack: ${remainingPlayers[i].attack}</p><p>Influence: ${remainingPlayers[i].influence}</p>`}<p>Health: ${remainingPlayers[i].health}</p>`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                        if (!activeMermaid()) {
+                                            remainingPlayers[i].attack++;
+                                            remainingPlayers[i].influence++;
+                                        }
+                                        remainingPlayers[i].health++;
+                                        remainingPlayers.splice(i, 1);
+                                    };
+                                }
+                            });
+                        }
+                        else {
+                            remainingPlayers.forEach(player => {
+                                if (!activeMermaid()) {
+                                    player.attack++;
+                                    player.influence++;
+                                }
+                                player.health++;
+                            });
+                        }
+                    }                    
+                }
 
                 if (villainOrDAE) {
                     // Crabbe and Goyle effect
