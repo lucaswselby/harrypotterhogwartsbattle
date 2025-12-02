@@ -2733,7 +2733,7 @@ document.getElementById("submitPlayers").onclick = () => {
         });
         const caughtAtADAMeeting2 = caughtAtADAMeeting1.clone();
         const howlers = new DarkArtsEvent("Howlers", "Pack 1", () => {
-            getNeighbors(players[0]).concat([players[0]]).filter(player => {return player.health > 0 && player.hand.filter(card => {return card.type === "ally";}).length;}).forEach(player => {
+            getNeighbors(players[0]).concat([players[0]]).filter(player => {return player.health > 0 && player.hand.filter(card => {return card.type === "item";}).length;}).forEach(player => {
                 const items = () => {return player.hand.filter(card => {return card.type === "item";});};
                 if (items().length) {
                     addPlayerChoice("Lose:", () => {return 2;}, 1, () => {
