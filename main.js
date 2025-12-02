@@ -1894,7 +1894,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (!this._hermioneSpecialUsed && spellsCast === 4 && this.hero.includes("Hermione Granger") && activeGame !== "Game 1" && activeGame !== "Game 2") {
                     this._hermioneSpecialUsed = true;
                     if (this.hero === "Hermione Granger") {
-                        if (activeGame.includes("Box") || activeGame === "Game 7") {
+                        if (activeGame.includes("Box") || activeGame.includes("Pack") || activeGame === "Game 7") {
                             players.forEach(player => {player.influence++;});
                         }
                         else {
