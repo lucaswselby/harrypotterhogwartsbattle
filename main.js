@@ -551,6 +551,51 @@ document.getElementById("submitPlayers").onclick = () => {
                             darken(escape.img);
                         }
 
+                        // Healing Charm
+                        if (players[0].charm === "Healing" && this.type === "ally") {
+                            if (players[0].health > 7) {
+                                const hurtPlayers = players.filter(player => {return canHeal(player);});
+                                if (hurtPlayers.length) {
+                                    if (hurtPlayers.length > 1) {
+                                        addPlayerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
+                                            for (let i = 0; i < hurtPlayers.length; i++) {
+                                                document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
+                                                document.getElementsByClassName("choice")[i].innerHTML += `Health: ${hurtPlayers[i].health}`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                            }
+                                        });
+                                    }
+                                    else hurtPlayers[0].health += 2;
+                                }
+                            }
+                            else if (players[0].health < 4) {
+                                players.forEach(player => {player.health += 2;});
+                            }
+                            else {
+                                getNeighbors(players[0]).concat(players[0]).forEach(player => {player.health += 2;});
+                            }
+                        }
+                        // Summoning Charm
+                        else if (players[0].charm === "Summoning" && players[0].played.filter(card => {return card.type === "item"}).length && this.type === "ally") {
+                            if (players[0].health > 7) players[0].attack++;
+                            else if (players[0].health < 4) {
+                                const healable = players.filter(player => {return canHeal(player);});
+                                if (healable.length) {
+                                    if (healable.length > 1) {
+                                        addPlayerChoice("Heal for 2:", () => {return healable.length;}, 1, () => {
+                                            for (let i = 0; i < healable.length; i++) {
+                                                document.getElementsByClassName("choice")[i].appendChild(healable[i].heroImage.cloneNode());
+                                                document.getElementsByClassName("choice")[i].innerHTML += `Health: ${healable[i].health}`;
+                                                document.getElementsByClassName("choice")[i].onclick = () => {healable[i].health += 2;};
+                                            }
+                                        });
+                                    }
+                                    else healable[0].health += 2;
+                                }
+                            }
+                            else players[0].influence++;
+                        }
+
                         // card effect
                         players[0].discardAt(players[0].hand.indexOf(this));
                         this._effect(players[0]);
@@ -651,51 +696,6 @@ document.getElementById("submitPlayers").onclick = () => {
                                 else hurtPlayers[0].health++;
                                 darken(peskipiksiPesternomi.img);
                             }
-                        }
-
-                        // Healing Charm
-                        if (players[0].charm === "Healing" && this.type === "ally") {
-                            if (players[0].health > 7) {
-                                const hurtPlayers = players.filter(player => {return canHeal(player);});
-                                if (hurtPlayers.length) {
-                                    if (hurtPlayers.length > 1) {
-                                        addPlayerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
-                                            for (let i = 0; i < hurtPlayers.length; i++) {
-                                                document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
-                                                document.getElementsByClassName("choice")[i].innerHTML += `Health: ${hurtPlayers[i].health}`;
-                                                document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
-                                            }
-                                        });
-                                    }
-                                    else hurtPlayers[0].health += 2;
-                                }
-                            }
-                            else if (players[0].health < 4) {
-                                players.forEach(player => {player.health += 2;});
-                            }
-                            else {
-                                getNeighbors(players[0]).concat(players[0]).forEach(player => {player.health += 2;});
-                            }
-                        }
-                        // Summoning Charm
-                        else if (players[0].charm === "Summoning" && players[0].played.filter(card => {return card.type === "item"}).length && this.type === "ally") {
-                            if (players[0].health > 7) players[0].attack++;
-                            else if (players[0].health < 4) {
-                                const healable = players.filter(player => {return canHeal(player);});
-                                if (healable.length) {
-                                    if (healable.length > 1) {
-                                        addPlayerChoice("Heal for 2:", () => {return healable.length;}, 1, () => {
-                                            for (let i = 0; i < healable.length; i++) {
-                                                document.getElementsByClassName("choice")[i].appendChild(healable[i].heroImage.cloneNode());
-                                                document.getElementsByClassName("choice")[i].innerHTML += `Health: ${healable[i].health}`;
-                                                document.getElementsByClassName("choice")[i].onclick = () => {healable[i].health += 2;};
-                                            }
-                                        });
-                                    }
-                                    else healable[0].health += 2;
-                                }
-                            }
-                            else players[0].influence++;
                         }
 
                         players[0].playedPush(this);
