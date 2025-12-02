@@ -1623,6 +1623,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._gainedHealth = false;
                 this._attacks = 0;
                 this._influences = 0;
+                this._influenceGained = 0;
                 this._healthGained = 0;
                 this._healthLost = 0;
                 this._horcruxesDestroyed = [];
@@ -1831,6 +1832,9 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             set influence(influence) {
                 if ((!this.stunned && (!encounters.length || encounters[0] !== horcrux3)) || players[0] === this) {
+                    // sets influenceGained
+                    if (influence > this.influence) this._influenceGained += influence - this.influence;
+
                     // sets influence
                     this._influence = influence;
                     if (this.influence < 0) {
@@ -2213,7 +2217,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         !hogwartsCards.filter(card => {return card.type === "ally"}).length // catch for no more allies in the shop
                     )) ||
                     (encounters[0] === sneakingInTheHalls && this.played.filter(card => {return card.type === "item"}).length >= 4) || // Sneaking in the Halls completion
-                    (encounters[0] === theMinistryIsMeddling && this.influence >= 8) || // The Ministry is Meddling completion
+                    (encounters[0] === theMinistryIsMeddling && this._influenceGained >= 8) || // The Ministry is Meddling completion
                     (encounters[0] === detentionWithDolores && this.played.map(card => {return card.cost;}).filter(cost => {cost >= 4;}).length >= 3) // Detention with Dolores completion
                 )) this.addDestroyedHorcrux(encounters.shift());
 
@@ -2228,6 +2232,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this.gainedHealth = false;
                 this.attacks = 0;
                 this.influences = 0;
+                this._influenceGained = 0;
                 owlsSpells1 = 0;
                 owlsSpells2 = 0;
                 this._healthGained = 0;
