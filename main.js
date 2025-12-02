@@ -2335,12 +2335,13 @@ document.getElementById("submitPlayers").onclick = () => {
         if (document.getElementById("player5Hero").value) players.push(new Player(document.getElementById("player5Hero").value, document.getElementById("player5Proficiency").value, document.getElementById("player5Charm").value));*/
 
         // remove Hogwarts cards for current players
-        if (players.map(player => {return player.hero;}).includes("Luna Lovegood") && hogwartsCards.includes(lunaLovegood)) hogwartsCards.splice(hogwartsCards.indexOf(lunaLovegood), 1);
-        if (players.map(player => {return player.hero;}).includes("Ginny Weasley") && hogwartsCards.includes(ginnyWeasley)) hogwartsCards.splice(hogwartsCards.indexOf(ginnyWeasley), 1);
-        if (players.map(player => {return player.hero;}).includes("Harry Potter") && hogwartsCards.includes(harryPotter)) hogwartsCards.splice(hogwartsCards.indexOf(harryPotter), 1);
-        if (players.map(player => {return player.hero;}).includes("Hermione Granger") && hogwartsCards.includes(hermioneGranger)) hogwartsCards.splice(hogwartsCards.indexOf(hermioneGranger), 1);
-        if (players.map(player => {return player.hero;}).includes("Neville Longbottom") && hogwartsCards.includes(nevilleLongbottom)) hogwartsCards.splice(hogwartsCards.indexOf(nevilleLongbottom), 1);
-        if (players.map(player => {return player.hero;}).includes("Ron Weasley") && hogwartsCards.includes(ronWeasley)) hogwartsCards.splice(hogwartsCards.indexOf(ronWeasley), 1);
+        // use reduce instead of map because of Box heroes
+        if (players.reduce((prev, curr) => {return prev + curr;}, "").includes("Luna Lovegood") && hogwartsCards.includes(lunaLovegood)) hogwartsCards.splice(hogwartsCards.indexOf(lunaLovegood), 1);
+        if (players.reduce((prev, curr) => {return prev + curr;}, "").includes("Ginny Weasley") && hogwartsCards.includes(ginnyWeasley)) hogwartsCards.splice(hogwartsCards.indexOf(ginnyWeasley), 1);
+        if (players.reduce((prev, curr) => {return prev + curr;}, "").includes("Harry Potter") && hogwartsCards.includes(harryPotter)) hogwartsCards.splice(hogwartsCards.indexOf(harryPotter), 1);
+        if (players.reduce((prev, curr) => {return prev + curr;}, "").includes("Hermione Granger") && hogwartsCards.includes(hermioneGranger)) hogwartsCards.splice(hogwartsCards.indexOf(hermioneGranger), 1);
+        if (players.reduce((prev, curr) => {return prev + curr;}, "").includes("Neville Longbottom") && hogwartsCards.includes(nevilleLongbottom)) hogwartsCards.splice(hogwartsCards.indexOf(nevilleLongbottom), 1);
+        if (players.reduce((prev, curr) => {return prev + curr;}, "").includes("Ron Weasley") && hogwartsCards.includes(ronWeasley)) hogwartsCards.splice(hogwartsCards.indexOf(ronWeasley), 1);
 
         // locations
         class Location {
