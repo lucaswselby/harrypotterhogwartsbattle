@@ -2734,15 +2734,17 @@ document.getElementById("submitPlayers").onclick = () => {
         const caughtAtADAMeeting2 = caughtAtADAMeeting1.clone();
         const howlers = new DarkArtsEvent("Howlers", "Pack 1", () => {
             getNeighbors(players[0]).concat([players[0]]).filter(player => {return player.health > 0 && player.hand.filter(card => {return card.type === "ally";}).length;}).forEach(player => {
-                const allies = () => {return player.hand.filter(card => {return card.type === "ally";});};
-                addPlayerChoice("Lose:", () => {return 2;}, 1, () => {
-                    document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken + healthToken}</div>`;
-                    document.getElementsByClassName("choice")[0].onclick = () => {player.health -= 3;};
-                    document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer>${allies().reduce((prev, curr) => {return prev + `<img src="${curr.img.src}">`}, "")}</div>`;
-                    document.getElementsByClassName("choice")[1].onclick = () => {
-                        while (allies().length) player.forcedDiscardAt(player.hand.indexOf(allies()[0]), true);
-                    };
-                });
+                const items = () => {return player.hand.filter(card => {return card.type === "item";});};
+                if (items().length) {
+                    addPlayerChoice("Lose:", () => {return 2;}, 1, () => {
+                        document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken + healthToken}</div>`;
+                        document.getElementsByClassName("choice")[0].onclick = () => {player.health -= 3;};
+                        document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${items().reduce((prev, curr) => {return prev + `<img src="${curr.img.src}">`}, "")}</div>`;
+                        document.getElementsByClassName("choice")[1].onclick = () => {
+                            while (items().length) player.forcedDiscardAt(player.hand.indexOf(items()[0]), true);
+                        };
+                    });
+                }
             });
         });
         const weasleyIsOurKing1 = new DarkArtsEvent("Weasley Is Our King", "Pack 1", () => {
