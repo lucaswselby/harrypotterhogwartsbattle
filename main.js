@@ -1706,7 +1706,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                         else {
                             // Neville Longbottom special
-                            if (players[0].hero === "Neville Longbottom" && ((!this.gainedHealth && (activeGame === "Game 3" || activeGame === "Game 4" || activeGame === "Game 5" || activeGame === "Game 6")) || (activeGame === "Game 7" || activeGame.includes("Box")))) {
+                            if (players[0].hero === "Neville Longbottom" && ((!this.gainedHealth && (activeGame === "Game 3" || activeGame === "Game 4" || activeGame === "Game 5" || activeGame === "Game 6")) || (activeGame === "Game 7" || activeGame.includes("Box") || activeGame.includes("Pack")))) {
                                 health++;
                             }
                             // Neville Longbottom Box expansion special
