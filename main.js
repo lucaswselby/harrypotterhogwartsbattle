@@ -3889,6 +3889,10 @@ document.getElementById("submitPlayers").onclick = () => {
                         if (activeVillains[i].health <= 0 && activeVillains[i].influence <= 0) {
                             // add new villain
                             if (inactiveVillains.length) {
+                                // add new villain
+                                activeVillains[i] = inactiveVillains.shift();
+                                document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
+                                
                                 // Death Eater effect
                                 if (inactiveVillains[inactiveVillains.length - 1].type.includes("villain")) {
                                     if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy && deathEater1.health > 0) players.forEach(player => {player.health--;});
@@ -3898,9 +3902,6 @@ document.getElementById("submitPlayers").onclick = () => {
                                 // Common Welsh Green effect
                                 if (inactiveVillains[inactiveVillains.length - 1].type.includes("creature") && activeVillains.includes(commonWelshGreen) && !commonWelshGreen.petrifiedBy && commonWelshGreen.health > 0) players.forEach(player => {player.health -= 2;});
 
-                                // add new villain
-                                activeVillains[i] = inactiveVillains.shift();
-                                document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
 
                                 // remove villain card back and add Lord Voldemort
                                 if (!inactiveVillains.length) {
