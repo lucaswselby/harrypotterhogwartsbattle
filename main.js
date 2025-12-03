@@ -3400,17 +3400,17 @@ document.getElementById("submitPlayers").onclick = () => {
         // Pack expansion villains
         const corneliusFudge = new Villain("Cornelius Fudge", "Pack 1", "villain", 0, 7, () => {}, () => {players.forEach(player => {player.drawCards(1);});}, true);
         const marcusFlint = new Villain("Marcus Flint", "Pack 1", "villain", 6, 0, () => {
-            const items = players[0].hand.filter(card => {return card.type === "item";});
-            if (items.length) {
-                if (items.length > 1) {
-                    addPlayerChoice("Discard:", () => {return items.length;}, 1, () => {
-                        for (let i = 0; i < items.length; i++) {
-                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`;
+            const items = () => {return players[0].hand.filter(card => {return card.type === "item";});};
+            if (items().length) {
+                if (items().length > 1) {
+                    addPlayerChoice("Discard:", () => {return items().length;}, 1, () => {
+                        for (let i = 0; i < items().length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items()[i].img.src}">`;
                             document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(i, true)};
                         }
                     });
                 }
-                else players[0].forcedDiscardAt(0, true);
+                else players[0].forcedDiscardAt(players[0].hand.indexOf(items[0]), true);
             }
             else players[0].health -= 2;
         }, () => {
