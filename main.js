@@ -323,7 +323,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         default: alert(`${color} is not a die color.`);
                         // TO-DO: add Phoenix die options, then make arithmancyUsed false for phoenix die users like Kreacher and Boggart
                     }
-                    let otherResults = ["influence", "draw", "attack", "health"].filter(result => {return result !== commonRoll});
+                    let otherResults = ["influence", "draw", "attack", "health"].filter(otherResult => {return otherResult !== result});
                     if (result === commonRoll) {
                         otherResults.splice(Math.floor(Math.random() * 3), 1); // remove the side of the die facing down
                     }
@@ -338,7 +338,9 @@ document.getElementById("submitPlayers").onclick = () => {
                             document.getElementsByClassName("choice")[i + 1].onclick = () => {
                                 affectedPlayer.influence--;
                                 result = otherResults[i];
-                                activateEffect();
+                                arithmancyUsed = true;
+                                selfCorrectingInkRoll = false;
+                                arithmancyCheck(effect);
                             };
                         }
                     });
