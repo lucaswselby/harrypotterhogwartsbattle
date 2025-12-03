@@ -1698,7 +1698,21 @@ document.getElementById("submitPlayers").onclick = () => {
         const expectoPatronum1 = new Card("Expecto Patronum", "Game 3", "spell", 5, affectedPlayer => {affectedPlayer.attack++; activeLocation.removeFromLocation();}, false, false);
         const expectoPatronum2 = expectoPatronum1.clone();
         const maraudersMap = new Card("Marauder's Map", "Game 3", "item", 5, affectedPlayer => {affectedPlayer.drawCards(2);}, false, false);
-        const petrificusTotalus1 = new Card("Petrificus Totalus", "Game 3", "spell", 6, affectedPlayer => {affectedPlayer.attack++; let unpetrifiedVillains = activeVillains.concat(invulnerableVoldemort() ? invulnerableVoldemort() : []).filter(villain => {return !villain.petrifiedBy && villain.health > 0 && villain.type.includes("villain");}); if (unpetrifiedVillains.length) {if (unpetrifiedVillains.length > 1) {addPlayerChoice("Petrify:", () => {return unpetrifiedVillains.length;}, 1, () => {for (let i = 0; i < unpetrifiedVillains.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedVillains[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedVillains[i].petrifiedBy = affectedPlayer;};}});} else unpetrifiedVillains[0].petrifiedBy = affectedPlayer;}}, false, false);
+        const petrificusTotalus1 = new Card("Petrificus Totalus", "Game 3", "spell", 6, affectedPlayer => {
+            affectedPlayer.attack++; 
+            let unpetrifiedVillains = activeVillains.concat(invulnerableVoldemort() ? invulnerableVoldemort() : []).filter(villain => {return !villain.petrifiedBy && villain.health + villain.influence > 0 && villain.type.includes("villain");}); 
+            if (unpetrifiedVillains.length) {
+                if (unpetrifiedVillains.length > 1) {
+                    addPlayerChoice("Petrify:", () => {return unpetrifiedVillains.length;}, 1, () => {
+                        for (let i = 0; i < unpetrifiedVillains.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${unpetrifiedVillains[i].img.src}">`; 
+                            document.getElementsByClassName("choice")[i].onclick = () => {unpetrifiedVillains[i].petrifiedBy = affectedPlayer;};
+                        }
+                    });
+                }
+                else unpetrifiedVillains[0].petrifiedBy = affectedPlayer;
+            }
+        }, false, false);
         const petrificusTotalus2 = petrificusTotalus1.clone();
         const remusLupin = new Card("Remus Lupin", "Game 3", "ally", 4, affectedPlayer => {if (!activeMermaid()) affectedPlayer.attack++; const hurtPlayers = players.filter(player => {return canHeal(player);}); if (hurtPlayers.length) {if (hurtPlayers.length > 1) {addPlayerChoice("Heal for 3:", () => {return hurtPlayers.length;}, 1, () => {for (let i = 0; i < hurtPlayers.length; i++) {document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${hurtPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 3;};}});} else hurtPlayers[0].health += 3;}}, false, false);
         const siriusBlack = new Card("Sirius Black", "Game 3", "ally", 6, affectedPlayer => {if (!activeMermaid()) {affectedPlayer.attack += 2; affectedPlayer.influence++;}}, false, false);
