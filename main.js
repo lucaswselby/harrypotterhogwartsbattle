@@ -1683,7 +1683,24 @@ document.getElementById("submitPlayers").onclick = () => {
         const mollyWeasley = new Card("Molly Weasley", "Game 2", "ally", 6, affectedPlayer => {players.forEach(player => {if (!activeMermaid()) player.influence++; player.health += 2;});}, false, false);
         const nimbusTwoThousandAndOne1 = new Card("Nimbus Two Thousand And One", "Game 2", "item", 5, affectedPlayer => {affectedPlayer.attack += 2;}, true, false);
         const nimbusTwoThousandAndOne2 = nimbusTwoThousandAndOne1.clone();
-        const polyjuicePotion1 = new Card("Polyjuice Potion", "Game 2", "item", 3, affectedPlayer => {const allies = affectedPlayer.hand.filter(card => {return card.type === "ally";}); if (allies.length) {const polyjuiceAlly = ally => {ally.effect(affectedPlayer); if (ally.passive) affectedPlayer.passives.push(ally);}; if (allies.length > 1) {addPlayerChoice("Pick an ally to copy:", () => {return allies.length;}, 1, () => {for (let i = 0; i < allies.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {polyjuiceAlly(allies[i]);};}});} else polyjuiceAlly(allies[0]);}}, false, false);
+        const polyjuicePotion1 = new Card("Polyjuice Potion", "Game 2", "item", 3, affectedPlayer => {
+            const allies = affectedPlayer.played.filter(card => {return card.type === "ally";});
+            if (allies.length) {
+                const polyjuiceAlly = ally => {
+                    ally.effect(affectedPlayer);
+                    if (ally.passive) affectedPlayer.passives.push(ally);
+                };
+                if (allies.length > 1) {
+                    addPlayerChoice("Pick an ally to copy:", () => {return allies.length;}, 1, () => {
+                        for (let i = 0; i < allies.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${allies[i].img.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {polyjuiceAlly(allies[i]);};
+                        }
+                    });
+                }
+                else polyjuiceAlly(allies[0]);
+            }
+        }, false, false);
         const polyjuicePotion2 = polyjuicePotion1.clone();
 
         // Game 3
