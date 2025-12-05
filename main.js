@@ -2323,10 +2323,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 hogwartsCards.push(arrestoMomentum1, arrestoMomentum2, ascendio1, ascendio2, autoAnswerQuill, barnOwl1, barnOwl2, barnOwl3, deanThomas, errol, lavenderBrown, locomotor1, locomotor2, padmaAndParvatiPatil, scourgify1, scourgify2, scourgify3, scourgify4, scourgify5, scourgify6, screechOwl1, screechOwl2, selfCorrectingInk1, selfCorrectingInk2, selfCorrectingInk3);
 
                 // remove Hogwarts cards for current players
-                if (!players.reduce((prev, curr) => {return prev + curr;}, "").includes("Harry Potter")) hogwartsCards.push(harryPotter);
-                if (!players.reduce((prev, curr) => {return prev + curr;}, "").includes("Hermione Granger")) hogwartsCards.push(hermioneGranger);
-                if (!players.reduce((prev, curr) => {return prev + curr;}, "").includes("Neville Longbottom")) hogwartsCards.push(nevilleLongbottom);
-                if (!players.reduce((prev, curr) => {return prev + curr;}, "").includes("Ron Weasley")) hogwartsCards.push(ronWeasley);
+                const heroesStr = players.reduce((prev, curr) => {return prev + curr.hero;}, "");
+                if (!heroesStr.includes("Harry Potter")) hogwartsCards.push(harryPotter);
+                if (!heroesStr.includes("Hermione Granger")) hogwartsCards.push(hermioneGranger);
+                if (!heroesStr.includes("Neville Longbottom")) hogwartsCards.push(nevilleLongbottom);
+                if (!heroesStr.includes("Ron Weasley")) hogwartsCards.push(ronWeasley);
             }
         }
 
