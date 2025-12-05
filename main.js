@@ -1,3 +1,8 @@
+// prevent page reload
+window.onbeforeunload = event => {
+    event.preventDefault();
+}
+
 // display player proficiecy choice
 const displayGameChoices = playerNumber => {
     const game = document.querySelector("input[name=\"game\"]:checked").value;
