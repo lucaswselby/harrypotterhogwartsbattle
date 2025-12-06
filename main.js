@@ -3985,7 +3985,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     if (activeVillains[i] !== corneliusFudge && activeVillains.includes(corneliusFudge) && !corneliusFudge.petrifiedBy && corneliusFudge.health > 0) players.forEach(player => {player.draw.splice(0, 1);});
                                 }
                                 // Common Welsh Green effect
-                                if (activeVillains[i].type.includes("creature") && activeVillains.includes(commonWelshGreen) && !commonWelshGreen.petrifiedBy && commonWelshGreen.health > 0) players.forEach(player => {player.health -= 2;});
+                                if (activeVillains[i] !== commonWelshGreen && activeVillains[i].type.includes("creature") && activeVillains.includes(commonWelshGreen) && !commonWelshGreen.petrifiedBy && commonWelshGreen.health > 0) players.forEach(player => {player.health -= 2;});
 
 
                                 // remove villain card back and add Lord Voldemort
