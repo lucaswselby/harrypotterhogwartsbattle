@@ -3979,7 +3979,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 document.getElementsByClassName("activeVillain")[i].appendChild(activeVillains[i].img);
                                 
                                 // Death Eater effect
-                                if (inactiveVillains[inactiveVillains.length - 1].type.includes("villain")) {
+                                if (activeVillains[i].type.includes("villain")) {
                                     if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy && deathEater1.health > 0) players.forEach(player => {player.health--;});
                                     if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy && deathEater2.health > 0) players.forEach(player => {player.health--;});
                                     if (activeVillains.includes(corneliusFudge) && !corneliusFudge.petrifiedBy && corneliusFudge.health > 0) players.forEach(player => {player.draw.splice(0, 1);});
