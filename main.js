@@ -3980,9 +3980,9 @@ document.getElementById("submitPlayers").onclick = () => {
                                 
                                 // Death Eater effect
                                 if (activeVillains[i].type.includes("villain")) {
-                                    if (activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy && deathEater1.health > 0) players.forEach(player => {player.health--;});
-                                    if (activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy && deathEater2.health > 0) players.forEach(player => {player.health--;});
                                     if (activeVillains.includes(corneliusFudge) && !corneliusFudge.petrifiedBy && corneliusFudge.health > 0) players.forEach(player => {player.draw.splice(0, 1);});
+                                    if (activeVillains[i] !== deathEater1 && activeVillains.includes(deathEater1) && !deathEater1.petrifiedBy && deathEater1.health > 0) players.forEach(player => {player.health--;});
+                                    if (activeVillains[i] !== deathEater2 && activeVillains.includes(deathEater2) && !deathEater2.petrifiedBy && deathEater2.health > 0) players.forEach(player => {player.health--;});
                                 }
                                 // Common Welsh Green effect
                                 if (activeVillains[i].type.includes("creature") && activeVillains.includes(commonWelshGreen) && !commonWelshGreen.petrifiedBy && commonWelshGreen.health > 0) players.forEach(player => {player.health -= 2;});
