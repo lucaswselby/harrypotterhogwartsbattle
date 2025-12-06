@@ -1089,11 +1089,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // display attack icons
-                    if (players[0] === this) {
-                        document.getElementsByClassName("attackTokens")[players.indexOf(this)].innerHTML = "";
-                        for (let i = 0; i < this.attack; i++) {
-                            document.getElementsByClassName("attackTokens")[players.indexOf(this)].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
-                        }
+                    document.getElementsByClassName("attackTokens")[players.indexOf(this)].innerHTML = "";
+                    for (let i = 0; i < this.attack; i++) {
+                        document.getElementsByClassName("attackTokens")[players.indexOf(this)].innerHTML += "<img class=\"attackToken\" src=\"./images/attackToken.png\" alt=\"attack token\">";
                     }
                 }
             }
@@ -1112,11 +1110,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
                     
                     // display influence icons
-                    if (players[0] === this) {
-                        document.getElementsByClassName("influenceTokens")[players.indexOf(this)].innerHTML = "";
-                        for (let i = 0; i < this.influence; i++) {
-                            document.getElementsByClassName("influenceTokens")[players.indexOf(this)].innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
-                        }
+                    document.getElementsByClassName("influenceTokens")[players.indexOf(this)].innerHTML = "";
+                    for (let i = 0; i < this.influence; i++) {
+                        document.getElementsByClassName("influenceTokens")[players.indexOf(this)].innerHTML += "<img class=\"influenceToken\" src=\"./images/influenceToken.png\" alt=\"influence token\">";
                     }
                 }
             }
