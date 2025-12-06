@@ -3441,11 +3441,11 @@ document.getElementById("submitPlayers").onclick = () => {
                     addPlayerChoice("Discard:", () => {return items().length;}, 1, () => {
                         for (let i = 0; i < items().length; i++) {
                             document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items()[i].img.src}">`;
-                            document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(players[0].hand.indexOf(items[i]), true)};
+                            document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(players[0].hand.indexOf(items()[i]), true)};
                         }
                     });
                 }
-                else players[0].forcedDiscardAt(players[0].hand.indexOf(items[0]), true);
+                else players[0].forcedDiscardAt(players[0].hand.indexOf(items()[0]), true);
             }
             else players[0].health -= 2;
         }, () => {
