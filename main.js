@@ -2135,7 +2135,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const barnOwl1 = new Card("Barn Owl", "Pack 1", "ally", 4, affectedPlayer => {affectedPlayer.health += 2;}, false, false);
         const barnOwl2 = barnOwl1.clone();
         const barnOwl3 = barnOwl1.clone();
-        const deanThomas = new Card("Dean Thomas", "Pack 1", "ally", 3, () => {
+        const deanThomas = new Card("Dean Thomas", "Pack 1", "ally", 3, affectedPlayer => {
             const deanInfluence = () => {
                 affectedPlayer.influence++;
                 getNeighbors(affectedPlayer).forEach(neighbor => {neighbor.influence++;});
