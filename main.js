@@ -295,10 +295,62 @@ document.getElementById("submitPlayers").onclick = () => {
             else if (color === "yellow") sides.push("health", "health");
             else if (color === "blue") sides.push("draw", "draw");
             let result = sides[Math.floor(Math.random() * sides.length)];
-            const arithmancyCheck = effect => {
+            const arithmancyCheck = () => {
                 const activateEffect = () => {
-                    effect();
-                    if (encounters.length && encounters[0].remaining.length && !evil) encounters[0].addSymbol(result); // add symbol to encounter
+                    // result based on roll
+                    if (evil) {
+                        if (result === "influence" || result === "location") activeLocation.addToLocation();
+                        else if (result === "draw") {
+                            players.forEach(player => {
+                                addPlayerChoice("Discard:", () => {return player.hand.length;}, 1, () => {
+                                    for (let i = 0; i < player.hand.length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, color !== "phoenix");};
+                                    }
+                                });
+                            });
+                        }
+                        else if (result === "draw 2") {
+                            addPlayerChoice("Discard:", () => {return affectedPlayer.hand.length;}, 2, () => {
+                                for (let i = 0; i < affectedPlayer.hand.length; i++) {
+                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${affectedPlayer.hand[i].img.src}">`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {affectedPlayer.forcedDiscardAt(i, false);};
+                                }
+                            });
+                        }
+                        else if (result === "attack") players.forEach(player => {player.health--;});
+                        else if (result === "health") {
+                            if (color === "phoenix") {
+                                activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {
+                                    creature.health++;
+                                    creature.influence++;
+                                });
+                            }
+                            else {
+                                activeVillains.filter(villain => {return villain.type.includes("villain");}).forEach(villain => {
+                                    villain.health++;
+                                });
+                            }
+                        }
+                        else if (result === "health 2") {
+                            activeVillains.forEach(villain => {
+                                villain.health++;
+                                villain.influence++;
+                            });                    
+                        }
+                        else alert(`${color} is not a die color.`);
+                    }
+                    else {
+                        if (result === "influence") players.forEach(player => {player.influence++;});
+                        else if (result.includes("draw")) players.forEach(player => {player.drawCards(result === "draw" ? 1 : 2);});
+                        else if (result === "attack") players.forEach(player => {player.attack++;});
+                        else if (result.includes("health")) players.forEach(player => {player.health += result === "health" ? 1 : 2;});
+                        else if (result === "location") activeLocation.removeFromLocation();
+                        else alert(`${color} is not a die color.`);
+                    }
+
+                    // add symbol to encounter
+                    if (encounters.length && encounters[0].remaining.length && !evil) encounters[0].addSymbol(result);
                 };
 
                 // returns the imge corresponding the to result of the dice roll
@@ -336,7 +388,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         document.getElementsByClassName("choice")[0].innerHTML = `<p>Keep${rerollViable() ? " or reroll" : ""}:</p>${rewardImg(result)}`;
                         document.getElementsByClassName("choice")[0].onclick = () => {
                             selfCorrectingInkRoll = false;
-                            arithmancyCheck(effect);
+                            arithmancyCheck();
                         };
                         for (let i = 0; i < otherResults.length; i++) {
                             document.getElementsByClassName("choice")[i + 1].innerHTML = `<p>Spend 1 influence:</p>${rewardImg(otherResults[i])}`;
@@ -345,7 +397,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 result = otherResults[i];
                                 arithmancyUsed = true;
                                 selfCorrectingInkRoll = false;
-                                arithmancyCheck(effect);
+                                arithmancyCheck();
                             };
                         }
                     });
@@ -365,60 +417,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     activateEffect();
                 }
             };
-            if (evil) {
-                if (result === "influence" || result === "location") arithmancyCheck(() => {activeLocation.addToLocation();});
-                else if (result === "draw") {
-                    arithmancyCheck(() => {
-                        players.forEach(player => {
-                            addPlayerChoice("Discard:", () => {return player.hand.length;}, 1, () => {
-                                for (let i = 0; i < player.hand.length; i++) {
-                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
-                                    document.getElementsByClassName("choice")[i].onclick = () => {player.forcedDiscardAt(i, color !== "phoenix");};
-                                }
-                            });
-                        });
-                    });
-                }
-                else if (result === "draw 2") {
-                    arithmancyCheck(() => {
-                        addPlayerChoice("Discard:", () => {return affectedPlayer.hand.length;}, 2, () => {
-                            for (let i = 0; i < affectedPlayer.hand.length; i++) {
-                                document.getElementsByClassName("choice")[i].innerHTML = `<img src="${affectedPlayer.hand[i].img.src}">`;
-                                document.getElementsByClassName("choice")[i].onclick = () => {affectedPlayer.forcedDiscardAt(i, false);};
-                            }
-                        });
-                    });
-                }
-                else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.health--;});});
-                else if (result === "health") {
-                    if (color === "phoenix") {
-                        activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {
-                            creature.health++;
-                            creature.influence++;
-                        });
-                    }
-                    else {
-                        activeVillains.filter(villain => {return villain.type.includes("villain");}).forEach(villain => {
-                            villain.health++;
-                        });
-                    }
-                }
-                else if (result === "health 2") {
-                    activeVillains.forEach(villain => {
-                        villain.health++;
-                        villain.influence++;
-                    });                    
-                }
-                else alert(`${color} is not a die color.`);
-            }
-            else {
-                if (result === "influence") arithmancyCheck(() => {players.forEach(player => {player.influence++;});});
-                else if (result.includes("draw")) arithmancyCheck(() => {players.forEach(player => {player.drawCards(result === "draw" ? 1 : 2);});});
-                else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.attack++;});});
-                else if (result.includes("health")) arithmancyCheck(() => {players.forEach(player => {player.health += result === "health" ? 1 : 2;});});
-                else if (result === "location") arithmancyCheck(() => {activeLocation.removeFromLocation()});
-                else alert(`${color} is not a die color.`);
-            }
+            arithmancyCheck();
         };
 
         // check if Voldemort is in the draw villain spot
