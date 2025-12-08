@@ -1515,7 +1515,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     )) ||
                     (encounters[0] === sneakingInTheHalls && this.played.filter(card => {return card.type === "item"}).length >= 4) || // Sneaking in the Halls completion
                     (encounters[0] === theMinistryIsMeddling && this._influenceGained >= 8) || // The Ministry is Meddling completion
-                    (encounters[0] === detentionWithDolores && this.played.map(card => {return card.cost;}).filter(cost => {cost >= 4;}).length >= 3) // Detention with Dolores completion
+                    (encounters[0] === detentionWithDolores && this.played.map(card => {return card.cost;}).filter(cost => {return cost >= 4;}).length >= 3) // Detention with Dolores completion
                 )) this.addDestroyedHorcrux(encounters.shift());
 
                 this.petrified = false;
