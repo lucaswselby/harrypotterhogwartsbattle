@@ -952,7 +952,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         this._healthLost += this.health - health;
                         
                         // Werewolf effect
-                        if (activeVillains.includes(werewolf) && !werewolf.activated && this.healthLost >= 4) {
+                        if (activeVillains.includes(werewolf) && !werewolf.petrifiedBy && werewolf.health + werewolf.influence > 0 && !werewolf.activated && this.healthLost >= 4) {
                             activeLocation.addToLocation();
                             werewolf.activated = true;
                         }
