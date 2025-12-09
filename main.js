@@ -658,6 +658,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 gillyweedEffect();
                             }
                         }
+
                         // Divination proficiency
                         if (players[0].proficiency === "Divination" && this.type === "item") {
                             addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
@@ -697,14 +698,13 @@ document.getElementById("submitPlayers").onclick = () => {
                                 darken(peskipiksiPesternomi.img);
                             }
                         }
-
-                        players[0].playedPush(this);
-                        
                         // Escape effect
                         if (encounters.length && encounters[0] === escape && (this.type === "item" || this.type === "ally")) {
                             players[0].health--;
                             darken(escape.img);
                         }
+
+                        players[0].playedPush(this);
                     }
                 }
             }
