@@ -2821,7 +2821,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     addPlayerChoice("Lose:", () => {return 2;}, 1, () => {
                         document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken + healthToken}</div>`;
                         document.getElementsByClassName("choice")[0].onclick = () => {player.health -= 3;};
-                        document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${items().reduce((prev, curr) => {return prev + `<img src="${curr.img.src}">`}, "")}</div>`;
+                        document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer" height="40vh" style="overfow-x: auto;">${items().reduce((prev, curr) => {return prev + `<img src="${curr.img.src}">`}, "")}</div>`;
                         document.getElementsByClassName("choice")[1].onclick = () => {
                             while (items().length) player.forcedDiscardAt(player.hand.indexOf(items()[0]), true);
                         };
