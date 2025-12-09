@@ -1710,7 +1710,18 @@ document.getElementById("submitPlayers").onclick = () => {
         const chocolateFrog1 = new Card("Chocolate Frog", "Game 3", "item", 2, affectedPlayer => {let unstunnedPlayers = players.filter(player => {return !player.stunned;}); if (unstunnedPlayers.length) {if (unstunnedPlayers.length > 1) {addPlayerChoice(`Give 1 influence and 1 health to:`, () => {return unstunnedPlayers.length;}, 1, () => {for (let i = 0; i < unstunnedPlayers.length; i++) {document.getElementsByClassName("choice")[i].appendChild(unstunnedPlayers[i].heroImage.cloneNode()); document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${unstunnedPlayers[i].influence}</p><p>Health: ${unstunnedPlayers[i].health}</p>`; document.getElementsByClassName("choice")[i].onclick = () => {unstunnedPlayers[i].influence++; unstunnedPlayers[i].health++;};}});} else {unstunnedPlayers[0].influence++; unstunnedPlayers[0].health++;}}}, false, false);
         const chocolateFrog2 = chocolateFrog1.clone();
         const chocolateFrog3 = chocolateFrog1.clone();
-        const crystalBall1 = new Card("Crystal Ball", "Game 3", "item", 3, affectedPlayer => {if (!affectedPlayer.petrified) {affectedPlayer.drawCards(2); addPlayerChoice("Discard:", () => {return affectedPlayer.hand.length;}, 1, () => {for (let i = 0; i < affectedPlayer.hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${affectedPlayer.hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {affectedPlayer.forcedDiscardAt(i, false);};}});}}, false, false);
+        const crystalBall1 = new Card("Crystal Ball", "Game 3", "item", 3, affectedPlayer => {
+            affectedPlayer.drawCards(2);
+            addPlayerChoice("Discard:", () => {return affectedPlayer.hand.length + (affectedPlayer.petrified ? 1 : 0);}, 1, () => {
+                for (let i = 0; i < affectedPlayer.hand.length; i++) {
+                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${affectedPlayer.hand[i].img.src}">`;
+                    document.getElementsByClassName("choice")[i].onclick = () => {affectedPlayer.forcedDiscardAt(i, false);};
+                }
+                if (affectedPlayer.petrified) {
+                    document.getElementsByClassName("choice")[affectedPlayer.hand.length].innerHTML = "<p>Nothing</p>";
+                }
+            });
+        }, false, false);
         const crystalBall2 = crystalBall1.clone();
         const expectoPatronum1 = new Card("Expecto Patronum", "Game 3", "spell", 5, affectedPlayer => {affectedPlayer.attack++; activeLocation.removeFromLocation();}, false, false);
         const expectoPatronum2 = expectoPatronum1.clone();
