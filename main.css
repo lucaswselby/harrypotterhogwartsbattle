@@ -316,6 +316,7 @@ input[type="submit"] {
 
 .shop, #hogwartsCardBack {
     height: 20%;
+    width: auto;
     position: absolute;
 }
 #shop1, #shop2 {
