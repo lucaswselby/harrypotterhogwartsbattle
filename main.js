@@ -551,12 +551,6 @@ document.getElementById("submitPlayers").onclick = () => {
             generateOnClick() {
                 this._img.onclick = () => {
                     if (!document.getElementById("playerChoice") && players[0].hand.includes(this)) {
-                        // Escape effect
-                        if (encounters.length && encounters[0] === escape && (this.type === "item" || this.type === "ally")) {
-                            players[0].health--;
-                            darken(escape.img);
-                        }
-
                         // Healing Charm
                         if (players[0].charm === "Healing" && this.type === "ally") {
                             if (players[0].health > 7) {
@@ -702,6 +696,11 @@ document.getElementById("submitPlayers").onclick = () => {
                                 else hurtPlayers[0].health++;
                                 darken(peskipiksiPesternomi.img);
                             }
+                        }
+                        // Escape effect
+                        if (encounters.length && encounters[0] === escape && (this.type === "item" || this.type === "ally")) {
+                            players[0].health--;
+                            darken(escape.img);
                         }
 
                         players[0].playedPush(this);
