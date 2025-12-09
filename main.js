@@ -952,8 +952,8 @@ document.getElementById("submitPlayers").onclick = () => {
                         
                         // Werewolf effect
                         if (activeVillains.includes(werewolf) && !werewolf.petrifiedBy && werewolf.health + werewolf.influence > 0 && !werewolf.activated && this.healthLost >= 4) {
-                            activeLocation.addToLocation();
                             werewolf.activated = true;
+                            activeLocation.addToLocation();
                         }
                         // Pansy Parkinson effect
                         if (activeVillains.includes(pansyParkinson) && !pansyParkinson.activated && this.healthLost >= 3) {
