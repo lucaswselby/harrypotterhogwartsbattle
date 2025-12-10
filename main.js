@@ -238,13 +238,15 @@ document.getElementById("submitPlayers").onclick = () => {
                     }
 
                     // queues next player choice
-                    document.getElementById("playerChoice").addEventListener("click", () => {
-                        playerChoices.splice(playerChoices.indexOf(this), 1);
-                        if (playerChoices.length) {
-                            if (playerChoices[0].choices()) playerChoices[0].display();
-                            else playerChoices.shift();
-                        }
-                    });
+                    if (document.getElementById("playerChoice")) {
+                        document.getElementById("playerChoice").addEventListener("click", () => {
+                            playerChoices.splice(playerChoices.indexOf(this), 1);
+                            if (playerChoices.length) {
+                                if (playerChoices[0].choices()) playerChoices[0].display();
+                                else playerChoices.shift();
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -3347,25 +3349,37 @@ document.getElementById("submitPlayers").onclick = () => {
         const aragog = new Villain("Aragog", "Box 3", "creature", 8, 0, () => {players[0].health -= activeVillains.filter(villain => {return villain.type.includes("creature");}).length;}, () => {players.forEach(player => {player.health += 2; player.influence++;}); activeLocation.removeFromLocation();}, false);
         const centaur = new Villain("Centaur", "Box 3", "creature", 0, 7, () => {
             const spells = () => {return players[0].hand.filter(card => {return card.type === "spell";});};
-            if (spells().length && players[0].health > 0) {
+            if (spells().length) {
                 addPlayerChoice("Lose:", () => {return 2;}, 1, () => {
-                    document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div>`;
-                    document.getElementsByClassName("choice")[0].onclick = () => {players[0].health -= 2;};
-                    document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard:</p>${choiceScroll(spells())}`;
-                    document.getElementsByClassName("choice")[1].onclick = () => {
-                        if (spells().length > 1) {
-                            playerChoices.unshift(new PlayerChoice("Discard:", () => {return spells().length;}, 1, () => {
-                                for (let i = 0; i < spells().length; i++) {
-                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells()[i].img.src}">`;
-                                    document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(players[0].hand.indexOf(spells()[i]), true);};
-                                }
-                            }));
+                    if (spells().length && players[0].health > 0) {
+                        document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div>`;
+                        document.getElementsByClassName("choice")[0].onclick = () => {players[0].health -= 2;};
+                        document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard:</p>${choiceScroll(spells())}`;
+                        document.getElementsByClassName("choice")[1].onclick = () => {
+                            if (spells().length > 1) {
+                                playerChoices.unshift(new PlayerChoice("Discard:", () => {return spells().length;}, 1, () => {
+                                    for (let i = 0; i < spells().length; i++) {
+                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells()[i].img.src}">`;
+                                        document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(players[0].hand.indexOf(spells()[i]), true);};
+                                    }
+                                }));
+                            }
+                            else players[0].forcedDiscardAt(players[0].hand.indexOf(spells()[0]), true);
+                        };
+                    }
+                    else {
+                        players[0].health -= 2;
+                        document.getElementById("playerChoiceContainer").remove();
+                        document.getElementById("revealBoard").remove();
+                        playerChoices.shift();
+                        if (playerChoices.length) {
+                            if (playerChoices[0].choices()) playerChoices[0].display();
+                            else playerChoices.shift();
                         }
-                        else players[0].forcedDiscardAt(players[0].hand.indexOf(spells()[0]), true);
-                    };
+                    }
                 });
             }
-            else if (players[0].health > 0) players[0].health -= 2;
+            else players[0].health -= 2;
         }, () => {players.forEach(player => {const spells = player.discard.filter(card => {return card.type === "spell"}); if (spells.length) {const discardToHand = index => {player.addToHand(spells[index]); player.discard.splice(player.discard.indexOf(spells[index]), 1);}; if (spells.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return spells.length;}, 1, () => {for (let i = 0; i < spells.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${spells[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}}); activeLocation.removeFromLocation();}, false);
         const grawp = new Villain("Grawp", "Box 3", "creature", 0, 8, () => {if (players[0].hand.length >= 6) players[0].health -= 2;}, () => {players.forEach(player => {
             if (!player.petrified) {
