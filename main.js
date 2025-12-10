@@ -232,7 +232,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     playerChoiceElement.style.gridTemplateColumns = `repeat(${this._choices()}, calc((100vw - ${getComputedStyle(playerChoiceElement).getPropertyValue("gap")} * ${this._choices() - 1}) / ${this._choices()}))`;
                     this._populateFunction();
                     const minChoiceWidth = 75; // needs to be a multiple plus .5 of the gap size to give the illusion of there being more options off screen
-                    if (document.getElementsByClassName("choice")[0].offsetWidth < minChoiceWidth) {
+                    if (document.getElementsByClassName("choice")[0] && document.getElementsByClassName("choice")[0].offsetWidth < minChoiceWidth) {
                         playerChoiceElement.style.overflowX = "scroll";
                         playerChoiceElement.style.gridTemplateColumns = `repeat(${this._choices()}, ${minChoiceWidth}px)`;
                     }
