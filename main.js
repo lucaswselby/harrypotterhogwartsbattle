@@ -425,17 +425,20 @@ document.getElementById("submitPlayers").onclick = () => {
         // check if Voldemort is in the draw villain spot
         const invulnerableVoldemort = () => {
             if (!inactiveVillains.length) {
-                if ((activeGame === "Game 5" || activeGame === "Box 1") && activeVillains[0] !== lordVoldemort1) {
+                if ((activeGame === "Game 5" || activeGame === "Box 1" || activeGame === "Pack 1") && activeVillains[0] !== lordVoldemort1) {
                     return lordVoldemort1;
                 }
-                else if ((activeGame === "Game 6" || activeGame === "Box 2") && activeVillains[0] !== lordVoldemort2) {
+                else if ((activeGame === "Game 6" || activeGame === "Box 2" || activeGame === "Pack 2") && activeVillains[0] !== lordVoldemort2) {
                     return lordVoldemort2;
                 }
-                else if ((activeGame === "Game 7" || activeGame === "Box 3") && activeVillains[0] !== lordVoldemort3) {
+                else if ((activeGame === "Game 7" || activeGame === "Box 3" || activeGame === "Pack 3") && activeVillains[0] !== lordVoldemort3) {
                     return lordVoldemort3;
                 }
                 else if (activeGame === "Box 4" && activeVillains[0] !== lordVoldemort4) {
                     return lordVoldemort4;
+                }
+                else if (activeGame === "Pack 4" && activeVillains[0] !== lordVoldemort5) {
+                    return lordVoldemort5;
                 }
             }
             return null;
@@ -3072,17 +3075,20 @@ document.getElementById("submitPlayers").onclick = () => {
                             if (!activeVillains.filter(villain => {return villain.health || villain.influence}).length && !inactiveVillains.length) {
                                 activeVillains = [];
                                 // Voldemort
-                                if ((activeGame === "Game 5" || activeGame === "Box 1") && this !== lordVoldemort1) {
+                                if ((activeGame === "Game 5" || activeGame === "Box 1" || activeGame === "Pack 1") && this !== lordVoldemort1) {
                                     activeVillains.push(lordVoldemort1);
                                 }
-                                else if ((activeGame === "Game 6" || activeGame === "Box 2") && this !== lordVoldemort2) {
+                                else if ((activeGame === "Game 6" || activeGame === "Box 2" || activeGame === "Pack 2") && this !== lordVoldemort2) {
                                     activeVillains.push(lordVoldemort2);
                                 }
-                                else if ((activeGame === "Game 7" || activeGame === "Box 3") && this !== lordVoldemort3) {
+                                else if ((activeGame === "Game 7" || activeGame === "Box 3" || activeGame === "Pack 3") && this !== lordVoldemort3) {
                                     activeVillains.push(lordVoldemort3);
                                 }
                                 else if (activeGame === "Box 4" && this !== lordVoldemort4) {
                                     activeVillains.push(lordVoldemort4);
+                                }
+                                else if (activeGame === "Pack 4" && this !== lordVoldemort5) {
+                                    activeVillains.push(lordVoldemort5);
                                 }
                                 else alert("Victory!");
                                 populateVillains();
@@ -3472,6 +3478,11 @@ document.getElementById("submitPlayers").onclick = () => {
             players.forEach(player => {const items = player.discard.filter(card => {return card.type === "item"}); if (items.length) {const discardToHand = index => {player.addToHand(items[index]); player.discard.splice(player.discard.indexOf(items[index]), 1);}; if (items.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}});
         }, false);
         const pansyParkinson = new Villain("Pansy Parkinson", "Pack 1", "villain", 0, 5, () => {}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();}, true);
+        // TO-DO: add Pack villains
+        const lordVoldemort5 = new Villain("Lord Voldemort", "Pack 4", "villain", 25, 7, () => {
+            players[0].health -= activeLocation.added;
+            if (players[0].stunned) activeLocation.addToLocation();
+        }, () => {}, false);
         const pack1Villains = [corneliusFudge, marcusFlint, pansyParkinson];
         const pack2Villains = [];
         const pack3Villains = [];
@@ -4015,17 +4026,20 @@ document.getElementById("submitPlayers").onclick = () => {
                                 // remove villain card back and add Lord Voldemort
                                 if (!inactiveVillains.length) {
                                     document.getElementById("villainDraw").innerHTML = "";
-                                    if ((activeGame === "Game 5" || activeGame === "Box 1") && activeVillains[0] !== lordVoldemort1) {
+                                    if ((activeGame === "Game 5" || activeGame === "Box 1" || activeGame === "Pack 1") && activeVillains[0] !== lordVoldemort1) {
                                         document.getElementById("villainDraw").appendChild(lordVoldemort1.img);
                                     }
-                                    else if ((activeGame === "Game 6" || activeGame === "Box 2") && activeVillains[0] !== lordVoldemort2) {
+                                    else if ((activeGame === "Game 6" || activeGame === "Box 2" || activeGame === "Pack 2") && activeVillains[0] !== lordVoldemort2) {
                                         document.getElementById("villainDraw").appendChild(lordVoldemort2.img);
                                     }
-                                    else if ((activeGame === "Game 7" || activeGame === "Box 3") && activeVillains[0] !== lordVoldemort3) {
+                                    else if ((activeGame === "Game 7" || activeGame === "Box 3" || activeGame === "Pack 3") && activeVillains[0] !== lordVoldemort3) {
                                         document.getElementById("villainDraw").appendChild(lordVoldemort3.img);
                                     }
                                     else if (activeGame === "Box 4" && activeVillains[0] !== lordVoldemort4) {
                                         document.getElementById("villainDraw").appendChild(lordVoldemort4.img);
+                                    }
+                                    else if (activeGame === "Pack 4" && activeVillains[0] !== lordVoldemort5) {
+                                        document.getElementById("villainDraw").appendChild(lordVoldemort5.img);
                                     }
                                 }
                             }
