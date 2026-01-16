@@ -3489,10 +3489,12 @@ document.getElementById("submitPlayers").onclick = () => {
         const pack4Villains = [];
 
         // add Box or Pack villains to inactiveVilains
+        if (activeGame.includes("Box") || activeGame.includes("Pack")) {            
+            inactiveVillains.splice(inactiveVillains.indexOf(basilisk), 1);
+            inactiveVillains.splice(inactiveVillains.indexOf(dementor), 1);
+        }
         switch (activeGame) {
             case "Box 1":
-                inactiveVillains.splice(inactiveVillains.indexOf(basilisk), 1);
-                inactiveVillains.splice(inactiveVillains.indexOf(dementor), 1);
                 inactiveVillains = inactiveVillains.slice(0, 5).concat(box1Villains);
                 break;
             case "Box 2":
