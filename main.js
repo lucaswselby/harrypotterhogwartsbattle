@@ -523,6 +523,105 @@ document.getElementById("submitPlayers").onclick = () => {
             });
         };
 
+        const completeIngredientTask = rowIndex => {
+            for (let i = 0; i < document.getElementsByClassName(`ingredientsRow${rowIndex+1}`).length; i++) {
+                document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).classList.toggle("shimmer");
+                document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).onclick = () => {
+                    let receivingPotions = availablePotions.filter(potion => {return potion.needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "wild ingredient";});
+                    addPlayerChoice(`Assign ${availableIngredients[rowIndex][i].name} to:`, () => {return 2 + receivingPotions.length;}, 1, () => {
+                        const refillIngredients = () => {
+                            // discard used ingredient
+                            ingredientDiscard.push(availableIngredients[rowIndex][i]);
+
+                            // refill available ingredients by cascade
+                            for (let j = rowIndex; j > 0; j++) {
+                                availableIngredients[j][i] = availableIngredients[j-1][i];
+                            }
+
+                            // check for ingredients in pile and refill from discard if necessary
+                            if (!ingredientsPile.length) {
+                                shuffle(ingredientDiscard);
+                                while (ingredientDiscard.length) ingredientsPile.push(ingredientDiscard.shift());
+                            }
+
+                            // refill available ingredient
+                            availableIngredients[0][i] = ingredientsPile.shift();
+
+                            populatePotions();
+                        };
+
+                        // add ingredient to available potions
+                        for (let j = 0; j < receivingPotions.length; j++) {
+                            if (availablePotions[j].needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "wild ingredient") {
+                                // add availableIngredients[rowIndex][i] to receivingPotions[j]
+                                document.getElementsByClassName("choice")[j].innerHTML = `<p>Add to</p><img src="${receivingPotions[j].img.src}">`;
+                                document.getElementsByClassName("choice")[j].onclick = () => {
+                                    if (availableIngredients[rowIndex][i] === "wild ingredient") {
+                                        receivingPotions[j].wildIngredientsUsed++;
+                                    }
+                                    else {
+                                        receivingPotions[j].needed = receivingPotions[j].needed.filter(ingredient => {return ingredient !== availableIngredients[rowIndex][i];});
+                                    }
+
+                                    // complete potion
+                                    if (receivingPotions[j].needed.length - receivingPotions[j].wildIngredientsUsed <= 0) {
+                                        playerChoices.unshift(new PlayerChoice("Banish or Discard", () => {return 2;}, 1, () => {
+                                            const replacePotion = () => {
+                                                let newPotion = potions.shift();
+                                                availablePotions[availablePotions.indexOf(receivingPotions[j])] = newPotion;
+                                                document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).innerHTML = "";
+                                                document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).appendChild(newPotion.img);
+
+                                                // discard ingredients
+                                                for (let k = 0; k < receivingPotions[j].wildIngredientsUsed; k++) {
+                                                    ingredientDiscard.push("wild ingredient");
+                                                }
+                                                receivingPotions[j].ingredients.filter(ingredient => {return !receivingPotions[j].needed.includes(ingredient);}).forEach(ingredient => {ingredientDiscard.push(ingredient);});
+                                                for (let k = 1; k <= 3; k++) {
+                                                    document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}ingredient${k}`).innerHTML = "";
+                                                }
+
+                                                // reset completed potion
+                                                receivingPotions[j].needed = [...receivingPotions[j].ingredients];
+                                            };
+
+                                            // use potion for banish ability
+                                            document.getElementsByClassName("choice")[0].innerHTML = receivingPotions[j].banishEffectLabel;
+                                            document.getElementsByClassName("choice")[0].onclick = () => {
+                                                players[0].cardsDrawn--;
+                                                players[0].draw.unshift(receivingPotions[j]);
+                                                players[0].drawCards(1);
+                                                receivingPotions[j].banishEffect(players[0]);
+                                                replacePotion();
+                                            };
+
+                                            // add potion to discard
+                                            document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p>${hogwartsCardBack}`;
+                                            document.getElementsByClassName("choice")[1].onclick = () => {
+                                                players[0].discard.push(receivingPotions[j]);
+                                                replacePotion();
+                                            };
+                                        }));
+                                    }
+
+                                    refillIngredients();
+                                };
+                            }
+                        };
+
+                        // discard ingredient
+                        document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 2].innerHTML = "<p>Discard</p>";
+                        document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 2].onclick = () => {
+                            ingredientDiscard.push(availableIngredients[rowIndex][i]);
+                            refillIngredients();
+                        };
+
+                        document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 1].innerHTML = "<p>Nothing</p>";
+                    });
+                };
+            }
+        };
+
         // cards
         class Card {
             constructor(name, game, type, cost, effect, passive, houseDie) {
@@ -1000,7 +1099,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                             // Apparition Charm
                             if (this.charm === "Apparition" && !this.gainedHealth) {
-                                // TO-DO: highlight Apparition Charm
+                                document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.toggle("shimmer");
                                 document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {
                                     if (this.health > 7) {
                                         const cheapCards = this.played.filter(card => {return card.cost <= 3;});
@@ -1047,9 +1146,13 @@ document.getElementById("submitPlayers").onclick = () => {
                                             });
                                         }
                                     }
+                                    document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.toggle("shimmer");
                                 };
                             }
                             this.gainedHealth = true;
+
+                            // Potion List A
+                            if (this !== players[0]) completeIngredientTask(1);
 
                             this._healthGained += health - this.health;
                             if (this.healthGained >= 3) {
@@ -1104,8 +1207,13 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             set influence(influence) {
                 if ((!this.stunned && (!encounters.length || encounters[0] !== horcrux3)) || players[0] === this) {
-                    // sets influenceGained
-                    if (influence > this.influence) this._influenceGained += influence - this.influence;
+                    if (influence > this.influence) {
+                        // sets influenceGained
+                        this._influenceGained += influence - this.influence;
+
+                        // Potion List A
+                        if (this._influenceGained === 5) completeIngredientTask(3);
+                    }
 
                     // sets influence
                     this._influence = influence;
@@ -1210,6 +1318,9 @@ document.getElementById("submitPlayers").onclick = () => {
                     this._charmUsed = true;
                 }
 
+                // Potion List A
+                if (spellsCast === 3) completeIngredientTask(4);
+
                 // check for items cast
                 let itemsCast = this.played.filter(card => {return card.type === "item";}).length;
 
@@ -1287,6 +1398,9 @@ document.getElementById("submitPlayers").onclick = () => {
                         players.forEach(player => {player.health++;});
                     }
                 }
+
+                // Potions List A
+                if (this.attacks === 3) completeIngredientTask(2);
             }
             get influences() {
                 return this._influences;
@@ -1333,6 +1447,9 @@ document.getElementById("submitPlayers").onclick = () => {
             }
 
             banishAt(index) {
+                // banish potions to the potions array
+                if (this.hand[index] === "potion") potions.push(this.hand[index]);
+
                 if (document.getElementsByClassName("playerHand")[players.indexOf(this)].contains(this.hand[index].img)) document.getElementsByClassName("playerHand")[players.indexOf(this)].removeChild(this.hand[index].img);
                 if (this.passives.includes(this.hand[index])) this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
                 this._hand.splice(index, 1);
@@ -1591,6 +1708,9 @@ document.getElementById("submitPlayers").onclick = () => {
                                 darken(lordVoldemort4.img);
                             }, 1000);
                         }
+
+                        // Potion List A
+                        completeIngredientTask(0);
                     };
 
                     // Stag Patronus
@@ -3794,6 +3914,154 @@ document.getElementById("submitPlayers").onclick = () => {
                 break;
         }
 
+        // Potions
+        class Potion extends Card {
+            constructor(name, game, effectLabel, effect, banishEffectLabel, banishEffect, ingredients) {
+                super(name, game, "potion", 0, effect, false, false);
+                this._effectLabel = effectLabel;
+                this._banishEffectLabel = banishEffectLabel;
+                this._banishEffect = player => {
+                    banishEffect(player);
+                    player.banishAt(player.hand.indexOf(this));
+                }
+                this._ingredients = ingredients;
+                this._needed = ingredients;
+                this._wildIngredientsUsed = 0;
+            }
+            get ingredients() {
+                return this._ingredients;
+            }
+            get needed() {
+                return this._needed;
+            }
+            set needed(needed) {
+                this._needed = needed;
+            }
+            get wildIngredientsUsed() {
+                return this._wildIngredientsUsed;
+            }
+            set wildIngredientsUsed(wildIngredientsUsed) {
+                this._wildIngredientsUsed = wildIngredientsUsed;
+            }
+            clone() {
+                return new Potion(this._name, this._game, this._effectLabel, this._effect, this._banishEffectLabel, this._banishEffect, this._ingredients);
+            }
+            generateOnClick() {
+                this._img.onclick = () => {
+                    if (!document.getElementById("playerChoice") && players[0].hand.includes(this)) {
+                        addPlayerChoice("Choose one:", () => {return 2;}, 1, () => {
+                            document.getElementsByClassName("choice")[0].innerHTML = this._effectLabel;
+                            document.getElementsByClassName("choice")[0].onclick = () => {
+                                this._effect(players[0]);
+                                players[0].discardAt(players[0].hand.indexOf(this));
+                                players[0].playedPush(this);
+                            };
+                            document.getElementsByClassName("choice")[1].innerHTML = this._banishEffectLabel;
+                            document.getElementsByClassName("choice")[1].onclick = () => {
+                                this._banishEffect(players[0]);
+                            };
+                        });
+                    }
+                }
+            }
+        }
+        const ageingPotion1 = new Potion("Ageing Potion", "Pack 2", influenceToken, affectedPlayer => {affectedPlayer.influence++;}, `<p>Banish this card, then any two heroes gain:</p>${attackToken}`, affectedPlayer => {
+            if (players.length > 2) {
+                let remainingPlayers = [...players];
+                addPlayerChoice("Give 1 attack to:", () => {return remainingPlayers.length;}, 2, () => {
+                    for (let i = 0; i < remainingPlayers.length; i++) {
+                        document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].img.cloneNode());
+                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Attacks: ${remainingPlayers[i].attack}</p>`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            remainingPlayers[i].attack++;
+                            remainingPlayers.splice(i, 1);
+                        };
+                    }
+                });
+            }
+            else players.forEach(player => {player.attack++;});
+        }, ["bicorn horn", "hellebore"]);
+        const ageingPotion2 = ageingPotion1.clone();
+        const ageingPotion3 = ageingPotion1.clone();
+        const amortentia1 = new Potion("Amortentia", "Pack 2", `<p>Any one hero gains:</p>${healthToken + healthToken}`, affectedPlayer => {
+            let healable = players.filter(player => {return canHeal(player);});
+            if (healable.length) {
+                if (healable.length > 1) {
+                    addPlayerChoice("Heal for 2:", () => {return healable.length;}, 1, () => {
+                        for (let i = 0; i < healable.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(healable[i].img.cloneNode());
+                            document.getElementsByClassName("choice")[i].innerHTML += `Health: ${healable[i].health}`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {healable[i].health += 2;};
+                        }
+                    });
+                }
+                else healable[0].health += 2;
+            }
+        }, `<p>Banish this card, then any two heroes gain:</p>${healthToken + healthToken + influenceToken + influenceToken}`, affectedPlayer => {
+            if (players.length > 2) {
+                let remainingPlayers = [...players];
+                addPlayerChoice("Pick to heal for 2 and gain 2 influence:", () => {return remainingPlayers.length;}, 2, () => {
+                    for (let i = 0; i < remainingPlayers.length; i++) {
+                        document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].img.cloneNode());
+                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${remainingPlayers[i].health}</p><p>Influence: ${remainingPlayers[i].influence}</p>`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            remainingPlayers[i].health += 2;
+                            remainingPlayers[i].influence += 2;
+                            remainingPlayers.splice(i, 1);
+                        };
+                    }
+                });
+            }
+            else players.forEach(player => {
+                player.health += 2;
+                player.influence += 2;
+            });
+        }, ["lacewing fly", "flobber worm", "bicorn horn"]);
+        const amortentia2 = amortentia1.clone();
+        const calmingDraught1 = new Potion("Calming Draught", "Pack 2", `<p>All Heroes gain:</p>${influenceToken + healthToken}`, affectedPlayer => {
+            players.forEach(player => {
+                player.influence++;
+                player.health++;
+            });
+        }, "<p>Remove from location</p>", affectedPlayer => {activeLocation.removeFromLocation();}, ["bicorn horn", "lacewing fly", "hellebore"]);
+        const calmingDraught2 = calmingDraught1.clone();
+        const calmingDraught3 = calmingDraught1.clone();
+        const mandrakeRestorativeDraught1 = new Potion("Mandrake Restorative Draught", "Pack 2", `<p>Any two Heroes gain</p>${healthToken + healthToken}`, affectedPlayer => {
+            let healable = players.filter(player => {return canHeal(player);});
+            if (healable.length) {
+                if (healable.length > 2) {
+                    addPlayerChoice("Heal for 2:", () => {return healable.length;}, 2, () => {
+                        for (let i = 0; i < healable.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(healable[i].heroImage.cloneNode());
+                            document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${healable[i].health}</p>`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {
+                                healable[i].health += 2;
+                                healable.splice(i, 1);
+                            };
+                        }
+                    });
+                }
+                else healable.forEach(player => {player.health += 2;});
+            }
+        }, `<p>ALL Heroes draw</p>${hogwartsCardBack}`, affectedPlayer => {
+            players.forEach(player => {player.drawCards(1);});
+        }, ["mandrake leaf", "lacewing fly"]);
+        const mandrakeRestorativeDraught2 = mandrakeRestorativeDraught1.clone();
+        const mandrakeRestorativeDraught3 = mandrakeRestorativeDraught1.clone();
+        const pepperupPotion1 = new Potion("Pepperup Potion", "Pack 2", attackToken, affectedPlayer => {affectedPlayer.attack++;}, "<p>Roll any House Die</p>", affectedPlayer => {rollAnyHouseDie(affectedPlayer, false);}, ["mandrake leaf", "bicorn horn"]);
+        const pepperupPotion2 = pepperupPotion1.clone();
+        let potions = [ageingPotion1, ageingPotion2, ageingPotion3, amortentia1, amortentia2, calmingDraught1, calmingDraught2, calmingDraught3, mandrakeRestorativeDraught1, mandrakeRestorativeDraught2, mandrakeRestorativeDraught3, pepperupPotion1, pepperupPotion2];
+        if (activeGame !== "Pack 2") {
+            // TO-DO: add Pack 3 potions
+            if (activeGame !== "Pack 3") {
+                // TO-DO: add Pack 4 potions
+            }
+        }
+        shuffle(potions);
+        let ingredientsPile = ["bicorn horn", "bicorn horn", "bicorn horn", "bicorn horn", "bicorn horn", "mandrake leaf", "mandrake leaf", "mandrake leaf", "mandrake leaf", "mandrake leaf", "flobber worm", "flobber worm", "hellebore", "hellebore", "hellebore", "hellebore", "lacewing fly", "lacewing fly", "lacewing fly", "wild ingredient", "wild ingredient", "wild ingredient", "wild ingredient", "wild ingredient"];
+        if (activeGame === "Pack 4") ingredientsPile.push("bicorn horn", "mandrake leaf", "flobber worm", "hellebore", "lacewing fly", "wild ingredient");
+        shuffle(ingredientsPile);
+
         // display game
         document.getElementsByTagName("MAIN")[0].innerHTML = `<div id="gameBoardContainer">
             <img id="gameBoard" src="./images/board.png" alt="game board">
@@ -3822,8 +4090,34 @@ document.getElementById("submitPlayers").onclick = () => {
             <div class="shop" id="shop5"></div>
             <div class="shop" id="shop6"></div>
         </div>
-        ${activeGame.includes("Pack") && activeGame !== "Pack 1" ? `<div id="potionsBoardContainer">
-            <img src=\"./images/Pack 2/potionListA.png\" id=\"potionsBoard\" alt=\"Potions Board\">
+        ${activeGame.includes("Pack") && activeGame !== "Pack 1" ? `<div id="potionsCupboardContainer">
+            <img src=\"./images/Pack 2/thePotionsCupboard.png\" id=\"potionsCupboard\" alt=\"The Potions Cupboard\">
+            <div id="potionDraw">
+                <img src="./images/hogwartsCardBack.png" alt="Back of Potions card">
+            </div>
+            <div id="ingredientsPile"></div>
+            <div id="potionList">
+                <img src="./images/Pack 2/potionListA.png">
+            </div>
+            <div class="ingredientsRow1 ingredientsCol1"></div>
+            <div class="ingredientsRow1 ingredientsCol2"></div>
+            <div class="ingredientsRow2 ingredientsCol1"></div>
+            <div class="ingredientsRow2 ingredientsCol2"></div>
+            <div class="ingredientsRow3 ingredientsCol1"></div>
+            <div class="ingredientsRow3 ingredientsCol2"></div>
+            <div class="ingredientsRow4 ingredientsCol1"></div>
+            <div class="ingredientsRow4 ingredientsCol2"></div>
+            <div class="ingredientsRow5 ingredientsCol1"></div>
+            <div class="ingredientsRow5 ingredientsCol2"></div>
+            <div id="potion1"></div>
+            <div id="potion2"></div>
+            <div class="potionIngredient" id="potion1Ingredient1"></div>
+            <div class="potionIngredient" id="potion1Ingredient2"></div>
+            <div class="potionIngredient" id="potion1Ingredient3"></div>
+            <div class="potionIngredient" id="potion2Ingredient1"></div>
+            <div class="potionIngredient" id="potion2Ingredient2"></div>
+            <div class="potionIngredient" id="potion2Ingredient3"></div>
+            <div id="ingredientDiscard"></div>
         </div>` : ""}
         <div id="playersContainer"></div>`;
         const disableScreen = document.createElement("DIV");
@@ -3963,9 +4257,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 main.style.overflowY = "auto";
                 main.style.height = "auto";
                 main.style.flexWrap = "wrap";
-                const gameBoardContainerWidth = "75.1%";
+                const gameBoardContainerWidth = "82.3%";
                 document.getElementById("gameBoardContainer").style.width = gameBoardContainerWidth;
-                document.getElementById("potionsBoardContainer").style.width = `calc(100% - ${gameBoardContainerWidth})`;
+                document.getElementById("potionsCupboardContainer").style.width = `calc(100% - ${gameBoardContainerWidth})`;
                 const playersContainer = document.getElementById("playersContainer");
                 const reorientPlayersContainer = () => {
                     if (window.matchMedia("(orientation: portrait)").matches) {
@@ -4076,6 +4370,50 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         };
         populatePlayers();
+
+        // populate Potions Cupboard
+        let availableIngredients = [ingredientsPile.splice(0, 2), ingredientsPile.splice(0, 2), ingredientsPile.splice(0, 2), ingredientsPile.splice(0, 2), ingredientsPile.splice(0, 2)];
+        let availablePotions = potions.splice(0, 2);
+        let availablePotion1Ingredients = ["", "", ""];
+        let availablePotion2Ingredients = ["", "", ""];
+        let ingredientDiscard = [];
+        const populatePotions = () => {
+            if (document.getElementById("potionsCupboard")) {
+                // populate ingredients pile
+                document.getElementById("ingredientsPile").innerHTML = "";
+                ingredientsPile.forEach(ingredient => {
+                    document.getElementById("ingredientsPile").innerHTML += `<img src="./images/Pack 2/${src(ingredient)}">`;
+                });
+
+                // populate available ingredients
+                for (let i = 0; i < document.getElementsByClassName("ingredientsCol1").length; i++) {
+                    for (let j = 0; j < document.getElementsByClassName("ingredientsRow1").length; j++) {
+                        document.getElementsByClassName(`ingredientsRow${i+1} ingredientsCol${j+1}`)[0].innerHTML = `<img class="ingredient" src="./images/Pack 2/${src(availableIngredients[i][j])}">`;
+                    }
+                }
+
+                // populate available potions
+                document.getElementById("potion1").innerHTML = "";
+                document.getElementById("potion1").appendChild(availablePotions[0].img);
+                document.getElementById("potion2").innerHTML = "";
+                document.getElementById("potion2").appendChild(availablePotions[1].img);
+
+                // populate available potion ingredients
+                for (let i = 0; i < availablePotion1Ingredients.length; i++) {
+                    if (availablePotion1Ingredients[i]) document.getElementById(`potion1Ingredient${i+1}`).innerHTML = `<img class="ingredient" src="./images/Pack 2/${src(availablePotion1Ingredients[i])}">`;
+                }
+                for (let i = 0; i < availablePotion2Ingredients.length; i++) {
+                    if (availablePotion2Ingredients[i]) document.getElementById(`potion2Ingredient${i+1}`).innerHTML = `<img class="ingredient" src="./images/Pack 2/${src(availablePotion2Ingredients[i])}">`;
+                }
+
+                // populate ingredientDiscard
+                document.getElementById("ingredientDiscard").innerHTML = "";
+                ingredientDiscard.forEach(ingredient => {
+                    document.getElementById("ingredientDiscard").innerHTML += `<img src="./images/Pack 2/${src(ingredient)}">`;
+                });
+            }
+        };
+        populatePotions();
 
         // start a new turn
         let firstTurn = true;

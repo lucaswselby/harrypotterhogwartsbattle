@@ -4,6 +4,7 @@
     --playerChoiceDisplay: flex;
     --revealBoardDisplay: block;
     --revealBoardButtonHeight: 10%;
+    --shopCardHeight: 20%;
 }
 html, body {
     height: 100%;
@@ -62,7 +63,7 @@ input[type="submit"] {
     display: none;
 }
 
-#gameBoardContainer, #potionsBoardContainer, .playerBoardContainer {
+#gameBoardContainer, #potionsCupboardContainer, .playerBoardContainer {
     position: relative;
 }
 #gameBoardContainer {
@@ -87,7 +88,6 @@ input[type="submit"] {
 }
 .location, .darkArtsEvent, #darkArtsEventBack, .villain, .event {
     height: 100%;
-    border-radius: 10px;
     position: absolute;
     top: 0;
     left: 0;
@@ -315,8 +315,7 @@ input[type="submit"] {
 }
 
 .shop, #hogwartsCardBack {
-    height: 20%;
-    width: auto;
+    height: var(--shopCardHeight);
     position: absolute;
 }
 #shop1, #shop2 {
@@ -334,23 +333,116 @@ input[type="submit"] {
 #shop2, #shop4, #shop6 {
     left: 84%;
 }
-.shop img, #hogwartsCardBack img {
+.shop img, #hogwartsCardBack img, #potionsCupboard, #potionDraw img, #potionList img, #potion1 img, #potion2 img, .ingredient {
     height: 100%;
     width: 100%;
-    border-radius: 10px;
 }
 #hogwartsCardBack {
     top: 4%;
     left: 76%;
 }
 
-#potionsBoardContainer {
-    aspect-ratio: 815 / 1640;
+#potionsCupboardContainer {
+    aspect-ratio: 1100 / 3395;
     height: 100%;
 }
-#potionsBoard {
-    height: 100%;
-    width: 100%;
+#potionDraw {
+    height: var(--shopCardHeight);
+    position: absolute;
+    top: 6%;
+    left: 5%;
+}
+#ingredientsPile, #ingredientDiscard {
+    position: absolute;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    overflow-y: auto;
+}
+#ingredientsPile {
+    height: var(--shopCardHeight);
+    width: 40%;
+    top: 6%;
+    left: 54%;
+}
+#ingredientsPile img {
+    height: 22%;
+}
+#potionList {
+    height: 32%;
+    position: absolute;
+    top: 28%;
+    left: 1%;
+}
+.ingredientsRow1, .ingredientsRow2, .ingredientsRow3, .ingredientsRow4, .ingredientsRow5, .potionIngredient {
+    height: 4.5%;
+    position: absolute;
+}
+.ingredientsRow1 {
+    top: 28.2%;
+}
+.ingredientsRow2 {
+    top: 34.5%;
+}
+.ingredientsRow3 {
+    top: 40.7%;
+}
+.ingredientsRow4 {
+    top: 46.7%;
+}
+.ingredientsRow5 {
+    top: 53%;
+}
+.ingredientsCol1, .ingredientsCol2 {
+    position: absolute;
+}
+.ingredientsCol1 {
+    left: 59%;
+}
+.ingredientsCol2 {
+    left: 75%;
+}
+#potion1, #potion2 {
+    position: absolute;
+    top: 62%;
+    height: var(--shopCardHeight);
+}
+#potion1 {
+    left: 3%;
+}
+#potion2 {
+    left: 52%;
+}
+.potionIngredient {
+    position: absolute;
+    top: 83%;
+}
+#potion1Ingredient1 {
+    left: 4%;
+}
+#potion1Ingredient2 {
+    left: 19%;
+}
+#potion1Ingredient3 {
+    left: 34%;
+}
+#potion2Ingredient1 {
+    left: 51%;
+}
+#potion2Ingredient2 {
+    left: 66%;
+}
+#potion2Ingredient3 {
+    left: 81%;
+}
+#ingredientDiscard {
+    top: 90%;
+    left: 4%;
+    height: 7%;
+    width: 91%;
+}
+#ingredientDiscard img {
+    height: 65%;
 }
 
 #playersContainer {
@@ -504,6 +596,84 @@ input[type="submit"] {
     all: unset;
     max-height: 100%;
     max-width: 100%;
+}
+
+/* https://codepen.io/collinsworth/pen/zYepgqG */
+/* The secret sauce that enables gradient rotation. NOTE: does not work in all browsers. https://caniuse.com/?search=%40property */
+@property --border-angle-1 {
+	syntax: "<angle>";
+	inherits: true;
+	initial-value: 0deg;
+}
+@property --border-angle-2 {
+	syntax: "<angle>";
+	inherits: true;
+	initial-value: 90deg;
+}
+@property --border-angle-3 {
+	syntax: "<angle>";
+	inherits: true;
+	initial-value: 180deg;
+}
+/* sRGB color. */
+:root {
+	--ravenclaw-blue: rgb(0, 0, 255);
+	--slytherin-green: rgb(0, 255, 0);
+	--gryffindor-red: rgb(255, 0, 0);
+}
+/* Display-P3 color, when supported. */
+@supports (color: color(display-p3 1 1 1)) {
+	:root {
+		--ravenclaw-blue: color(display-p3 0 0.2 1);
+		--slytherin-green: color(display-p3 0.4 1 0);
+		--gryffindor-red: color(display-p3 1 0 0);
+	}
+}
+@keyframes rotateBackground {
+	to { --border-angle-1: 360deg; }
+}
+@keyframes rotateBackground2 {
+	to { --border-angle-2: -270deg; }
+}
+@keyframes rotateBackground3 {
+	to { --border-angle-3: 540deg; }
+}
+.shimmer {
+	--border-angle-1: 0deg;
+	--border-angle-2: 90deg;
+	--border-angle-3: 180deg;
+	border: 0;
+    border-radius: 100%;
+    transform: translate(-.5px, -1.5px);
+	padding: 1px;
+	width: max-content;
+	border-color: transparent;
+    background-color: yellow;
+	background-image: conic-gradient(
+			from var(--border-angle-1) at 10% 15%,
+			transparent,
+			var(--ravenclaw-blue) 10%,
+			transparent 30%,
+			transparent
+		),
+		conic-gradient(
+			from var(--border-angle-2) at 70% 60%,
+			transparent,
+			var(--slytherin-green) 10%,
+			transparent 60%,
+			transparent
+		),
+		conic-gradient(
+			from var(--border-angle-3) at 50% 20%,
+			transparent,
+			var(--gryffindor-red) 10%,
+			transparent 50%,
+			transparent
+		);
+	animation: 
+		rotateBackground 3s linear infinite,
+		rotateBackground2 8s linear infinite,
+		rotateBackground3 13s linear infinite;
 }
 
 @keyframes darken {
