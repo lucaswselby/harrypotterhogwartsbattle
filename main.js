@@ -1537,6 +1537,31 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }                    
                 }
+                // Arabella Figg effect
+                else if (this.hand[index] === arabellaFigg) {
+                    if (!activeMermaid()) this.influence++;
+                    this.health++;
+                }
+                // Eagle Owl effect
+                else if (this.hand[index] === eagleOwl) {
+                    activeLocation.removeFromLocation();
+                }
+                // School Owl effect
+                else if (this.hand[index] === schoolOwl1 || this.hand[index] === schoolOwl2) {
+                    let remainingPlayers = players.filter(player => {return !player.petrified;});
+                    if (remainingPlayers.length > 2) {
+                        addPlayerChoice("Draw 1 for:", () => {return remainingPlayers.length;}, 2, () => {
+                            for (let i = 0; i < remainingPlayers.length; i++) {
+                                document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                                document.getElementsByClassName("choice")[i].onclick = () => {
+                                    remainingPlayers[i].drawCards(1);
+                                    remainingPlayers.splice(i, 1);
+                                };
+                            }
+                        });
+                    }
+                    else remainingPlayers.forEach(player => {player.drawCards(1);});
+                }
 
                 if (villainOrDAE) {
                     // Crabbe and Goyle effect
@@ -2448,6 +2473,83 @@ document.getElementById("submitPlayers").onclick = () => {
         const selfCorrectingInk2 = selfCorrectingInk1.clone();
         const selfCorrectingInk3 = selfCorrectingInk1.clone();
 
+        // Pack 2
+        const arabellaFigg = new Card("Arabella Figg", "Pack 2", "ally", 2, () => {
+            if (!activeMermaid()) {
+                addPlayerChoice("Give 1 influence to:", affectedPlayer => {return players.length;}, 1, () => {
+                    for (let i = 0; i < players.length; i++) {
+                        document.getElementsByClassName("choice")[i].appendChild(players[i].heroImage.cloneNode());
+                        document.getElementsByClassName("choice")[i].innerHTML += `<p>Influence: ${players[i].influence}</p>`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {players[i].influence++;};
+                    }
+                });
+            }
+        }, false, false);
+        const confringo1 = new Card("Confringo", "Pack 2", "spell", 3, affectedPlayer => {
+            affectedPlayer.attack++;
+            if (affectedPlayer.hand.length) {
+                addPlayerChoice("Banish:", () => {return affectedPlayer.hand.length + 1;}, 1, () => {
+                    for (let i = 0; i < affectedPlayer.hand.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${affectedPlayer.hand[i].img.src}">`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {affectedPlayer.banishAt(i)};
+                    }
+                    document.getElementById("choice")[affectedPlayer.hand.length].innerHTML = "<p>Nothing</p>";
+                });
+            }
+        }, false, false);
+        const confringo2 = confringo1.clone();
+        const eagleOwl = new Card("Eagle Owl", "Pack 2", "ally", 4, affectedPlayer => {
+            if (!activeMermaid()) {
+                let remainingPlayers = [...players];
+                if (players.length > 2) {
+                    addPlayerChoice("Gain 1 attack:", () => {return remainingPlayers.length;}, 2, () => {
+                        for (let i = 0; i < remainingPlayers.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                            document.getElementsByClassName("choice")[i].innerHTML += `<p>Attacks: ${remainingPlayers[i].attack}</p>`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {
+                                remainingPlayers[i].attack++;
+                                remainingPlayers.splice(i, 1);
+                            };
+                        }
+                    });
+                }
+                else players.forEach(player => {player.attack++;});
+            }
+        }, false, false);
+        const evanesco1 = new Card("Evanesco", "Pack 2", "spell", 5, affectedPlayer => {
+            let remainingPlayers = [...players];
+            const banishChoose = player => {
+                if (player.hand.length) {
+                    addPlayerChoice(`Banish for ${player.hero}:`, () => {return player.hand.length + 1;}, 1, () => {
+                        for (let i = 0; i < player.hand.length; i++) {
+                            document.getElementsByClassName("choice")[i].innerHTML = `<img src="${player.hand[i].img.src}">`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {player.banishAt(i);};
+                        }
+                        document.getElementsByClassName("choice")[player.hand.length].innerHTML = "<p>Nothing</p>";
+                    });
+                }
+            };
+            if (players.length > 2) {
+                addPlayerChoice("Banish 1 for:", () => {return remainingPlayers.length + 1;}, 2, () => {
+                    for (let i = 0; i < remainingPlayers.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<p>${remainingPlayers[i].hero}:</p>${choiceScroll(remainingPlayers[i].hand, false)}`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {
+                            banishChoose(remainingPlayers[i]);
+                            remainingPlayers.splice(i, 1);
+                        };
+                    }
+                    document.getElementsByClassName("choice")[remainingPlayers.length].innerHTML = "<p>Nevermind</p>";
+                    document.getElementsByClassName("choice")[remainingPlayers.length].onclick = () => {remainingPlayers = [];};
+                });
+            }
+            else players.forEach(player => {banishChoose(player);});
+        }, false, false);
+        const evanesco2 = evanesco1.clone();
+        const evanesco3 = evanesco1.clone();
+        const percyWeasley = new Card("Percy Weasley", "Pack 2", "ally", 3, affectedPlayer => {}, true, false);
+        const schoolOwl1 = new Card("School Owl", "Pack 2", "ally", 3, affectedPlayer => {affectedPlayer.attack++;}, false, false);
+        const schoolOwl2 = schoolOwl1.clone();
+
         // hogwartsCard array
         let hogwartsCards = [albusDumbledore, descendo1, descendo2, essenceOfDittany1, essenceOfDittany2, essenceOfDittany3, essenceOfDittany4, goldenSnitch, incendio1, incendio2, incendio3, incendio4, lumos1, lumos2, oliverWood, quidditchGear1, quidditchGear2, quidditchGear3, quidditchGear4, reparo1, reparo2, reparo3, reparo4, reparo5, reparo6, rubeusHagrid, sortingHat, wingardiumLeviosa1, wingardiumLeviosa2, wingardiumLeviosa3];
         if (activeGame !== "Game 1") {
@@ -2493,6 +2595,16 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (!heroesStr.includes("Hermione Granger")) hogwartsCards.push(hermioneGranger);
                 if (!heroesStr.includes("Neville Longbottom")) hogwartsCards.push(nevilleLongbottom);
                 if (!heroesStr.includes("Ron Weasley")) hogwartsCards.push(ronWeasley);
+
+                if (activeGame !== "Pack 1") {
+                    hogwartsCards.push(arabellaFigg, confringo1, confringo2, eagleOwl, evanesco1, evanesco2, evanesco3, percyWeasley);
+                    if (activeGame !== "Pack 2") {
+                        hogwartsCards.push();
+                        if (activeGame !== "Pack 3") {
+                            hogwartsCards.push();
+                        }
+                    }
+                }
             }
         }
 
@@ -4843,6 +4955,13 @@ document.getElementById("submitPlayers").onclick = () => {
                                                         villain.influenceDamageTaken = 0;
                                                         villain.ginnyUsed = false;
                                                     });
+
+                                                    // Percy Weasley effect
+                                                    if (players[0].hand.includes(percyWeasley)) {
+                                                        if (players[0].hand.length === 5) players[0].influence += 3;
+                                                        else players[0].influence++;
+                                                        darken(percyWeasley.img);
+                                                    }
 
                                                     // reenable all events
                                                     disableScreen.style.display = "none";
