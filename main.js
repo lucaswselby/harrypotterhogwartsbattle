@@ -524,102 +524,110 @@ document.getElementById("submitPlayers").onclick = () => {
         };
 
         const completeIngredientTask = rowIndex => {
-            for (let i = 0; i < document.getElementsByClassName(`ingredientsRow${rowIndex+1}`).length; i++) {
-                document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).classList.toggle("shimmer");
-                document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).onclick = () => {
-                    let receivingPotions = availablePotions.filter(potion => {return potion.needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "wild ingredient";});
-                    addPlayerChoice(`Assign ${availableIngredients[rowIndex][i].name} to:`, () => {return 2 + receivingPotions.length;}, 1, () => {
-                        const refillIngredients = () => {
-                            // discard used ingredient
-                            ingredientDiscard.push(availableIngredients[rowIndex][i]);
+            if (!activeDarkArtsEvents.includes(devilsSnare1) && !activeDarkArtsEvents.includes(devilsSnare2)) {
+                for (let i = 0; i < document.getElementsByClassName(`ingredientsRow${rowIndex+1}`).length; i++) {
+                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).classList.toggle("shimmer");
+                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).onclick = () => {
+                        let receivingPotions = availablePotions.filter(potion => {return potion.needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "wild ingredient";});
+                        addPlayerChoice(`Assign ${availableIngredients[rowIndex][i].name} to:`, () => {return 2 + receivingPotions.length;}, 1, () => {
+                            const refillIngredients = () => {
+                                // discard used ingredient
+                                ingredientDiscard.push(availableIngredients[rowIndex][i]);
 
-                            // refill available ingredients by cascade
-                            for (let j = rowIndex; j > 0; j++) {
-                                availableIngredients[j][i] = availableIngredients[j-1][i];
-                            }
+                                // refill available ingredients by cascade
+                                for (let j = rowIndex; j > 0; j++) {
+                                    availableIngredients[j][i] = availableIngredients[j-1][i];
+                                }
 
-                            // check for ingredients in pile and refill from discard if necessary
-                            if (!ingredientsPile.length) {
-                                shuffle(ingredientDiscard);
-                                while (ingredientDiscard.length) ingredientsPile.push(ingredientDiscard.shift());
-                            }
+                                // check for ingredients in pile and refill from discard if necessary
+                                if (!ingredientsPile.length) {
+                                    shuffle(ingredientDiscard);
+                                    while (ingredientDiscard.length) ingredientsPile.push(ingredientDiscard.shift());
+                                }
 
-                            // refill available ingredient
-                            availableIngredients[0][i] = ingredientsPile.shift();
+                                // refill available ingredient
+                                availableIngredients[0][i] = ingredientsPile.shift();
 
-                            populatePotions();
-                        };
+                                populatePotions();
+                            };
 
-                        // add ingredient to available potions
-                        for (let j = 0; j < receivingPotions.length; j++) {
-                            if (availablePotions[j].needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "wild ingredient") {
-                                // add availableIngredients[rowIndex][i] to receivingPotions[j]
-                                document.getElementsByClassName("choice")[j].innerHTML = `<p>Add to</p><img src="${receivingPotions[j].img.src}">`;
-                                document.getElementsByClassName("choice")[j].onclick = () => {
-                                    if (availableIngredients[rowIndex][i] === "wild ingredient") {
-                                        receivingPotions[j].wildIngredientsUsed++;
-                                    }
-                                    else {
-                                        receivingPotions[j].needed = receivingPotions[j].needed.filter(ingredient => {return ingredient !== availableIngredients[rowIndex][i];});
-                                    }
+                            // add ingredient to available potions
+                            for (let j = 0; j < receivingPotions.length; j++) {
+                                if (availablePotions[j].needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "wild ingredient") {
+                                    // add availableIngredients[rowIndex][i] to receivingPotions[j]
+                                    document.getElementsByClassName("choice")[j].innerHTML = `<p>Add to</p><img src="${receivingPotions[j].img.src}">`;
+                                    document.getElementsByClassName("choice")[j].onclick = () => {
+                                        if (availableIngredients[rowIndex][i] === "wild ingredient") {
+                                            receivingPotions[j].wildIngredientsUsed++;
+                                        }
+                                        else {
+                                            receivingPotions[j].needed = receivingPotions[j].needed.filter(ingredient => {return ingredient !== availableIngredients[rowIndex][i];});
+                                        }
 
-                                    // complete potion
-                                    if (receivingPotions[j].needed.length - receivingPotions[j].wildIngredientsUsed <= 0) {
-                                        playerChoices.unshift(new PlayerChoice("Banish or Discard", () => {return 2;}, 1, () => {
-                                            const replacePotion = () => {
-                                                let newPotion = potions.shift();
-                                                availablePotions[availablePotions.indexOf(receivingPotions[j])] = newPotion;
-                                                document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).innerHTML = "";
-                                                document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).appendChild(newPotion.img);
+                                        // complete potion
+                                        if (receivingPotions[j].needed.length - receivingPotions[j].wildIngredientsUsed <= 0) {
+                                            playerChoices.unshift(new PlayerChoice("Banish or Discard", () => {return 2;}, 1, () => {
+                                                const replacePotion = () => {
+                                                    let newPotion = potions.shift();
+                                                    availablePotions[availablePotions.indexOf(receivingPotions[j])] = newPotion;
+                                                    document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).innerHTML = "";
+                                                    document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).appendChild(newPotion.img);
 
-                                                // discard ingredients
-                                                for (let k = 0; k < receivingPotions[j].wildIngredientsUsed; k++) {
-                                                    ingredientDiscard.push("wild ingredient");
-                                                }
-                                                receivingPotions[j].ingredients.filter(ingredient => {return !receivingPotions[j].needed.includes(ingredient);}).forEach(ingredient => {ingredientDiscard.push(ingredient);});
-                                                for (let k = 1; k <= 3; k++) {
-                                                    document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}ingredient${k}`).innerHTML = "";
-                                                }
+                                                    // discard ingredients
+                                                    for (let k = 0; k < receivingPotions[j].wildIngredientsUsed; k++) {
+                                                        ingredientDiscard.push("wild ingredient");
+                                                    }
+                                                    receivingPotions[j].ingredients.filter(ingredient => {return !receivingPotions[j].needed.includes(ingredient);}).forEach(ingredient => {ingredientDiscard.push(ingredient);});
+                                                    for (let k = 1; k <= 3; k++) {
+                                                        document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}ingredient${k}`).innerHTML = "";
+                                                    }
 
-                                                // reset completed potion
-                                                receivingPotions[j].needed = [...receivingPotions[j].ingredients];
-                                            };
+                                                    // reset completed potion
+                                                    receivingPotions[j].needed = [...receivingPotions[j].ingredients];
+                                                };
 
-                                            // use potion for banish ability
-                                            document.getElementsByClassName("choice")[0].innerHTML = receivingPotions[j].banishEffectLabel;
-                                            document.getElementsByClassName("choice")[0].onclick = () => {
-                                                players[0].cardsDrawn--;
-                                                players[0].draw.unshift(receivingPotions[j]);
-                                                players[0].drawCards(1);
-                                                receivingPotions[j].banishEffect(players[0]);
-                                                replacePotion();
-                                            };
+                                                // use potion for banish ability
+                                                document.getElementsByClassName("choice")[0].innerHTML = receivingPotions[j].banishEffectLabel;
+                                                document.getElementsByClassName("choice")[0].onclick = () => {
+                                                    players[0].cardsDrawn--;
+                                                    players[0].draw.unshift(receivingPotions[j]);
+                                                    players[0].drawCards(1);
+                                                    receivingPotions[j].banishEffect(players[0]);
+                                                    replacePotion();
+                                                };
 
-                                            // add potion to discard
-                                            document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p>${hogwartsCardBack}`;
-                                            document.getElementsByClassName("choice")[1].onclick = () => {
-                                                players[0].discard.push(receivingPotions[j]);
-                                                players[0].bought.push(receivingPotions[j]);
-                                                replacePotion();
-                                            };
-                                        }));
-                                    }
+                                                // add potion to discard
+                                                document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p>${hogwartsCardBack}`;
+                                                document.getElementsByClassName("choice")[1].onclick = () => {
+                                                    players[0].discard.push(receivingPotions[j]);
+                                                    players[0].bought.push(receivingPotions[j]);
+                                                    replacePotion();
+                                                };
+                                            }));
+                                        }
 
-                                    refillIngredients();
-                                };
-                            }
-                        };
+                                        refillIngredients();
+                                    };
+                                }
+                            };
 
-                        // discard ingredient
-                        document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 2].innerHTML = "<p>Discard</p>";
-                        document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 2].onclick = () => {
-                            ingredientDiscard.push(availableIngredients[rowIndex][i]);
-                            refillIngredients();
-                        };
+                            // discard ingredient
+                            document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 2].innerHTML = "<p>Discard</p>";
+                            document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 2].onclick = () => {
+                                ingredientDiscard.push(availableIngredients[rowIndex][i]);
+                                refillIngredients();
+                            };
 
-                        document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 1].innerHTML = "<p>Nothing</p>";
-                    });
-                };
+                            document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 1].innerHTML = "<p>Nothing</p>";
+                        });
+                    };
+                }
+            }
+
+            // Devil's Snare effect
+            else {
+                if (devilsSnare1.img) darken(devilsSnare1.img);
+                if (devilsSnare2.img) darken(devilsSnare2.img);
             }
         };
 
@@ -658,47 +666,61 @@ document.getElementById("submitPlayers").onclick = () => {
                     if (!document.getElementById("playerChoice") && players[0].hand.includes(this)) {
                         // Healing Charm
                         if (players[0].charm === "Healing" && this.type === "ally") {
-                            if (players[0].health > 7) {
-                                const hurtPlayers = players.filter(player => {return canHeal(player);});
-                                if (hurtPlayers.length) {
-                                    if (hurtPlayers.length > 1) {
-                                        addPlayerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
-                                            for (let i = 0; i < hurtPlayers.length; i++) {
-                                                document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
-                                                document.getElementsByClassName("choice")[i].innerHTML += `Health: ${hurtPlayers[i].health}`;
-                                                document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
-                                            }
-                                        });
-                                    }
-                                    else hurtPlayers[0].health += 2;
-                                }
-                            }
-                            else if (players[0].health < 4) {
-                                players.forEach(player => {player.health += 2;});
+                            // In the Hall of Prophecy effect
+                            if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                                if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                                if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
                             }
                             else {
-                                getNeighbors(players[0]).concat(players[0]).forEach(player => {player.health += 2;});
+                                if (players[0].health > 7) {
+                                    const hurtPlayers = players.filter(player => {return canHeal(player);});
+                                    if (hurtPlayers.length) {
+                                        if (hurtPlayers.length > 1) {
+                                            addPlayerChoice("Heal for 2:", () => {return hurtPlayers.length;}, 1, () => {
+                                                for (let i = 0; i < hurtPlayers.length; i++) {
+                                                    document.getElementsByClassName("choice")[i].appendChild(hurtPlayers[i].heroImage.cloneNode());
+                                                    document.getElementsByClassName("choice")[i].innerHTML += `Health: ${hurtPlayers[i].health}`;
+                                                    document.getElementsByClassName("choice")[i].onclick = () => {hurtPlayers[i].health += 2;};
+                                                }
+                                            });
+                                        }
+                                        else hurtPlayers[0].health += 2;
+                                    }
+                                }
+                                else if (players[0].health < 4) {
+                                    players.forEach(player => {player.health += 2;});
+                                }
+                                else {
+                                    getNeighbors(players[0]).concat(players[0]).forEach(player => {player.health += 2;});
+                                }
                             }
                         }
                         // Summoning Charm
                         else if (players[0].charm === "Summoning" && players[0].played.filter(card => {return card.type === "item"}).length && this.type === "ally") {
-                            if (players[0].health > 7) players[0].attack++;
-                            else if (players[0].health < 4) {
-                                const healable = players.filter(player => {return canHeal(player);});
-                                if (healable.length) {
-                                    if (healable.length > 1) {
-                                        addPlayerChoice("Heal for 2:", () => {return healable.length;}, 1, () => {
-                                            for (let i = 0; i < healable.length; i++) {
-                                                document.getElementsByClassName("choice")[i].appendChild(healable[i].heroImage.cloneNode());
-                                                document.getElementsByClassName("choice")[i].innerHTML += `Health: ${healable[i].health}`;
-                                                document.getElementsByClassName("choice")[i].onclick = () => {healable[i].health += 2;};
-                                            }
-                                        });
-                                    }
-                                    else healable[0].health += 2;
-                                }
+                            // In the Hall of Prophecy effect
+                            if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                                if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                                if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
                             }
-                            else players[0].influence++;
+                            else {
+                                if (players[0].health > 7) players[0].attack++;
+                                else if (players[0].health < 4) {
+                                    const healable = players.filter(player => {return canHeal(player);});
+                                    if (healable.length) {
+                                        if (healable.length > 1) {
+                                            addPlayerChoice("Heal for 2:", () => {return healable.length;}, 1, () => {
+                                                for (let i = 0; i < healable.length; i++) {
+                                                    document.getElementsByClassName("choice")[i].appendChild(healable[i].heroImage.cloneNode());
+                                                    document.getElementsByClassName("choice")[i].innerHTML += `Health: ${healable[i].health}`;
+                                                    document.getElementsByClassName("choice")[i].onclick = () => {healable[i].health += 2;};
+                                                }
+                                            });
+                                        }
+                                        else healable[0].health += 2;
+                                    }
+                                }
+                                else players[0].influence++;
+                            }
                         }
 
                         // card effect
@@ -1101,55 +1123,62 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
                             // Apparition Charm
                             if (this.charm === "Apparition" && !this.gainedHealth) {
-                                document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.toggle("shimmer");
-                                document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {
-                                    if (this.health > 7) {
-                                        const cheapCards = this.played.filter(card => {return card.cost <= 3;});
-                                        if (cheapCards.length) {
-                                            addPlayerChoice("Affect another Hero with:", () => {return cheapCards.length + 1;}, 1, () => {
-                                                for (let i = 0; i < cheapCards.length; i++) {
-                                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`;
-                                                    document.getElementsByClassName("choice")[i].onclick = () => {
-                                                        const remainingPlayers = players.filter(player => {return player !== this});
-                                                        const gainBenefit = player => {
-                                                            cheapCards[i].effect(player);
+                                // In the Hall of Prophecy effect
+                                if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                                    if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                                    if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
+                                }
+                                else {
+                                    document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.toggle("shimmer");
+                                    document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {
+                                        if (this.health > 7) {
+                                            const cheapCards = this.played.filter(card => {return card.cost <= 3;});
+                                            if (cheapCards.length) {
+                                                addPlayerChoice("Affect another Hero with:", () => {return cheapCards.length + 1;}, 1, () => {
+                                                    for (let i = 0; i < cheapCards.length; i++) {
+                                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${cheapCards[i].img.src}">`;
+                                                        document.getElementsByClassName("choice")[i].onclick = () => {
+                                                            const remainingPlayers = players.filter(player => {return player !== this});
+                                                            const gainBenefit = player => {
+                                                                cheapCards[i].effect(player);
+                                                                document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {};
+                                                            };
+                                                            if (remainingPlayers.length > 1) {
+                                                                playerChoices.unshift(new PlayerChoice("Affect:", () => {return remainingPlayers.length;}, 1, () => {
+                                                                    for (let j = 0; j < remainingPlayers.length; j++) {
+                                                                        document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode());
+                                                                        document.getElementsByClassName("choice")[j].onclick = () => {gainBenefit(remainingPlayers[j]);};
+                                                                    }
+                                                                }));
+                                                            }
+                                                            else gainBenefit(remainingPlayers[0]);
+                                                        };
+                                                    }
+                                                    document.getElementsByClassName("choie")[cheapCards.length].innerHTML = "Nothing";
+                                                });
+                                            }
+                                        }
+                                        else if (this.health < 4) {
+                                            rollHouseDie(this, "yellow", false, false, false);
+                                            document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {};
+                                        }
+                                        else {
+                                            const items = this.discard.filter(card => {return card.type === "item";});
+                                            if (items.length) {
+                                                addPlayerChoice("Move to hand:", () => {return items.length;}, 1, () => {
+                                                    for (let i = 0; i < items.length; i++) {
+                                                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`;
+                                                        document.getElementsByClassName("choice")[i].onclick = () => {
+                                                            this.addToHand(this.discard.splice(this.discard.indexOf(items[i]), 1)[0]);
                                                             document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {};
                                                         };
-                                                        if (remainingPlayers.length > 1) {
-                                                            playerChoices.unshift(new PlayerChoice("Affect:", () => {return remainingPlayers.length;}, 1, () => {
-                                                                for (let j = 0; j < remainingPlayers.length; j++) {
-                                                                    document.getElementsByClassName("choice")[j].appendChild(remainingPlayers[j].heroImage.cloneNode());
-                                                                    document.getElementsByClassName("choice")[j].onclick = () => {gainBenefit(remainingPlayers[j]);};
-                                                                }
-                                                            }));
-                                                        }
-                                                        else gainBenefit(remainingPlayers[0]);
-                                                    };
-                                                }
-                                                document.getElementsByClassName("choie")[cheapCards.length].innerHTML = "Nothing";
-                                            });
+                                                    }
+                                                });
+                                            }
                                         }
-                                    }
-                                    else if (this.health < 4) {
-                                        rollHouseDie(this, "yellow", false, false, false);
-                                        document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {};
-                                    }
-                                    else {
-                                        const items = this.discard.filter(card => {return card.type === "item";});
-                                        if (items.length) {
-                                            addPlayerChoice("Move to hand:", () => {return items.length;}, 1, () => {
-                                                for (let i = 0; i < items.length; i++) {
-                                                    document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`;
-                                                    document.getElementsByClassName("choice")[i].onclick = () => {
-                                                        this.addToHand(this.discard.splice(this.discard.indexOf(items[i]), 1)[0]);
-                                                        document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {};
-                                                    };
-                                                }
-                                            });
-                                        }
-                                    }
-                                    document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.toggle("shimmer");
-                                };
+                                        document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.toggle("shimmer");
+                                    };
+                                }
                             }
                             this.gainedHealth = true;
 
@@ -1314,10 +1343,17 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 // Cheering Charm
                 if (this.charm === "Cheering" && spellsCast === 3 && !this.charmUsed) {
-                    if (this.health > 7) this.influence += 2;
-                    else if (this.health < 4) rollHouseDie(this, "red", false, false, false);
-                    else this.drawCards(1);
-                    this._charmUsed = true;
+                    // In the Hall of Prophecy effect
+                    if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                        if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                        if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
+                    }
+                    else {
+                        if (this.health > 7) this.influence += 2;
+                        else if (this.health < 4) rollHouseDie(this, "red", false, false, false);
+                        else this.drawCards(1);
+                        this._charmUsed = true;
+                    }
                 }
 
                 // Potion List A
@@ -1674,8 +1710,15 @@ document.getElementById("submitPlayers").onclick = () => {
 
                 this.petrified = false;
                 while (this.hand.length) this.discardAt(0);
-                if (this.charm !== "Permanent Sticking" || this.health > 7) this.attack = 0;
-                if (this.charm !== "Permanent Sticking") this.influence = 0;
+                // In the Hall of Prophecy effect
+                if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                    if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                    if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
+                }
+                else {
+                    if (this.charm !== "Permanent Sticking" || this.health > 7) this.attack = 0;
+                    if (this.charm !== "Permanent Sticking") this.influence = 0;
+                }
                 this._passives = [];
                 this._played = [];
                 this._hermioneSpecialUsed = false;
@@ -3101,6 +3144,22 @@ document.getElementById("submitPlayers").onclick = () => {
             activeLocation.addToLocation();
         });
         const weasleyIsOurKing2 = weasleyIsOurKing1.clone();
+        const beyondTheVeil = new DarkArtsEvent("Beyond The Veil", "Pack 2", () => {getNeighbors(players[0]).concat(players[0]).forEach(player => {player.health -= 3; if (player.stunned) avadaKill = true;});});
+        const devilsSnare1 = new DarkArtsEvent("Devil's Snare", "Pack 2", () => {activeLocation.addToLocation();});
+        const devilsSnare2 = devilsSnare1.clone();
+        const inTheHallOfProphecy1 = new DarkArtsEvent("In The Hall Of Prophecy", "Pack 2", () => {
+            if (players[0].hand.length) {
+                addPlayerChoice("Discard:", () => {return players[0].hand.length;}, 1, () => {
+                    for (let i = 0; i < players[0].hand.length; i++) {
+                        document.getElementsByClassName("choice")[i].innerHTML = `<img src="${players[0].hand[i].img.src}">`;
+                        document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(i, true);};
+                    }
+                });
+            }
+            activeLocation.addToLocation();
+        });
+        const inTheHallOfProphecy2 = inTheHallOfProphecy1.clone();
+        const quickQuotesQuill = new DarkArtsEvent("Quick Quotes Quill", "Pack 2", () => {getNeighbors(players[0]).concat(players[0]).forEach(player => {player.health--;});});
 
         // add Box DAEs to game
         if (activeGame.includes("Box") || activeGame.includes("Pack")) {
@@ -3118,6 +3177,13 @@ document.getElementById("submitPlayers").onclick = () => {
             // add Pack DAEs to game
             if (activeGame.includes("Pack")) {
                 darkArtsEvents.push(caughtAtADAMeeting1, caughtAtADAMeeting2, howlers, weasleyIsOurKing1, weasleyIsOurKing2);
+                if (activeGame !== "Pack 1") {
+                    darkArtsEvents.push(beyondTheVeil, devilsSnare1, devilsSnare2, inTheHallOfProphecy1, inTheHallOfProphecy2, quickQuotesQuill);
+                    if (activeGame !== "Pack 2") {
+                        darkArtsEvents.push();
+                        if (activeGame !== "Pack 3") darkArtsEvents.push();
+                    }
+                }
             }
         }
         shuffle(darkArtsEvents);
@@ -4495,20 +4561,27 @@ document.getElementById("submitPlayers").onclick = () => {
 
                     // Permanent Sticking Charm activates before starting the next turn
                     if (players[0].charm === "Permanent Sticking" && players[0].health < 4) {
-                        const remainingPlayers = players.filter(player => {return player !== players[0]});
-                        addPlayerChoice(`Give ${players[0].attack} attacks and ${players[0].influence} influence to:`, () => {return remainingPlayers.length;}, 1, () => {
-                            for (let i = 0; i < remainingPlayers.length; i++) {
-                                document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
-                                document.getElementsByClassName("choice")[i].innerHTML += `<p>Attacks: ${remainingPlayers[i].attack}</p><p>Influence: ${remainingPlayers[i].influence}</p>`;
-                                document.getElementsByClassName("choice")[i].onclick = () => {
-                                    remainingPlayers[i].attack += players[0].attack;
-                                    players[0].attack = 0;
-                                    remainingPlayers[i].influence += players[0].influence;
-                                    players[0].influence = 0;
-                                    startTurn();
-                                };
-                            }
-                        });
+                        // In the Hall of Prophecy effect
+                        if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                            if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                            if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
+                        }
+                        else {
+                            const remainingPlayers = players.filter(player => {return player !== players[0]});
+                            addPlayerChoice(`Give ${players[0].attack} attacks and ${players[0].influence} influence to:`, () => {return remainingPlayers.length;}, 1, () => {
+                                for (let i = 0; i < remainingPlayers.length; i++) {
+                                    document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                                    document.getElementsByClassName("choice")[i].innerHTML += `<p>Attacks: ${remainingPlayers[i].attack}</p><p>Influence: ${remainingPlayers[i].influence}</p>`;
+                                    document.getElementsByClassName("choice")[i].onclick = () => {
+                                        remainingPlayers[i].attack += players[0].attack;
+                                        players[0].attack = 0;
+                                        remainingPlayers[i].influence += players[0].influence;
+                                        players[0].influence = 0;
+                                        startTurn();
+                                    };
+                                }
+                            });
+                        }
                     }
                     else startTurn();
                 }
@@ -4725,7 +4798,12 @@ document.getElementById("submitPlayers").onclick = () => {
             // Defensive Charm
             if (players[0].charm === "Defensive") {
                 document.getElementsByClassName("playerCharm")[0].onclick = () => {
-                    if (!document.getElementById("playerChoice")) {
+                    // In the Hall of Prophecy effect
+                    if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                        if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                        if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
+                    }
+                    else if (!document.getElementById("playerChoice")) {
                         if (players[0].health > 7) {
                             const hurtVillains = activeVillains.filter(villain => {return villain.health < villain.maxHealth});
                             const hurtableVillains = activeVillains.filter(villain => {return villain.health > 0;});
@@ -4793,7 +4871,12 @@ document.getElementById("submitPlayers").onclick = () => {
             // Hover Charm
             else if (players[0].charm === "Hover") {
                 document.getElementsByClassName("playerCharm")[0].onclick = () => {
-                    if (players[0].hand.length && !document.getElementById("playerChoice")) {
+                    // In the Hall of Prophecy effect
+                    if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                        if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                        if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
+                    }
+                    else if (players[0].hand.length && !document.getElementById("playerChoice")) {
                         const hoverCharmEffect = () => {
                             if (players[0].health > 7) players[0].influence += 2;
                             else if (players[0].health < 4) {
@@ -4847,7 +4930,12 @@ document.getElementById("submitPlayers").onclick = () => {
             // Memory Charm
             else if (players[0].charm === "Memory") {
                 document.getElementsByClassName("playerCharm")[0].onclick = () => {
-                    if (!document.getElementById("playerChoice")) {
+                    // In the Hall of Prophecy effect
+                    if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                        if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                        if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
+                    }
+                    else if (!document.getElementById("playerChoice")) {
                         const cheapCards = players[0].hand.filter(card => {return !card.cost || (card.cost <= 3 && players[0].health < 8) || (card.cost <= 5 && players[0].health < 4);});
                         if (cheapCards.length) {
                             const memoryCloneAt = index => {
@@ -4872,7 +4960,12 @@ document.getElementById("submitPlayers").onclick = () => {
             // Undetectable Extension Charm
             else if (players[0].charm === "Undetectable Extension") {
                 document.getElementsByClassName("playerCharm")[0].onclick = () => {
-                    if (!document.getElementById("playerChoice")) {
+                    // In the Hall of Prophecy effect
+                    if (activeDarkArtsEvents.includes(inTheHallOfProphecy1) || activeDarkArtsEvents.includes(inTheHallOfProphecy2)) {
+                        if (inTheHallOfProphecy1.img) darken(inTheHallOfProphecy1.img);
+                        if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
+                    }
+                    else if (!document.getElementById("playerChoice")) {
                         if (!players[0].draw.length) players[0].shuffle();
                         if (players[0].health < 8 && players[0].health > 3 && players[0].draw[0].cost) players[0].drawCards(1);
                         else {
