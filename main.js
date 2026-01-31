@@ -599,6 +599,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                             document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p>${hogwartsCardBack}`;
                                             document.getElementsByClassName("choice")[1].onclick = () => {
                                                 players[0].discard.push(receivingPotions[j]);
+                                                players[0].bought.push(receivingPotions[j]);
                                                 replacePotion();
                                             };
                                         }));
@@ -1004,6 +1005,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._horcrux1Used = false;
                 this._invulnerable = false;
                 this._bought = [];
+                this._potionsBanished = 0;
             }
             get hero() {
                 return this._hero;
@@ -1448,7 +1450,10 @@ document.getElementById("submitPlayers").onclick = () => {
 
             banishAt(index) {
                 // banish potions to the potions array
-                if (this.hand[index] === "potion") potions.push(this.hand[index]);
+                if (this.hand[index] === "potion") {
+                    potions.push(this.hand[index]);
+                    this._potionsBanished++;
+                }
 
                 if (document.getElementsByClassName("playerHand")[players.indexOf(this)].contains(this.hand[index].img)) document.getElementsByClassName("playerHand")[players.indexOf(this)].removeChild(this.hand[index].img);
                 if (this.passives.includes(this.hand[index])) this._passives.splice(this.passives.indexOf(this.hand[index]), 1);
@@ -1661,7 +1666,10 @@ document.getElementById("submitPlayers").onclick = () => {
                     )) ||
                     (encounters[0] === sneakingInTheHalls && this.played.filter(card => {return card.type === "item"}).length >= 4) || // Sneaking in the Halls completion
                     (encounters[0] === theMinistryIsMeddling && this._influenceGained >= 8) || // The Ministry is Meddling completion
-                    (encounters[0] === detentionWithDolores && this.played.map(card => {return card.cost;}).filter(cost => {return cost >= 4;}).length >= 3) // Detention with Dolores completion
+                    (encounters[0] === detentionWithDolores && this.played.map(card => {return card.cost;}).filter(cost => {return cost >= 4;}).length >= 3) || // Detention with Dolores completion
+                    (encounters[0] === beforeTheWizengamot && this._potionsBanished >= 2) || // Before the Wizengamot completion
+                    (encounters[0] === ministersOfMagic && this.bought.length >= 3) || // Ministers of Magic completion
+                    (encounters[0] === magicIsMight && this.played.filter(card => {return card.value % 2 === 1;}).length >= 3) // Magic is Might completion
                 )) this.addDestroyedHorcrux(encounters.shift());
 
                 this.petrified = false;
@@ -1683,6 +1691,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 players.forEach(player => {player._invulnerable = false;});
                 this._horcrux1Used = false;
                 this._bought = [];
+                this._potionsBanished = 0;
                 this._charmUsed = false;
                 this.proficiencyImage.onclick = () => {};
                 this.charmImage.onclick = () => {};
@@ -2612,7 +2621,7 @@ document.getElementById("submitPlayers").onclick = () => {
         hogwartsCards.forEach(card => {
             card.img.onclick = () => {
                 if (!document.getElementById("playerChoice")) {
-                    const cost = card.cost - (players[0].proficiency === "Arithmancy" && card.houseDie ? 1 : 0);
+                    const cost = card.cost - (players[0].proficiency === "Arithmancy" && card.houseDie ? 1 : 0) + (encounters.length && encounters[0] === ministersOfMagic ? 1 : 0);
                     if (players[0].influence >= cost) {
                         players[0].influence -= cost;
 
@@ -3217,6 +3226,12 @@ document.getElementById("submitPlayers").onclick = () => {
                         players[0].health -= 2;
                         if (horcrux2.img) darken(horcrux2.img);
                         if (theFirstTask.img) darken(theFirstTask.img);
+                    }
+
+                    // Before the Wizengamot effect
+                    if (encounters.length && encounters[0] === beforeTheWizengamot && this.attackDamageTaken === 2) {
+                        getNeighbors(players[0]).forEach(player => {player.health -= 2;});
+                        darken(beforeTheWizengamot.img);
                     }
                 }
                 if (healthType === "health") this._health = health;
@@ -4010,6 +4025,22 @@ document.getElementById("submitPlayers").onclick = () => {
             players.forEach(player => {player.influence += 2;});
             players[0].removeDestroyedHorcrux(detentionWithDolores);
         });
+        const beforeTheWizengamot = new Encounter("Before The Wizengamot", "Pack 2", [], () => {}, () => {
+            if (players.filter(player => {return !player.petrified;}).length) players.forEach(player => {player.drawCards(1);});
+            players[0].removeDestroyedHorcrux(beforeTheWizengamot);
+        });
+        const ministersOfMagic = new Encounter("Ministers Of Magic", "Pack 2", [], () => {}, () => {
+            players.forEach(player => {player.influence += 2;});
+            players[0].removeDestroyedHorcrux(ministersOfMagic);
+        });
+        const magicIsMight = new Encounter("Magic Is Might", "Pack 2", [], () => {
+            if (players[0].hand.filter(card => {return card.type === "spell"}).length >= 4) activeVillains.filter(villain => {return villain.type.includes("villain");}).forEach(villain => {villain.health++;});
+        }, () => {
+            if ((!activeVillains.includes(bartyCrouchJr) || bartyCrouchJr.petrifiedBy || bartyCrouchJr.health <= 0) && (activeLocation.number > 1 || activeLocation.added)) {
+                activeLocation.removeFromLocation();
+                players[0].removeDestroyedHorcrux(magicIsMight);
+            }
+        });
         let encounters = [];
         switch (activeGame) {
             case "Game 7": encounters = [horcrux1, horcrux2, horcrux3, horcrux4, horcrux5, horcrux6];
@@ -4023,6 +4054,8 @@ document.getElementById("submitPlayers").onclick = () => {
             case "Box 4": encounters = [theFirstTask, theSecondTask, theThirdTask];
                 break;
             case "Pack 1": encounters = [sneakingInTheHalls, theMinistryIsMeddling, detentionWithDolores];
+                break;
+            case "Pack 2": encounters = [beforeTheWizengamot, ministersOfMagic, magicIsMight];
                 break;
         }
 
