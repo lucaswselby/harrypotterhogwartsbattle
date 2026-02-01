@@ -4324,7 +4324,6 @@ document.getElementById("submitPlayers").onclick = () => {
             <div id="potionDraw">
                 <img src="./images/hogwartsCardBack.png" alt="Back of Potions card">
             </div>
-            <div id="ingredientsPile"></div>
             <div id="potionList">
                 <img src="./images/Pack 2/potionListA.png">
             </div>
@@ -4615,12 +4614,6 @@ document.getElementById("submitPlayers").onclick = () => {
         let ingredientDiscard = [];
         const populatePotions = () => {
             if (document.getElementById("potionsCupboard")) {
-                // populate ingredients pile
-                document.getElementById("ingredientsPile").innerHTML = "";
-                ingredientsPile.forEach(ingredient => {
-                    document.getElementById("ingredientsPile").innerHTML += `<img src="./images/Pack 2/${src(ingredient)}">`;
-                });
-
                 // populate available ingredients
                 for (let i = 0; i < document.getElementsByClassName("ingredientsCol1").length; i++) {
                     for (let j = 0; j < document.getElementsByClassName("ingredientsRow1").length; j++) {
