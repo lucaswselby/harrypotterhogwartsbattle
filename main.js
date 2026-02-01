@@ -3791,13 +3791,31 @@ document.getElementById("submitPlayers").onclick = () => {
             players.forEach(player => {const items = player.discard.filter(card => {return card.type === "item"}); if (items.length) {const discardToHand = index => {player.addToHand(items[index]); player.discard.splice(player.discard.indexOf(items[index]), 1);}; if (items.length > 1) {addPlayerChoice(`${player.hero} move from discard to hand:`, () => {return items.length;}, 1, () => {for (let i = 0; i < items.length; i++) {document.getElementsByClassName("choice")[i].innerHTML = `<img src="${items[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {discardToHand(i)};}});} else discardToHand(0);}});
         }, false);
         const pansyParkinson = new Villain("Pansy Parkinson", "Pack 1", "villain", 0, 5, () => {}, () => {players.forEach(player => {player.drawCards(1);}); activeLocation.removeFromLocation();}, true);
+        const piusThicknesse = new Villain("Pius Thicknesse", "Pack 2", "villain", 7, 0, () => {}, () => {players.forEach(player => {player.influence++;}); activeLocation.removeFromLocation();}, true);
+        const ritaSkeeter = new Villain("Rita Skeeter", "Pack 2", "villain", 7, 0, () => {players[0].health -= 2; getNeighbors(players[0]).forEach(player => {player.health--;});}, () => {players.forEach(player => {player.health += 3;});}, false);
+        const rufusScrimgeour = new Villain("Rufus Scrimgeour", "Pack 2", "villain", 6, 0, () => {
+            const remainingPlayers = players.filter(player => {return player !== players[0];});
+            const oddCards = () => {return players[0].hand.filter(card => {return card.cost % 2 === 1;}).length;};
+            if (oddCards()) {
+                if (remainingPlayers.length > 1) {
+                    addPlayerChoice("Choose to lose 1 health:", () => {return remainingPlayers.length;}, oddCards(), () => {
+                        for (let i = 0; i < remainingPlayers.length; i++) {
+                            document.getElementsByClassName("choice")[i].appendChild(remainingPlayers[i].heroImage.cloneNode());
+                            document.getElementsByClassName("choice")[i].innerHTML += `<p>Health: ${remainingPlayers[i].health}</p>`;
+                            document.getElementsByClassName("choice")[i].onclick = () => {remainingPlayers[i].health--;};
+                        }
+                    });
+                }
+                else remainingPlayers.health -= oddCards();
+            }
+        }, () => {}, false);
         // TO-DO: add Pack villains
         const lordVoldemort5 = new Villain("Lord Voldemort", "Pack 4", "villain", 25, 7, () => {
             players[0].health -= activeLocation.added;
             if (players[0].stunned) activeLocation.addToLocation();
         }, () => {}, false);
         const pack1Villains = [corneliusFudge, marcusFlint, pansyParkinson];
-        const pack2Villains = [];
+        const pack2Villains = [piusThicknesse, ritaSkeeter, rufusScrimgeour];
         const pack3Villains = [];
         const pack4Villains = [];
 
@@ -5016,6 +5034,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 let daeDraws = activeLocation.darkArtsEventDraws;
                 if (activeVillains.includes(bellatrixLestrange) && !bellatrixLestrange.petrifiedBy && bellatrixLestrange.health > 0) daeDraws++; // Bellatrix adds 1 draw
                 if (activeVillains.includes(chineseFireball) && !chineseFireball.petrifiedBy && chineseFireball.influence > 0) daeDraws++; // Chinese Fireball adds 1 draw
+                if (activeVillains.includes(piusThicknesse) && !piusThicknesse.petrifiedBy && piusThicknesse.health > 0 && players[0].influence) { // Pius Thicknesse effect
+                    daeDraws++;
+                    players[0].influence = 0;
+                }
                 if (players[0].passives.includes(finiteIncantatem1) || players[0].passives.includes(finiteIncantatem2)) daeDraws = 1; // Finite Incantatem limits draws to 1
                 if (protean && daeDraws) daeDraws--; // Protean Charm can reduce daeDraws by 1
                 for (let i = 0; i < daeDraws; i++) {
