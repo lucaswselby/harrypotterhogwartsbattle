@@ -526,8 +526,8 @@ document.getElementById("submitPlayers").onclick = () => {
         const completeIngredientTask = rowIndex => {
             if (!activeDarkArtsEvents.includes(devilsSnare1) && !activeDarkArtsEvents.includes(devilsSnare2)) {
                 for (let i = 0; i < document.getElementsByClassName(`ingredientsRow${rowIndex+1}`).length; i++) {
-                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).classList.toggle("shimmer");
-                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).onclick = () => {
+                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`)[0].classList.toggle("shimmer");
+                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`)[0].onclick = () => {
                         let receivingPotions = availablePotions.filter(potion => {return potion.needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "Wild Ingredient";});
                         addPlayerChoice(`Assign ${availableIngredients[rowIndex][i].name} to:`, () => {return 2 + receivingPotions.length;}, 1, () => {
                             const refillIngredients = () => {
