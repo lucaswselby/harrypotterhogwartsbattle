@@ -528,7 +528,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 for (let i = 0; i < document.getElementsByClassName(`ingredientsRow${rowIndex+1}`).length; i++) {
                     document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).classList.toggle("shimmer");
                     document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`).onclick = () => {
-                        let receivingPotions = availablePotions.filter(potion => {return potion.needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "wild ingredient";});
+                        let receivingPotions = availablePotions.filter(potion => {return potion.needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "Wild Ingredient";});
                         addPlayerChoice(`Assign ${availableIngredients[rowIndex][i].name} to:`, () => {return 2 + receivingPotions.length;}, 1, () => {
                             const refillIngredients = () => {
                                 // discard used ingredient
@@ -553,11 +553,11 @@ document.getElementById("submitPlayers").onclick = () => {
 
                             // add ingredient to available potions
                             for (let j = 0; j < receivingPotions.length; j++) {
-                                if (availablePotions[j].needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "wild ingredient") {
+                                if (availablePotions[j].needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "Wild Ingredient") {
                                     // add availableIngredients[rowIndex][i] to receivingPotions[j]
                                     document.getElementsByClassName("choice")[j].innerHTML = `<p>Add to</p><img src="${receivingPotions[j].img.src}">`;
                                     document.getElementsByClassName("choice")[j].onclick = () => {
-                                        if (availableIngredients[rowIndex][i] === "wild ingredient") {
+                                        if (availableIngredients[rowIndex][i] === "Wild Ingredient") {
                                             receivingPotions[j].wildIngredientsUsed++;
                                         }
                                         else {
@@ -575,7 +575,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                                                     // discard ingredients
                                                     for (let k = 0; k < receivingPotions[j].wildIngredientsUsed; k++) {
-                                                        ingredientDiscard.push("wild ingredient");
+                                                        ingredientDiscard.push("Wild Ingredient");
                                                     }
                                                     receivingPotions[j].ingredients.filter(ingredient => {return !receivingPotions[j].needed.includes(ingredient);}).forEach(ingredient => {ingredientDiscard.push(ingredient);});
                                                     for (let k = 1; k <= 3; k++) {
@@ -4209,7 +4209,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 });
             }
             else players.forEach(player => {player.attack++;});
-        }, ["bicorn horn", "hellebore"]);
+        }, ["Bicorn Horn", "Hellebore"]);
         const ageingPotion2 = ageingPotion1.clone();
         const ageingPotion3 = ageingPotion1.clone();
         const amortentia1 = new Potion("Amortentia", "Pack 2", `<p>Any one hero gains:</p>${healthToken + healthToken}`, affectedPlayer => {
@@ -4245,14 +4245,14 @@ document.getElementById("submitPlayers").onclick = () => {
                 player.health += 2;
                 player.influence += 2;
             });
-        }, ["lacewing fly", "flobber worm", "bicorn horn"]);
+        }, ["Lacewing Fly", "Flobber Worm", "Bicorn Horn"]);
         const amortentia2 = amortentia1.clone();
         const calmingDraught1 = new Potion("Calming Draught", "Pack 2", `<p>All Heroes gain:</p>${influenceToken + healthToken}`, affectedPlayer => {
             players.forEach(player => {
                 player.influence++;
                 player.health++;
             });
-        }, "<p>Remove from location</p>", affectedPlayer => {activeLocation.removeFromLocation();}, ["bicorn horn", "lacewing fly", "hellebore"]);
+        }, "<p>Remove from location</p>", affectedPlayer => {activeLocation.removeFromLocation();}, ["Bicorn Horn", "Lacewing Fly", "Hellebore"]);
         const calmingDraught2 = calmingDraught1.clone();
         const calmingDraught3 = calmingDraught1.clone();
         const mandrakeRestorativeDraught1 = new Potion("Mandrake Restorative Draught", "Pack 2", `<p>Any two Heroes gain</p>${healthToken + healthToken}`, affectedPlayer => {
@@ -4274,10 +4274,10 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }, `<p>ALL Heroes draw</p>${hogwartsCardBack}`, affectedPlayer => {
             players.forEach(player => {player.drawCards(1);});
-        }, ["mandrake leaf", "lacewing fly"]);
+        }, ["Mandrake Leaf", "Lacewing Fly"]);
         const mandrakeRestorativeDraught2 = mandrakeRestorativeDraught1.clone();
         const mandrakeRestorativeDraught3 = mandrakeRestorativeDraught1.clone();
-        const pepperupPotion1 = new Potion("Pepperup Potion", "Pack 2", attackToken, affectedPlayer => {affectedPlayer.attack++;}, "<p>Roll any House Die</p>", affectedPlayer => {rollAnyHouseDie(affectedPlayer, false);}, ["mandrake leaf", "bicorn horn"]);
+        const pepperupPotion1 = new Potion("Pepperup Potion", "Pack 2", attackToken, affectedPlayer => {affectedPlayer.attack++;}, "<p>Roll any House Die</p>", affectedPlayer => {rollAnyHouseDie(affectedPlayer, false);}, ["Mandrake Leaf", "Bicorn Horn"]);
         const pepperupPotion2 = pepperupPotion1.clone();
         let potions = [ageingPotion1, ageingPotion2, ageingPotion3, amortentia1, amortentia2, calmingDraught1, calmingDraught2, calmingDraught3, mandrakeRestorativeDraught1, mandrakeRestorativeDraught2, mandrakeRestorativeDraught3, pepperupPotion1, pepperupPotion2];
         if (activeGame !== "Pack 2") {
@@ -4287,8 +4287,8 @@ document.getElementById("submitPlayers").onclick = () => {
             }
         }
         shuffle(potions);
-        let ingredientsPile = ["bicorn horn", "bicorn horn", "bicorn horn", "bicorn horn", "bicorn horn", "mandrake leaf", "mandrake leaf", "mandrake leaf", "mandrake leaf", "mandrake leaf", "flobber worm", "flobber worm", "hellebore", "hellebore", "hellebore", "hellebore", "lacewing fly", "lacewing fly", "lacewing fly", "wild ingredient", "wild ingredient", "wild ingredient", "wild ingredient", "wild ingredient"];
-        if (activeGame === "Pack 4") ingredientsPile.push("bicorn horn", "mandrake leaf", "flobber worm", "hellebore", "lacewing fly", "wild ingredient");
+        let ingredientsPile = ["Bicorn Horn", "Bicorn Horn", "Bicorn Horn", "Bicorn Horn", "Bicorn Horn", "Mandrake Leaf", "Mandrake Leaf", "Mandrake Leaf", "Mandrake Leaf", "Mandrake Leaf", "Flobber Worm", "Flobber Worm", "Hellebore", "Hellebore", "Hellebore", "Hellebore", "Lacewing Fly", "Lacewing Fly", "Lacewing Fly", "Wild Ingredient", "Wild Ingredient", "Wild Ingredient", "Wild Ingredient", "Wild Ingredient"];
+        if (activeGame === "Pack 4") ingredientsPile.push("Bicorn Horn", "Mandrake Leaf", "Flobber Worm", "Hellebore", "Lacewing Fly", "Wild Ingredient");
         shuffle(ingredientsPile);
 
         // display game
