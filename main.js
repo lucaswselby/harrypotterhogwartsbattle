@@ -4662,6 +4662,11 @@ document.getElementById("submitPlayers").onclick = () => {
                 for (let i = 0; i < potion2Ingredients.length; i++) {
                     if (potion2Ingredients[i]) document.getElementById(`potion2Ingredient${i+1}`).innerHTML = `<img class="ingredient" src="./images/Pack 2/${src(potion2Ingredients[i])}">`;
                 }
+
+                // add magnification to all images
+                for (let i = 0; i < document.getElementById("potionsCupboard").getElementsByTagName("IMG").length; i++) {
+                    document.getElementById("potionsCupboard").getElementsByTagName("IMG")[i].oncontextmenu = event => {magnify(event);};
+                }
             }
         };
         populatePotions();
@@ -5105,8 +5110,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 setTimeout(() => {
                                                     // magnify images
                                                     for (let j = 0; j < document.getElementsByTagName("IMG").length; j++) {
-                                                        const img = document.getElementsByTagName("IMG")[j];
-                                                        img.oncontextmenu = event => {magnify(event);};
+                                                        document.getElementsByTagName("IMG")[j].oncontextmenu = event => {magnify(event);};
                                                     }
 
                                                     // reset villains
