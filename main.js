@@ -526,16 +526,14 @@ document.getElementById("submitPlayers").onclick = () => {
         const completeIngredientTask = rowIndex => {
             if (!activeDarkArtsEvents.includes(devilsSnare1) && !activeDarkArtsEvents.includes(devilsSnare2)) {
                 for (let i = 0; i < document.getElementsByClassName(`ingredientsRow${rowIndex+1}`).length; i++) {
-                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`)[0].classList.toggle("shimmer");
-                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`)[0].onclick = () => {
+                    const ingredientElem = document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`)[0];
+                    ingredientElem.classList.add("shimmer");
+                    ingredientElem.onclick = () => {
                         let receivingPotions = availablePotions.filter(potion => {return potion.needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "Wild Ingredient";});
-                        addPlayerChoice(`Assign ${availableIngredients[rowIndex][i].name} to:`, () => {return 2 + receivingPotions.length;}, 1, () => {
+                        addPlayerChoice(`Assign ${availableIngredients[rowIndex][i]} to:`, () => {return 2 + receivingPotions.length;}, 1, () => {
                             const refillIngredients = () => {
-                                // discard used ingredient
-                                ingredientDiscard.push(availableIngredients[rowIndex][i]);
-
                                 // refill available ingredients by cascade
-                                for (let j = rowIndex; j > 0; j++) {
+                                for (let j = rowIndex; j > 0; j--) {
                                     availableIngredients[j][i] = availableIngredients[j-1][i];
                                 }
 
@@ -551,69 +549,82 @@ document.getElementById("submitPlayers").onclick = () => {
                                 populatePotions();
                             };
 
+                            // remove shimmer and onclick
+                            const unclickifyRow = () => {
+                                for (let j = 1; j <= document.getElementsByClassName("ingredientsRow1").length; j++) {
+                                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${j}`)[0].classList.remove("shimmer");
+                                    document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${j}`)[0].onclick = () => {};
+                                }
+                            }
+
                             // add ingredient to available potions
                             for (let j = 0; j < receivingPotions.length; j++) {
-                                if (availablePotions[j].needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "Wild Ingredient") {
-                                    // add availableIngredients[rowIndex][i] to receivingPotions[j]
-                                    document.getElementsByClassName("choice")[j].innerHTML = `<p>Add to</p><img src="${receivingPotions[j].img.src}">`;
-                                    document.getElementsByClassName("choice")[j].onclick = () => {
-                                        if (availableIngredients[rowIndex][i] === "Wild Ingredient") {
-                                            receivingPotions[j].wildIngredientsUsed++;
-                                        }
-                                        else {
-                                            receivingPotions[j].needed = receivingPotions[j].needed.filter(ingredient => {return ingredient !== availableIngredients[rowIndex][i];});
-                                        }
+                                // add availableIngredients[rowIndex][i] to receivingPotions[j]
+                                document.getElementsByClassName("choice")[j].innerHTML = `<p>Add to</p><img src="${receivingPotions[j].img.src}">`;
+                                document.getElementsByClassName("choice")[j].onclick = () => {
+                                    unclickifyRow();
 
-                                        // complete potion
-                                        if (receivingPotions[j].needed.length - receivingPotions[j].wildIngredientsUsed <= 0) {
-                                            playerChoices.unshift(new PlayerChoice("Banish or Discard", () => {return 2;}, 1, () => {
-                                                const replacePotion = () => {
-                                                    let newPotion = potions.shift();
-                                                    availablePotions[availablePotions.indexOf(receivingPotions[j])] = newPotion;
-                                                    document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).innerHTML = "";
-                                                    document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).appendChild(newPotion.img);
+                                    // add ingredient to chosen potion
+                                    if (availableIngredients[rowIndex][i] === "Wild Ingredient") {
+                                        receivingPotions[j].wildIngredientsUsed++;
+                                    }
+                                    else {
+                                        receivingPotions[j].needed.splice(receivingPotions[j].needed.indexOf(availableIngredients[rowIndex][i]), 1);
+                                    }
+                                    if (availablePotions.indexOf(receivingPotions[j])) potion2Ingredients[potion2Ingredients.indexOf("")] = availableIngredients[rowIndex][i];
+                                    else potion1Ingredients[potion1Ingredients.indexOf("")] = availableIngredients[rowIndex][i];
 
-                                                    // discard ingredients
-                                                    for (let k = 0; k < receivingPotions[j].wildIngredientsUsed; k++) {
-                                                        ingredientDiscard.push("Wild Ingredient");
-                                                    }
-                                                    receivingPotions[j].ingredients.filter(ingredient => {return !receivingPotions[j].needed.includes(ingredient);}).forEach(ingredient => {ingredientDiscard.push(ingredient);});
-                                                    for (let k = 1; k <= 3; k++) {
-                                                        document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}ingredient${k}`).innerHTML = "";
-                                                    }
+                                    // complete potion
+                                    if (receivingPotions[j].needed.length - receivingPotions[j].wildIngredientsUsed <= 0) {
+                                        playerChoices.unshift(new PlayerChoice("Banish or Discard", () => {return 2;}, 1, () => {
+                                            const replacePotion = () => {
+                                                // discard ingredients
+                                                for (let k = 0; k < receivingPotions[j].wildIngredientsUsed; k++) {
+                                                    ingredientDiscard.push("Wild Ingredient");
+                                                }
+                                                receivingPotions[j].ingredients.filter(ingredient => {return !receivingPotions[j].needed.includes(ingredient);}).forEach(ingredient => {ingredientDiscard.push(ingredient);});
+                                                for (let k = 1; k <= 3; k++) {
+                                                    document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}Ingredient${k}`).innerHTML = "";
+                                                }
+                                                if (availablePotions.indexOf(receivingPotions[j])) potion2Ingredients = ["", "", ""];
+                                                else  potion1Ingredients = ["", "", ""];
 
-                                                    // reset completed potion
-                                                    receivingPotions[j].needed = [...receivingPotions[j].ingredients];
-                                                };
+                                                // reset completed potion
+                                                receivingPotions[j].needed = [...receivingPotions[j].ingredients];
+                                                let newPotion = potions.shift();
+                                                document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).innerHTML = "";
+                                                document.getElementById(`potion${availablePotions.indexOf(receivingPotions[j])+1}`).appendChild(newPotion.img);
+                                                availablePotions[availablePotions.indexOf(receivingPotions[j])] = newPotion;
+                                            };
 
-                                                // use potion for banish ability
-                                                document.getElementsByClassName("choice")[0].innerHTML = receivingPotions[j].banishEffectLabel;
-                                                document.getElementsByClassName("choice")[0].onclick = () => {
-                                                    players[0].cardsDrawn--;
-                                                    players[0].draw.unshift(receivingPotions[j]);
-                                                    players[0].drawCards(1);
-                                                    receivingPotions[j].banishEffect(players[0]);
-                                                    replacePotion();
-                                                };
+                                            // use potion for banish ability
+                                            document.getElementsByClassName("choice")[0].innerHTML = receivingPotions[j].banishEffectLabel;
+                                            document.getElementsByClassName("choice")[0].onclick = () => {
+                                                players[0].cardsDrawn--;
+                                                players[0].draw.unshift(receivingPotions[j]);
+                                                players[0].drawCards(1);
+                                                receivingPotions[j].banishEffect(players[0]);
+                                                replacePotion();
+                                            };
 
-                                                // add potion to discard
-                                                document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p>${hogwartsCardBack}`;
-                                                document.getElementsByClassName("choice")[1].onclick = () => {
-                                                    players[0].discard.push(receivingPotions[j]);
-                                                    players[0].bought.push(receivingPotions[j]);
-                                                    replacePotion();
-                                                };
-                                            }));
-                                        }
+                                            // add potion to discard
+                                            document.getElementsByClassName("choice")[1].innerHTML = `<p>Discard</p>${hogwartsCardBack}`;
+                                            document.getElementsByClassName("choice")[1].onclick = () => {
+                                                players[0].discard.push(receivingPotions[j]);
+                                                players[0].bought.push(receivingPotions[j]);
+                                                replacePotion();
+                                            };
+                                        }));
+                                    }
 
-                                        refillIngredients();
-                                    };
-                                }
+                                    refillIngredients();
+                                };
                             };
 
                             // discard ingredient
                             document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 2].innerHTML = "<p>Discard</p>";
                             document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 2].onclick = () => {
+                                unclickifyRow();
                                 ingredientDiscard.push(availableIngredients[rowIndex][i]);
                                 refillIngredients();
                             };
@@ -1129,7 +1140,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                     if (inTheHallOfProphecy2.img) darken(inTheHallOfProphecy2.img);
                                 }
                                 else {
-                                    document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.toggle("shimmer");
+                                    document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.add("shimmer");
                                     document.getElementsByClassName("playerCharm")[players.indexOf(this)].onclick = () => {
                                         if (this.health > 7) {
                                             const cheapCards = this.played.filter(card => {return card.cost <= 3;});
@@ -1176,7 +1187,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                                 });
                                             }
                                         }
-                                        document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.toggle("shimmer");
+                                        document.getElementsByClassName("playerCharm")[players.indexOf(this)].classList.remove("shimmer");
                                     };
                                 }
                             }
@@ -4157,6 +4168,15 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._needed = ingredients;
                 this._wildIngredientsUsed = 0;
             }
+            get name() {
+                return super.name;
+            }
+            get effectLabel() {
+                return this._effectLabel;
+            }
+            get banishEffectLabel() {
+                return this._banishEffectLabel;
+            }
             get ingredients() {
                 return this._ingredients;
             }
@@ -4345,7 +4365,6 @@ document.getElementById("submitPlayers").onclick = () => {
             <div class="potionIngredient" id="potion2Ingredient1"></div>
             <div class="potionIngredient" id="potion2Ingredient2"></div>
             <div class="potionIngredient" id="potion2Ingredient3"></div>
-            <div id="ingredientDiscard"></div>
         </div>` : ""}
         <div id="playersContainer"></div>`;
         const disableScreen = document.createElement("DIV");
@@ -4576,6 +4595,15 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     }
 
+                    // reset potions
+                    for (let i = 1; i <= document.getElementsByClassName("ingredientsCol1").length; i++) {
+                        for (let j = 1; j <= document.getElementsByClassName("ingredientsRow1").length; j++) {
+                            const ingredientElem = document.getElementsByClassName(`ingredientsRow${i} ingredientsCol${j}`)[0];
+                            ingredientElem.classList.remove("shimmer");
+                            ingredientElem.onclick = () => {};
+                        }
+                    }
+
                     // Permanent Sticking Charm activates before starting the next turn
                     if (players[0].charm === "Permanent Sticking" && players[0].health < 4) {
                         // In the Hall of Prophecy effect
@@ -4609,8 +4637,8 @@ document.getElementById("submitPlayers").onclick = () => {
         // populate Potions Cupboard
         let availableIngredients = [ingredientsPile.splice(0, 2), ingredientsPile.splice(0, 2), ingredientsPile.splice(0, 2), ingredientsPile.splice(0, 2), ingredientsPile.splice(0, 2)];
         let availablePotions = potions.splice(0, 2);
-        let availablePotion1Ingredients = ["", "", ""];
-        let availablePotion2Ingredients = ["", "", ""];
+        let potion1Ingredients = ["", "", ""];
+        let potion2Ingredients = ["", "", ""];
         let ingredientDiscard = [];
         const populatePotions = () => {
             if (document.getElementById("potionsCupboard")) {
@@ -4628,18 +4656,12 @@ document.getElementById("submitPlayers").onclick = () => {
                 document.getElementById("potion2").appendChild(availablePotions[1].img);
 
                 // populate available potion ingredients
-                for (let i = 0; i < availablePotion1Ingredients.length; i++) {
-                    if (availablePotion1Ingredients[i]) document.getElementById(`potion1Ingredient${i+1}`).innerHTML = `<img class="ingredient" src="./images/Pack 2/${src(availablePotion1Ingredients[i])}">`;
+                for (let i = 0; i < potion1Ingredients.length; i++) {
+                    if (potion1Ingredients[i]) document.getElementById(`potion1Ingredient${i+1}`).innerHTML = `<img class="ingredient" src="./images/Pack 2/${src(potion1Ingredients[i])}">`;
                 }
-                for (let i = 0; i < availablePotion2Ingredients.length; i++) {
-                    if (availablePotion2Ingredients[i]) document.getElementById(`potion2Ingredient${i+1}`).innerHTML = `<img class="ingredient" src="./images/Pack 2/${src(availablePotion2Ingredients[i])}">`;
+                for (let i = 0; i < potion2Ingredients.length; i++) {
+                    if (potion2Ingredients[i]) document.getElementById(`potion2Ingredient${i+1}`).innerHTML = `<img class="ingredient" src="./images/Pack 2/${src(potion2Ingredients[i])}">`;
                 }
-
-                // populate ingredientDiscard
-                document.getElementById("ingredientDiscard").innerHTML = "";
-                ingredientDiscard.forEach(ingredient => {
-                    document.getElementById("ingredientDiscard").innerHTML += `<img src="./images/Pack 2/${src(ingredient)}">`;
-                });
             }
         };
         populatePotions();

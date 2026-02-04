@@ -352,22 +352,6 @@ input[type="submit"] {
     top: 6%;
     left: 5%;
 }
-#ingredientsPile, #ingredientDiscard {
-    position: absolute;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-evenly;
-    overflow-y: auto;
-}
-#ingredientsPile {
-    height: var(--shopCardHeight);
-    width: 40%;
-    top: 6%;
-    left: 54%;
-}
-#ingredientsPile img {
-    height: 22%;
-}
 #potionList {
     height: 32%;
     position: absolute;
@@ -434,15 +418,6 @@ input[type="submit"] {
 }
 #potion2Ingredient3 {
     left: 81%;
-}
-#ingredientDiscard {
-    top: 90%;
-    left: 4%;
-    height: 7%;
-    width: 91%;
-}
-#ingredientDiscard img {
-    height: 65%;
 }
 
 #playersContainer {
@@ -642,10 +617,10 @@ input[type="submit"] {
 	--border-angle-1: 0deg;
 	--border-angle-2: 90deg;
 	--border-angle-3: 180deg;
+    --thickness: 2px;
 	border: 0;
-    border-radius: 100%;
-    transform: translate(-.5px, -1.5px);
-	padding: 1px;
+    transform: translate(calc(var(--thickness) / -2), calc(var(--thickness) / -2 - 1));
+	padding: var(--thickness);
 	width: max-content;
 	border-color: transparent;
     background-color: yellow;
