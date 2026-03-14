@@ -4232,7 +4232,7 @@ document.getElementById("submitPlayers").onclick = () => {
         }, ["Bicorn Horn", "Hellebore"]);
         const ageingPotion2 = ageingPotion1.clone();
         const ageingPotion3 = ageingPotion1.clone();
-        const amortentia1 = new Potion("Amortentia", "Pack 2", `<p>Any one hero gains:</p>${healthToken + healthToken}`, affectedPlayer => {
+        const amortentia1 = new Potion("Amortentia", "Pack 2", `<p>Any one hero gains:</p><div class="choiceContainer">${healthToken + healthToken}</div>`, affectedPlayer => {
             let healable = players.filter(player => {return canHeal(player);});
             if (healable.length) {
                 if (healable.length > 1) {
@@ -4246,7 +4246,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
                 else healable[0].health += 2;
             }
-        }, `<p>Banish this card, then any two heroes gain:</p>${healthToken + healthToken + influenceToken + influenceToken}`, affectedPlayer => {
+        }, `<p>Banish this card, then any two heroes gain:</p><div class="choiceContainer">${healthToken + healthToken + influenceToken + influenceToken}</div>`, affectedPlayer => {
             if (players.length > 2) {
                 let remainingPlayers = [...players];
                 addPlayerChoice("Pick to heal for 2 and gain 2 influence:", () => {return remainingPlayers.length;}, 2, () => {
