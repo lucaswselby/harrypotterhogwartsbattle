@@ -529,8 +529,12 @@ document.getElementById("submitPlayers").onclick = () => {
                     const ingredientElem = document.getElementsByClassName(`ingredientsRow${rowIndex+1} ingredientsCol${i+1}`)[0];
                     ingredientElem.classList.add("shimmer");
                     ingredientElem.onclick = () => {
-                        let receivingPotions = availablePotions.filter(potion => {return potion.needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "Wild Ingredient";});
-                        addPlayerChoice(`Assign ${availableIngredients[rowIndex][i]} to:`, () => {return 2 + receivingPotions.length;}, 1, () => {
+                        let getReceivingPotions = () => {
+                            return availablePotions.filter(potion => {
+                                return potion.needed.includes(availableIngredients[rowIndex][i]) || availableIngredients[rowIndex][i] === "Wild Ingredient";
+                            });
+                        };
+                        addPlayerChoice(`Assign ${availableIngredients[rowIndex][i]} to:`, () => {return 2 + getReceivingPotions().length;}, 1, () => {
                             const refillIngredients = () => {
                                 // refill available ingredients by cascade
                                 for (let j = rowIndex; j > 0; j--) {
@@ -558,6 +562,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             }
 
                             // add ingredient to available potions
+                            let receivingPotions = [...getReceivingPotions()];
                             for (let j = 0; j < receivingPotions.length; j++) {
                                 // add availableIngredients[rowIndex][i] to receivingPotions[j]
                                 document.getElementsByClassName("choice")[j].innerHTML = `<p>Add to</p><img src="${receivingPotions[j].img.src}">`;
@@ -619,7 +624,7 @@ document.getElementById("submitPlayers").onclick = () => {
 
                                     refillIngredients();
                                 };
-                            };
+                            }
 
                             // discard ingredient
                             document.getElementsByClassName("choice")[document.getElementsByClassName("choice").length - 2].innerHTML = "<p>Discard</p>";
@@ -4162,7 +4167,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 this._banishEffectLabel = banishEffectLabel;
                 this._banishEffect = player => {
                     banishEffect(player);
-                    player.banishAt(player.hand.indexOf(this));
+                    if (player.hand.includes(this)) player.banishAt(player.hand.indexOf(this));
                 }
                 this._ingredients = ingredients;
                 this._needed = ingredients;
@@ -4176,6 +4181,9 @@ document.getElementById("submitPlayers").onclick = () => {
             }
             get banishEffectLabel() {
                 return this._banishEffectLabel;
+            }
+            banishEffect(player) {
+                this._banishEffect(player);
             }
             get ingredients() {
                 return this._ingredients;
