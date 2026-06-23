@@ -1703,7 +1703,7 @@ document.getElementById("submitPlayers").onclick = () => {
                 if (encounters.length && (
                     (encounters[0].destroys.length && !encounters[0].remaining.length) ||
                     (encounters[0] === peskipiksiPesternomi && this.played.filter(card => {return card.cost && card.cost % 2 === 0;}).length === 2) || // Peskipiksi Pesternomi completion
-                    (encounters[0] === thirdFloorCorridor && this.played.filter(card => {card.type === "spell"}).length >= 2 && this.played.filter(card => {card.type === "item"}).length >= 2 && this.played.filter(card => {card.type === "ally"}).length >= 2) || // Third Floor Corridor completion
+                    (encounters[0] === thirdFloorCorridor && this.played.filter(card => {return card.type === "spell"}).length >= 2 && this.played.filter(card => {return card.type === "item"}).length >= 2 && this.played.filter(card => {return card.type === "ally"}).length >= 2) || // Third Floor Corridor completion
                     (encounters[0] === unregisteredAnimagus && (this.attacks === 5 || (!inactiveVillains.length && !activeVillains.filter(villain => {return villain.health || villain.influence;}).length))) || // Unregistered Animagus completion
                     (encounters[0] === fullMoonRises && !activeVillains.filter(villain => {return villain.health || villain.influence;}).length) || // Full Moon Rises completion
                     (encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return cost > 0 && arr.indexOf(cost) === ind;}).length >= 3) || // Filthy Half-Breed completion
