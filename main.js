@@ -170,14 +170,18 @@ document.getElementById("submitPlayers").onclick = () => {
 
         // some cards give the players a choice of action
         class PlayerChoice {
-            constructor(description, choices, iterations, populateFunction) {
+            constructor(description, choices, iterations, populateFunction, defaultEffect) {
                 this._description = description;
                 this._choices = choices;
                 this._iterations = iterations;
                 this._populateFunction = populateFunction;
+                this._defaultEffect = defaultEffect ? defaultEffect : () => {};
             }
             get choices() {
                 return this._choices;
+            }
+            get defaultEffect() {
+                return this._defaultEffect;
             }
             display() {
                 if (this.choices()) {
@@ -225,6 +229,12 @@ document.getElementById("submitPlayers").onclick = () => {
                             playerChoices.unshift(new PlayerChoice(this._description, this.choices, this._iterations, this._populateFunction));
                         }
 
+                        // triggers default effect if the next playerChoice has no choices
+                        while (playerChoices.length && !playerChoices[0].choices()) {
+                            playerChoices[0].defaultEffect();
+                            playerChoices.shift();
+                        }
+
                         // queues next player choice
                         if (playerChoices.length) {
                             if (playerChoices[0].choices()) playerChoices[0].display();
@@ -248,8 +258,8 @@ document.getElementById("submitPlayers").onclick = () => {
         }
         let playerChoices = [];
         let playerTurn = false;
-        const addPlayerChoice = (description, choices, iterations, populateFunction) => {
-            const choice = new PlayerChoice(description, choices, iterations, populateFunction);
+        const addPlayerChoice = (description, choices, iterations, populateFunction, defaultEffect) => {
+            const choice = new PlayerChoice(description, choices, iterations, populateFunction, defaultEffect);
             if (choices()) {
                 playerChoices.push(choice);
                 if (playerChoices.length === 1 && playerTurn) playerChoices[0].display(); // display player choice during the player's turn (not evil turn)
@@ -3003,7 +3013,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     }; 
                     document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; 
                     document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};
-                });
+                }, () => {player.health -= 2;});
             } 
             else player.health -= 2;});
         });
@@ -3029,7 +3039,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         }; 
                         document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>Health: ${player.health}</p>`; 
                         document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};
-                    });
+                    }, () => {player.health -= 2;});
                 } 
                 else player.health -= 2;
             });
@@ -3038,7 +3048,7 @@ document.getElementById("submitPlayers").onclick = () => {
             players.forEach(player => {
                 const items = () => {return player.hand.filter(card => {return card.type === "item";});}; 
                 if (items().length) {
-                    addPlayerChoice(`${player.hero} loses:`, () => {return 2;}, 1, () => {
+                    addPlayerChoice(`${player.hero} loses:`, () => {return items().length ? 2 : 0;}, 1, () => {
                         document.getElementsByClassName("choice")[0].innerHTML = choiceScroll(items(), false); 
                         document.getElementsByClassName("choice")[0].onclick = () => {
                             if (items().length) {
@@ -3050,7 +3060,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             else player.health -= 2;
                         }; 
                         document.getElementsByClassName("choice")[1].innerHTML = `<div class="choiceContainer">${healthToken + healthToken}</div><p>${player.invulnerable ? "Nothing" : `Health: ${player.health}`}</p>`; document.getElementsByClassName("choice")[1].onclick = () => {player.health -= 2;};
-                    });
+                    }, () => {player.health -= 2;});
                 } 
                 else player.health -= 2;
             });
