@@ -3677,7 +3677,7 @@ document.getElementById("submitPlayers").onclick = () => {
         });}, false);
         const troll = new Villain("Troll", "Box 1", "creature", 7, 0, () => {
             if (players[0].health) {
-                addPlayerChoice("Choose 1:", () => {return 2;}, 1, () => {
+                addPlayerChoice("Choose 1:", () => {return players[0].health ? 2 : 0;}, 1, () => {
                     document.getElementsByClassName("choice")[0].innerHTML = `<p>Lose:</p><div class="choiceContainer">${healthToken + healthToken}</div>`;
                     document.getElementsByClassName("choice")[0].onclick = () => {players[0].health -= 2;};
                     document.getElementsByClassName("choice")[1].innerHTML = `<img src="./images/Box 1/detention.png"><p>Add to Discard</p>`;
