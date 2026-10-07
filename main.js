@@ -2012,7 +2012,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const kingsleyShacklebolt = new Card("Kingsley Shacklebolt", "Game 5", "ally", 7, affectedPlayer => {if (!activeMermaid()) affectedPlayer.attack += 2; affectedPlayer.health++; activeLocation.removeFromLocation();}, false, false);
         const lunaLovegood = new Card("Luna Lovegood", "Game 5", "ally", 5, affectedPlayer => {if (!activeMermaid()) affectedPlayer.influence++; rollHouseDie(affectedPlayer, "blue");}, true, true);
         const nymphadoraTonks = new Card("Nymphadora Tonks", "Game 5", "ally", 5, affectedPlayer => {
-            const unremovable = (activeVillains.includes(bartyCrouchJr) && bartyCrouchJr.health > 0 && !bartyCrouchJr.petrifiedBy) || (activeLocation.number === 1 && activeLocation.added === 0)
+            const unremovable = (activeVillains.includes(bartyCrouchJr) && bartyCrouchJr.health > 0 && !bartyCrouchJr.petrifiedBy) || (encounters.length && encounters[0] === defensiveTraining) || (activeLocation.number === 1 && activeLocation.added === 0)
             if (!activeMermaid()) {
                 addPlayerChoice("Choose:", () => {return unremovable ? 2 : 3;}, 1, () => {
                     document.getElementsByClassName("choice")[0].innerHTML = `<div class="choiceContainer">${influenceToken + influenceToken + influenceToken}</div>`; 
