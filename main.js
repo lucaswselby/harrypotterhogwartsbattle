@@ -1713,7 +1713,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     (encounters[0] === unregisteredAnimagus && (this.attacks >= 5 || (!inactiveVillains.length && !activeVillains.filter(villain => {return villain.health || villain.influence;}).length))) || // Unregistered Animagus completion
                     (encounters[0] === fullMoonRises && !activeVillains.filter(villain => {return villain.health || villain.influence;}).length) || // Full Moon Rises completion
                     (encounters[0] === filthyHalfBreed && this.played.map(card => {return card.cost;}).filter((cost, ind, arr) => {return cost > 0 && arr.indexOf(cost) === ind;}).length >= 3) || // Filthy Half-Breed completion
-                    (encounters[0] === escape && this.played.filter(card => {card.type === "spell"}).length >= 6) || // Escape completion
+                    (encounters[0] === escape && this.played.filter(card => {return card.type === "spell"}).length >= 6) || // Escape completion
                     (encounters[0] === theFirstTask && ( // The First Task completion
                         this.bought.filter(card => {return card.type === "item";}).reduce((prev, curr) => {return prev + curr.cost}, 0) >= 7 || 
                         !hogwartsCards.filter(card => {return card.type === "item"}).length // catch for no more items in the shop
