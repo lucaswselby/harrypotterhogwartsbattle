@@ -303,7 +303,7 @@ document.getElementById("submitPlayers").onclick = () => {
             else if (color === "yellow") sides.push("health", "health");
             else if (color === "blue") sides.push("draw", "draw");
             let result = sides[Math.floor(Math.random() * sides.length)];
-            const arithmancyCheck = () => {
+            const rerollCheck = () => {
                 const activateEffect = () => {
                     // result based on roll
                     if (evil) {
@@ -396,7 +396,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         document.getElementsByClassName("choice")[0].innerHTML = `<p>Keep${rerollViable() ? " or reroll" : ""}:</p>${rewardImg(result)}`;
                         document.getElementsByClassName("choice")[0].onclick = () => {
                             selfCorrectingInkRoll = false;
-                            arithmancyCheck();
+                            rerollCheck();
                         };
                         for (let i = 0; i < otherResults.length; i++) {
                             document.getElementsByClassName("choice")[i + 1].innerHTML = `<p>Spend 1 influence:</p>${rewardImg(otherResults[i])}`;
@@ -405,7 +405,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 result = otherResults[i];
                                 arithmancyAvailable = false;
                                 selfCorrectingInkRoll = false;
-                                arithmancyCheck();
+                                rerollCheck();
                             };
                         }
                     });
@@ -425,7 +425,7 @@ document.getElementById("submitPlayers").onclick = () => {
                     activateEffect();
                 }
             };
-            arithmancyCheck();
+            rerollCheck();
         };
 
         // check if Voldemort is in the draw villain spot
@@ -3806,7 +3806,7 @@ document.getElementById("submitPlayers").onclick = () => {
             let sides = ["influence", "draw", "attack", "health", "health", "health"];
             const result = sides[Math.floor(Math.random() * sides.length)];
             let arithmancyAvailable = true;
-            const arithmancyCheck = effect => {
+            const rerollCheck = effect => {
                 // check for Arithmancy
                 if ((players[0].proficiency === "Arithmancy" || players[0].horcruxesDestroyed.includes(forbiddenForestEncounter)) && arithmancyAvailable) {
                     addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
@@ -3821,9 +3821,9 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
                 else effect();
             };
-            if (result === "influence") arithmancyCheck(() => {activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {creature.influence++;})});
-            else if (result === "draw") {arithmancyCheck(() => {players.forEach(player => {player.addToHand(detention.clone());});});}
-            else if (result === "attack") arithmancyCheck(() => {players.forEach(player => {player.health--;});});
+            if (result === "influence") rerollCheck(() => {activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {creature.influence++;})});
+            else if (result === "draw") {rerollCheck(() => {players.forEach(player => {player.addToHand(detention.clone());});});}
+            else if (result === "attack") rerollCheck(() => {players.forEach(player => {player.health--;});});
             else if (result === "health") {
                 activeVillains.filter(villain => {return villain.type.includes("creature");}).forEach(creature => {
                     creature.health++;
