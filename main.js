@@ -290,13 +290,13 @@ document.getElementById("submitPlayers").onclick = () => {
         };
 
         // Hogwarts die
-        const rollHouseDie = (affectedPlayer, color, evil, arithmancyUsed, selfCorrectingInkRoll) => {
+        const rollHouseDie = (affectedPlayer, color, evil, arithmancyAvailable, selfCorrectingInkRoll) => {
             const originalSelfCorrectingInkRoll = selfCorrectingInkRoll;
-            const rerollViable = () => {return (affectedPlayer.proficiency === "Arithmancy" || affectedPlayer.horcruxesDestroyed.includes(forbiddenForestEncounter)) && !arithmancyUsed;};
+            const rerollViable = () => {return (affectedPlayer.proficiency === "Arithmancy" || affectedPlayer.horcruxesDestroyed.includes(forbiddenForestEncounter)) && arithmancyAvailable;};
             let sides = ["influence", "draw", "attack", "health"];
             if (color === "phoenix") {
                 sides = ["health", "health 2", "location", "attack", "draw", "draw 2"];
-                arithmancyUsed = true;
+                arithmancyAvailable = false;
             }
             else if (color === "red") sides.push("influence", "influence");
             else if (color === "green") sides.push("attack", "attack");
@@ -403,7 +403,7 @@ document.getElementById("submitPlayers").onclick = () => {
                             document.getElementsByClassName("choice")[i + 1].onclick = () => {
                                 affectedPlayer.influence--;
                                 result = otherResults[i];
-                                arithmancyUsed = true;
+                                arithmancyAvailable = false;
                                 selfCorrectingInkRoll = false;
                                 arithmancyCheck();
                             };
@@ -3805,10 +3805,10 @@ document.getElementById("submitPlayers").onclick = () => {
         const swedishShortSnout = new Villain("Swedish Short-Snout", "Box 4", "creature", 0, 6, () => {
             let sides = ["influence", "draw", "attack", "health", "health", "health"];
             const result = sides[Math.floor(Math.random() * sides.length)];
-            let arithmancyUsed = false;
+            let arithmancyAvailable = true;
             const arithmancyCheck = effect => {
                 // check for Arithmancy
-                if ((players[0].proficiency === "Arithmancy" || players[0].horcruxesDestroyed.includes(forbiddenForestEncounter)) && !arithmancyUsed) {
+                if ((players[0].proficiency === "Arithmancy" || players[0].horcruxesDestroyed.includes(forbiddenForestEncounter)) && arithmancyAvailable) {
                     addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
                         if (result === "influence") document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
                         else if (result === "draw") document.getElementsByClassName("choice")[0].innerHTML = hogwartsCardBack;
