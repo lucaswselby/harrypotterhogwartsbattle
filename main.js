@@ -299,6 +299,7 @@ document.getElementById("submitPlayers").onclick = () => {
             if (color === "phoenix") {
                 sides = ["health", "health 2", "location", "attack", "draw", "draw 2"];
                 arithmancyAvailable = false;
+                forbiddenForestAvailable = false;
             }
             else if (color === "red") sides.push("influence", "influence");
             else if (color === "green") sides.push("attack", "attack");
@@ -406,6 +407,7 @@ document.getElementById("submitPlayers").onclick = () => {
                                 affectedPlayer.influence--;
                                 result = otherResults[i];
                                 arithmancyAvailable = false;
+                                forbiddenForestAvailable = false;
                                 selfCorrectingInkRoll = false;
                                 rerollCheck();
                             };
@@ -414,7 +416,10 @@ document.getElementById("submitPlayers").onclick = () => {
                 }
                 // check for Arithmancy and Forbidden Forest encounter reward
                 else if (rerollViable()) {
-                    addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
+                    const rerollChoiceTitle = "Choose:";
+                    const rerollChoiceChoices = () => {return 2;};
+                    const rerollChoiceIterations = 1;
+                    const rerollChoicePopulate = () => {
                         document.getElementsByClassName("choice")[0].innerHTML = rewardImg(result);
                         document.getElementsByClassName("choice")[0].onclick = activateEffect;
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Re-roll</p>";
@@ -430,7 +435,9 @@ document.getElementById("submitPlayers").onclick = () => {
                             rollHouseDie(affectedPlayer, color, evil, arithmancyAvailable, forbiddenForestAvailable, originalSelfCorrectingInkRoll);
                         };
                         
-                    });
+                    };
+                    if (playerChoices.length) playerChoices.unshift(new PlayerChoice(rerollChoiceTitle, rerollChoiceChoices, rerollChoiceIterations, rerollChoicePopulate));
+                    else addPlayerChoice(rerollChoiceTitle, rerollChoiceChoices, rerollChoiceIterations, rerollChoicePopulate);
                 }
                 else {
                     activateEffect();
