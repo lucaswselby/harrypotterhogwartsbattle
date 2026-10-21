@@ -292,7 +292,9 @@ document.getElementById("submitPlayers").onclick = () => {
         // Hogwarts die
         const rollHouseDie = (affectedPlayer, color, evil, arithmancyAvailable, forbiddenForestAvailable, selfCorrectingInkRoll) => {
             const originalSelfCorrectingInkRoll = selfCorrectingInkRoll;
-            const rerollViable = () => {return (affectedPlayer.proficiency === "Arithmancy" && arithmancyAvailable) || (affectedPlayer.horcruxesDestroyed.includes(forbiddenForestEncounter) && forbiddenForestAvailable);};
+            arithmancyAvailable = arithmancyAvailable && affectedPlayer.proficiency === "Arithmancy";
+            forbiddenForestAvailable = forbiddenForestAvailable && affectedPlayer.horcruxesDestroyed.includes(forbiddenForestEncounter);
+            const rerollViable = () => {return arithmancyAvailable || forbiddenForestAvailable;};
             let sides = ["influence", "draw", "attack", "health"];
             if (color === "phoenix") {
                 sides = ["health", "health 2", "location", "attack", "draw", "draw 2"];
@@ -410,15 +412,24 @@ document.getElementById("submitPlayers").onclick = () => {
                         }
                     });
                 }
-                // check for Arithmancy
+                // check for Arithmancy and Forbidden Forest encounter reward
                 else if (rerollViable()) {
                     addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
                         document.getElementsByClassName("choice")[0].innerHTML = rewardImg(result);
                         document.getElementsByClassName("choice")[0].onclick = activateEffect;
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Re-roll</p>";
-                        document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie(affectedPlayer, color, evil, false, false, originalSelfCorrectingInkRoll);};
-                        if (affectedPlayer.proficiency === "Arithmancy") darken(affectedPlayer.proficiencyImage);
-                        if (affectedPlayer.horcruxesDestroyed.includes(forbiddenForestEncounter)) darken(forbiddenForestEncounter.img);
+                        document.getElementsByClassName("choice")[1].onclick = () => {
+                            if (arithmancyAvailable) {
+                                arithmancyAvailable = false;
+                                darken(affectedPlayer.proficiencyImage);
+                            }
+                            else if (forbiddenForestAvailable) {
+                                forbiddenForestAvailable = false;
+                                darken(forbiddenForestEncounter.img);
+                            }
+                            rollHouseDie(affectedPlayer, color, evil, arithmancyAvailable, forbiddenForestAvailable, originalSelfCorrectingInkRoll);
+                        };
+                        
                     });
                 }
                 else {
@@ -3806,10 +3817,11 @@ document.getElementById("submitPlayers").onclick = () => {
         const swedishShortSnout = new Villain("Swedish Short-Snout", "Box 4", "creature", 0, 6, () => {
             let sides = ["influence", "draw", "attack", "health", "health", "health"];
             const result = sides[Math.floor(Math.random() * sides.length)];
-            let arithmancyAvailable = true;
+            let arithmancyAvailable = players[0].proficiency === "Arithmancy";
+            let forbiddenForestAvailable = players[0].horcruxesDestroyed.includes(forbiddenForestEncounter);
             const rerollCheck = effect => {
-                // check for Arithmancy
-                if ((players[0].proficiency === "Arithmancy" || players[0].horcruxesDestroyed.includes(forbiddenForestEncounter)) && arithmancyAvailable) {
+                // check for Arithmancy and Forbidden Forest encounter reward
+                if (arithmancyAvailable || forbiddenForestAvailable) {
                     addPlayerChoice("Choose:", () => {return 2;}, 1, () => {
                         if (result === "influence") document.getElementsByClassName("choice")[0].innerHTML = influenceToken;
                         else if (result === "draw") document.getElementsByClassName("choice")[0].innerHTML = hogwartsCardBack;
@@ -3817,7 +3829,17 @@ document.getElementById("submitPlayers").onclick = () => {
                         else if (result === "health") document.getElementsByClassName("choice")[0].innerHTML = healthToken;
                         document.getElementsByClassName("choice")[0].onclick = effect;
                         document.getElementsByClassName("choice")[1].innerHTML = "<p>Re-roll</p>";
-                        document.getElementsByClassName("choice")[1].onclick = () => {rollHouseDie(players[0],"yellow", true, false, false, false);};
+                        document.getElementsByClassName("choice")[1].onclick = () => {
+                            if (arithmancyAvailable) {
+                                arithmancyAvailable = false;
+                                darken(affectedPlayer.proficiencyImage);
+                            }
+                            else if (forbiddenForestAvailable) {
+                                forbiddenForestAvailable = false;
+                                darken(forbiddenForestEncounter.img);
+                            }
+                            rollHouseDie(players[0],"yellow", true, arithmancyAvailable, forbiddenForestAvailable, false);
+                        };
                     });
                 }
                 else effect();
