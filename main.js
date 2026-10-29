@@ -1812,12 +1812,6 @@ document.getElementById("submitPlayers").onclick = () => {
                             else this.forcedDiscardAt(0, false);
                         }
 
-                        // Avada Kedavra effect
-                        if (avadaKill) {
-                            avadaKill = false;
-                            activeLocation.addToLocation();
-                        }
-
                         // Box 4 Lord Voldemort effect                        
                         if ((invulnerableVoldemort() === lordVoldemort4 || activeVillains.includes(lordVoldemort4)) && !lordVoldemort4.petrifiedBy) {
                             setTimeout(() => {
@@ -3008,7 +3002,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const expulso3 = expulso1.clone();
         const flipendo1 = new DarkArtsEvent("Flipendo", "Game 1", () => {addPlayerChoice("Discard:", () => {return players[0].hand.length;}, 1, () => {for (let i = 0; i < players[0].hand.length; i++) {document.getElementsByClassName("choice")[i].innerHTML += `<img src="${players[0].hand[i].img.src}">`; document.getElementsByClassName("choice")[i].onclick = () => {players[0].forcedDiscardAt(i, true);};}}); players[0].health--;});
         const flipendo2 = flipendo1.clone();
-        const heWhoMustNotBeNamed1 = new DarkArtsEvent("He Who Must Not Be Named", "Game 1", () => {activeLocation.addToLocation()});
+        const heWhoMustNotBeNamed1 = new DarkArtsEvent("He Who Must Not Be Named", "Game 1", () => {activeLocation.addToLocation();});
         const heWhoMustNotBeNamed2 = heWhoMustNotBeNamed1.clone();
         const heWhoMustNotBeNamed3 = heWhoMustNotBeNamed1.clone();
         const petrification1 = new DarkArtsEvent("Petrification", "Game 1", () => {players.forEach(player => {player.health--; player.petrified = true;});});
@@ -3087,8 +3081,7 @@ document.getElementById("submitPlayers").onclick = () => {
         const dementorsKiss2 = dementorsKiss1.clone();
         const oppugno = new DarkArtsEvent("Oppugno", "Game 3", () => {players.forEach(player => {if (!player.draw.length) player.shuffle(); if (player.draw[0].cost) {const tempPetrified = player.petrified; player.petrified = false; players[0].cardsDrawn--; player.drawCards(1); player.forcedDiscardAt(player.hand.length - 1, true); player.petrified = tempPetrified; player.health -= 2;}});});
         const tarantallegra = new DarkArtsEvent("Tarantallegra", "Game 3", () => {players[0].health--;});
-        let avadaKill = false;
-        const avadaKedavra1 = new DarkArtsEvent("Avada Kedavra", "Game 4", () => {players[0].health -= 3; if (players[0].stunned) avadaKill = true;});
+        const avadaKedavra1 = new DarkArtsEvent("Avada Kedavra", "Game 4", () => {players[0].health -= 3; setTimeout(() => {if (players[0].stunned) activeLocation.addToLocation();}, 500);});
         const crucio1 = new DarkArtsEvent("Crucio", "Game 4", () => {players[0].health--;});
         const heirOfSlytherin1 = new DarkArtsEvent("Heir Of Slytherin", "Game 4", () => {rollHouseDie(players[0],"green", true, true, true, false);});
         const heirOfSlytherin2 = heirOfSlytherin1.clone();
@@ -3226,7 +3219,7 @@ document.getElementById("submitPlayers").onclick = () => {
             activeLocation.addToLocation();
         });
         const weasleyIsOurKing2 = weasleyIsOurKing1.clone();
-        const beyondTheVeil = new DarkArtsEvent("Beyond The Veil", "Pack 2", () => {getNeighbors(players[0]).concat(players[0]).forEach(player => {player.health -= 3; if (player.stunned) avadaKill = true;});});
+        const beyondTheVeil = new DarkArtsEvent("Beyond The Veil", "Pack 2", () => {getNeighbors(players[0]).concat(players[0]).forEach(player => {player.health -= 3; setTimeout(() => {if (players[0].stunned) activeLocation.addToLocation();}, 500);});});
         const devilsSnare1 = new DarkArtsEvent("Devil's Snare", "Pack 2", () => {activeLocation.addToLocation();});
         const devilsSnare2 = devilsSnare1.clone();
         const inTheHallOfProphecy1 = new DarkArtsEvent("In The Hall Of Prophecy", "Pack 2", () => {
