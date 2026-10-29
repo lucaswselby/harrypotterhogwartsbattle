@@ -3831,7 +3831,7 @@ document.getElementById("submitPlayers").onclick = () => {
                         document.getElementsByClassName("choice")[1].onclick = () => {
                             if (arithmancyAvailable) {
                                 arithmancyAvailable = false;
-                                darken(affectedPlayer.proficiencyImage);
+                                darken(players[0].proficiencyImage);
                             }
                             else if (forbiddenForestAvailable) {
                                 forbiddenForestAvailable = false;
